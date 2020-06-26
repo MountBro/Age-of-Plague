@@ -7,13 +7,13 @@ These are our proposals for p2.
 - Map
   - Capital
   - Ponds
-  - Grid
+  - Grids
 - Armies
 - Towers
 - Castles & Cities
 - AI
 - Economy
-- Tech
+- Techs
   - Tower effects & building efficiency
   - Agricultural income
   - Econimic income

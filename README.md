@@ -1,3 +1,4 @@
-# Project 2 for team 3
+# VG100-Pgroup3-Project2
 
-This is the repo for project 2 team LJWZ, namely team 3.
+This is only for some BAK files (备份) and TC things.
+Please go to the according p2team3 to commit!!!

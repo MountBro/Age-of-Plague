@@ -1,4 +1,8 @@
 # Model 
+## paramters
+- largest capacity of each tile
+- quarantine: leak 
+
 ## tile (rendertile)
 - population
     - proportion of education
@@ -38,6 +42,7 @@
         
 # Update
 - spread of affection
+    - 
 - re-allocation of population by economic status (quarantine area excluded)
 - construction progress 
 - economy 

@@ -1,6 +1,7 @@
 classdef city 
     properties 
-        tiles 
+        tilesIndex = [];
+        tiles = {};
         centerPosition
         centerPopulation
         educated
@@ -16,7 +17,8 @@ classdef city
         end 
         function obj = upgradeTech(obj, increment)
             obj.techPoint = obj.techPoint + increment;
-        end 
+        end
+       
         function obj = upgradeHospitalLevel(obj, increment)
             if (obj.techPoint >= 1)
             obj.hospitalLevel = obj.hospitalLevel + increment;
@@ -27,8 +29,11 @@ classdef city
         end
         function obj = upgradeQuarantine(obj)
             obj.quarantineLeek = obj.quarantineLeek * 0.5;
+        end           
+        
+        function obj = populationFlow(obj)
+            
         end
-        % function populationFlow
         % function virusAttack(obj, virus)
     end
 end

@@ -6,8 +6,9 @@ classdef tile
         construction
         medicalUnitNum = 0;
         quarantine = false;
+        academy = false;
         hospital = false;
-        medicalUnit = false;
+        medicalUnit = 0;
         productivity
         infectRate = 0.05;
         a = 1;
@@ -70,6 +71,26 @@ classdef tile
                 disp('REDUNDANT OPERATION IN CANCELQUARANTINE: tile not put in quarantine');
             end
             obj.quarantine = false;
+        end
+        
+        function obj = buildHospital(obj)
+            if (obj.hospital || obj.academy)
+                disp('CANNOT BUILD HOSPITAL')
+            else
+                obj.hospital = true;
+            end
+        end
+        
+        function obj = buildAcademy(obj)
+            if (obj.hospital || obj.academy)
+                disp('CANNOT BUILD ACADEMY')
+            else
+                obj.hospital = true;
+            end
+        end
+        
+        function obj = addMedicalUnit(obj)
+            obj.medicalUnit = obj.medicalUnit + 1;
         end
     end
 end

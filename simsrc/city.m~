@@ -5,7 +5,6 @@ classdef city
         centerPosition
         centerPopulation
         educated
-        academyNum = 0;
         wealth = 0;
         techPoint = 0;
         hospitalLevel
@@ -39,10 +38,7 @@ classdef city
         function obj = upgradeQuarantine(obj)
             if (obj.techPoint >= 1)
                 obj.quarantineLeek = obj.quarantineLeek * 0.5;
-                obj.techPoint = obj.techPoint - 1;
-            else
-                disp('CANNOT UPGRADE QUARANTINE');
-            end
+                obj.techPoint = obj.techPoint -
         end
         
         % number of tiles in the city
@@ -203,7 +199,7 @@ classdef city
         
         % function obj = summonMedicalUnit(obj)
         % function obj = sendMedicalUnit(obj, i, j)
-        % function obj = buildH(obj, i, j) % build hospital
-        % function obj = buildA(obj, i, j) % build academy
+        % function obj = buildH(obj, i, j)
+        % function obj = buildA(obj, i, j)
     end
     end

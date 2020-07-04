@@ -7,7 +7,7 @@ classdef tile
         medicalUnitNum = 0;
         quarantine = false;
         hospital = false;
-        medicalUnit = false;
+        medicalUnit = 0;
         productivity
         infectRate = 0.05;
         a = 1;
@@ -60,13 +60,30 @@ classdef tile
         % function obj = cure(obj)
         function obj = setQuarantine(obj)
             if (obj.quarantine)
-                disp('REDUNDANT OPERATION: tile already put in quarantine');
+                disp('REDUNDANT OPERATION IN SETQUARANTINE: tile already put in quarantine');
             end
             obj.quarantine = true;
         end
         
         function obj = cancelQuarantine(obj)
             if (~obj.quarantine)
-                disp('
+                disp('REDUNDANT OPERATION IN CANCELQUARANTINE: tile not put in quarantine');
+            end
+            obj.quarantine = false;
+        end
+        
+        function obj = buildHospital(obj)
+            if (obj.hospital)
+                disp('REDUNDANT OPERATION IN BUILDHOSPITAL: hospital already built')
+            else
+                obj.hospital = true;
+            end
+        end
+        
+        
+        
+        function obj = addMedicalUnit(obj)
+            obj.medicalUnit = obj.medicalUnit + 1;
+        end
     end
 end

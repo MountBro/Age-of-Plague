@@ -9,7 +9,7 @@ classdef tile
         hospital = false;
         medicalUnit = false;
         productivity
-        infectRate = 0.05;
+        infectRate = 0.1;
         a = 1;
     end
     methods
@@ -49,12 +49,8 @@ classdef tile
             end
         end
         
-        function obj = tileInfect(obj)
-            if obj.infected ^ (1 + obj.infectRate) > obj.population
-                obj.infected = obj.population;
-            else 
-                obj.infected = obj.infected ^ ( 1 + obj.infectRate);
-            end
+        function obj = infect(obj)
+            
         end
         % function addMedicalUnit
         % function cure

@@ -1,23 +1,31 @@
-c = city (4,4, 200);
+c = city (5, 5, 200);
 
-for i = 1:3
-    for j = 1:4
-        if (i ~= 2 || j ~= 2)
+for i = 1:10
+    for j = 1:10
+        if (i ~= 5 || j ~= 5)
             c.tilesIndex = [c.tilesIndex; [i, j]];
-            t = tile(2 * i - j, i + 3*j, 20);  
-            t.infected = mod (5* i + 13*j, 21); % initialize infected population
+            t = tile(2 * i - j, i + 3 * j, 100); 
+            if (mod(i, 3) == 0 && mod(j, 3) == 0)
+                t.infected = 100; % initialize infected population
+            else 
+                t.infected = 0;
+            end
+            t.productivity = 9 * i + 11 * j; % initialize wealth
             c.tiles{i, j} = t;
         end
     end
 end
 
-c
 
-sizeOfIndex = size(c.tilesIndex);
-numTiles = sizeOfIndex(1);
-for k = 1:numTiles
-    index = c.tilesIndex(k, :);
-    i = index(1); j = index(2);
-    c.tiles{i, j}.render;
+
+figure(1)
+c.render
+for cnt = 1:20
+    c = c.populationFlow;
+    c = c.infect;
 end
-
+figure(2)
+c.render
+c.populationFlow
+figure(3)
+c.render

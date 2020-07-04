@@ -5,7 +5,7 @@ classdef city
         centerPosition
         centerPopulation
         educated
-        wealth
+        wealth = 0;
         techPoint = 0;
         hospitalLevel
         quarantineLeek
@@ -74,7 +74,7 @@ classdef city
         function neighborIndex = richNeighborhood(obj, i, j)
             out = [];
             index = obj.tilesIndex;
-            tile = obj.tiles{i, j};
+            tile = obj.tiles{i, j};           
             w = tile.productivity;
             if ismember([i, j+1], index, 'row') && (obj.tiles{i, j+1}.productivity > w)
                 out = [out; [i, j+1]];
@@ -97,6 +97,34 @@ classdef city
             neighborIndex = out;
         end
         
+        % the indexes of the richer neighboring tiles of a tile that are
+        % not put in quarantine
+        function neighborIndex = richValidNeighborhood(obj, i, j)
+            out = [];
+            index = obj.tilesIndex;
+            tile = obj.tiles{i, j};           
+            w = tile.productivity;
+            if ismember([i, j+1], index, 'row') && (obj.tiles{i, j+1}.productivity > w) && (~obj.tiles{i, j+1}.quarantine)
+                out = [out; [i, j+1]];
+            end
+            if ismember([i-1, j+1], index, 'row') && (obj.tiles{i-1, j+1}.productivity >w) && (~obj.tiles{i-1, j+1}.quarantine)
+                out = [out; [i-1, j+1]];
+            end
+            if ismember([i-1, j], index, 'row') && (obj.tiles{i-1, j}.productivity > w) && (~obj.tiles{i-1, j}.quarantine)
+                out = [out; [i-1, j]];
+            end
+            if ismember([i, j-1], index, 'row') && (obj.tiles{i, j-1}.productivity > w) && (~obj.tiles{i, j-1}.quarantine)
+                out = [out; [i, j-1]];
+            end
+            if ismember([i+1, j-1], index, 'row') && (obj.tiles{i+1, j-1}.productivity > w) && (~obj.tiles{i+1, j-1}.quarantine)
+                out = [out; [i+1, j-1]];
+            end
+            if ismember([i+1, j], index, 'row') && (obj.tiles{i+1, j}.productivity > w) && (~obj.tiles{i+1, j}.quarantine)
+                out = [out; [i+1, j]];
+            end         
+            neighborIndex = out;
+        end
+        
         
         
         % population flow according to economy status               
@@ -108,20 +136,22 @@ classdef city
                t_index = obj.tilesIndex(l,:);
                i = t_index(1); j = t_index(2);
                t = obj.tiles{i, j};
-               neighborIndex = richNeighborhood(obj, i, j);
-               sizeNeighborIndex = size(neighborIndex);
-               numNeighbor = sizeNeighborIndex(1);          
-               if (numNeighbor ~= 0)
-                   obj.tiles{i, j}.population = t.population - obj.exportRatio*t.population;
-                   obj.tiles{i, j}.infected = t.infected - obj.exportRatio*t.infected;
-                   for a = 1:numNeighbor
-                       neighbor_index = neighborIndex(a, :);
-                       in = neighbor_index(1);
-                       jn = neighbor_index(2);
-                       neighbor = obj.tiles{in, jn};
-                       neighbor.population = neighbor.population + obj.exportRatio*t.population/numNeighbor;
-                       neighbor.infected = neighbor.infected + obj.exportRatio*t.infected/numNeighbor;
-                       obj.tiles{in, jn} = neighbor;                      
+               if (~t.quarantine)
+                   neighborIndex = richValidNeighborhood(obj, i, j);
+                   sizeNeighborIndex = size(neighborIndex);
+                   numNeighbor = sizeNeighborIndex(1);          
+                   if (numNeighbor ~= 0)
+                       obj.tiles{i, j}.population = t.population - obj.exportRatio*t.population;
+                       obj.tiles{i, j}.infected = t.infected - obj.exportRatio*t.infected;
+                       for a = 1:numNeighbor
+                           neighbor_index = neighborIndex(a, :);
+                           in = neighbor_index(1);
+                           jn = neighbor_index(2);
+                           neighbor = obj.tiles{in, jn};
+                           neighbor.population = neighbor.population + obj.exportRatio*t.population/numNeighbor;
+                           neighbor.infected = neighbor.infected + obj.exportRatio*t.infected/numNeighbor;
+                           obj.tiles{in, jn} = neighbor;                      
+                       end
                    end
                end
             end
@@ -146,8 +176,23 @@ classdef city
                 obj.tiles{i, j}.render;
             end 
         end
+        
         % function obj = virusAttack(obj, virus);
-        % function obj = setQuarantine(obj, i, j);
-        % function 
+        function obj = setQ(obj, i, j)
+            obj.tiles{i,j} = obj.tiles{i, j}.setQuarantine;
+        end
+        
+        function obj = cancelQ(obj, i, j)
+            obj.tiles{i, j} = obj.tiles{i, j}.cancelQuarantine;
+        end
+        
+        function obj = levelIncome(obj)
+            N = numTiles(obj);
+            for k = 1:N
+                index = obj.tilesIndex(k, :);
+                i = index(1); j = index(2);
+                obj.wealth = obj.wealth + obj.tiles{i, j}.productivity;
+            end
+        end
     end
     end

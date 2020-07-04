@@ -121,8 +121,7 @@ classdef city
                        neighbor = obj.tiles{in, jn};
                        neighbor.population = neighbor.population + obj.exportRatio*t.population/numNeighbor;
                        neighbor.infected = neighbor.infected + obj.exportRatio*t.infected/numNeighbor;
-                       obj.tiles{in, jn} = neighbor;
-                       obj.tiles{in, jn}
+                       obj.tiles{in, jn} = neighbor;                      
                    end
                end
             end
@@ -147,6 +146,8 @@ classdef city
                 obj.tiles{i, j}.render;
             end 
         end
-        % function virusAttack(obj, virus)
+        % function obj = virusAttack(obj, virus);
+        % function obj = setQuarantine(obj, i, j);
+        % function 
     end
     end

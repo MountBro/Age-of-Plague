@@ -56,7 +56,8 @@ classdef tile
                 obj.infected = obj.infected ^ ( 1 + obj.infectRate);
             end
         end
-        % function addMedicalUnit
-        % function cure
+        % function obj = addMedicalUnit(obj)
+        % function obj = cure(obj)
+        % function obj = 
     end
 end

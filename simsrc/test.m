@@ -5,12 +5,8 @@ for i = 1:10
         if (i ~= 5 || j ~= 5)
             c.tilesIndex = [c.tilesIndex; [i, j]];
             t = tile(2 * i - j, i + 3 * j, 100); 
-            if (mod(i, 3) == 0 && mod(j, 3) == 0)
-                t.infected = 100; % initialize infected population
-            else 
-                t.infected = 0;
-            end
-            t.productivity = 9 * i + 11 * j; % initialize wealth
+            t.infected = 2 * rand();
+            t.productivity = 10 * rand(); % initialize wealth
             c.tiles{i, j} = t;
         end
     end
@@ -26,6 +22,9 @@ for cnt = 1:20
 end
 figure(2)
 c.render
-c.populationFlow
+for cnt = 1:20
+    c = c.populationFlow;
+    c = c.infect;
+end
 figure(3)
 c.render

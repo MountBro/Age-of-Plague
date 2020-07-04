@@ -39,11 +39,12 @@ classdef virus
             N = sizeOfSearched(1);
             out = [];
             if (N > 0)
-                for i = N:1
-                    rowSearched = searched(i, :);
-                    x = rowSearched(1); y = rowSearched(2);
+                for i = 1 : N
+                    rowSearched = searched(i, :)
+                    x = rowSearched(1)
+                    y = rowSearched(2)
                     if judgeAlive(obj, x, y)
-                        out = [out; [x, y]];
+                        out = [out; [x, y]]
                     end
                 end
             end
@@ -54,19 +55,20 @@ classdef virus
         function res = judgeAlive(obj, x, y)
             % calculate the nb number
             n = 0;
-            for i = 1:6
-                nb = calNB(x, y);
-                nb_size = size(nb);
-                N = nb_size(1);
-                for j = 1:N
-                    if ismember(nb(j, :), obj.stat, 'row')
-                        n = n + 1;
-                    end
+            
+            nb = calNB(x, y);
+            disp(nb)
+            nb_size = size(nb);
+            N = nb_size(1);
+            for j = 1:N
+                if ismember(nb(j, :), obj.stat, 'row')
+                    n = n + 1;
                 end
-                disp(n);
             end
+            disp(n);
+
             % judge alive or not
-            if n >= 3
+            if n == 2 || n == 4
                 res = true;
             else
                 res = false;

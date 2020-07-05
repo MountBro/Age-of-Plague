@@ -8,7 +8,9 @@ classdef tile
         quarantine = false;
         academy = false;
         hospital = false;
+        hCure = 20;    
         medicalUnit = 0;
+        muCure = 10;
         productivity
         infectRate = 0.05;
         a = 1;
@@ -26,10 +28,18 @@ classdef tile
             ratio = obj.infected / obj.population;
             color = [1, 1-ratio, 1-ratio];
             black = [0, 0, 0];
+            if (obj.hospital)
+                centerColor = 'g';
+            elseif (obj.academy)
+                centerColor = 'y';
+            else 
+                centerColor = color;
+            end
+                    
             [h0, h1, h2, h3, h4, h5, h6] = hexagon7(i, j, a);
             if (~obj.quarantine)
                 hold on 
-                plot(h0, 'FaceColor', color);
+                plot(h0, 'FaceColor', centerColor);
                 plot(h1, 'FaceColor', color);
                 plot(h2, 'FaceColor', color);
                 plot(h3, 'FaceColor', color);
@@ -91,6 +101,15 @@ classdef tile
         
         function obj = addMedicalUnit(obj)
             obj.medicalUnit = obj.medicalUnit + 1;
+        end
+        
+        function obj = cureTile(obj)
+            infected_ = obj.infected - obj.hospital * obj.hCure - obj.medicalUnit * obj.muCure;           
+            obj.infected = max(0, infected_);
+        end
+        
+        function obj = refreshProductivity(obj)
+            obj.productivity = obj.population - obj.infected;
         end
     end
 end

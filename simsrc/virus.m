@@ -45,7 +45,7 @@ classdef virus
                     y = rowSearched(2)
                     if judgeAlive(obj, x, y)
                         out = [out; [x, y]]
-                    end
+                    endhttp://focs.ji.sjtu.edu.cn:2143/projects/team-03/repository/g3p2/revisions/ethan/entry/simsrc/virus.m
                 end
             end
             obj.stat = out;

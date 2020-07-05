@@ -201,9 +201,37 @@ classdef city
             end
         end
         
+        function obj = refreshProd(obj)
+            N = numTiles(obj);
+            for k = 1:N
+                index = obj.tilesIndex(k, :);
+                i = index(1); j = index(2);
+                obj.tiles{i, j} = obj.tiles{i, j}.refreshProductivity;
+            end
+        end
+        
+        function obj = cure(obj)
+            N = numTiles(obj);
+            for k = 1:N
+                index = obj.tilesIndex(k, :);
+                i = index(1); j = index(2);
+                obj.tiles{i, j} = obj.tiles{i, j}.cureTile;
+            end
+        end
+            
+        
+        function obj = level(obj)
+            obj = obj.cure;
+            obj = obj.infect;
+            obj = obj.populationFlow; 
+            obj = obj.refreshProd;
+            obj = obj.levelIncome;
+        end
         % function obj = summonMedicalUnit(obj)
         % function obj = sendMedicalUnit(obj, i, j)
-        % function obj = buildH(obj, i, j) % build hospital
+        function obj = buildH(obj, i, j) % build hospital
+            obj.tiles{i, j} = obj.tiles{i, j}.buildHospital;
+        end
         % function obj = buildA(obj, i, j) % build academy
     end
     end

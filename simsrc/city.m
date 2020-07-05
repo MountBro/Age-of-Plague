@@ -183,7 +183,10 @@ classdef city
             end 
         end
         
-        % function obj = virusAttack(obj, virus);
+        function obj = virusAttack(obj, virus)
+            
+        end
+            
         function obj = setQ(obj, i, j)
             obj.tiles{i,j} = obj.tiles{i, j}.setQuarantine;
         end

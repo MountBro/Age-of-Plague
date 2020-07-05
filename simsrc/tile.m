@@ -111,5 +111,9 @@ classdef tile
         function obj = refreshProductivity(obj)
             obj.productivity = obj.population - obj.infected;
         end
+        
+        function obj = underAttack(obj, inf)
+            obj.infected = min (obj.population, inf + obj.infected);
+        end
     end
 end

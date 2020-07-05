@@ -1,24 +1,26 @@
 classdef virus
     properties
-        stat
+        inf
+        pos
         name
     end
     
     methods
         % construction function
-        function obj = virus(pos)
-            obj.stat = pos;
+        function obj = virus(inf, pos)
+            obj.inf = inf;
+            obj.pos = pos;
         end
         
         function searched = search(obj)
-            s = size(obj.stat);
+            s = size(obj.pos);
             N = s(1);
             if (N > 1)
                 out = [];
-                xmin = min(obj.stat(:, 1));
-                xmax = max(obj.stat(:, 1));
-                ymin = min(obj.stat(:, 2));
-                ymax = max(obj.stat(:, 2));
+                xmin = min(obj.pos(:, 1));
+                xmax = max(obj.pos(:, 1));
+                ymin = min(obj.pos(:, 2));
+                ymax = max(obj.pos(:, 2));
                 for i = (xmin-1):(xmax+1)
                     for j = (ymin-1):(ymax+1)
                         out = [out;[i,j]];
@@ -32,7 +34,7 @@ classdef virus
         end
                
                     
-        % change the virus status according to its neighbour numbers
+        % change the virus posus according to its neighbour numbers
         function obj = change(obj)
             searched = search(obj);
             sizeOfSearched = size(searched);
@@ -40,28 +42,27 @@ classdef virus
             out = [];
             if (N > 0)
                 for i = 1 : N
-                    rowSearched = searched(i, :)
-                    x = rowSearched(1)
-                    y = rowSearched(2)
+                    rowSearched = searched(i, :);
+                    x = rowSearched(1);
+                    y = rowSearched(2);
                     if judgeAlive(obj, x, y)
-                        out = [out; [x, y]]
-                    endhttp://focs.ji.sjtu.edu.cn:2143/projects/team-03/repository/g3p2/revisions/ethan/entry/simsrc/virus.m
+                        out = [out; [x, y]];
+                    end
                 end
             end
-            obj.stat = out;
+            obj.pos = out;
         end
        
 
         function res = judgeAlive(obj, x, y)
             % calculate the nb number
             n = 0;
-            
-            nb = calNB(x, y);
-            disp(nb)
-            nb_size = size(nb);
-            N = nb_size(1);
+            nbIndice = neighborIndice(x, y);
+            disp(nbIndice)
+            nbIndice_size = size(nbIndice);
+            N = nbIndice_size(1);
             for j = 1:N
-                if ismember(nb(j, :), obj.stat, 'row')
+                if ismember(nbIndice(j, :), obj.pos, 'row')
                     n = n + 1;
                 end
             end
@@ -76,12 +77,12 @@ classdef virus
         end
         
         function render(obj)
-            s = size(obj.stat);
+            s = size(obj.pos);
             num = s(1);
             a = 1;
             hold on 
             for k = 1:num
-                row = obj.stat(k, :);
+                row = obj.pos(k, :);
                 i = row(1); j = row(2);
                 [x, y] = rc(i, j, a);
                 hex = hexagon(x, y, a);

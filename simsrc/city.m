@@ -184,7 +184,18 @@ classdef city
         end
         
         function obj = virusAttack(obj, virus)
-            
+            pos = virus.pos;
+            inf = virus.inf;
+            s = size(pos);
+            N = s(1);            
+            for j = 1:N
+                row = pos(j, :);
+                i = row(1); j = row(2);
+                [I, J] = convertIndice(i, j); 
+                if (ismember([I, J], obj.tilesIndex, 'row'))
+                    obj.tiles{I, J} = obj.tiles{I, J}.underAttack(inf);
+                end
+            end
         end
             
         function obj = setQ(obj, i, j)

@@ -10,7 +10,7 @@ classdef city
         techPoint = 0;
         hospitalLevel
         quarantineLeek
-        exportRatio = 0.05;
+        exportRatio = 0.5;
         
     end
     methods

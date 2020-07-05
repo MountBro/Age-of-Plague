@@ -57,8 +57,7 @@ classdef virus
         function res = judgeAlive(obj, x, y)
             % calculate the nb number
             n = 0;
-            nbIndice = neighborIndice(x, y);
-            disp(nbIndice)
+            nbIndice = neighborIndice(x, y);           
             nbIndice_size = size(nbIndice);
             N = nbIndice_size(1);
             for j = 1:N
@@ -86,7 +85,7 @@ classdef virus
                 i = row(1); j = row(2);
                 [x, y] = rc(i, j, a);
                 hex = hexagon(x, y, a);
-                plot(hex, 'FaceColor', 'magenta', 'FaceAlpha', 1);
+                plot(hex, 'FaceColor', 'b', 'FaceAlpha', 1);
             end
         end
             

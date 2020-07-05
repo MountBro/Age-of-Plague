@@ -6,7 +6,7 @@ for i = 1:10
         if (i ~= 5 || j ~= 5)
             c.tilesIndex = [c.tilesIndex; [i, j]];
             t = tile(2 * i - j, i + 3 * j, 100); 
-            t.infected = 5 * rand();
+            t.infected = 0;
             t.productivity = 10 * rand(); % initialize wealth
             c.tiles{i, j} = t;
         end
@@ -30,15 +30,14 @@ v = virus(10, posInit);
 
 %% simulation
 figure(1) % initial condition of the city
-c.render
+clf;
 
-for cnt = 1:10
+for cnt = 1:20
     c = c.virusAttack(v);
-    clf;v.render;c.render;
-    c = c.level
-    clf;v.render;c.render;    
+    c = c.level; 
+    % clf; v.render; c.render;    
     v = v.change;
 end
 
-figure(2) % 10 rounds later
+v.render;c.render;
 

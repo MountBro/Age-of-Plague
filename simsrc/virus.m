@@ -65,7 +65,6 @@ classdef virus
                     n = n + 1;
                 end
             end
-            disp(n);
 
             % judge alive or not
             if n == 2 || n == 4

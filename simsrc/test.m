@@ -1,8 +1,10 @@
 %% initialize city
-c = city (5, 5, 200);
+c = city ([1, 1; 
+           1, 2;
+           1, 3;]);
 
-for i = 1:10
-    for j = 1:10
+for i = 1:5
+    for j = 1:5
         if (i ~= 5 || j ~= 5)
             c.tilesIndex = [c.tilesIndex; [i, j]];
             t = tile(2 * i - j, i + 3 * j, 100); 

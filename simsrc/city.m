@@ -1,9 +1,7 @@
 classdef city 
     properties 
         tilesIndex = [];
-        tiles = {};
-        centerPosition
-        centerPopulation
+        tiles = {};        
         educated
         academyNum = 0;
         wealth = 0;
@@ -15,9 +13,8 @@ classdef city
     end
     methods
         % constructor
-        function obj = city (I, J, population)
-            obj.centerPosition = [I, J];
-            obj.centerPopulation = population;
+        function obj = city(tilesIndex)
+            obj.tilesIndex = tilesIndex;
         end 
         
         % upgrade tech
@@ -235,7 +232,7 @@ classdef city
             
         
         function obj = level(obj)
-            obj = obj.cure;
+            obj = obj.cure; % lag
             obj = obj.infect;
             obj = obj.populationFlow; 
             obj = obj.refreshProd;
@@ -248,4 +245,5 @@ classdef city
         end
         % function obj = buildA(obj, i, j) % build academy
     end
-    end
+end
+    

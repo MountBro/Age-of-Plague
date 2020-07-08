@@ -2,17 +2,16 @@ classdef tile
     properties
         position 
         population
-        infected 
+        infected
         construction
         medicalUnitNum = 0;
         quarantine = false;
         academy = false;
         hospital = false;
-        hCure = 20;    
+        hCure = 1;    
         medicalUnit = 0;
-        muCure = 10;
+        muCure = 2;
         productivity
-        infectRate = 0.05;
         a = 1;
     end
     methods
@@ -25,17 +24,22 @@ classdef tile
             i = obj.position (1);
             j = obj.position (2);
             a = obj.a;
-            ratio = obj.infected / obj.population;
-            color = [1, 1-ratio, 1-ratio];
+            if obj.population == 0
+                color = 'm';
+            else
+                ratio = obj.infected / obj.population;
+                color = [1, 1-ratio, 1-ratio];
+            end
             black = [0, 0, 0];
             if (obj.hospital)
                 centerColor = 'g';
             elseif (obj.academy)
                 centerColor = 'y';
-            else 
+            
+            else
                 centerColor = color;
             end
-                    
+
             [h0, h1, h2, h3, h4, h5, h6] = hexagon7(i, j, a);
             if (~obj.quarantine)
                 hold on 
@@ -59,21 +63,16 @@ classdef tile
                 hold off
             end
         end
-        
-        function obj = tileInfect(obj)
-            if obj.infected ^ (1 + obj.infectRate) > obj.population
-                obj.infected = obj.population;
-            else 
-                obj.infected = obj.infected ^ ( 1 + obj.infectRate);
-            end
-        end
         % function obj = addMedicalUnit(obj)
         % function obj = cure(obj)
         function obj = setQuarantine(obj)
             if (obj.quarantine)
                 disp('REDUNDANT OPERATION IN SETQUARANTINE: tile already put in quarantine');
+            else
+                obj.quarantine = true;
+                disp ('built qua on');
+                disp (obj.position);
             end
-            obj.quarantine = true;
         end
         
         function obj = cancelQuarantine(obj)
@@ -85,17 +84,23 @@ classdef tile
         
         function obj = buildHospital(obj)
             if (obj.hospital || obj.academy)
-                disp('CANNOT BUILD HOSPITAL')
+                disp('CANNOT BUILD HOSPITAL');
+
             else
                 obj.hospital = true;
+                disp ('built hos on');
+                disp (obj.position);
             end
         end
         
         function obj = buildAcademy(obj)
             if (obj.hospital || obj.academy)
-                disp('CANNOT BUILD ACADEMY')
+                disp('No room for a second building.');
+
             else
-                obj.hospital = true;
+                obj.academy = true;
+                disp ('built aca on ');
+                disp (obj.position);
             end
         end
         

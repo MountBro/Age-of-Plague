@@ -3,11 +3,10 @@ v = virus(10, posInit);
 v.render;
 
 %%
-for i = 1:13
-v.render            % show the virus in the figure
+fgure(1);
+v.render;            % show the virus in the figure
 v = v.change;       % evolution of the virus
 clf;                % clear figure
-end
 
 
 

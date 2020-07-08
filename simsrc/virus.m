@@ -2,6 +2,7 @@ classdef virus
     properties
         inf
         pos
+        %sizexy
         name
     end
     
@@ -65,6 +66,7 @@ classdef virus
                     n = n + 1;
                 end
             end
+            %disp(n);
 
             % judge alive or not
             if n == 2 || n == 4
@@ -87,7 +89,6 @@ classdef virus
                 plot(hex, 'FaceColor', 'b', 'FaceAlpha', 1);
             end
         end
-            
     end
 end
 

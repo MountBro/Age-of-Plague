@@ -1,4 +1,4 @@
-function [h0, h1, h2, h3, h4, h5, h6, h7] = hexagon7(i, j, a)
+function [h0, h1, h2, h3, h4, h5, h6] = hexagon7(i, j, a)
 [x0, y0] = rc(i, j, a);
 [x1, y1] = rc(i, j+1, a);
 [x2, y2] = rc(i-1, j+1, a);

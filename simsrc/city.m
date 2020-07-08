@@ -4,7 +4,6 @@ classdef city
         tiles = {};
         totalPeo;
         totalsick;
-        dead;
         educated;
         academyNum = 0;
         wealth = 0;
@@ -100,22 +99,22 @@ classdef city
         function neighborIndex = validneighborhood(obj, i, j)
             out = [];
             index = obj.tilesIndex;
-            if ismember([i, j+1], index, 'row') && (~obj.tiles{i, j+1}.quarantine) && (obj.tiles{i, j+1}.population > 0)
+            if ismember([i, j+1], index, 'row') && (obj.tiles{i, j+1}.population > 0) && (~obj.tiles{i, j+1}.quarantine)
                 out = [out; [i, j+1]];
             end
-            if ismember([i-1, j+1], index, 'row') && (~obj.tiles{i-1, j+1}.quarantine) && (obj.tiles{i-1, j+1}.population > 0)
+            if ismember([i-1, j+1], index, 'row') && (obj.tiles{i-1, j+1}.population > 0) && (~obj.tiles{i-1, j+1}.quarantine)
                 out = [out; [i-1, j+1]];
             end
-            if ismember([i-1, j], index, 'row') && (~obj.tiles{i-1, j}.quarantine) && (obj.tiles{i-1, j}.population > 0)
+            if ismember([i-1, j], index, 'row') && (obj.tiles{i-1, j}.population > 0) && (~obj.tiles{i-1, j}.quarantine)
                 out = [out; [i-1, j]];
             end
-            if ismember([i, j-1], index, 'row') && (~obj.tiles{i, j-1}.quarantine) && (obj.tiles{i, j-1}.population > 0)
+            if ismember([i, j-1], index, 'row') && (obj.tiles{i, j-1}.population > 0) && (~obj.tiles{i, j-1}.quarantine)
                 out = [out; [i, j-1]];
             end
-            if ismember([i+1, j-1], index, 'row') && (~obj.tiles{i+1, j-1}.quarantine) && (obj.tiles{i+1, j-1}.population > 0)
+            if ismember([i+1, j-1], index, 'row') && (obj.tiles{i+1, j-1}.population > 0) && (~obj.tiles{i+1, j-1}.quarantine)
                 out = [out; [i+1, j-1]];
             end
-            if ismember([i+1, j], index, 'row') && (~obj.tiles{i+1, j}.quarantine) && (obj.tiles{i+1, j}.population > 0)
+            if ismember([i+1, j], index, 'row') && (obj.tiles{i+1, j}.population > 0) && (~obj.tiles{i+1, j}.quarantine)
                 out = [out; [i+1, j]];
             end         
             neighborIndex = out;
@@ -194,10 +193,12 @@ classdef city
                        leave = r(1:numNeighbor);
                        sickleave = [];
                        for M = 1:numNeighbor
-                           sickleave = [sickleave, M];
+                           if leave(M) <= t.infected
+                              sickleave = [sickleave, leave(M)];
+                           end
                        end
-                       obj.tiles{i, j}.population = t.population - leave;
-                       obj.tiles{i, j}.infected = t.infected - sickleave;
+                       t.population = t.population - numNeighbor;
+                       t.infected = t.infected - length(sickleave);
                        for a = 1:numNeighbor
                            neighbor_index = neighborIndex(a, :);
                            in = neighbor_index(1);
@@ -207,21 +208,12 @@ classdef city
                            if ismember(a,sickleave)
                               neighbor.infected = neighbor.infected + 1;
                            end
-                           obj.tiles{in, jn} = neighbor;                      
+                           obj.tiles{in, jn} = neighbor;
                        end
                    end
                end
             end
             
-        end
-        
-        function obj = infect(obj)
-           N = numTiles(obj);
-           for k = 1:N
-               index = obj.tilesIndex(k, :);
-               i = index(1); j = index(2);
-               obj.tiles{i, j} = obj.tiles{i, j}.tileInfect;
-           end
         end
         
         function render(obj)
@@ -288,7 +280,6 @@ classdef city
         function obj = level(obj)
             obj = obj.sumPopulation;
             obj = obj.cure;
-            obj = obj.infect;
             obj = obj.populationFlow; 
             obj = obj.refreshProd;
             obj = obj.levelIncome;

@@ -3,7 +3,6 @@ classdef tile
         position 
         population
         infected
-        dead
         construction
         medicalUnitNum = 0;
         quarantine = false;
@@ -13,7 +12,6 @@ classdef tile
         medicalUnit = 0;
         muCure = 2;
         productivity
-        infectRate = 0.05;
         a = 1;
     end
     methods
@@ -63,14 +61,6 @@ classdef tile
                 plot(h5, 'FaceColor', black);
                 plot(h6, 'FaceColor', black);
                 hold off
-            end
-        end
-        
-        function obj = tileInfect(obj)
-            if obj.infected ^ (1 + obj.infectRate) > obj.population
-                obj.infected = obj.population;
-            else 
-                obj.infected = obj.infected ^ ( 1 + obj.infectRate);
             end
         end
         % function obj = addMedicalUnit(obj)

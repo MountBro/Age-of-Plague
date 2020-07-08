@@ -197,8 +197,8 @@ classdef city
                               sickleave = [sickleave, leave(M)];
                            end
                        end
-                       t.population = t.population - numNeighbor;
-                       t.infected = t.infected - length(sickleave);
+                       obj.tiles{i, j}.population = t.population - numNeighbor;
+                       obj.tiles{i, j}.infected = t.infected - length(sickleave);
                        for a = 1:numNeighbor
                            neighbor_index = neighborIndex(a, :);
                            in = neighbor_index(1);

@@ -2,14 +2,16 @@ classdef virus
     properties
         inf
         pos
+        kill %50 for death rate 50%
         name
     end
     
     methods
         % construction function
-        function obj = virus(inf, pos)
+        function obj = virus(inf, pos, kill)
             obj.inf = inf;
             obj.pos = pos;
+            obj.kill = kill;
         end
         
         function searched = search(obj)
@@ -65,7 +67,7 @@ classdef virus
                     n = n + 1;
                 end
             end
-            disp(n);
+            %disp(n);
 
             % judge alive or not
             if n == 2 || n == 4
@@ -88,7 +90,6 @@ classdef virus
                 plot(hex, 'FaceColor', 'b', 'FaceAlpha', 1);
             end
         end
-            
     end
 end
 

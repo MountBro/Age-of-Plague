@@ -2,15 +2,17 @@ module View exposing (..)
 
 import Geometry exposing (..)
 import Html exposing (..)
+import Model exposing (..)
 import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
 import Tile exposing (..)
-import Model exposing (..)
 
-View : Model -> Html Msg
-View model =
-    List.map 
+
+view : Model -> Html Msg
+view model =
+    List.map
+
 
 renderHex : ( Int, Int ) -> Html Msg
 renderHex ( i, j ) =
@@ -19,7 +21,7 @@ renderHex ( i, j ) =
             rc ( i, j )
 
         a =
-            param.a
+            para.a
 
         h =
             a / sqrt 3

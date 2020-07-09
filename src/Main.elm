@@ -1,14 +1,13 @@
 module Main exposing (..)
+
 import Browser exposing (..)
-
-Main = Browser.element
-       { model = model
-       , init = init
-       , update = update
-       , subscriptions = Cmd.none
-       }
+import View exposing (view)
 
 
-
-    
-    
+main =
+    Browser.element
+        { view = view
+        , init = init
+        , update = update
+        , subscriptions = Cmd.none
+        }

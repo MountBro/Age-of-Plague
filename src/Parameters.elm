@@ -1,6 +1,6 @@
 module Parameters exposing (..)
 
 
-param =
+para =
     { a = 10
     }

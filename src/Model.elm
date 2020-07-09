@@ -8,6 +8,14 @@ type alias Model =
     }
 
 
+type alias City =
+    { population : Int
+    , totalsick : Int
+    , totaldead : Int
+    , tilesindex : List Tile
+    }
+
+
 type alias Behavior =
     { populationFlow : Bool
     , virusEvolve : Bool

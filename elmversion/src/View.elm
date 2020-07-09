@@ -12,7 +12,12 @@ import Message exposing (..)
 
 view : Model -> Html Msg
 view model =
-    rendermap model
+    svg
+        [ SA.viewBox ("0 0 1000 600")
+        , SA.height "600"
+        , SA.width "1000"
+        ]
+        (List.map (\x -> renderTile x) model.city.tilesindex)
 
 
 renderHex : ( Int, Int ) -> Html Msg
@@ -62,6 +67,6 @@ renderTile t =
     List.map (\x -> renderHex x) lst
 
 
-rendermap : Model -> Html Msg
+rendermap : Model -> List (Html Msg)
 rendermap model =
     List.map (\x -> renderTile x) model.city.tilesindex

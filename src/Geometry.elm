@@ -23,7 +23,7 @@ rc : HexIndice -> Pos
 rc ( i, j ) =
     let
         a =
-            param.a
+            para.a
 
         x =
             a * (toFloat i + 2 * toFloat j)

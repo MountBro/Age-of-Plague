@@ -1,5 +1,8 @@
 module Model exposing (..)
 
+import Card exposing (..)
+import Tile exposing (..)
+
 
 type alias Model =
     { todo : List Card

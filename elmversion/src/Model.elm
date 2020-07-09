@@ -1,11 +1,13 @@
 module Model exposing (..)
 import Tile exposing (..)
-
+import Message exposing (..)
 
 type alias Model =
     { -- to do : List Card
     city : City
     , behavior : Behavior
+    , state : Gamestatus
+    , map : List Tile
     }
 
 

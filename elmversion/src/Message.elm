@@ -8,6 +8,12 @@ type Msg
     | Tick Time.Posix
     | AddKey KeyValue
 
+type Gamestatus
+    = Playing
+    | Drawing
+    | Playcard
+    | Stopped
+
 
 type Keyin
     = Tab
@@ -38,8 +44,8 @@ toKeyValue string =
             Control string
 
 
-toDirection : Char -> Keyin
-toDirection char =
+inKey : Char -> Keyin
+inKey char =
     case char of
         "tab" ->
             Tab

@@ -1,0 +1,14 @@
+module Model exposing (..)
+
+
+type alias Model =
+    { todo : List (List Action)
+    , city : City
+    , behavior : Behavior
+    }
+
+
+type alias Behavior =
+    { populationFlow : Bool
+    , virusEvolve : Bool
+    }

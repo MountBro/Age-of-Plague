@@ -1,0 +1,18 @@
+module Geometry exposing (..)
+
+
+type alias TileIndice = (Int, Int)
+
+type alias HexIndice = (Int, Int)
+
+type alias Pos = (Float, Float)
+
+-- the center position of hex (i, j)
+
+rc : HexIndice -> Pos    
+rc (i, j) = let
+    a = param.a
+        x = a * ( i + 2 * j)
+        y = - a * i * sqrt(3)
+        in
+            (x, y)

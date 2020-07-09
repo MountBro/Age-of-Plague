@@ -1,0 +1,5 @@
+module Tile exposing (..)
+
+type alias Tile =
+    { indice : (Int, Int)
+    , }

@@ -4,6 +4,7 @@ classdef tile
         population
         infected
         construction
+        dead
         medicalUnitNum = 0;
         quarantine = false;
         academy = false;
@@ -26,6 +27,7 @@ classdef tile
             a = obj.a;
             if obj.population == 0
                 color = 'm';
+
             else
                 ratio = obj.infected / obj.population;
                 color = [1, 1-ratio, 1-ratio];
@@ -33,9 +35,10 @@ classdef tile
             black = [0, 0, 0];
             if (obj.hospital)
                 centerColor = 'g';
+
             elseif (obj.academy)
                 centerColor = 'y';
-            
+
             else
                 centerColor = color;
             end
@@ -51,6 +54,7 @@ classdef tile
                 plot(h5, 'FaceColor', color);
                 plot(h6, 'FaceColor', color);
                 hold off
+
             else 
                 hold on 
                 plot(h0, 'FaceColor', black);

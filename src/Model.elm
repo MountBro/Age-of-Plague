@@ -39,7 +39,18 @@ initCity : Int -> ( Int, Int ) -> City
 initCity tilepeo ( sizex, sizey ) =
     let
         lstTiles =
-            initListTiles ( sizex, sizey ) tilepeo
+            [ ( 0, 0 )
+            , ( 0, 1 )
+            , ( 0, 2 )
+            , ( 1, -1 )
+            , ( 1, 0 )
+            , ( 1, 1 )
+            , ( 2, -1 )
+            , ( 2, 0 )
+            , ( 2, 1 )
+            , ( 3, -1 )
+            ]
+                |> initTiles tilepeo
 
         totalpeo =
             sumPopulation lstTiles
@@ -56,7 +67,7 @@ sumPopulation lst =
 
 initModel : () -> ( Model, Cmd Msg )
 initModel _ =
-    ( { city = initCity 10 ( 3, 3 )
+    ( { city = initCity 10 ( 10, 10 )
       , behavior =
             { populationFlow = True
             , virusEvolve = True

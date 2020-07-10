@@ -9,4 +9,3 @@ My main goal is to design JavaScript and fancy UIs for our project.
 
 1. For the mouse dragging JS effect, Please go to the new2.html file.
 2. The 'pic' folder is for pictures.
-3. And the main file structure for elm is the index.html and elm.js.

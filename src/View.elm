@@ -9,13 +9,14 @@ import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
 import Tile exposing (..)
+import Virus exposing (..)
 
 
 view : Model -> Html Msg
 view model =
     let
         l1 =
-            log "tiles" model.city.tilesindex
+            log "virus" model.virus
     in
     svg
         [ SA.viewBox "0 0 1000 600"
@@ -24,7 +25,9 @@ view model =
         , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
         , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
         ]
-        (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex))
+        (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
+            ++ renderVirus model.virus
+        )
 
 
 renderHex : String -> Float -> ( Int, Int ) -> Html Msg
@@ -48,7 +51,7 @@ renderHex cstr opa ( i, j ) =
                 [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
                 |> SA.points
             , cstr |> SA.fill
-            , opa |> SA.fillOpacity
+            , opa |> String.fromFloat |> SA.fillOpacity
             ]
             []
         ]
@@ -172,7 +175,7 @@ renderTile t =
     List.map (renderHex "black" 0) lst ++ [ border ] ++ [ cons ]
 
 
-renderVirus : Virus -> Html Msg
+renderVirus : Virus -> List (Html Msg)
 renderVirus v =
     let
         pos =

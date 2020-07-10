@@ -86,3 +86,20 @@ polyPoint l1 l2 =
                 s1 ++ "," ++ s2 ++ " "
         in
         s ++ polyPoint (List.drop 1 l1) (List.drop 1 l2)
+
+
+pointAdd : Pos -> Pos -> Pos
+pointAdd ( x1, y1 ) ( x2, y2 ) =
+    ( x1 + x2, y1 + y2 )
+
+
+generateNeighbor : ( Int, Int ) -> List ( Int, Int )
+generateNeighbor pos =
+    let
+        i =
+            Tuple.first pos
+
+        j =
+            Tuple.second pos
+    in
+    [ ( i, j - 1 ), ( i, j + 1 ), ( i + 1, j ), ( i + 1, j - 1 ), ( i - 1, j ), ( i - 1, j + 1 ) ]

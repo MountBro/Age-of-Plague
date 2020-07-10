@@ -5,6 +5,7 @@ import Geometry exposing (..)
 import Message exposing (..)
 import Task
 import Tile exposing (..)
+import Virus exposing (..)
 
 
 type alias Model =
@@ -14,18 +15,12 @@ type alias Model =
     , state : Gamestatus
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
-
-    --, map : List Tile
+    , virus : Virus
     }
 
 
 type alias City =
-    { totalpopulation : Int
-    , sizex : Int -- Number of tiles on x direction
-    , sizey : Int -- Number of tiles on y direction
-    , totalsick : Int
-    , totaldead : Int
-    , tilesindex : List Tile
+    { tilesindex : List Tile
     }
 
 
@@ -35,27 +30,13 @@ type alias Behavior =
     }
 
 
-initCity : Int -> ( Int, Int ) -> City
-initCity tilepeo ( sizex, sizey ) =
+initCity : Int -> List ( Int, Int ) -> City
+initCity tilepeo l =
     let
-        lstTiles =
-            [ ( 0, 0 )
-            , ( 0, 1 )
-            , ( 0, 2 )
-            , ( 1, -1 )
-            , ( 1, 0 )
-            , ( 1, 1 )
-            , ( 2, -1 )
-            , ( 2, 0 )
-            , ( 2, 1 )
-            , ( 3, -1 )
-            ]
-                |> initTiles tilepeo
-
-        totalpeo =
-            sumPopulation lstTiles
+        tiles =
+            initTiles tilepeo l
     in
-    City totalpeo sizex sizey 0 0 lstTiles
+    City tiles
 
 
 sumPopulation : List Tile -> Int
@@ -65,9 +46,31 @@ sumPopulation lst =
         |> List.sum
 
 
+initVirus : Virus
+initVirus =
+    { rules = [ 2, 4 ]
+    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
+    , number = 0
+    , infect = 1
+    , kill = 0.5
+    }
+
+
 initModel : () -> ( Model, Cmd Msg )
 initModel _ =
-    ( { city = initCity 10 ( 10, 10 )
+    ( { city =
+            initCity 10
+                [ ( 0, 0 )
+                , ( 0, 1 )
+                , ( 0, 2 )
+                , ( 1, -1 )
+                , ( 1, 0 )
+                , ( 1, 1 )
+                , ( 2, -1 )
+                , ( 2, 0 )
+                , ( 2, 1 )
+                , ( 3, -1 )
+                ]
       , behavior =
             { populationFlow = True
             , virusEvolve = True
@@ -75,6 +78,7 @@ initModel _ =
       , state = Playing
       , screenSize = ( 600, 800 )
       , viewport = Nothing
+      , virus = initVirus
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

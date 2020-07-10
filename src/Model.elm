@@ -15,7 +15,7 @@ type alias Model =
     , state : Gamestatus
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
-    --, virus : Virus
+    , virus : Virus
     --, map : List Tile
     }
 
@@ -65,12 +65,13 @@ initModel _ =
       , state = Playing
       , screenSize = ( 600, 800 )
       , viewport = Nothing
+      , virus = initVirus
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
 
 initVirus : Virus
-initCirus =
+initVirus =
     {
     rules = [2,4]
     , pos = [(1,2),(1,3),(2,2),(2,4),(2,3)]

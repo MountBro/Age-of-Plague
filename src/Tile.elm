@@ -1,4 +1,5 @@
 module Tile exposing (..)
+
 import Geometry exposing (..)
 
 
@@ -18,18 +19,21 @@ type Construction
     | None
 
 
-initTiles : (Int, Int) -> Int -> Tile
-initTiles (x,y) population =
-    Tile (x,y) population 0 0 None 0
+initTiles : ( Int, Int ) -> Int -> Tile
+initTiles ( x, y ) population =
+    Tile ( x, y ) population 0 0 None 0
 
-initListTiles : (Int, Int) -> Int -> List Tile
-initListTiles (sizex, sizey) peo =
+
+initListTiles : ( Int, Int ) -> Int -> List Tile
+initListTiles ( sizex, sizey ) peo =
     let
-        lstx = List.range 1 sizex
+        lstx =
+            List.range 1 sizex
 
-        lsty = List.range 1 sizey
+        lsty =
+            List.range 1 sizey
 
-        lstIndice = List.map2 Tuple.pair lstx lsty
-
+        lstIndice =
+            List.map2 Tuple.pair lstx lsty
     in
     List.map (\x -> initTiles x peo) lstIndice

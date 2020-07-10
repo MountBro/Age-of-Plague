@@ -1,21 +1,23 @@
 module Main exposing (..)
+
 import Browser exposing (..)
-import Message exposing (..)
 import Browser.Events exposing (onResize)
-import Time exposing (..)
-import View exposing(..)
 import Json.Decode
+import Message exposing (..)
 import Model exposing (..)
-import update exposing (..)
+import Time exposing (..)
+import Update exposing (..)
+import View exposing (..)
 
 
 main : Program () Model.Model Message.Msg
-main = Browser.element
-       { view = view
-       , init = initmodel
-       , update = update
-       , subscriptions = Cmd.none
-       }
+main =
+    Browser.element
+        { init = initModel
+        , subscriptions = subscriptions
+        , update = update
+        , view = view
+        }
 
 
 subscriptions : Model.Model -> Sub Msg
@@ -27,7 +29,7 @@ subscriptions model =
                 [ Time.every 50 Tick
                 , Browser.Events.onResize Resize
                 ]
+
           else
             Sub.none
         ]
-

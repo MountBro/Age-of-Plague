@@ -2,34 +2,45 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html.Attributes as HA
 import Html.Events.Extra.Mouse as Mouse
-import Json.Decode as D
-import Playground exposing (..)
 
 
-type Msg
-    = MouseDownAt ( Float, Float )
-
-
-
--- Main
-
-
+main : Program () MouseEvent MouseEvent
 main =
     Browser.sandbox
-        { init = init
-        , update = always
+        { init = None
         , view = view
+        , update = always
         }
 
 
-init =
-    div [] [ text "hello!" ]
+type MouseEvent
+    = None
+    | Down Mouse.Event
+    | Move Mouse.Event
+    | Up Mouse.Event
+    | Click Mouse.Event
+    | DoubleClick Mouse.Event
+    | Over Mouse.Event
+    | Out Mouse.Event
+    | ContextMenu Mouse.Event
 
 
-view msg =
-    div
-        [ Mouse.onDown (\event -> MouseDownAt event.offsetPos) ]
-        [ text "click here" ]
+view : MouseEvent -> Html MouseEvent
+view event =
+    div []
+        [ button
+            [ Mouse.onDown Down
+            , Mouse.onMove Move
+            , Mouse.onUp Up
+            , Mouse.onClick Click
+            , Mouse.onDoubleClick DoubleClick
+            , Mouse.onOver Over
+            , Mouse.onOut Out
+            , Mouse.onContextMenu ContextMenu
+            , HA.style "height" "10cm"
+            , HA.style "width" "10cm"
+            ]
+            [ text <| Debug.toString event ]
+        ]

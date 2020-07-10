@@ -2,29 +2,41 @@ module View exposing (..)
 
 import Geometry exposing (..)
 import Html exposing (..)
+import Message exposing (..)
+import Model exposing (..)
 import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
 import Tile exposing (..)
-import Model exposing (..)
-import Message exposing (..)
+import Html.Attributes
 
 
 view : Model -> Html Msg
 view model =
-    svg
-        [ SA.viewBox ("0 0 1000 600")
-        , SA.height "600"
-        , SA.width "1000"
+    div
+        [ Html.Attributes.style "position" "absolute"
+        , Html.Attributes.style "width" "100%"
+        , Html.Attributes.style "padding" "0px"
+        , Html.Attributes.style "text-align" "center"
+        , Html.Attributes.style "width" "100%"
+        , Html.Attributes.style "height" "100%"
         ]
-        (List.map (\x -> renderTile x) model.city.tilesindex)
+        [
+            svg
+                [ SA.viewBox "0 0 1000 600"
+                , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
+                , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+                ]
+                (List.concat (List.map renderTile model.city.tilesindex))
+        ]
+
 
 
 renderHex : ( Int, Int ) -> Html Msg
 renderHex ( i, j ) =
     let
         ( x, y ) =
-            rc ( i, j )
+            pointAdd (rc ( i, j )) (400,400)
 
         a =
             para.a
@@ -42,7 +54,13 @@ renderHex ( i, j ) =
         ]
 
 
-renderTile : Tile -> Html Msg
+
+-- k1, k2, K1, K2
+-- K1 = k2 + 2k1; K2 = 3k2 - k1
+-- aK1 + bK2 = (2a -b) k1 + (a + 3b) k2
+
+
+renderTile : Tile -> List (Html Msg)
 renderTile t =
     let
         ind =
@@ -60,14 +78,16 @@ renderTile t =
         j =
             a + 3 * b
 
-        lst = [( i, j ), ( i, j - 1 ), ( i, j + 1 ), ( i + 1, j ), ( i + 1, j + 1 ), ( i - 1, j ), (i - 1, j - 1)]
-        -- list of positions of the seven hexs in a tile.
+        lst =
+            [ ( i, j ), ( i, j - 1 ), ( i, j + 1 ), ( i + 1, j ), ( i + 1, j - 1 ), ( i - 1, j ), ( i - 1, j + 1 ) ]
 
+        -- list of positions of the seven hexs in a tile.
     in
     List.map (\x -> renderHex x) lst
 
 
-{-rendermap : Model -> List (Html Msg)
-rendermap model =
-    List.map (\x -> renderTile x) model.city.tilesindex
+
+{- rendermap : Model -> List (Html Msg)
+   rendermap model =
+       List.map (\x -> renderTile x) model.city.tilesindex
 -}

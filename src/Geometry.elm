@@ -60,3 +60,27 @@ polyPoint l1 l2 =
                 s1 ++ "," ++ s2 ++ " "
         in
         s ++ polyPoint (List.drop 1 l1) (List.drop 1 l2)
+
+pointAdd : Pos -> Pos -> Pos
+pointAdd ( x1, y1 ) ( x2, y2 ) =
+    ( x1 + x2, y1 + y2 )
+
+
+judgeNeighbor : Pos -> Pos -> Bool
+judgeNeighbor ( x1, y1 ) ( x2, y2 ) =
+    if abs (x2 - x1) == 1 && abs (y2 - y1) == 1 then
+        True
+
+    else
+        False
+
+
+generateNeighbor : Pos -> List Pos
+generateNeighbor pos =
+    let
+        i = Tuple.first pos
+
+        j = Tuple.second pos
+
+    in
+    [ ( i, j - 1 ), ( i, j + 1 ), ( i + 1, j ), ( i + 1, j - 1 ), ( i - 1, j ), ( i - 1, j + 1 ) ]

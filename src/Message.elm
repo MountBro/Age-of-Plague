@@ -1,13 +1,16 @@
 module Message exposing (..)
-import Time exposing (..)
-import Json.Decode as Decode
+
 import Browser.Dom exposing (Error, Viewport)
+import Json.Decode as Decode
+import Time exposing (..)
+
 
 type Msg
     = Resize Int Int
     | Tick Time.Posix
     | AddKey KeyValue
     | GotViewport Viewport
+
 
 type Gamestatus
     = Playing
@@ -46,9 +49,9 @@ toKeyValue string =
             Control string
 
 
-inKey : Char -> Keyin
-inKey char =
-    case char of
+inKey : String -> Keyin
+inKey str =
+    case str of
         "tab" ->
             Tab
 

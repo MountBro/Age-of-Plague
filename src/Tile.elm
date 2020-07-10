@@ -1,4 +1,5 @@
 module Tile exposing (..)
+
 import Geometry exposing (..)
 
 
@@ -18,18 +19,28 @@ type Construction
     | None
 
 
-initTiles : (Int, Int) -> Int -> Tile
-initTiles (x,y) population =
-    Tile (x,y) population 0 0 None 0
+initTiles : ( Int, Int ) -> Int -> Tile
+initTiles ( x, y ) population =
+    Tile ( x, y ) population 0 0 None 0
 
-initListTiles : (Int, Int) -> Int -> List Tile
-initListTiles (sizex, sizey) peo =
+
+cartesianProduct : List a -> List b -> List ( a, b )
+cartesianProduct l1 l2 =
+    List.foldr (\li1 -> \li2 -> li1 ++ li2)
+        []
+        (List.map (\x -> List.map (\y -> ( x, y )) l2) l1)
+
+
+initListTiles : ( Int, Int ) -> Int -> List Tile
+initListTiles ( sizex, sizey ) peo =
     let
-        lstx = List.range 1 sizex
+        lstx =
+            List.range 1 sizex
 
-        lsty = List.range 1 sizey
+        lsty =
+            List.range 1 sizey
 
-        lstIndice = List.map2 Tuple.pair lstx lsty
-
+        lstIndice =
+            cartesianProduct lstx lsty
     in
     List.map (\x -> initTiles x peo) lstIndice

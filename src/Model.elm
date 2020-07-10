@@ -1,13 +1,20 @@
 module Model exposing (..)
-import Tile exposing (..)
-import Message exposing (..)
+
+import Browser.Dom exposing (Error, Viewport)
 import Geometry exposing (..)
+import Message exposing (..)
+import Task
+import Tile exposing (..)
+
 
 type alias Model =
     { -- to do : List Card
-    city : City
+      city : City
     , behavior : Behavior
     , state : Gamestatus
+    , screenSize : ( Float, Float )
+    , viewport : Maybe Viewport
+    , virus
     --, map : List Tile
     }
 
@@ -18,9 +25,8 @@ type alias City =
     , sizey : Int -- Number of tiles on y direction
     , totalsick : Int
     , totaldead : Int
-    , tilesindex : List(Tile)
+    , tilesindex : List Tile
     }
-
 
 
 type alias Behavior =
@@ -28,15 +34,18 @@ type alias Behavior =
     , virusEvolve : Bool
     }
 
-initcity : Int -> (Int, Int) -> City
-initcity tilepeo (sizex, sizey) =
+
+initCity : Int -> ( Int, Int ) -> City
+initCity tilepeo ( sizex, sizey ) =
     let
-        lstTiles = initListTiles (sizex, sizey) tilepeo
+        lstTiles =
+            initListTiles ( sizex, sizey ) tilepeo
 
-        totalpeo = sumPopulation lstTiles
-
+        totalpeo =
+            sumPopulation lstTiles
     in
     City totalpeo sizex sizey 0 0 lstTiles
+
 
 sumPopulation : List Tile -> Int
 sumPopulation lst =
@@ -44,12 +53,17 @@ sumPopulation lst =
         |> List.map (\x -> x.population)
         |> List.sum
 
-initmodel : () -> Model
-initmodel _ =
-    { city = initcity 10 (3,3)
-    , behavior =
-        { populationFlow = True
-        , virusEvolve = True
-        }
-    ,state = Playing
-    }
+
+initModel : () -> ( Model, Cmd Msg )
+initModel _ =
+    ( { city = initCity 10 ( 3, 3 )
+      , behavior =
+            { populationFlow = True
+            , virusEvolve = True
+            }
+      , state = Playing
+      , screenSize = ( 600, 800 )
+      , viewport = Nothing
+      }
+    , Task.perform GotViewport Browser.Dom.getViewport
+    )

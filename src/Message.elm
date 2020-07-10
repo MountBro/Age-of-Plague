@@ -1,12 +1,13 @@
 module Message exposing (..)
 import Time exposing (..)
 import Json.Decode as Decode
-
+import Browser.Dom exposing (Error, Viewport)
 
 type Msg
     = Resize Int Int
     | Tick Time.Posix
     | AddKey KeyValue
+    | GotViewport Viewport
 
 type Gamestatus
     = Playing

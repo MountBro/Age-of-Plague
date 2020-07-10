@@ -5,6 +5,8 @@ import Browser.Events exposing (onResize)
 import Time exposing (..)
 import View exposing(..)
 import Json.Decode
+import Model exposing (..)
+import update exposing (..)
 
 
 main : Program () Model.Model Message.Msg

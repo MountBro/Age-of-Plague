@@ -10,6 +10,7 @@ type Msg
     | Tick Time.Posix
     | AddKey KeyValue
     | GotViewport Viewport
+    | VirusEvolve
 
 
 type Gamestatus

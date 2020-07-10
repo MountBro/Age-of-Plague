@@ -3,6 +3,7 @@ module View exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
+import Html.Events exposing (..)
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
@@ -18,16 +19,24 @@ view model =
         l1 =
             log "virus" model.virus
     in
-    svg
-        [ SA.viewBox "0 0 1000 600"
-        , SA.height "600"
-        , SA.width "1000"
-        , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
-        , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+    div []
+        [ svg
+            [ SA.viewBox "0 0 1000 600"
+            , SA.height "600"
+            , SA.width "1000"
+            , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
+            , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+            ]
+            (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
+                ++ renderVirus model.virus
+            )
+        , evolveButton
         ]
-        (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
-            ++ renderVirus model.virus
-        )
+
+
+evolveButton : Html Msg
+evolveButton =
+    Html.button [ onClick VirusEvolve ] [ Html.text "EVOLVE" ]
 
 
 renderHex : String -> Float -> ( Int, Int ) -> Html Msg

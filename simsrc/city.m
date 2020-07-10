@@ -4,6 +4,7 @@ classdef city
         tiles = {};
         totalPeo;
         totalsick;
+        death;
         educated;
         academyNum = 0;
         wealth = 0;
@@ -184,22 +185,22 @@ classdef city
                t_index = obj.tilesIndex(k,:);
                i = t_index(1); j = t_index(2);
                t = obj.tiles{i, j};
-               if (~t.quarantine && t.population >0 )
+               if (~t.quarantine && t.population > 0 )
                    neighborIndex = validneighborhood(obj, i, j);
                    sizeNeighborIndex = size(neighborIndex);
                    numNeighbor = sizeNeighborIndex(1);
                    if (numNeighbor ~= 0)
                        r = randperm(t.population);
-                       leave = r(1:numNeighbor);
+                       leave = r(1:min(numNeighbor,t.population));
                        sickleave = [];
-                       for M = 1:numNeighbor
+                       for M = 1:length(leave)
                            if leave(M) <= t.infected
                               sickleave = [sickleave, leave(M)];
                            end
                        end
                        obj.tiles{i, j}.population = t.population - numNeighbor;
                        obj.tiles{i, j}.infected = t.infected - length(sickleave);
-                       for a = 1:numNeighbor
+                       for a = 1:length(leave)
                            neighbor_index = neighborIndex(a, :);
                            in = neighbor_index(1);
                            jn = neighbor_index(2);
@@ -213,7 +214,6 @@ classdef city
                    end
                end
             end
-            
         end
         
         function render(obj)
@@ -240,7 +240,50 @@ classdef city
                 end
             end
         end
-            
+        
+        function sicktiles = sickTiles(obj)
+           N = numTiles(obj);
+           out = [];
+           for k = 1:N
+               index = obj.tilesIndex(k, :);
+               i = index(1); j = index(2);
+               if obj.tiles{i, j}.infected ~= 0
+                   out = [out;[i,j]];
+               end
+           end
+           sicktiles = out;
+        end
+        
+        function obj = sumdeath(obj)
+           N = numTiles(obj);
+           obj.death = 0;
+           for k = 1:N
+               index = obj.tilesIndex(k, :);
+               i = index(1); j = index(2);
+               obj.death = obj.tiles{i, j}.dead + obj.death;
+           end
+        end
+        
+        function obj = virusKill(obj, virus)
+            killrate = virus.kill/100;
+            sicktiles = sickTiles(obj);
+            sizeOfIndex = size(sicktiles);
+            N = sizeOfIndex(1);
+            for k = 1:N
+                index = sicktiles(k, :);
+                i = index(1); j = index(2);
+                infect = obj.tiles{i,j}.infected;
+                for p = 1:infect
+                    m = rand();
+                    if m <= killrate
+                        obj.tiles{i,j}.infected = obj.tiles{i,j}.infected - 1;
+                        obj.tiles{i,j}.dead = obj.tiles{i,j}.dead + 1;
+                        obj.tiles{i,j}.population = obj.tiles{i,j}.population - 1;
+                    end
+                end
+            end
+        end
+        
         function obj = setQ(obj, i, j)
             obj.tiles{i,j} = obj.tiles{i, j}.setQuarantine;
         end
@@ -285,6 +328,7 @@ classdef city
             obj = obj.levelIncome;
             obj = obj.upgradeTech;
             obj = obj.sick;
+            obj = obj.sumdeath;
         end
         % function obj = summonMedicalUnit(obj)
         function obj = sendMedicalUnit(obj, i, j)

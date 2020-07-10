@@ -7,10 +7,18 @@ import Svg exposing (..)
 import Svg.Attributes as SA
 import Tile exposing (..)
 import Model exposing (..)
+import Message exposing (..)
 
-View : Model -> Html Msg
-View model =
-    List.map 
+
+view : Model -> Html Msg
+view model =
+    svg
+        [ SA.viewBox ("0 0 1000 600")
+        , SA.height "600"
+        , SA.width "1000"
+        ]
+        (List.map (\x -> renderTile x) model.city.tilesindex)
+
 
 renderHex : ( Int, Int ) -> Html Msg
 renderHex ( i, j ) =
@@ -19,7 +27,7 @@ renderHex ( i, j ) =
             rc ( i, j )
 
         a =
-            param.a
+            para.a
 
         h =
             a / sqrt 3
@@ -38,18 +46,28 @@ renderTile : Tile -> Html Msg
 renderTile t =
     let
         ind =
-            Tile.indice
+            t.indice
 
-        I =
+        a =
             Tuple.first ind
 
-        J =
+        b =
             Tuple.second ind
 
         i =
-            2 * I - J
+            2 * a - b
 
         j =
-            I + 3 * J
+            a + 3 * b
+
+        lst = [( i, j ), ( i, j - 1 ), ( i, j + 1 ), ( i + 1, j ), ( i + 1, j + 1 ), ( i - 1, j ), (i - 1, j - 1)]
+        -- list of positions of the seven hexs in a tile.
+
     in
-    renderHex ( i, j )
+    List.map (\x -> renderHex x) lst
+
+
+{-rendermap : Model -> List (Html Msg)
+rendermap model =
+    List.map (\x -> renderTile x) model.city.tilesindex
+-}

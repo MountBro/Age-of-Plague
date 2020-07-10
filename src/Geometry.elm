@@ -15,7 +15,6 @@ type alias Pos =
     ( Float, Float )
 
 
-
 -- the center position of hex (i, j)
 
 
@@ -23,7 +22,7 @@ rc : HexIndice -> Pos
 rc ( i, j ) =
     let
         a =
-            param.a
+            para.a
 
         x =
             a * (toFloat i + 2 * toFloat j)

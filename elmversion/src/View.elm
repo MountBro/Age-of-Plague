@@ -67,6 +67,7 @@ renderTile t =
     List.map (\x -> renderHex x) lst
 
 
-rendermap : Model -> List (Html Msg)
+{-rendermap : Model -> List (Html Msg)
 rendermap model =
     List.map (\x -> renderTile x) model.city.tilesindex
+-}

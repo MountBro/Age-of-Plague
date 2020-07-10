@@ -12,6 +12,7 @@ type Gamestatus
     = Playing
     | Drawing
     | Playcard
+    | NextRound
     | Stopped
 
 

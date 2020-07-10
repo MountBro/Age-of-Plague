@@ -18,14 +18,3 @@ tile
     hospital
 generate anti-virus
 draw cards
-
-
-
-
-
-
-
-
-
-
-

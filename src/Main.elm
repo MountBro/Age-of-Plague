@@ -4,19 +4,32 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Events.Extra.Mouse as Mouse
 import Json.Decode as D
+import Playground exposing (..)
+
+
+type Msg
+    = MouseDownAt ( Float, Float )
 
 
 
--- MAIN
+-- Main
 
 
-main : Html msg
 main =
-    div [ style "id" "box" ]
-        [ img
-            [ src "https://i.loli.net/2020/06/15/qneQ1A8UE39d2Wu.png"
-            , style "height" "200px"
-            ]
-            []
-        ]
+    Browser.sandbox
+        { init = init
+        , update = always
+        , view = view
+        }
+
+
+init =
+    div [] [ text "hello!" ]
+
+
+view msg =
+    div
+        [ Mouse.onDown (\event -> MouseDownAt event.offsetPos) ]
+        [ text "click here" ]

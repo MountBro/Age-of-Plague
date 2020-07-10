@@ -5,6 +5,7 @@ import Geometry exposing (..)
 import Message exposing (..)
 import Task
 import Tile exposing (..)
+import Virus exposing (..)
 
 
 type alias Model =
@@ -14,7 +15,7 @@ type alias Model =
     , state : Gamestatus
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
-    , virus
+    --, virus : Virus
     --, map : List Tile
     }
 
@@ -67,3 +68,15 @@ initModel _ =
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
+
+initVirus : Virus
+initCirus =
+    {
+    rules = [2,4]
+    , pos = [(1,2),(1,3),(2,2),(2,4),(2,3)]
+    , number = 0
+    , inflect = 1
+    , kill = 0.5
+    }
+
+--virusKill :

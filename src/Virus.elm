@@ -1,6 +1,6 @@
 module Virus exposing (..)
 import Geometry exposing (..)
-
+import List.Extra as LE
 
 type alias Virus =
     { rules : List (Int)
@@ -31,6 +31,7 @@ searchNeighbor : List Pos -> List Pos
 searchNeighbor virlst =
     List.map (\x -> generateNeighbor x) virlst
         |> List.concat
+        |> LE.unique
 
 
 judgeAlive : List Pos -> Virus -> Virus

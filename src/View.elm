@@ -27,8 +27,8 @@ view model =
         (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex))
 
 
-renderHex : ( Int, Int ) -> Html Msg
-renderHex ( i, j ) =
+renderHex : String -> Float -> ( Int, Int ) -> Html Msg
+renderHex cstr opa ( i, j ) =
     let
         ( x0, y0 ) =
             para.tileOrigin
@@ -47,6 +47,8 @@ renderHex ( i, j ) =
             [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
                 [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
                 |> SA.points
+            , cstr |> SA.fill
+            , opa |> SA.fillOpacity
             ]
             []
         ]
@@ -167,7 +169,16 @@ renderTile t =
 
         -- list of positions of the seven hexs in a tile.
     in
-    List.map renderHex lst ++ [ border ] ++ [ cons ]
+    List.map (renderHex "black" 0) lst ++ [ border ] ++ [ cons ]
+
+
+renderVirus : Virus -> Html Msg
+renderVirus v =
+    let
+        pos =
+            v.pos
+    in
+    List.map (renderHex "purple" 0.5) pos
 
 
 

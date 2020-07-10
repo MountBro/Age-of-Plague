@@ -25,3 +25,6 @@ update msg model =
 
         VirusEvolve ->
             ( { model | virus = model.virus |> change }, Cmd.none )
+
+        NextRound ->
+            ( { model | currentRound = model.currentRound + 1 }, Cmd.none )

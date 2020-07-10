@@ -29,14 +29,82 @@ view model =
             ]
             (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
                 ++ renderVirus model.virus
+                ++ [ renderLevelProgress model ]
+                ++ renderFlags [ 5, 10, 15 ]
             )
         , evolveButton
+        , nextRoundButton
         ]
 
 
 evolveButton : Html Msg
 evolveButton =
     Html.button [ onClick VirusEvolve ] [ Html.text "EVOLVE" ]
+
+
+nextRoundButton : Html Msg
+nextRoundButton =
+    Html.button [ onClick NextRound ] [ Html.text "next round" ]
+
+
+renderFlag : Int -> Html Msg
+renderFlag i =
+    let
+        wg =
+            toFloat (min i 20) / 20 * para.wlp
+
+        a =
+            para.af
+    in
+    svg []
+        [ line
+            [ para.xlp + wg |> String.fromFloat |> SA.x1
+            , para.ylp + para.hlp |> String.fromFloat |> SA.y1
+            , para.xlp + wg |> String.fromFloat |> SA.x2
+            , para.ylp |> String.fromFloat |> SA.y2
+            , 1.0 |> String.fromFloat |> SA.strokeWidth
+            , "black" |> SA.stroke
+            ]
+            []
+        , polygon
+            [ polyPoint [ para.xlp + wg, para.xlp + wg + sqrt 3 / 2 * a, para.xlp + wg ]
+                [ para.ylp, para.ylp - a / 2, para.ylp - a ]
+                |> SA.points
+            , "red" |> SA.fill
+            ]
+            []
+        ]
+
+
+renderFlags : List Int -> List (Html Msg)
+renderFlags li =
+    List.map renderFlag li
+
+
+renderLevelProgress : Model -> Html Msg
+renderLevelProgress model =
+    let
+        wg =
+            toFloat (min model.currentRound 20) / 20.0 * para.wlp
+    in
+    svg []
+        [ rect
+            [ para.xlp |> String.fromFloat |> SA.x
+            , para.ylp |> String.fromFloat |> SA.y
+            , para.wlp |> String.fromFloat |> SA.width
+            , para.hlp |> String.fromFloat |> SA.height
+            , SA.fill "#666666"
+            ]
+            []
+        , rect
+            [ para.xlp |> String.fromFloat |> SA.x
+            , para.ylp |> String.fromFloat |> SA.y
+            , wg |> String.fromFloat |> SA.width
+            , para.hlp |> String.fromFloat |> SA.height
+            , SA.fill "green"
+            ]
+            []
+        ]
 
 
 renderHex : String -> Float -> ( Int, Int ) -> Html Msg

@@ -11,13 +11,13 @@ type Msg
     | AddKey KeyValue
     | GotViewport Viewport
     | VirusEvolve
+    | NextRound
 
 
 type Gamestatus
     = Playing
     | Drawing
     | Playcard
-    | NextRound
     | Stopped
 
 

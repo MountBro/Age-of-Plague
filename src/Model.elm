@@ -13,6 +13,7 @@ type alias Model =
       city : City
     , behavior : Behavior
     , state : Gamestatus
+    , currentRound : Int
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
     , virus : Virus
@@ -76,9 +77,14 @@ initModel _ =
             , virusEvolve = True
             }
       , state = Playing
+      , currentRound = 0
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
+
+
+
+--virusKill :

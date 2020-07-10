@@ -3,7 +3,7 @@ resource
     power
     economy
 virus(tile?)
-    froze
+    freeze
     kill/cut
     translate
 population

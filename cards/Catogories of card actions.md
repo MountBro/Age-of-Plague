@@ -1,21 +1,23 @@
 # Catogories of card actions
 resource
-    power
+    power -> IncPowerI Int
     economy -> EcoDoubleI, 
 virus(tile?)
     freeze -> DisableEvolveI, DisableEvolve Float, DisableEvolveTileI (Int, Int)
-    kill/cut -> CutI (Int, Int), Cut (Int, Int) Float
+    kill/cut -> CutHexI (Int, Int), CutHex (Int, Int) Float, CutTileI (Int, Int), CutTile (Int, Int) Float
     translate
 population
-    healthy population
-    infected population
+    healthy population -> CloneDoubleI (Int, Int)
+    infected population -> OrganCloneI, HealAllI, ResurgenceI (Int, Int)
     dead population -> AltDeathRateI Float
-    overall population
-    flow -> SetAttractorI
+    overall population -> MegaCloneI Float
+    flow -> SetAttractorI, DistributeToNeighborsI (Int, Int)
 tile
-    quarantine
-    warehouse
-    hospital -> AltCureEffI Int 
-generate anti-virus -> PlaceAntiVirusI (Int, Int), AntiVirusEvolve, AntiVirusClear 
-summoncard -> SummonCardI Card
-hybrid -> EcoHalfI_Cut (Int, Int) Float 
+    quarantine -> SetQuaI (Int, Int)
+    warehouse -> BuildWarehouse (Int, Int)
+    hospital -> AltCureEffI (Int, Int) Int -> BuildHospitalI (Int, Int)  
+generate anti-virus -> PlaceAntiVirusI (Int, Int), AntiVirusEvolveI, AntiVirusClearI 
+summoncard -> SummonCardI (List Card)
+hybrid -> EcoHalfI_Cut (Int, Int) Float， Judgement Float, EcoDouble_Freeze Float, SacrificeI (Int, Int)
+
+None

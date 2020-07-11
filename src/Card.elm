@@ -2,13 +2,22 @@ module Card exposing (..)
 
 
 type alias Card =
-    { cost : Int
+    { selMode : Selection
+    , cost : Int
     , action : List Action
-    , medUnitCost : Int
     , roundPlayed : Int
     }
 
 
+type Selection
+    = HexSel
+    | TileSel
+    | None
+
+
 type Action
-    = DisablePopulationFlow
-    | BlaBla
+    = IncPowerI Int
+    | EcoDoubleI
+    | DisableEvolveI
+    | DisableEvolve Float
+    | NoAction

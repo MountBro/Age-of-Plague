@@ -1,10 +1,12 @@
 module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
+import Card exposing (..)
 import Geometry exposing (..)
 import Message exposing (..)
 import Task
 import Tile exposing (..)
+import Todo exposing (..)
 import Virus exposing (..)
 
 
@@ -17,7 +19,21 @@ type alias Model =
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
     , virus : Virus
+    , region : Region
+    , cardSelected : CardSelected
+    , todo : Todo
+    , roundTodoCleared : Bool
     }
+
+
+type Region
+    = NoRegion
+    | SelectRegion ( Int, Int )
+
+
+type CardSelected
+    = NoCard
+    | SelectCard Card
 
 
 type alias City =
@@ -81,16 +97,13 @@ initModel _ =
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
+      , region = NoRegion
+      , cardSelected = NoCard
+      , todo = []
+      , roundTodoCleared = False
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
-
-
-type alias SelectionMode =
-    { card : Bool
-    , hex : Bool
-    , tile : Bool
-    }
 
 
 

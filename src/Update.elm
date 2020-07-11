@@ -2,6 +2,7 @@ module Update exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
+import Debug exposing (log, toString)
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Random exposing (..)
@@ -16,12 +17,8 @@ update msg model =
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
         Tick newTime ->
-            if not model.roundTodoCleared then
-                if finished model.todo then
-                    ( clearCurrentRoundTodo model, Cmd.none )
-
-                else
-                    pickAction model
+            if not (finished model.todo) then
+                pickAction model
 
             else
                 ( model, Cmd.none )
@@ -55,7 +52,10 @@ update msg model =
                     else
                         0
             in
-            ( { model | currentRound = model.currentRound + inc }, Cmd.none )
+            ( { model | currentRound = model.currentRound + inc } |> clearCurrentRoundTodo, Cmd.none )
+
+        PlayCard card ->
+            ( { model | todo = model.todo ++ [ ( True, card.action ) ] }, Cmd.none )
 
 
 clearCurrentRoundTodo : Model -> Model
@@ -67,8 +67,9 @@ clearCurrentRoundTodo model =
         todo =
             List.map (\( x, y ) -> ( x, List.drop 1 y )) todo_
                 |> List.filter (\( x, y ) -> not (List.isEmpty y))
+                |> List.map (\( x, y ) -> ( True, y ))
     in
-    { model | todo = todo, roundTodoCleared = True }
+    { model | todo = todo, roundTodoCleared = False }
 
 
 pickAction : Model -> ( Model, Cmd Msg )
@@ -99,4 +100,9 @@ pickAction model =
 
 performAction : Action -> Model -> ( Model, Cmd Msg )
 performAction action model =
-    ( model, Cmd.none )
+    case action of
+        IncPowerI inc ->
+            ( { model | power = model.power + inc }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )

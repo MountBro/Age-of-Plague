@@ -26,6 +26,8 @@ type alias Model =
     , todo : Todo
     , roundTodoCleared : Bool
     , av : AntiVirus
+    , power : Int
+    , economy : Int
     }
 
 
@@ -103,7 +105,7 @@ initModel _ =
             , virusEvolve = True
             }
       , state = Playing
-      , currentRound = 0
+      , currentRound = 1
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
@@ -112,6 +114,8 @@ initModel _ =
       , todo = []
       , roundTodoCleared = False
       , av = initAntiVirus
+      , power = 10
+      , economy = 10
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

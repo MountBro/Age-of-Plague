@@ -1,5 +1,6 @@
 module View exposing (..)
 
+import Card exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
@@ -15,10 +16,10 @@ import Virus exposing (..)
 
 view : Model -> Html Msg
 view model =
-    let
-        l1 =
-            log "virus" model.virus
-    in
+    --let
+    --    l1 =
+    --        log "virus" model.virus
+    --in
     div []
         [ svg
             [ SA.viewBox "0 0 1000 600"
@@ -35,8 +36,30 @@ view model =
             )
         , evolveButton
         , nextRoundButton
-        , Html.text (Debug.toString (sumPopulation model.city))
+        , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
+        , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
+        , powerEcoInfo model
+        , cardButton powerOverload
+        , cardButton onStandby
+        , Html.text (Debug.toString model.todo)
         ]
+
+
+cardButton : Card -> Html Msg
+cardButton card =
+    Html.button [ onClick (PlayCard card) ] [ Html.text card.name ]
+
+
+powerEcoInfo : Model -> Html Msg
+powerEcoInfo model =
+    let
+        p =
+            String.fromInt model.power
+
+        ec =
+            String.fromInt model.economy
+    in
+    Html.text ("power: " ++ p ++ ". " ++ "economy: " ++ ec ++ ". ")
 
 
 evolveButton : Html Msg

@@ -17,10 +17,14 @@ type Selection
 
 type Action
     = IncPowerI Int
+    | FreezeI
+    | Freeze Float
     | EcoDoubleI
+    | EcoDoubleI_Freeze Float
     | DisableEvolveI
     | DisableEvolve Float
     | NoAction
+    | Summon (List Card)
 
 
 powerOverload =
@@ -29,3 +33,15 @@ powerOverload =
 
 onStandby =
     Card NoSel 0 [ IncPowerI 2 ] "On Standby"
+
+
+coldWave =
+    Card NoSel 1 [ Freeze 0.5 ] "Cold Wave"
+
+
+blizzard =
+    Card NoSel 8 [ FreezeI, FreezeI, FreezeI ] "Blizzard"
+
+
+rain =
+    Card NoSel 3 [ EcoDoubleI, EcoDoubleI_Freeze 0.5 ] "Rain"

@@ -28,6 +28,9 @@ type alias Model =
     , av : AntiVirus
     , power : Int
     , economy : Int
+    , basicEcoOutput : Int
+    , warehouseNum : Int
+    , ecoRatio : Int
     }
 
 
@@ -85,6 +88,10 @@ initAntiVirus =
     }
 
 
+initBehavior =
+    { populationFlow = True, virusEvolve = True }
+
+
 initModel : () -> ( Model, Cmd Msg )
 initModel _ =
     ( { city =
@@ -100,10 +107,7 @@ initModel _ =
                 , ( 2, 1 )
                 , ( 3, -1 )
                 ]
-      , behavior =
-            { populationFlow = True
-            , virusEvolve = True
-            }
+      , behavior = initBehavior
       , state = Playing
       , currentRound = 1
       , screenSize = ( 600, 800 )
@@ -116,6 +120,9 @@ initModel _ =
       , av = initAntiVirus
       , power = 10
       , economy = 10
+      , basicEcoOutput = para.basicEcoOutput
+      , warehouseNum = 0
+      , ecoRatio = 1
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

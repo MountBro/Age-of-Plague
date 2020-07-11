@@ -5,6 +5,7 @@ import Card exposing (..)
 import Debug exposing (log, toString)
 import Message exposing (Msg(..))
 import Model exposing (..)
+import Parameters exposing (..)
 import Random exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
@@ -32,30 +33,59 @@ update msg model =
             )
 
         VirusEvolve ->
-            ( { model
-                | city = updateCity model.city model.virus
-                , virus = change model.virus model.av |> Tuple.first
-                , av = change model.virus model.av |> Tuple.second
-              }
+            ( model |> virusEvolve
             , Cmd.none
             )
 
-        NextRound prob ->
-            ( model, Random.generate (NextRoundRandom prob) (Random.float 0 1) )
+        NextRound ->
+            if model.behavior.virusEvolve then
+                ( { model | currentRound = model.currentRound + 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc, Cmd.none )
 
-        NextRoundRandom prob f ->
-            let
-                inc =
-                    if f < prob then
-                        1
-
-                    else
-                        0
-            in
-            ( { model | currentRound = model.currentRound + inc } |> clearCurrentRoundTodo, Cmd.none )
+            else
+                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc, Cmd.none )
 
         PlayCard card ->
-            ( { model | todo = model.todo ++ [ ( True, card.action ) ] }, Cmd.none )
+            if card.cost < model.power && para.ecoThreshold < model.economy then
+                ( { model
+                    | todo = model.todo ++ [ ( True, card.action ) ]
+                    , power = model.power - card.cost
+                    , economy = model.economy - para.ecoThreshold
+                  }
+                , Cmd.none
+                )
+
+            else
+                ( model, Cmd.none )
+
+        FreezeRet prob rand ->
+            let
+                behavior_ =
+                    model.behavior
+
+                behavior =
+                    { behavior_ | virusEvolve = not (rand < prob) }
+            in
+            ( { model | behavior = behavior }, Cmd.none )
+
+
+ecoInc : Model -> Model
+ecoInc model =
+    { model
+        | economy =
+            model.economy
+                + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
+                * model.ecoRatio
+        , ecoRatio = 1
+    }
+
+
+virusEvolve : Model -> Model
+virusEvolve model =
+    { model
+        | city = updateCity model.city model.virus
+        , virus = change model.virus model.av |> Tuple.first
+        , av = change model.virus model.av |> Tuple.second
+    }
 
 
 clearCurrentRoundTodo : Model -> Model
@@ -103,6 +133,25 @@ performAction action model =
     case action of
         IncPowerI inc ->
             ( { model | power = model.power + inc }, Cmd.none )
+
+        Freeze prob ->
+            ( model, Random.generate (FreezeRet prob) (Random.float 0 1) )
+
+        FreezeI ->
+            let
+                behavior_ =
+                    model.behavior
+
+                behavior =
+                    { behavior_ | virusEvolve = False }
+            in
+            ( { model | behavior = behavior }, Cmd.none )
+
+        EcoDoubleI ->
+            ( { model | ecoRatio = 2 }, Cmd.none )
+
+        EcoDoubleI_Freeze prob ->
+            ( { model | ecoRatio = 2 }, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         _ ->
             ( model, Cmd.none )

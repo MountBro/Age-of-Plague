@@ -11,4 +11,7 @@ para =
     , wlp = 200.0
     , hlp = 25.0
     , af = 12.0
+    , ecoThreshold = 1
+    , warehouseOutput = 1
+    , basicEcoOutput = 3
     }

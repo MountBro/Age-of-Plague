@@ -12,9 +12,9 @@ type Msg
     | AddKey KeyValue
     | GotViewport Viewport
     | VirusEvolve
-    | NextRound Float
-    | NextRoundRandom Float Float
+    | NextRound
     | PlayCard Card
+    | FreezeRet Float Float
 
 
 type Gamestatus

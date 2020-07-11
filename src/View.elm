@@ -41,6 +41,9 @@ view model =
         , powerEcoInfo model
         , cardButton powerOverload
         , cardButton onStandby
+        , cardButton coldWave
+        , cardButton blizzard
+        , cardButton rain
         , Html.text (Debug.toString model.todo)
         ]
 
@@ -69,7 +72,7 @@ evolveButton =
 
 nextRoundButton : Html Msg
 nextRoundButton =
-    Html.button [ onClick (NextRound 1.0) ] [ Html.text "next round" ]
+    Html.button [ onClick NextRound ] [ Html.text "next round" ]
 
 
 renderFlag : Int -> Html Msg

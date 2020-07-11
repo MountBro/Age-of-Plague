@@ -4,7 +4,7 @@ import Geometry exposing (..)
 
 
 type alias Tile =
-    { indice : (Int, Int)
+    { indice : ( Int, Int )
     , population : Int
     , sick : Int
     , dead : Int
@@ -16,12 +16,12 @@ type alias Tile =
 type Construction
     = Hos -- Hospital
     | Qua --Quarantine
-    | None
+    | NoConstruction
 
 
 initTile : ( Int, Int ) -> Int -> Tile
 initTile ( x, y ) population =
-    Tile ( x, y ) population 0 0 None 0
+    Tile ( x, y ) population 0 0 NoConstruction 0
 
 
 cartesianProduct : List a -> List b -> List ( a, b )

@@ -30,6 +30,7 @@ stretch t ( x, y ) =
     ( t * x, t * y )
 
 
+posAdd : Pos -> Pos -> Pos
 posAdd ( x1, y1 ) ( x2, y2 ) =
     ( x1 + x2, y1 + y2 )
 
@@ -87,23 +88,26 @@ polyPoint l1 l2 =
         s ++ polyPoint (List.drop 1 l1) (List.drop 1 l2)
 
 
-generateZone : (Int, Int) -> List (Int, Int)
+generateZone : ( Int, Int ) -> List ( Int, Int )
 generateZone pos =
     let
-        i = Tuple.first pos
+        i =
+            Tuple.first pos
 
-        j = Tuple.second pos
-
+        j =
+            Tuple.second pos
     in
     [ ( i, j - 1 ), ( i, j + 1 ), ( i + 1, j ), ( i + 1, j - 1 ), ( i - 1, j ), ( i - 1, j + 1 ) ]
 
 
-converHextoTile : (Int, Int) -> (Int, Int)
+converHextoTile : ( Int, Int ) -> ( Int, Int )
 converHextoTile hexIn =
     let
-        i = Tuple.first hexIn |> toFloat
+        i =
+            Tuple.first hexIn |> toFloat
 
-        j = Tuple.second hexIn |> toFloat
+        j =
+            Tuple.second hexIn |> toFloat
 
         x =
             round ((2 * j - i) / 7)
@@ -111,5 +115,4 @@ converHextoTile hexIn =
         y =
             round ((3 * i + j) / 7)
     in
-    (x,y)
-
+    ( x, y )

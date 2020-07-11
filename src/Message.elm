@@ -1,6 +1,7 @@
 module Message exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
+import Card exposing (..)
 import Json.Decode as Decode
 import Time exposing (..)
 
@@ -12,6 +13,8 @@ type Msg
     | GotViewport Viewport
     | VirusEvolve
     | NextRound
+    | PlayCard Card
+    | FreezeRet Float Float
 
 
 type Gamestatus

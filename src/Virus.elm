@@ -25,7 +25,6 @@ countInfectedNeighbor pos lstv =
         lstn =
             --List of indexes of neighbours
             generateZone pos
-
     in
     lstn
         |> List.map
@@ -45,7 +44,6 @@ countavNeighbor pos lstv =
         lstn =
             --List of indexes of neighbours
             generateZone pos
-
     in
     lstn
         |> List.map
@@ -66,7 +64,7 @@ searchNeighbor virlst =
         |> LE.unique
 
 
-judgeAlivevir : List ( Int, Int ) -> Virus -> List (Int, Int) -> AntiVirus -> (Virus, AntiVirus)
+judgeAlivevir : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> ( Virus, AntiVirus )
 judgeAlivevir lstvir vir lstanti anti =
     let
         lstv =
@@ -76,19 +74,17 @@ judgeAlivevir lstvir vir lstanti anti =
         lsta =
             List.partition (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member x vir.pos)) lstanti
                 |> Tuple.first
-
     in
-    ({ vir | pos = lstv } , { anti | pos = lsta})
+    ( { vir | pos = lstv }, { anti | pos = lsta } )
 
 
-change : Virus -> AntiVirus -> (Virus, AntiVirus)
-change virus anti=
+change : Virus -> AntiVirus -> ( Virus, AntiVirus )
+change virus anti =
     let
         lstvir =
             searchNeighbor virus.pos
 
         lstanti =
             searchNeighbor anti.pos
-
     in
     judgeAlivevir lstvir virus lstanti anti

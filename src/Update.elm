@@ -3,10 +3,11 @@ module Update exposing (..)
 import Browser.Dom exposing (Error, Viewport)
 import Message exposing (Msg(..))
 import Model exposing (..)
+import Random exposing (..)
 import Virus exposing (..)
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Resize w h ->
@@ -26,5 +27,16 @@ update msg model =
         VirusEvolve ->
             ( { model | virus = model.virus |> change }, Cmd.none )
 
-        NextRound ->
-            ( { model | currentRound = model.currentRound + 1 }, Cmd.none )
+        NextRound prob ->
+            ( model, Random.generate (NextRoundRandom prob) (Random.float 0 1) )
+
+        NextRoundRandom prob f ->
+            let
+                inc =
+                    if f < prob then
+                        1
+
+                    else
+                        0
+            in
+            ( { model | currentRound = model.currentRound + inc }, Cmd.none )

@@ -11,7 +11,8 @@ type Msg
     | AddKey KeyValue
     | GotViewport Viewport
     | VirusEvolve
-    | NextRound
+    | NextRound Float
+    | NextRoundRandom Float Float
 
 
 type Gamestatus

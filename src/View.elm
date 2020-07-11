@@ -44,7 +44,7 @@ evolveButton =
 
 nextRoundButton : Html Msg
 nextRoundButton =
-    Html.button [ onClick NextRound ] [ Html.text "next round" ]
+    Html.button [ onClick (NextRound 0.1) ] [ Html.text "next round" ]
 
 
 renderFlag : Int -> Html Msg

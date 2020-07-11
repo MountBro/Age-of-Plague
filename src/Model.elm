@@ -86,5 +86,12 @@ initModel _ =
     )
 
 
+type alias SelectionMode =
+    { card : Bool
+    , hex : Bool
+    , tile : Bool
+    }
+
+
 
 --virusKill :

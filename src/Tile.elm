@@ -4,7 +4,7 @@ import Geometry exposing (..)
 
 
 type alias Tile =
-    { indice : TileIndice
+    { indice : (Int, Int)
     , population : Int
     , sick : Int
     , dead : Int
@@ -19,8 +19,8 @@ type Construction
     | None
 
 
-initTiles : ( Int, Int ) -> Int -> Tile
-initTiles ( x, y ) population =
+initTile : ( Int, Int ) -> Int -> Tile
+initTile ( x, y ) population =
     Tile ( x, y ) population 0 0 None 0
 
 
@@ -31,16 +31,16 @@ cartesianProduct l1 l2 =
         (List.map (\x -> List.map (\y -> ( x, y )) l2) l1)
 
 
-initListTiles : ( Int, Int ) -> Int -> List Tile
-initListTiles ( sizex, sizey ) peo =
+initTiles : Int -> List ( Int, Int ) -> List Tile
+initTiles p l =
+    List.map (\x -> initTile x p) l
+
+
+validNeighborTile : List Tile -> Tile -> List Tile
+validNeighborTile tlst t =
     let
-        lstx =
-            List.range 1 sizex
-
-        lsty =
-            List.range 1 sizey
-
-        lstIndice =
-            cartesianProduct lstx lsty
+        lstn =
+            generateZone t.indice
     in
-    List.map (\x -> initTiles x peo) lstIndice
+    List.partition (\x -> List.member x.indice lstn && x.population > 0) tlst
+        |> Tuple.first

@@ -1,54 +1,63 @@
 module Virus exposing (..)
+
 import Geometry exposing (..)
 import List.Extra as LE
 
+
 type alias Virus =
-    { rules : List (Int)
-    , pos : List (Pos)
+    { rules : List Int
+    , pos : List ( Int, Int )
     , number : Int -- number of virus
-    , inflect : Int -- inflection per round
+    , infect : Int -- inflection per round
     , kill : Float -- deathrate
     }
 
-countValidNeighbor : Pos -> List Pos -> Int
-countValidNeighbor pos lstv =
+
+countInfectedNeighbor : ( Int, Int ) -> List ( Int, Int ) -> Int
+countInfectedNeighbor pos lstv =
     let
-        lstn =  --List of indexes of neighbours
-            generateNeighbor pos
+        lstn =
+            --List of indexes of neighbours
+            generateZone pos
+
     in
     lstn
-        |> List.map (\x ->
-                        if List.member x lstv then
-                            1
+        |> List.map
+            (\x ->
+                if List.member x lstv then
+                    1
 
-                        else
-                            0
-                )
+                else
+                    0
+            )
         |> List.sum
 
 
-searchNeighbor : List Pos -> List Pos
+searchNeighbor : List ( Int, Int ) -> List ( Int, Int )
 searchNeighbor virlst =
-    List.map (\x -> generateNeighbor x) virlst
+    List.map (\x -> generateZone x) virlst
         |> List.concat
         |> LE.unique
 
 
-judgeAlive : List Pos -> Virus -> Virus
+judgeAlive : List ( Int, Int ) -> Virus -> Virus
 judgeAlive lstp vir =
     let
         lst =
-            List.partition (\x -> List.member (countValidNeighbor x lstp) vir.rules) lstp
+            List.partition (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules) lstp
                 |> Tuple.first
-    in
 
-    { vir |
-        pos = lst
-        }
+    in
+    { vir
+        | pos = lst
+    }
+
 
 change : Virus -> Virus
 change virus =
     let
-        lstn = searchNeighbor virus.pos
+        lstn =
+            searchNeighbor virus.pos
+
     in
     judgeAlive lstn virus

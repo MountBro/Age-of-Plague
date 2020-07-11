@@ -3,6 +3,7 @@ module Update exposing (..)
 import Browser.Dom exposing (Error, Viewport)
 import Message exposing (Msg(..))
 import Model exposing (..)
+import Virus exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -21,3 +22,12 @@ update msg model =
             ( { model | viewport = Just viewport, screenSize = ( viewport.viewport.width, viewport.viewport.height ) }
             , Cmd.none
             )
+
+        VirusEvolve ->
+            ( { model |
+                city = infect model.city model.virus
+              , virus = change model.virus
+                }, Cmd.none )
+
+        NextRound ->
+            ( { model | currentRound = model.currentRound + 1 }, Cmd.none )

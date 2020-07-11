@@ -10,13 +10,14 @@ type Msg
     | Tick Time.Posix
     | AddKey KeyValue
     | GotViewport Viewport
+    | VirusEvolve
+    | NextRound
 
 
 type Gamestatus
     = Playing
     | Drawing
     | Playcard
-    | NextRound
     | Stopped
 
 

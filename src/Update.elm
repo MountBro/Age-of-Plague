@@ -25,8 +25,9 @@ update msg model =
 
         VirusEvolve ->
             ( { model |
-                city = infect model.city model.virus
-              , virus = change model.virus
+                city = updateCity model.city model.virus
+              , virus = change model.virus model.av |> Tuple.first
+              , av = change model.virus model.av |> Tuple.second
                 }, Cmd.none )
 
         NextRound ->

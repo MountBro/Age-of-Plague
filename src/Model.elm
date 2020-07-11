@@ -7,6 +7,7 @@ import Task
 import Tile exposing (..)
 import Virus exposing (..)
 import List.Extra as LE
+import Debug
 
 
 type alias Model =
@@ -18,6 +19,7 @@ type alias Model =
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
     , virus : Virus
+    , av :AntiVirus
     }
 
 
@@ -41,10 +43,10 @@ initCity tilepeo l =
     City tiles
 
 
-sumPopulation : List Tile -> Int
-sumPopulation lst =
-    lst
-        |> List.map (\x -> x.population)
+sumPopulation : City -> Int
+sumPopulation city =
+    city.tilesindex
+        |> List.map (\x -> x.sick)
         |> List.sum
 
 
@@ -55,6 +57,13 @@ initVirus =
     , number = 0
     , infect = 1
     , kill = 0.5
+    }
+
+
+initAntiVirus :AntiVirus
+initAntiVirus =
+    { rules = [ 2 ]
+    , pos = [ ( 3, 2 ), ( 3, 3 )]
     }
 
 
@@ -82,6 +91,7 @@ initModel _ =
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
+      , av = initAntiVirus
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -120,14 +130,20 @@ infect city virus =
         }
 
 
-populationFlow : Tile -> List Tile -> List Tile
-populationFlow t citytilesindex  =
+populationFlow : Int -> City -> City
+populationFlow n city =
     let
-        {-[t] =
-            List.take 1 citytilesindex-}
+        citytileslst =
+            city.tilesindex
+
+        t =
+            List.take n citytileslst
+                |> List.drop (n - 1)
+                |> List.head
+                |> Maybe.withDefault (Tile ( -100, -100 ) 100 0 0 None 0)
 
         lstnTile =
-            validNeighborTile citytilesindex t --not include tile t itself
+            validNeighborTile citytileslst t --not include tile t itself
 
         numNeig = --number of valid neighbor tiles (not including t)
             List.length lstnTile
@@ -149,46 +165,53 @@ populationFlow t citytilesindex  =
                 |> List.take sickleave
 
     in
-    if t.population >= numNeig then
-        List.map (\x -> if x == t then
-                            { x | population = x.population - numNeig
-                                , sick = x.sick - sickleave}
+    if n <= List.length citytileslst then
+        let
+            newcitytileslst =
+                if t.population >= numNeig then
+                    List.map (\x -> if x == t then
+                                        { x | population = x.population - numNeig
+                                            , sick = x.sick - sickleave}
 
-                        else if List.member x.indice sickLst then
-                            { x | population = x.population + 1
-                                , sick = x.sick + 1}
+                                    else if List.member x.indice sickLst then
+                                        { x | population = x.population + 1
+                                            , sick = x.sick + 1}
 
-                        else if List.member x.indice leaveLst then
-                            { x | population = x.population + 1}
+                                    else if List.member x.indice leaveLst then
+                                        { x | population = x.population + 1}
 
-                        else
-                            x
+                                    else
+                                        x
+                                    ) citytileslst
 
-                        ) citytilesindex
+                else
+                    List.map (\x -> if x == t then
+                                        { x | population = 0
+                                            , sick = 0
+                                            }
+
+                                    else if List.member x.indice sickLst then
+                                        { x | population = x.population + 1
+                                            , sick = x.sick + 1}
+
+                                    else if List.member x.indice leaveLst then
+                                        { x | population = x.population + 1}
+
+                                    else
+                                        x
+                                    ) citytileslst
+
+            newcity =
+                { city |
+                    tilesindex = newcitytileslst}
+        in
+        populationFlow (n + 1) newcity
 
     else
-        List.map (\x -> if x == t then
-                            { x | population = 0
-                                , sick = 0
-                                }
-
-                        else if List.member x.indice sickLst then
-                            { x | population = x.population + 1
-                                , sick = x.sick + 1}
-
-                        else if List.member x.indice leaveLst then
-                            { x | population = x.population + 1}
-
-                        else
-                            x
-
-                        ) citytilesindex
+        city
 
 
-{-cityPopulationFlow : City -> City
-cityPopulationFlow city =
-    let
-        citytilesindex = city.tilesindex
-    in
-    {city |
-        tilesindex = List.map (\x -> populationFlow x citytilesindex) citytilesindex}-}
+updateCity : City -> Virus -> City
+updateCity city vir =
+    infect city vir
+        |> populationFlow 1

@@ -88,13 +88,8 @@ polyPoint l1 l2 =
         s ++ polyPoint (List.drop 1 l1) (List.drop 1 l2)
 
 
-pointAdd : Pos -> Pos -> Pos
-pointAdd ( x1, y1 ) ( x2, y2 ) =
-    ( x1 + x2, y1 + y2 )
-
-
-generateNeighbor : ( Int, Int ) -> List ( Int, Int )
-generateNeighbor pos =
+generateZone : ( Int, Int ) -> List ( Int, Int )
+generateZone pos =
     let
         i =
             Tuple.first pos
@@ -103,3 +98,21 @@ generateNeighbor pos =
             Tuple.second pos
     in
     [ ( i, j - 1 ), ( i, j + 1 ), ( i + 1, j ), ( i + 1, j - 1 ), ( i - 1, j ), ( i - 1, j + 1 ) ]
+
+
+converHextoTile : ( Int, Int ) -> ( Int, Int )
+converHextoTile hexIn =
+    let
+        i =
+            Tuple.first hexIn |> toFloat
+
+        j =
+            Tuple.second hexIn |> toFloat
+
+        x =
+            round ((2 * j - i) / 7)
+
+        y =
+            round ((3 * i + j) / 7)
+    in
+    ( x, y )

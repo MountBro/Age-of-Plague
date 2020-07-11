@@ -29,11 +29,13 @@ view model =
             ]
             (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
                 ++ renderVirus model.virus
+                ++ renderantiVirus model.av
                 ++ [ renderLevelProgress model ]
                 ++ renderFlags [ 5, 10, 15 ]
             )
         , evolveButton
         , nextRoundButton
+        , Html.text (Debug.toString (sumPopulation model.city))
         ]
 
 
@@ -44,7 +46,7 @@ evolveButton =
 
 nextRoundButton : Html Msg
 nextRoundButton =
-    Html.button [ onClick (NextRound 0.1) ] [ Html.text "next round" ]
+    Html.button [ onClick (NextRound 1.0) ] [ Html.text "next round" ]
 
 
 renderFlag : Int -> Html Msg
@@ -232,7 +234,7 @@ renderTile t =
                 Qua ->
                     "Q"
 
-                None ->
+                NoConstruction ->
                     "N"
 
         cons =
@@ -249,7 +251,7 @@ renderTile t =
 
         -- list of positions of the seven hexs in a tile.
     in
-    List.map (renderHex "black" 0) lst ++ [ border ] ++ [ cons ]
+    List.map (renderHex "white" 0) lst ++ [ border ] ++ [ cons ]
 
 
 renderVirus : Virus -> List (Html Msg)
@@ -259,6 +261,15 @@ renderVirus v =
             v.pos
     in
     List.map (renderHex "purple" 0.5) pos
+
+
+renderantiVirus : AntiVirus -> List (Html Msg)
+renderantiVirus av =
+    let
+        pos =
+            av.pos
+    in
+    List.map (renderHex "blue" 0.5) pos
 
 
 

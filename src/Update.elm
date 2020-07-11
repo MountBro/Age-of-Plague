@@ -35,7 +35,13 @@ update msg model =
             )
 
         VirusEvolve ->
-            ( { model | virus = model.virus |> change }, Cmd.none )
+            ( { model
+                | city = updateCity model.city model.virus
+                , virus = change model.virus model.av |> Tuple.first
+                , av = change model.virus model.av |> Tuple.second
+              }
+            , Cmd.none
+            )
 
         NextRound prob ->
             ( model, Random.generate (NextRoundRandom prob) (Random.float 0 1) )

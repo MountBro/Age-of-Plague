@@ -1,9 +1,11 @@
 module Main exposing (..)
 
 import Browser
+import Debug as DB
 import Html exposing (..)
 import Html.Attributes as HA
 import Html.Events.Extra.Mouse as Mouse
+import Svg as S
 
 
 main : Program () MouseEvent MouseEvent
@@ -29,8 +31,12 @@ type MouseEvent
 
 view : MouseEvent -> Html MouseEvent
 view event =
+    let
+        log1 =
+            DB.log <| DB.toString event
+    in
     div []
-        [ button
+        [ p
             [ Mouse.onDown Down
             , Mouse.onMove Move
             , Mouse.onUp Up
@@ -41,6 +47,9 @@ view event =
             , Mouse.onContextMenu ContextMenu
             , HA.style "height" "10cm"
             , HA.style "width" "10cm"
+            , HA.style "border-size" "2cm"
+            , HA.style "border" "solid"
+            , HA.style "border-color" "#8efe43"
             ]
-            [ text <| Debug.toString event ]
+            [ Debug.toString Mouse.Event |> text ]
         ]

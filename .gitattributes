@@ -1,0 +1,15 @@
+* text-auto
+
+*.elm text
+*.html text
+*.md text
+*.js text
+*.json text 
+
+
+*.sln text eol=lf
+
+*.jpg binary
+*.jpeg binary
+*.png binary 
+*.odg binary

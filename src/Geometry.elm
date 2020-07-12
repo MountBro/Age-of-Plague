@@ -101,18 +101,16 @@ generateZone pos =
 
 
 converHextoTile : ( Int, Int ) -> ( Int, Int )
-converHextoTile hexIn =
-    let
-        i =
-            Tuple.first hexIn |> toFloat
+converHextoTile ( i, j ) =
+    (( i, j ) :: generateZone ( i, j ))
+        |> List.map (\( x, y ) -> ( toFloat x, toFloat y ))
+        |> List.map (\( x, y ) -> ( (3 * x + y) / 7, (2 * y - x) / 7 ))
+        |> List.filter (\( x, y ) -> isInt x && isInt y)
+        |> List.head
+        |> Maybe.withDefault ( 0, 0 )
+        |> (\( x, y ) -> ( round x, round y ))
 
-        j =
-            Tuple.second hexIn |> toFloat
 
-        x =
-            round ((2 * j - i) / 7)
-
-        y =
-            round ((3 * i + j) / 7)
-    in
-    ( x, y )
+isInt : Float -> Bool
+isInt x =
+    abs (x - toFloat (round x)) < 0.00001

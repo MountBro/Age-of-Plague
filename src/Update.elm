@@ -203,6 +203,9 @@ performAction action model =
                 ( c1, c2 ) =
                     ( 2 * t1 - t2, t1 + 3 * t2 )
 
+                lc =
+                    log "chosenTile" ( t1, t2 )
+
                 virus_ =
                     model.virus
 
@@ -212,7 +215,7 @@ performAction action model =
                 pos =
                     List.filter
                         (\( x, y ) ->
-                            not (List.member ( x, y ) (generateZone ( c1, c2 )))
+                            not (List.member ( x, y ) (( c1, c2 ) :: generateZone ( c1, c2 )))
                         )
                         pos_
 

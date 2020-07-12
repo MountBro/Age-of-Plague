@@ -64,6 +64,8 @@ view model =
         , cardButton blizzard
         , cardButton rain
         , cardButton cut
+        , cardButton fubao
+        , cardButton megaCut
         , Html.text (Debug.toString model.todo)
         ]
 

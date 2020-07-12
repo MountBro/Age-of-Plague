@@ -25,7 +25,9 @@ type Action
     | DisableEvolve Float
     | NoAction
     | CutHexI ( Int, Int )
+    | CutTileI ( Int, Int )
     | Summon (List Card)
+    | Activate996I
 
 
 powerOverload =
@@ -50,3 +52,11 @@ rain =
 
 cut =
     Card HexSel 1 [ CutHexI ( 0, 0 ) ] "Cut"
+
+
+megaCut =
+    Card TileSel 5 [ CutTileI ( 0, 0 ) ] "Mega Cut"
+
+
+fubao =
+    Card NoSel 1 [ Activate996I, Activate996I ] "996"

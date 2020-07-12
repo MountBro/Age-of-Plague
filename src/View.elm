@@ -40,7 +40,8 @@ view model =
             , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
             , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
             ]
-            (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
+            ([ bkg ]
+                ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
                 ++ renderVirus model.virus
                 ++ renderantiVirus model.av
                 ++ [ renderLevelProgress model ]
@@ -59,6 +60,18 @@ view model =
         , cardButton rain
         , Html.text (Debug.toString model.todo)
         ]
+
+
+bkg : Svg Msg
+bkg =
+    rect
+        [ SA.x "0"
+        , SA.y "0"
+        , SA.width "1000"
+        , SA.height "600"
+        , SA.fill "#2A363b"
+        ]
+        []
 
 
 cardButton : Card -> Html Msg
@@ -111,7 +124,7 @@ renderFlag i =
             [ polyPoint [ para.xlp + wg, para.xlp + wg + sqrt 3 / 2 * a, para.xlp + wg ]
                 [ para.ylp, para.ylp - a / 2, para.ylp - a ]
                 |> SA.points
-            , "red" |> SA.fill
+            , "orange" |> SA.fill
             ]
             []
         ]

@@ -2,7 +2,7 @@
 
 Cost: 1
 
-Description: The next 2 rounds, economy doubles, but the death rate rises 5%.
+Description: The next 2 rounds, economy doubles, but the death rate rises 2%.
 Action:
     resource
         economy

@@ -52,6 +52,12 @@ view model =
                 ++ [ renderLevelProgress model ]
                 ++ renderFlags [ 5, 10, 15 ]
                 ++ film
+                ++ [ caption 15 70 "green" "green: healthy population"
+                   , caption 15 90 "orange" "orange: infected population"
+                   , caption 15 110 "red" "red: dead population"
+                   , caption 15 130 "purple" "purple hex: Virus"
+                   , caption 15 150 "blue" "blue hex: AntiVirus"
+                   ]
             )
         , evolveButton
         , nextRoundButton
@@ -80,6 +86,19 @@ bkg =
         , SA.fill "#2A363b"
         ]
         []
+
+
+caption : Float -> Float -> String -> String -> Svg Msg
+caption x y cstr text =
+    text_
+        [ SA.fontSize "15"
+        , SA.fontFamily "sans-serif"
+        , x |> String.fromFloat |> SA.x
+        , y |> String.fromFloat |> SA.y
+        , cstr |> SA.fill
+        ]
+        [ text |> Svg.text
+        ]
 
 
 cardButton : Card -> Html Msg
@@ -369,7 +388,7 @@ renderTile t =
                 , text_
                     [ SA.fontSize "15"
                     , SA.fontFamily "sans-serif"
-                    , x |> String.fromFloat |> SA.x
+                    , x + 3.0 |> String.fromFloat |> SA.x
                     , y - 10.0 |> String.fromFloat |> SA.y
                     , SA.fill "orange"
                     ]
@@ -378,7 +397,7 @@ renderTile t =
                     [ SA.fontSize "15"
                     , SA.fontFamily "sans-serif"
                     , x - 5.0 |> String.fromFloat |> SA.x
-                    , y + 20.0 |> String.fromFloat |> SA.y
+                    , y + 23.0 |> String.fromFloat |> SA.y
                     , SA.fill "red"
                     ]
                     [ t.dead |> String.fromInt |> Svg.text ]

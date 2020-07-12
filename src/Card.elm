@@ -16,7 +16,7 @@ type Selection
 
 
 type Action
-    = IncPowerI Int
+    = IncPowerI Int --
     | FreezeI
     | Freeze Float
     | EcoDoubleI
@@ -45,3 +45,8 @@ blizzard =
 
 rain =
     Card NoSel 3 [ EcoDoubleI, EcoDoubleI_Freeze 0.5 ] "Rain"
+
+
+
+-- warmwave =
+--     Card NoSel 1 [, ] "Warm Wave"

@@ -57,6 +57,16 @@ update msg model =
                     , Cmd.none
                     )
 
+                else if List.member card targetCardlst then
+                    ( { model
+                        | cardSelected = SelectCard card
+                        , selHex = SelHexOn
+                        , power = model.power - card.cost
+                        , economy = model.economy - para.ecoThreshold
+                      }
+                    , Cmd.none
+                    )
+
                 else
                     ( { model
                         | todo = model.todo ++ [ ( True, card.action ) ]
@@ -237,6 +247,196 @@ performAction action model =
             in
             ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus }, Cmd.none )
 
+        OrganCloneI ( i, j ) ->
+            let
+                city_ =
+                    model.city
+
+                tilelst_ =
+                    model.city.tilesindex
+
+                pos =
+                    converHextoTile ( i, j )
+
+                tilelst =
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                if x.sick - x.dead > 0 then
+                                    { x | sick = x.sick - x.dead }
+
+                                else
+                                    { x | sick = 0 }
+
+                            else
+                                x
+                        )
+                        tilelst_
+
+                city =
+                    { city_ | tilesindex = tilelst }
+            in
+            ( { model | city = city }, Cmd.none )
+
+        HumanCloneI ( i, j ) ->
+            let
+                city_ =
+                    model.city
+
+                tilelst_ =
+                    model.city.tilesindex
+
+                pos =
+                    converHextoTile ( i, j )
+
+                tilelst =
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                { x | population = x.population * 2 }
+
+                            else
+                                x
+                        )
+                        tilelst_
+
+                city =
+                    { city_ | tilesindex = tilelst }
+            in
+            ( { model | city = city }, Cmd.none )
+
+        MegaCloneI ->
+            let
+                city_ =
+                    model.city
+
+                tilelst_ =
+                    model.city.tilesindex
+
+                tilelst =
+                    List.map (\x -> { x | population = round (toFloat x.population * 1.5) }) tilelst_
+
+                city =
+                    { city_ | tilesindex = tilelst }
+            in
+            ( { model | city = city }, Cmd.none )
+
+        PurificationI ( i, j ) ->
+            let
+                city_ =
+                    model.city
+
+                tilelst_ =
+                    model.city.tilesindex
+
+                pos =
+                    converHextoTile ( i, j )
+
+                tilelst =
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                { x | sick = 0 }
+
+                            else
+                                x
+                        )
+                        tilelst_
+
+                city =
+                    { city_ | tilesindex = tilelst }
+            in
+            ( { model | city = city }, Cmd.none )
+
+        SacrificeI ( i, j ) ->
+            let
+                virus_ =
+                    model.virus
+
+                virpos_ =
+                    virus_.pos
+
+                virpos =
+                    List.filter (\x -> converHextoTile x /= ( i, j )) virpos_
+
+                city_ =
+                    model.city
+
+                tilelst_ =
+                    model.city.tilesindex
+
+                tilepos =
+                    converHextoTile ( i, j )
+
+                tilelst =
+                    List.map
+                        (\x ->
+                            if x.indice == tilepos then
+                                { x
+                                    | population = x.population - x.sick
+                                    , sick = 0
+                                    , dead = x.dead + x.sick
+                                }
+
+                            else
+                                x
+                        )
+                        tilelst_
+
+                city =
+                    { city_ | tilesindex = tilelst }
+
+                virus =
+                    { virus_ | pos = virpos }
+            in
+            ( { model | city = city, virus = virus }, Cmd.none )
+
+        ResurgenceI ( i, j ) ->
+            let
+                city_ =
+                    model.city
+
+                tilelst_ =
+                    model.city.tilesindex
+
+                pos =
+                    converHextoTile ( i, j )
+
+                tilelst =
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                { x
+                                    | population = x.population + round (toFloat x.dead / 2)
+                                    , dead = x.dead - round (toFloat x.dead / 2)
+                                }
+
+                            else
+                                x
+                        )
+                        tilelst_
+
+                city =
+                    { city_ | tilesindex = tilelst }
+            in
+            ( { model | city = city }, Cmd.none )
+
+        FreezevirusI ( i, j ) ->
+            let
+                pos =
+                    converHextoTile ( i, j )
+
+                virus_ =
+                    model.virus
+
+                virpos =
+                    List.filter (\x -> converHextoTile x /= pos) virus_.pos
+
+                virus =
+                    { virus_ | pos = virpos }
+            in
+            ( { model | virus = virus }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
 
@@ -279,6 +479,24 @@ fillRegion card sel =
 
     else if card == megaCut then
         ( ( True, [ CutTileI sel ] ), Cmd.none )
+
+    else if card == organClone then
+        ( ( True, [ OrganCloneI sel ] ), Cmd.none )
+
+    else if card == humanClone then
+        ( ( True, [ HumanCloneI sel ] ), Cmd.none )
+
+    else if card == purification then
+        ( ( True, [ PurificationI sel ] ), Cmd.none )
+
+    else if card == resurgence then
+        ( ( True, [ ResurgenceI sel ] ), Cmd.none )
+
+    else if card == sacrifice then
+        ( ( True, [ SacrificeI sel ] ), Cmd.none )
+
+    else if card == defenseline then
+        ( ( True, [ FreezevirusI sel, FreezevirusI sel ] ), Cmd.none )
 
     else
         ( finishedEmptyQueue, Cmd.none )

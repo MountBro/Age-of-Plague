@@ -72,6 +72,13 @@ view model =
         , cardButton cut
         , cardButton fubao
         , cardButton megaCut
+        , cardButton organClone
+        , cardButton humanClone
+        , cardButton megaClone
+        , cardButton purification
+        , cardButton sacrifice
+        , cardButton resurgence
+        , cardButton defenseline
         , Html.text (Debug.toString model.todo)
         ]
 

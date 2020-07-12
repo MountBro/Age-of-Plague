@@ -3,4 +3,6 @@
 *.elm~
 elm-stuff
 
-
+*.elmi
+*.elmo
+*.dat

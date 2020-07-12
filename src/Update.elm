@@ -19,10 +19,10 @@ update msg model =
 
         Tick newTime ->
             if not (finished model.todo) then
-                pickAction model
+                model |> pickAction |> mFillRegion
 
             else
-                ( model, Cmd.none )
+                ( model, Cmd.none ) |> mFillRegion
 
         AddKey kv ->
             ( model, Cmd.none )
@@ -45,7 +45,10 @@ update msg model =
                 ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc, Cmd.none )
 
         PlayCard card ->
-            if card.cost < model.power && para.ecoThreshold < model.economy then
+            if card == cut then
+                ( { model | cardSelected = SelectCard cut, selHex = SelHexOn }, Cmd.none )
+
+            else if card.cost < model.power && para.ecoThreshold < model.economy then
                 ( { model
                     | todo = model.todo ++ [ ( True, card.action ) ]
                     , power = model.power - card.cost
@@ -167,5 +170,61 @@ performAction action model =
         EcoDoubleI_Freeze prob ->
             ( { model | ecoRatio = 2 }, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
+        CutHexI ( i, j ) ->
+            let
+                virus_ =
+                    model.virus
+
+                pos_ =
+                    virus_.pos
+
+                pos =
+                    List.filter (\( x, y ) -> ( x, y ) /= ( i, j )) pos_
+
+                virus =
+                    { virus_ | pos = pos }
+            in
+            ( { model | virus = virus }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
+
+
+type alias Sel =
+    ( Int, Int )
+
+
+mFillRegion : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+mFillRegion ( model, cm ) =
+    case model.cardSelected of
+        NoCard ->
+            ( model, Cmd.none )
+
+        SelectCard card ->
+            case model.selHex of
+                SelHexOn ->
+                    if model.selectedHex /= ( -233, -233 ) then
+                        ( { model
+                            | todo =
+                                model.todo
+                                    ++ [ Tuple.first (fillRegion card model.selectedHex) ]
+                            , selHex = SelHexOff
+                            , selectedHex = ( -233, -233 )
+                          }
+                        , Cmd.batch [ cm, Tuple.second (fillRegion card model.selectedHex) ]
+                        )
+
+                    else
+                        ( model, cm )
+
+                SelHexOff ->
+                    ( model, Cmd.none )
+
+
+fillRegion : Card -> Sel -> ( Queue, Cmd Msg )
+fillRegion card sel =
+    if card == cut then
+        ( ( True, [ CutHexI sel ] ), Cmd.none )
+
+    else
+        ( finishedEmptyQueue, Cmd.none )

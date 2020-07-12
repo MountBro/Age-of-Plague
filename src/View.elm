@@ -28,10 +28,15 @@ onOver message =
 
 view : Model -> Html Msg
 view model =
-    --let
-    --    l1 =
-    --        log "virus" model.virus
-    --in
+    let
+        film =
+            case model.selHex of
+                SelHexOn ->
+                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesindex)
+
+                _ ->
+                    []
+    in
     div []
         [ svg
             [ SA.viewBox "0 0 1000 600"
@@ -46,7 +51,7 @@ view model =
                 ++ renderantiVirus model.av
                 ++ [ renderLevelProgress model ]
                 ++ renderFlags [ 5, 10, 15 ]
-                ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesindex)
+                ++ film
             )
         , evolveButton
         , nextRoundButton
@@ -58,6 +63,7 @@ view model =
         , cardButton coldWave
         , cardButton blizzard
         , cardButton rain
+        , cardButton cut
         , Html.text (Debug.toString model.todo)
         ]
 

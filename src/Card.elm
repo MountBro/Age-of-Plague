@@ -24,6 +24,7 @@ type Action
     | DisableEvolveI
     | DisableEvolve Float
     | NoAction
+    | CutHexI ( Int, Int )
     | Summon (List Card)
 
 
@@ -45,3 +46,7 @@ blizzard =
 
 rain =
     Card NoSel 3 [ EcoDoubleI, EcoDoubleI_Freeze 0.5 ] "Rain"
+
+
+cut =
+    Card HexSel 1 [ CutHexI ( 0, 0 ) ] "Cut"

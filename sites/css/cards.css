@@ -1,16 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 body {
     font-family: "Raleway", sans-serif;
-    background: #eee;
+    background: black;
 }
 
 
 /* the following root section is for parameters */
 
 :root {
-    --initPosX: -230%;
+    --initPosX: -215%;
     --dx: 35%;
-    --initPosY: 25%;
-    --secdPosY: 50%;
+    --initPosY: 50%;
+    --secdPosY: 75%;
 }
 
 .wrapper {
@@ -369,14 +370,14 @@ body {
     width: 100%;
     height: 100%;
     transform: rotate(0deg) scale(1) translateY(20px);
-    transition: 0.01s all ease;
+    transition: 0.5s all ease;
     z-index: 99999999999;
     margin-top: -1cm;
     margin-left: -1cm;
 }
 
 .container::after {
-    content: "hello!";
+    content: attr(data-info);
     /* display: inline; */
     position: absolute;
     top: 100%;
@@ -387,7 +388,7 @@ body {
     font-weight: 700;
     line-height: 1.5em;
     padding: 0.5em 0.8em;
-    background: rgba(0, 0, 0, 0.8);
+    background: #00478a;
     color: #fff;
     pointer-events: none;
     /* This prevents the box from apearing when hovered. */
@@ -447,11 +448,13 @@ h4 {
 }
 
 h1 {
-    color: #111;
+    color: whitesmoke;
     position: fixed;
-    top: 0%;
+    top: 7%;
     text-align: center;
     margin: 20px 100px;
+    font-family: 'Raleway';
+    font-size: xx-large;
 }
 
 p {

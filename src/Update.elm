@@ -67,6 +67,40 @@ update msg model =
             in
             ( { model | behavior = behavior }, Cmd.none )
 
+        SelI text ->
+            let
+                i =
+                    parseInputNumber text
+            in
+            ( { model | isel = i }, Cmd.none )
+
+        SelJ text ->
+            let
+                j =
+                    parseInputNumber text
+            in
+            ( { model | jsel = j }, Cmd.none )
+
+        AlterSelState ->
+            ( { model | sel = not model.sel }, Cmd.none )
+
+        Position x y ->
+            ( { model | position = Debug.log "position" ( x, y ) }, Cmd.none )
+
+
+parseInputNumber : String -> Int
+parseInputNumber text =
+    let
+        maybeInt =
+            String.toInt text
+    in
+    case maybeInt of
+        Just val ->
+            val
+
+        Nothing ->
+            0
+
 
 ecoInc : Model -> Model
 ecoInc model =

@@ -5,21 +5,23 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
+import Json.Decode as Decode
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
+import Svg.Events as SE
 import Tile exposing (..)
 import Virus exposing (..)
 
 
 view : Model -> Html Msg
 view model =
-    --let
-    --    l1 =
-    --        log "virus" model.virus
-    --in
+    let
+        l1 =
+            log "position" model.position
+    in
     div []
         [ svg
             [ SA.viewBox "0 0 1000 600"
@@ -27,6 +29,10 @@ view model =
             , SA.width "1000"
             , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
             , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+            , SE.on "svgclick" <|
+                Decode.map2 Position
+                    (Decode.at [ "detail", "x" ] Decode.int)
+                    (Decode.at [ "detail", "y" ] Decode.int)
             ]
             (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
                 ++ renderVirus model.virus
@@ -45,6 +51,11 @@ view model =
         , cardButton blizzard
         , cardButton rain
         , Html.text (Debug.toString model.todo)
+        , ul [] []
+        , Html.input [ onInput SelI ] []
+        , Html.input [ onInput SelJ ] []
+        , Html.button [ onClick AlterSelState ] [ Html.text "Sel" ]
+        , Html.text ("sel: " ++ Debug.toString model.sel ++ ". " ++ "i: " ++ Debug.toString model.isel ++ ", " ++ "j: " ++ Debug.toString model.jsel ++ ". ")
         ]
 
 

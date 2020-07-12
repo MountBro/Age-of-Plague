@@ -6,6 +6,7 @@ import Debug
 import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (..)
+import Parameters exposing (..)
 import Task
 import Tile exposing (..)
 import Todo exposing (..)
@@ -21,7 +22,6 @@ type alias Model =
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
     , virus : Virus
-    , region : Region
     , cardSelected : CardSelected
     , todo : Todo
     , roundTodoCleared : Bool
@@ -31,12 +31,11 @@ type alias Model =
     , basicEcoOutput : Int
     , warehouseNum : Int
     , ecoRatio : Int
+    , isel : Int
+    , jsel : Int
+    , sel : Bool
+    , position : ( Int, Int )
     }
-
-
-type Region
-    = NoRegion
-    | SelectRegion ( Int, Int )
 
 
 type CardSelected
@@ -113,7 +112,6 @@ initModel _ =
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
-      , region = NoRegion
       , cardSelected = NoCard
       , todo = []
       , roundTodoCleared = False
@@ -123,6 +121,10 @@ initModel _ =
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
       , ecoRatio = 1
+      , isel = 0
+      , jsel = 0
+      , sel = True
+      , position = ( 0, 0 )
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

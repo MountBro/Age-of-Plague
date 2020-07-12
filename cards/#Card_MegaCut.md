@@ -1,5 +1,4 @@
 #Card_MegaCut
-
 Cost: 5
 
 Description: Cut one tile.

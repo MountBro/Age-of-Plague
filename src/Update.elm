@@ -46,7 +46,7 @@ update msg model =
                 ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc, Cmd.none )
 
         PlayCard card ->
-            if card.cost < model.power && para.ecoThreshold < model.economy then
+            if card.cost <= model.power && para.ecoThreshold <= model.economy then
                 if card == cut || card == megaCut then
                     ( { model
                         | cardSelected = SelectCard card

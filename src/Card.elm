@@ -99,4 +99,3 @@ defenseline =
 
 targetCardlst =
     [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline ]
-        >>>>>>> b386107270cadaccedd0c7006e5f411f41a56a9a

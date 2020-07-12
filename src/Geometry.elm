@@ -116,3 +116,8 @@ converHextoTile hexIn =
             round ((2 * j - i) / 7)
     in
     ( x, y )
+
+
+isInt : Float -> Bool
+isInt x =
+    abs (x - toFloat (round x)) < 0.00001

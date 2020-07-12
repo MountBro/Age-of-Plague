@@ -26,9 +26,14 @@ type Action
     | NoAction
     | CutHexI ( Int, Int )
     | Summon (List Card)
+    | CutTileI ( Int, Int )
+    | Activate996I
     | OrganCloneI (Int,Int)
     | HumanCloneI (Int,Int)
     | MegaCloneI
+    | PurificationI (Int, Int)
+    | SacrificeI (Int, Int)
+    | ResurgenceI (Int, Int)
 
 
 powerOverload =
@@ -55,16 +60,36 @@ cut =
     Card HexSel 1 [ CutHexI ( 0, 0 ) ] "Cut"
 
 
+megaCut =
+    Card TileSel 5 [ CutTileI ( 0, 0 ) ] "Mega Cut"
+
+
+fubao =
+    Card NoSel 1 [ Activate996I, Activate996I ] "996"
+
+
 organClone =
-    Card TileSel 3 [ OrganCloneI (0,0) ] "Organ Clone"
+    Card TileSel 3 [ OrganCloneI ( 0, 0 ) ] "Organ Clone"
 
 
 humanClone =
-    Card TileSel 3 [ HumanCloneI (0,0) ] "Human Clone"
+    Card TileSel 3 [ HumanCloneI ( 0, 0 ) ] "Human Clone"
 
 
 megaClone =
-    Card TileSel 8 [ MegaCloneI] "Mega Clone"
+    Card NoSel 8 [ MegaCloneI ] "Mega Clone"
 
 
-targetCardlst = [ cut, organClone, humanClone ] --List of cards requiring target hex or tiles
+purification =
+    Card TileSel 3 [ PurificationI ( 0, 0 ) ] "Purification"
+
+
+sacrifice =
+    Card TileSel 4 [ SacrificeI (0, 0) ] "Sacrifice"
+
+
+resurgence =
+    Card TileSel 8 [ ResurgenceI (0, 0) ] "Resurgence"
+
+
+targetCardlst = [ cut, organClone, humanClone, sacrifice, purification, resurgence ]

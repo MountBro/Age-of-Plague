@@ -8,7 +8,7 @@ type alias Virus =
     { rules : List Int
     , pos : List ( Int, Int )
     , number : Int -- number of virus
-    , infect : Int -- inflection per round
+    , infect : Int -- infection per round
     , kill : Float -- deathrate
     }
 

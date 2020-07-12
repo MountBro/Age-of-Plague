@@ -56,9 +56,7 @@ view model =
         , evolveButton
         , nextRoundButton
         , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-        , Html.text ("Population: " ++ Debug.toString (sumPopulation model.city) ++ ". "
-        ++ "Sick :" ++Debug.toString (sumSick model.city) ++ ". "
-        ++ "Dead :" ++Debug.toString (sumDead model.city) ++ ". ")
+        , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
         , powerEcoInfo model
         , cardButton powerOverload
         , cardButton onStandby
@@ -66,9 +64,15 @@ view model =
         , cardButton blizzard
         , cardButton rain
         , cardButton cut
+        , cardButton fubao
+        , cardButton megaCut
         , cardButton organClone
+        , cardButton humanClone
+        , cardButton megaClone
+        , cardButton purification
+        , cardButton sacrifice
+        , cardButton resurgence
         , Html.text (Debug.toString model.todo)
-        , Html.text (Debug.toString model.city.tilesindex)
         ]
 
 
@@ -358,9 +362,37 @@ renderTile t =
                     [ constructionCaption |> Svg.text ]
                 ]
 
+        populationInfo =
+            svg []
+                [ text_
+                    [ SA.fontSize "15"
+                    , SA.fontFamily "sans-serif"
+                    , x - 15.0 |> String.fromFloat |> SA.x
+                    , y - 10.0 |> String.fromFloat |> SA.y
+                    , SA.fill "green"
+                    ]
+                    [ t.population - t.sick |> String.fromInt |> Svg.text ]
+                , text_
+                    [ SA.fontSize "15"
+                    , SA.fontFamily "sans-serif"
+                    , x |> String.fromFloat |> SA.x
+                    , y - 10.0 |> String.fromFloat |> SA.y
+                    , SA.fill "orange"
+                    ]
+                    [ t.sick |> String.fromInt |> Svg.text ]
+                , text_
+                    [ SA.fontSize "15"
+                    , SA.fontFamily "sans-serif"
+                    , x - 5.0 |> String.fromFloat |> SA.x
+                    , y + 20.0 |> String.fromFloat |> SA.y
+                    , SA.fill "red"
+                    ]
+                    [ t.dead |> String.fromInt |> Svg.text ]
+                ]
+
         -- list of positions of the seven hexs in a tile.
     in
-    [ border ] ++ [ cons ]
+    [ border ] ++ [ cons ] ++ [ populationInfo ]
 
 
 renderTileFilm : Model -> Tile -> List (Html Msg)

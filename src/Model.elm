@@ -22,6 +22,7 @@ type alias Model =
     , screenSize : ( Float, Float )
     , viewport : Maybe Viewport
     , virus : Virus
+    , region : Region
     , cardSelected : CardSelected
     , todo : Todo
     , roundTodoCleared : Bool
@@ -31,11 +32,20 @@ type alias Model =
     , basicEcoOutput : Int
     , warehouseNum : Int
     , ecoRatio : Int
-    , isel : Int
-    , jsel : Int
-    , sel : Bool
-    , position : ( Int, Int )
+    , selectedHex : ( Int, Int )
+    , mouseOver : ( Int, Int )
+    , selHex : SelHex
     }
+
+
+type Region
+    = NoRegion
+    | SelectRegion ( Int, Int )
+
+
+type SelHex
+    = SelHexOn
+    | SelHexOff
 
 
 type CardSelected
@@ -66,7 +76,21 @@ initCity tilepeo l =
 sumPopulation : City -> Int
 sumPopulation city =
     city.tilesindex
+        |> List.map (\x -> x.population)
+        |> List.sum
+
+
+sumSick : City -> Int
+sumSick city =
+    city.tilesindex
         |> List.map (\x -> x.sick)
+        |> List.sum
+
+
+sumDead : City -> Int
+sumDead city =
+    city.tilesindex
+        |> List.map (\x -> x.dead)
         |> List.sum
 
 
@@ -112,6 +136,7 @@ initModel _ =
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
+      , region = NoRegion
       , cardSelected = NoCard
       , todo = []
       , roundTodoCleared = False
@@ -121,10 +146,9 @@ initModel _ =
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
       , ecoRatio = 1
-      , isel = 0
-      , jsel = 0
-      , sel = True
-      , position = ( 0, 0 )
+      , selectedHex = ( -233, -233 )
+      , mouseOver = ( -233, -233 )
+      , selHex = SelHexOff
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -134,9 +158,14 @@ sickupdate : List Tile -> List ( Int, Int ) -> Int -> List Tile
 sickupdate t lstvir inf =
     List.map
         (\x ->
-            if List.member x.indice lstvir && x.sick + inf <= x.population then
+            if (LE.count ((==) x.indice) lstvir > 0) && x.sick + inf * LE.count ((==) x.indice) lstvir <= x.population then
                 { x
-                    | sick = x.sick + inf
+                    | sick = x.sick + inf * LE.count ((==) x.indice) lstvir
+                }
+
+            else if LE.count ((==) x.indice) lstvir > 0 then
+                { x
+                    | sick = x.population
                 }
 
             else
@@ -145,8 +174,54 @@ sickupdate t lstvir inf =
         t
 
 
+virusKill : Virus -> City -> City
+virusKill vir city =
+    let
+        dr =
+            vir.kill
 
---virusKill :
+        patients =
+            toFloat (sumSick city)
+
+        death =
+            patients
+                * dr
+                |> round
+
+        ( lstInfectedn, lstInfected1 ) =
+            city.tilesindex
+                |> List.partition (\x -> x.sick > 0)
+                |> Tuple.first
+                |> List.sortBy .sick
+                |> List.partition (\x -> x.sick > 1)
+
+        estimateDeath =
+            List.map (\x -> round (toFloat x.sick * (0.05 + dr))) lstInfectedn
+                |> List.sum
+
+        deathlst =
+            if death <= estimateDeath then
+                List.take (round (toFloat death / toFloat estimateDeath) * List.length lstInfectedn) lstInfectedn
+
+            else
+                lstInfectedn ++ List.take (death - estimateDeath) lstInfected1
+    in
+    { city
+        | tilesindex =
+            List.map
+                (\x ->
+                    if List.member x deathlst then
+                        { x
+                            | sick = x.sick - round (toFloat x.sick * dr)
+                            , dead = x.dead + round (toFloat x.sick * dr)
+                            , population = x.population - round (toFloat x.sick * dr)
+                        }
+
+                    else
+                        x
+                )
+                city.tilesindex
+    }
 
 
 infect : City -> Virus -> City
@@ -182,11 +257,11 @@ populationFlow n city =
                 |> Maybe.withDefault (Tile ( -100, -100 ) 100 0 0 NoConstruction 0)
 
         lstnTile =
+            --not include tile t itself
             validNeighborTile citytileslst t
 
-        --not include tile t itself
         numNeig =
-            --number of valid neighbor tiles (not including t)
+            --number of valid neighbor tiles around tile t (not including tile t)
             List.length lstnTile
 
         sickleave =
@@ -198,7 +273,7 @@ populationFlow n city =
                 t.sick
 
         leaveLst =
-            --List of tiles people would go. Compatible for population < numNeig
+            -- make a ordered list of tiles people would go. Compatible for population < numNeig
             List.sortBy (\x -> x.sick + x.dead * 2) lstnTile
                 |> List.map (\x -> x.indice)
                 |> List.take t.population
@@ -270,4 +345,5 @@ populationFlow n city =
 updateCity : City -> Virus -> City
 updateCity city vir =
     infect city vir
+        |> virusKill vir
         |> populationFlow 1

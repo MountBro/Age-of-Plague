@@ -15,10 +15,8 @@ type Msg
     | NextRound
     | PlayCard Card
     | FreezeRet Float Float
-    | SelI String
-    | SelJ String
-    | AlterSelState
-    | Position Int Int
+    | SelectHex Int Int
+    | MouseOver Int Int
 
 
 type Gamestatus

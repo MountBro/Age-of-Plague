@@ -3,6 +3,7 @@ module Update exposing (..)
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
 import Debug exposing (log, toString)
+import Geometry exposing (..)
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
@@ -19,10 +20,10 @@ update msg model =
 
         Tick newTime ->
             if not (finished model.todo) then
-                pickAction model
+                model |> pickAction |> mFillRegion
 
             else
-                ( model, Cmd.none )
+                ( model, Cmd.none ) |> mFillRegion
 
         AddKey kv ->
             ( model, Cmd.none )
@@ -45,14 +46,25 @@ update msg model =
                 ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc, Cmd.none )
 
         PlayCard card ->
-            if card.cost < model.power && para.ecoThreshold < model.economy then
-                ( { model
-                    | todo = model.todo ++ [ ( True, card.action ) ]
-                    , power = model.power - card.cost
-                    , economy = model.economy - para.ecoThreshold
-                  }
-                , Cmd.none
-                )
+            if card.cost <= model.power && para.ecoThreshold <= model.economy then
+                if card == cut || card == megaCut then
+                    ( { model
+                        | cardSelected = SelectCard card
+                        , selHex = SelHexOn
+                        , power = model.power - card.cost
+                        , economy = model.economy - para.ecoThreshold
+                      }
+                    , Cmd.none
+                    )
+
+                else
+                    ( { model
+                        | todo = model.todo ++ [ ( True, card.action ) ]
+                        , power = model.power - card.cost
+                        , economy = model.economy - para.ecoThreshold
+                      }
+                    , Cmd.none
+                    )
 
             else
                 ( model, Cmd.none )
@@ -67,39 +79,19 @@ update msg model =
             in
             ( { model | behavior = behavior }, Cmd.none )
 
-        SelI text ->
+        SelectHex i j ->
             let
-                i =
-                    parseInputNumber text
+                log1 =
+                    log "i, j: " ( i, j )
             in
-            ( { model | isel = i }, Cmd.none )
+            ( { model | selectedHex = ( i, j ) }, Cmd.none )
 
-        SelJ text ->
+        MouseOver i j ->
             let
-                j =
-                    parseInputNumber text
+                log2 =
+                    log "over" ( i, j )
             in
-            ( { model | jsel = j }, Cmd.none )
-
-        AlterSelState ->
-            ( { model | sel = not model.sel }, Cmd.none )
-
-        Position x y ->
-            ( { model | position = Debug.log "position" ( x, y ) }, Cmd.none )
-
-
-parseInputNumber : String -> Int
-parseInputNumber text =
-    let
-        maybeInt =
-            String.toInt text
-    in
-    case maybeInt of
-        Just val ->
-            val
-
-        Nothing ->
-            0
+            ( { model | mouseOver = ( i, j ) }, Cmd.none )
 
 
 ecoInc : Model -> Model
@@ -182,10 +174,108 @@ performAction action model =
             ( { model | behavior = behavior }, Cmd.none )
 
         EcoDoubleI ->
-            ( { model | ecoRatio = 2 }, Cmd.none )
+            ( { model | ecoRatio = 2 * model.ecoRatio }, Cmd.none )
 
         EcoDoubleI_Freeze prob ->
-            ( { model | ecoRatio = 2 }, Random.generate (FreezeRet prob) (Random.float 0 1) )
+            ( { model | ecoRatio = 2 * model.ecoRatio }, Random.generate (FreezeRet prob) (Random.float 0 1) )
+
+        CutHexI ( i, j ) ->
+            let
+                virus_ =
+                    model.virus
+
+                pos_ =
+                    virus_.pos
+
+                pos =
+                    List.filter (\( x, y ) -> ( x, y ) /= ( i, j )) pos_
+
+                virus =
+                    { virus_ | pos = pos }
+            in
+            ( { model | virus = virus }, Cmd.none )
+
+        CutTileI ( i, j ) ->
+            let
+                ( t1, t2 ) =
+                    converHextoTile ( i, j )
+
+                ( c1, c2 ) =
+                    ( 2 * t1 - t2, t1 + 3 * t2 )
+
+                virus_ =
+                    model.virus
+
+                pos_ =
+                    virus_.pos
+
+                pos =
+                    List.filter
+                        (\( x, y ) ->
+                            not (List.member ( x, y ) (generateZone ( c1, c2 )))
+                        )
+                        pos_
+
+                virus =
+                    { virus_ | pos = pos }
+            in
+            ( { model | virus = virus }, Cmd.none )
+
+        Activate996I ->
+            let
+                virus_ =
+                    model.virus
+
+                dr =
+                    1.05 * virus_.kill
+
+                virus =
+                    { virus_ | kill = dr }
+            in
+            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
+
+
+type alias Sel =
+    ( Int, Int )
+
+
+mFillRegion : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+mFillRegion ( model, cm ) =
+    case model.cardSelected of
+        NoCard ->
+            ( model, Cmd.none )
+
+        SelectCard card ->
+            case model.selHex of
+                SelHexOn ->
+                    if model.selectedHex /= ( -233, -233 ) then
+                        ( { model
+                            | todo =
+                                model.todo
+                                    ++ [ Tuple.first (fillRegion card model.selectedHex) ]
+                            , selHex = SelHexOff
+                            , selectedHex = ( -233, -233 )
+                          }
+                        , Cmd.batch [ cm, Tuple.second (fillRegion card model.selectedHex) ]
+                        )
+
+                    else
+                        ( model, cm )
+
+                SelHexOff ->
+                    ( model, Cmd.none )
+
+
+fillRegion : Card -> Sel -> ( Queue, Cmd Msg )
+fillRegion card sel =
+    if card == cut then
+        ( ( True, [ CutHexI sel ] ), Cmd.none )
+
+    else if card == megaCut then
+        ( ( True, [ CutTileI sel ] ), Cmd.none )
+
+    else
+        ( finishedEmptyQueue, Cmd.none )

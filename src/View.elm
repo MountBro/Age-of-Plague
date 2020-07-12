@@ -5,7 +5,7 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
-import Json.Decode as Decode
+import Json.Decode as D
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
@@ -16,11 +16,26 @@ import Tile exposing (..)
 import Virus exposing (..)
 
 
+onClick : msg -> Svg.Attribute msg
+onClick message =
+    on "click" (D.succeed message)
+
+
+onOver : msg -> Svg.Attribute msg
+onOver message =
+    on "mouseover" (D.succeed message)
+
+
 view : Model -> Html Msg
 view model =
     let
-        l1 =
-            log "position" model.position
+        film =
+            case model.selHex of
+                SelHexOn ->
+                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesindex)
+
+                _ ->
+                    []
     in
     div []
         [ svg
@@ -29,16 +44,14 @@ view model =
             , SA.width "1000"
             , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
             , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
-            , SE.on "svgclick" <|
-                Decode.map2 Position
-                    (Decode.at [ "detail", "x" ] Decode.int)
-                    (Decode.at [ "detail", "y" ] Decode.int)
             ]
-            (List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
+            ([ bkg ]
+                ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
                 ++ renderVirus model.virus
                 ++ renderantiVirus model.av
                 ++ [ renderLevelProgress model ]
                 ++ renderFlags [ 5, 10, 15 ]
+                ++ film
             )
         , evolveButton
         , nextRoundButton
@@ -50,13 +63,23 @@ view model =
         , cardButton coldWave
         , cardButton blizzard
         , cardButton rain
+        , cardButton cut
+        , cardButton fubao
+        , cardButton megaCut
         , Html.text (Debug.toString model.todo)
-        , ul [] []
-        , Html.input [ onInput SelI ] []
-        , Html.input [ onInput SelJ ] []
-        , Html.button [ onClick AlterSelState ] [ Html.text "Sel" ]
-        , Html.text ("sel: " ++ Debug.toString model.sel ++ ". " ++ "i: " ++ Debug.toString model.isel ++ ", " ++ "j: " ++ Debug.toString model.jsel ++ ". ")
         ]
+
+
+bkg : Svg Msg
+bkg =
+    rect
+        [ SA.x "0"
+        , SA.y "0"
+        , SA.width "1000"
+        , SA.height "600"
+        , SA.fill "#2A363b"
+        ]
+        []
 
 
 cardButton : Card -> Html Msg
@@ -109,7 +132,7 @@ renderFlag i =
             [ polyPoint [ para.xlp + wg, para.xlp + wg + sqrt 3 / 2 * a, para.xlp + wg ]
                 [ para.ylp, para.ylp - a / 2, para.ylp - a ]
                 |> SA.points
-            , "red" |> SA.fill
+            , "orange" |> SA.fill
             ]
             []
         ]
@@ -168,6 +191,51 @@ renderHex cstr opa ( i, j ) =
                 |> SA.points
             , cstr |> SA.fill
             , opa |> String.fromFloat |> SA.fillOpacity
+            ]
+            []
+        ]
+
+
+renderFilm : Model -> ( Int, Int ) -> Html Msg
+renderFilm model ( i, j ) =
+    let
+        ( x0, y0 ) =
+            para.tileOrigin
+
+        a =
+            para.a
+
+        h =
+            a / sqrt 3
+
+        ( x, y ) =
+            posAdd (rc ( i, j )) ( x0, y0 )
+
+        tint =
+            if ( i, j ) == model.mouseOver then
+                polygon
+                    [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
+                        [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
+                        |> SA.points
+                    , 0.3 |> String.fromFloat |> SA.fillOpacity
+                    , SA.fill "yellow"
+                    ]
+                    []
+
+            else
+                polygon [] []
+    in
+    svg
+        [ onClick (SelectHex i j)
+        , onOver (MouseOver i j)
+        ]
+        [ tint
+        , polygon
+            [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
+                [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
+                |> SA.points
+            , 0.0 |> String.fromFloat |> SA.fillOpacity
+            , SA.fill "white"
             ]
             []
         ]
@@ -258,7 +326,9 @@ renderTile t =
                 [ polyline
                     [ polyPoint borderX borderY |> SA.points
                     , SA.strokeWidth "2"
-                    , SA.stroke "orange"
+                    , SA.stroke "#2A363B"
+                    , SA.fill "#99b898"
+                    , SA.fillOpacity "1"
                     ]
                     []
                 ]
@@ -288,7 +358,46 @@ renderTile t =
 
         -- list of positions of the seven hexs in a tile.
     in
-    List.map (renderHex "white" 0) lst ++ [ border ] ++ [ cons ]
+    [ border ] ++ [ cons ]
+
+
+renderTileFilm : Model -> Tile -> List (Html Msg)
+renderTileFilm model t =
+    let
+        a =
+            para.a
+
+        h =
+            a / sqrt 3
+
+        ind =
+            t.indice
+
+        t1 =
+            Tuple.first ind
+
+        t2 =
+            Tuple.second ind
+
+        i =
+            2 * t1 - t2
+
+        j =
+            t1 + 3 * t2
+
+        lst =
+            [ ( i, j )
+            , ( i, j - 1 )
+            , ( i, j + 1 )
+            , ( i + 1, j )
+            , ( i + 1, j - 1 )
+            , ( i - 1, j )
+            , ( i - 1, j + 1 )
+            ]
+
+        -- list of positions of the seven hexs in a tile.
+    in
+    List.map (renderFilm model) lst
 
 
 renderVirus : Virus -> List (Html Msg)

@@ -356,9 +356,37 @@ renderTile t =
                     [ constructionCaption |> Svg.text ]
                 ]
 
+        populationInfo =
+            svg []
+                [ text_
+                    [ SA.fontSize "15"
+                    , SA.fontFamily "sans-serif"
+                    , x - 15.0 |> String.fromFloat |> SA.x
+                    , y - 10.0 |> String.fromFloat |> SA.y
+                    , SA.fill "green"
+                    ]
+                    [ t.population - t.sick |> String.fromInt |> Svg.text ]
+                , text_
+                    [ SA.fontSize "15"
+                    , SA.fontFamily "sans-serif"
+                    , x |> String.fromFloat |> SA.x
+                    , y - 10.0 |> String.fromFloat |> SA.y
+                    , SA.fill "orange"
+                    ]
+                    [ t.sick |> String.fromInt |> Svg.text ]
+                , text_
+                    [ SA.fontSize "15"
+                    , SA.fontFamily "sans-serif"
+                    , x - 5.0 |> String.fromFloat |> SA.x
+                    , y + 20.0 |> String.fromFloat |> SA.y
+                    , SA.fill "red"
+                    ]
+                    [ t.dead |> String.fromInt |> Svg.text ]
+                ]
+
         -- list of positions of the seven hexs in a tile.
     in
-    [ border ] ++ [ cons ]
+    [ border ] ++ [ cons ] ++ [ populationInfo ]
 
 
 renderTileFilm : Model -> Tile -> List (Html Msg)

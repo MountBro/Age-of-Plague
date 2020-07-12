@@ -97,9 +97,9 @@ sumDead city =
 initVirus : Virus
 initVirus =
     { rules = [ 2, 4 ]
+    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
 
-    -- , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
-    , pos = cartesianProduct (List.range -5 5) (List.range -5 5)
+    --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
     , number = 0
     , infect = 1
     , kill = 0.5

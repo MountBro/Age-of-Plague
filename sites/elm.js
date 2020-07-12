@@ -6398,79 +6398,19 @@ var $author$project$Message$FreezeRet = F2(
 	function (a, b) {
 		return {$: 'FreezeRet', a: a, b: b};
 	});
-var $author$project$Geometry$generateZone = function (pos) {
-	var j = pos.b;
-	var i = pos.a;
-	return _List_fromArray(
-		[
-			_Utils_Tuple2(i, j - 1),
-			_Utils_Tuple2(i, j + 1),
-			_Utils_Tuple2(i + 1, j),
-			_Utils_Tuple2(i + 1, j - 1),
-			_Utils_Tuple2(i - 1, j),
-			_Utils_Tuple2(i - 1, j + 1)
-		]);
-};
-var $elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
 var $elm$core$Basics$round = _Basics_round;
-var $author$project$Geometry$isInt = function (x) {
-	return $elm$core$Basics$abs(
-		x - $elm$core$Basics$round(x)) < 0.00001;
-};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Geometry$converHextoTile = function (_v0) {
-	var i = _v0.a;
-	var j = _v0.b;
-	return function (_v4) {
-		var x = _v4.a;
-		var y = _v4.b;
-		return _Utils_Tuple2(
-			$elm$core$Basics$round(x),
-			$elm$core$Basics$round(y));
-	}(
-		A2(
-			$elm$core$Maybe$withDefault,
-			_Utils_Tuple2(0, 0),
-			$elm$core$List$head(
-				A2(
-					$elm$core$List$filter,
-					function (_v3) {
-						var x = _v3.a;
-						var y = _v3.b;
-						return $author$project$Geometry$isInt(x) && $author$project$Geometry$isInt(y);
-					},
-					A2(
-						$elm$core$List$map,
-						function (_v2) {
-							var x = _v2.a;
-							var y = _v2.b;
-							return _Utils_Tuple2(((3 * x) + y) / 7, ((2 * y) - x) / 7);
-						},
-						A2(
-							$elm$core$List$map,
-							function (_v1) {
-								var x = _v1.a;
-								var y = _v1.b;
-								return _Utils_Tuple2(x, y);
-							},
-							A2(
-								$elm$core$List$cons,
-								_Utils_Tuple2(i, j),
-								$author$project$Geometry$generateZone(
-									_Utils_Tuple2(i, j)))))))));
+var $author$project$Geometry$converHextoTile = function (hexIn) {
+	var j = hexIn.b;
+	var i = hexIn.a;
+	var x = $elm$core$Basics$round(((3 * i) + j) / 7);
+	var y = $elm$core$Basics$round(((2 * j) - i) / 7);
+	return _Utils_Tuple2(x, y);
 };
 var $elm$random$Random$Generator = function (a) {
 	return {$: 'Generator', a: a};
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
 };
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $elm$random$Random$Seed = F2(
@@ -6584,6 +6524,19 @@ var $elm$random$Random$generate = F2(
 			$elm$random$Random$Generate(
 				A2($elm$random$Random$map, tagger, generator)));
 	});
+var $author$project$Geometry$generateZone = function (pos) {
+	var j = pos.b;
+	var i = pos.a;
+	return _List_fromArray(
+		[
+			_Utils_Tuple2(i, j - 1),
+			_Utils_Tuple2(i, j + 1),
+			_Utils_Tuple2(i + 1, j),
+			_Utils_Tuple2(i + 1, j - 1),
+			_Utils_Tuple2(i - 1, j),
+			_Utils_Tuple2(i - 1, j + 1)
+		]);
+};
 var $author$project$Update$performAction = F2(
 	function (action, model) {
 		switch (action.$) {
@@ -6887,6 +6840,15 @@ var $author$project$Update$performAction = F2(
 					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		}
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
 		}
 	});
 var $author$project$Update$pickAction = function (model) {
@@ -8051,7 +8013,7 @@ var $author$project$View$renderTile = function (t) {
 						$elm$svg$Svg$Attributes$fontSize('15'),
 						$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
 						$elm$svg$Svg$Attributes$x(
-						$elm$core$String$fromFloat(x + 3.0)),
+						$elm$core$String$fromFloat(x)),
 						$elm$svg$Svg$Attributes$y(
 						$elm$core$String$fromFloat(y - 10.0)),
 						$elm$svg$Svg$Attributes$fill('orange')
@@ -8070,7 +8032,7 @@ var $author$project$View$renderTile = function (t) {
 						$elm$svg$Svg$Attributes$x(
 						$elm$core$String$fromFloat(x - 5.0)),
 						$elm$svg$Svg$Attributes$y(
-						$elm$core$String$fromFloat(y + 23.0)),
+						$elm$core$String$fromFloat(y + 20.0)),
 						$elm$svg$Svg$Attributes$fill('red')
 					]),
 				_List_fromArray(

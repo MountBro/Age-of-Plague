@@ -1,17 +1,3 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Main</title>
-  <style>body { padding: 0; margin: 0; }</style>
-</head>
-
-<body>
-
-<pre id="elm"></pre>
-
-<script>
-try {
 (function(scope){
 'use strict';
 
@@ -4369,52 +4355,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-
-
-
-function _Time_now(millisToPosix)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(millisToPosix(Date.now())));
-	});
-}
-
-var _Time_setInterval = F2(function(interval, task)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
-		return function() { clearInterval(id); };
-	});
-});
-
-function _Time_here()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(
-			A2($elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
-		));
-	});
-}
-
-
-function _Time_getZoneName()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		try
-		{
-			var name = $elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
-		}
-		catch (e)
-		{
-			var name = $elm$time$Time$Offset(new Date().getTimezoneOffset());
-		}
-		callback(_Scheduler_succeed(name));
-	});
-}
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5204,1042 +5144,73 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Message$GotViewport = function (a) {
-	return {$: 'GotViewport', a: a};
-};
-var $author$project$Message$Playing = {$: 'Playing'};
-var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
-var $author$project$Model$City = function (tilesindex) {
-	return {tilesindex: tilesindex};
-};
-var $author$project$Tile$None = {$: 'None'};
-var $author$project$Tile$Tile = F6(
-	function (indice, population, sick, dead, construction, cureEff) {
-		return {construction: construction, cureEff: cureEff, dead: dead, indice: indice, population: population, sick: sick};
-	});
-var $author$project$Tile$initTile = F2(
-	function (_v0, population) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return A6(
-			$author$project$Tile$Tile,
-			_Utils_Tuple2(x, y),
-			population,
-			0,
-			0,
-			$author$project$Tile$None,
-			0);
-	});
-var $author$project$Tile$initTiles = F2(
-	function (p, l) {
-		return A2(
-			$elm$core$List$map,
-			function (x) {
-				return A2($author$project$Tile$initTile, x, p);
-			},
-			l);
-	});
-var $author$project$Model$initCity = F2(
-	function (tilepeo, l) {
-		var tiles = A2($author$project$Tile$initTiles, tilepeo, l);
-		return $author$project$Model$City(tiles);
-	});
-var $author$project$Model$initVirus = {
-	infect: 1,
-	kill: 0.5,
-	number: 0,
-	pos: _List_fromArray(
-		[
-			_Utils_Tuple2(1, 2),
-			_Utils_Tuple2(1, 3),
-			_Utils_Tuple2(2, 2),
-			_Utils_Tuple2(2, 4),
-			_Utils_Tuple2(2, 3)
-		]),
-	rules: _List_fromArray(
-		[2, 4])
-};
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $author$project$Model$initModel = function (_v0) {
-	return _Utils_Tuple2(
-		{
-			behavior: {populationFlow: true, virusEvolve: true},
-			city: A2(
-				$author$project$Model$initCity,
-				10,
-				_List_fromArray(
-					[
-						_Utils_Tuple2(0, 0),
-						_Utils_Tuple2(0, 1),
-						_Utils_Tuple2(0, 2),
-						_Utils_Tuple2(1, -1),
-						_Utils_Tuple2(1, 0),
-						_Utils_Tuple2(1, 1),
-						_Utils_Tuple2(2, -1),
-						_Utils_Tuple2(2, 0),
-						_Utils_Tuple2(2, 1),
-						_Utils_Tuple2(3, -1)
-					])),
-			currentRound: 0,
-			screenSize: _Utils_Tuple2(600, 800),
-			state: $author$project$Message$Playing,
-			viewport: $elm$core$Maybe$Nothing,
-			virus: $author$project$Model$initVirus
-		},
-		A2($elm$core$Task$perform, $author$project$Message$GotViewport, $elm$browser$Browser$Dom$getViewport));
-};
-var $author$project$Message$AddKey = function (a) {
-	return {$: 'AddKey', a: a};
-};
-var $author$project$Message$Resize = F2(
-	function (a, b) {
-		return {$: 'Resize', a: a, b: b};
-	});
-var $author$project$Message$Tick = function (a) {
-	return {$: 'Tick', a: a};
-};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$time$Time$Every = F2(
-	function (a, b) {
-		return {$: 'Every', a: a, b: b};
-	});
-var $elm$time$Time$State = F2(
-	function (taggers, processes) {
-		return {processes: processes, taggers: taggers};
-	});
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
-var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
-var $elm$time$Time$init = $elm$core$Task$succeed(
-	A2($elm$time$Time$State, $elm$core$Dict$empty, $elm$core$Dict$empty));
-var $elm$core$Basics$compare = _Utils_compare;
-var $elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
-				switch (_v1.$) {
-					case 'LT':
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 'EQ':
-						return $elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
-		}
-	});
-var $elm$core$Dict$Black = {$: 'Black'};
-var $elm$core$Dict$RBNode_elm_builtin = F5(
-	function (a, b, c, d, e) {
-		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
-	});
-var $elm$core$Dict$Red = {$: 'Red'};
-var $elm$core$Dict$balance = F5(
-	function (color, key, value, left, right) {
-		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
-			var _v1 = right.a;
-			var rK = right.b;
-			var rV = right.c;
-			var rLeft = right.d;
-			var rRight = right.e;
-			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
-				var _v3 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var lLeft = left.d;
-				var lRight = left.e;
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
-					key,
-					value,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, lK, lV, lLeft, lRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, rK, rV, rLeft, rRight));
-			} else {
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					color,
-					rK,
-					rV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, left, rLeft),
-					rRight);
-			}
-		} else {
-			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
-				var _v5 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var _v6 = left.d;
-				var _v7 = _v6.a;
-				var llK = _v6.b;
-				var llV = _v6.c;
-				var llLeft = _v6.d;
-				var llRight = _v6.e;
-				var lRight = left.e;
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
-					lK,
-					lV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, llK, llV, llLeft, llRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, lRight, right));
-			} else {
-				return A5($elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
-			}
-		}
-	});
-var $elm$core$Dict$insertHelp = F3(
-	function (key, value, dict) {
-		if (dict.$ === 'RBEmpty_elm_builtin') {
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
-		} else {
-			var nColor = dict.a;
-			var nKey = dict.b;
-			var nValue = dict.c;
-			var nLeft = dict.d;
-			var nRight = dict.e;
-			var _v1 = A2($elm$core$Basics$compare, key, nKey);
-			switch (_v1.$) {
-				case 'LT':
-					return A5(
-						$elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						A3($elm$core$Dict$insertHelp, key, value, nLeft),
-						nRight);
-				case 'EQ':
-					return A5($elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
-				default:
-					return A5(
-						$elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						nLeft,
-						A3($elm$core$Dict$insertHelp, key, value, nRight));
-			}
-		}
-	});
-var $elm$core$Dict$insert = F3(
-	function (key, value, dict) {
-		var _v0 = A3($elm$core$Dict$insertHelp, key, value, dict);
-		if ((_v0.$ === 'RBNode_elm_builtin') && (_v0.a.$ === 'Red')) {
-			var _v1 = _v0.a;
-			var k = _v0.b;
-			var v = _v0.c;
-			var l = _v0.d;
-			var r = _v0.e;
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, k, v, l, r);
-		} else {
-			var x = _v0;
-			return x;
-		}
-	});
-var $elm$time$Time$addMySub = F2(
-	function (_v0, state) {
-		var interval = _v0.a;
-		var tagger = _v0.b;
-		var _v1 = A2($elm$core$Dict$get, interval, state);
-		if (_v1.$ === 'Nothing') {
-			return A3(
-				$elm$core$Dict$insert,
-				interval,
-				_List_fromArray(
-					[tagger]),
-				state);
-		} else {
-			var taggers = _v1.a;
-			return A3(
-				$elm$core$Dict$insert,
-				interval,
-				A2($elm$core$List$cons, tagger, taggers),
-				state);
-		}
-	});
-var $elm$core$Process$kill = _Scheduler_kill;
-var $elm$core$Dict$foldl = F3(
-	function (func, acc, dict) {
-		foldl:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$func = func,
-					$temp$acc = A3(
-					func,
-					key,
-					value,
-					A3($elm$core$Dict$foldl, func, acc, left)),
-					$temp$dict = right;
-				func = $temp$func;
-				acc = $temp$acc;
-				dict = $temp$dict;
-				continue foldl;
-			}
-		}
-	});
-var $elm$core$Dict$merge = F6(
-	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
-		var stepState = F3(
-			function (rKey, rValue, _v0) {
-				stepState:
-				while (true) {
-					var list = _v0.a;
-					var result = _v0.b;
-					if (!list.b) {
-						return _Utils_Tuple2(
-							list,
-							A3(rightStep, rKey, rValue, result));
-					} else {
-						var _v2 = list.a;
-						var lKey = _v2.a;
-						var lValue = _v2.b;
-						var rest = list.b;
-						if (_Utils_cmp(lKey, rKey) < 0) {
-							var $temp$rKey = rKey,
-								$temp$rValue = rValue,
-								$temp$_v0 = _Utils_Tuple2(
-								rest,
-								A3(leftStep, lKey, lValue, result));
-							rKey = $temp$rKey;
-							rValue = $temp$rValue;
-							_v0 = $temp$_v0;
-							continue stepState;
-						} else {
-							if (_Utils_cmp(lKey, rKey) > 0) {
-								return _Utils_Tuple2(
-									list,
-									A3(rightStep, rKey, rValue, result));
-							} else {
-								return _Utils_Tuple2(
-									rest,
-									A4(bothStep, lKey, lValue, rValue, result));
-							}
-						}
-					}
-				}
-			});
-		var _v3 = A3(
-			$elm$core$Dict$foldl,
-			stepState,
-			_Utils_Tuple2(
-				$elm$core$Dict$toList(leftDict),
-				initialResult),
-			rightDict);
-		var leftovers = _v3.a;
-		var intermediateResult = _v3.b;
-		return A3(
-			$elm$core$List$foldl,
-			F2(
-				function (_v4, result) {
-					var k = _v4.a;
-					var v = _v4.b;
-					return A3(leftStep, k, v, result);
-				}),
-			intermediateResult,
-			leftovers);
-	});
-var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
-var $elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var $elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var $elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
-	});
-var $elm$time$Time$customZone = $elm$time$Time$Zone;
-var $elm$time$Time$setInterval = _Time_setInterval;
-var $elm$core$Process$spawn = _Scheduler_spawn;
-var $elm$time$Time$spawnHelp = F3(
-	function (router, intervals, processes) {
-		if (!intervals.b) {
-			return $elm$core$Task$succeed(processes);
-		} else {
-			var interval = intervals.a;
-			var rest = intervals.b;
-			var spawnTimer = $elm$core$Process$spawn(
-				A2(
-					$elm$time$Time$setInterval,
-					interval,
-					A2($elm$core$Platform$sendToSelf, router, interval)));
-			var spawnRest = function (id) {
-				return A3(
-					$elm$time$Time$spawnHelp,
-					router,
-					rest,
-					A3($elm$core$Dict$insert, interval, id, processes));
-			};
-			return A2($elm$core$Task$andThen, spawnRest, spawnTimer);
-		}
-	});
-var $elm$time$Time$onEffects = F3(
-	function (router, subs, _v0) {
-		var processes = _v0.processes;
-		var rightStep = F3(
-			function (_v6, id, _v7) {
-				var spawns = _v7.a;
-				var existing = _v7.b;
-				var kills = _v7.c;
-				return _Utils_Tuple3(
-					spawns,
-					existing,
-					A2(
-						$elm$core$Task$andThen,
-						function (_v5) {
-							return kills;
-						},
-						$elm$core$Process$kill(id)));
-			});
-		var newTaggers = A3($elm$core$List$foldl, $elm$time$Time$addMySub, $elm$core$Dict$empty, subs);
-		var leftStep = F3(
-			function (interval, taggers, _v4) {
-				var spawns = _v4.a;
-				var existing = _v4.b;
-				var kills = _v4.c;
-				return _Utils_Tuple3(
-					A2($elm$core$List$cons, interval, spawns),
-					existing,
-					kills);
-			});
-		var bothStep = F4(
-			function (interval, taggers, id, _v3) {
-				var spawns = _v3.a;
-				var existing = _v3.b;
-				var kills = _v3.c;
-				return _Utils_Tuple3(
-					spawns,
-					A3($elm$core$Dict$insert, interval, id, existing),
-					kills);
-			});
-		var _v1 = A6(
-			$elm$core$Dict$merge,
-			leftStep,
-			bothStep,
-			rightStep,
-			newTaggers,
-			processes,
-			_Utils_Tuple3(
-				_List_Nil,
-				$elm$core$Dict$empty,
-				$elm$core$Task$succeed(_Utils_Tuple0)));
-		var spawnList = _v1.a;
-		var existingDict = _v1.b;
-		var killTask = _v1.c;
-		return A2(
-			$elm$core$Task$andThen,
-			function (newProcesses) {
-				return $elm$core$Task$succeed(
-					A2($elm$time$Time$State, newTaggers, newProcesses));
-			},
-			A2(
-				$elm$core$Task$andThen,
-				function (_v2) {
-					return A3($elm$time$Time$spawnHelp, router, spawnList, existingDict);
-				},
-				killTask));
-	});
-var $elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
-var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
-var $elm$time$Time$onSelfMsg = F3(
-	function (router, interval, state) {
-		var _v0 = A2($elm$core$Dict$get, interval, state.taggers);
-		if (_v0.$ === 'Nothing') {
-			return $elm$core$Task$succeed(state);
-		} else {
-			var taggers = _v0.a;
-			var tellTaggers = function (time) {
-				return $elm$core$Task$sequence(
-					A2(
-						$elm$core$List$map,
-						function (tagger) {
-							return A2(
-								$elm$core$Platform$sendToApp,
-								router,
-								tagger(time));
-						},
-						taggers));
-			};
-			return A2(
-				$elm$core$Task$andThen,
-				function (_v1) {
-					return $elm$core$Task$succeed(state);
-				},
-				A2($elm$core$Task$andThen, tellTaggers, $elm$time$Time$now));
-		}
-	});
-var $elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var $elm$time$Time$subMap = F2(
-	function (f, _v0) {
-		var interval = _v0.a;
-		var tagger = _v0.b;
-		return A2(
-			$elm$time$Time$Every,
-			interval,
-			A2($elm$core$Basics$composeL, f, tagger));
-	});
-_Platform_effectManagers['Time'] = _Platform_createManager($elm$time$Time$init, $elm$time$Time$onEffects, $elm$time$Time$onSelfMsg, 0, $elm$time$Time$subMap);
-var $elm$time$Time$subscription = _Platform_leaf('Time');
-var $elm$time$Time$every = F2(
-	function (interval, tagger) {
-		return $elm$time$Time$subscription(
-			A2($elm$time$Time$Every, interval, tagger));
-	});
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Message$Character = function (a) {
-	return {$: 'Character', a: a};
-};
-var $author$project$Message$Control = function (a) {
-	return {$: 'Control', a: a};
-};
-var $elm$core$Debug$log = _Debug_log;
-var $author$project$Message$toKeyValue = function (string) {
-	var _v0 = $elm$core$Debug$log(string);
-	var _v1 = $elm$core$String$uncons(string);
-	if ((_v1.$ === 'Just') && (_v1.a.b === '')) {
-		var _v2 = _v1.a;
-		var _char = _v2.a;
-		return $author$project$Message$Character(_char);
-	} else {
-		return $author$project$Message$Control(string);
-	}
-};
-var $author$project$Message$keyDecoder = A2(
-	$elm$json$Json$Decode$map,
-	$author$project$Message$toKeyValue,
-	A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string));
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$browser$Browser$Events$Document = {$: 'Document'};
-var $elm$browser$Browser$Events$MySub = F3(
-	function (a, b, c) {
-		return {$: 'MySub', a: a, b: b, c: c};
-	});
-var $elm$browser$Browser$Events$State = F2(
-	function (subs, pids) {
-		return {pids: pids, subs: subs};
-	});
-var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
-	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
-var $elm$browser$Browser$Events$nodeToKey = function (node) {
-	if (node.$ === 'Document') {
-		return 'd_';
-	} else {
-		return 'w_';
-	}
-};
-var $elm$browser$Browser$Events$addKey = function (sub) {
-	var node = sub.a;
-	var name = sub.b;
-	return _Utils_Tuple2(
-		_Utils_ap(
-			$elm$browser$Browser$Events$nodeToKey(node),
-			name),
-		sub);
-};
-var $elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
-			}),
-		$elm$core$Dict$empty,
-		assocs);
-};
-var $elm$browser$Browser$Events$Event = F2(
-	function (key, event) {
-		return {event: event, key: key};
-	});
-var $elm$browser$Browser$Events$spawn = F3(
-	function (router, key, _v0) {
-		var node = _v0.a;
-		var name = _v0.b;
-		var actualNode = function () {
-			if (node.$ === 'Document') {
-				return _Browser_doc;
-			} else {
-				return _Browser_window;
-			}
-		}();
-		return A2(
-			$elm$core$Task$map,
-			function (value) {
-				return _Utils_Tuple2(key, value);
-			},
-			A3(
-				_Browser_on,
-				actualNode,
-				name,
-				function (event) {
-					return A2(
-						$elm$core$Platform$sendToSelf,
-						router,
-						A2($elm$browser$Browser$Events$Event, key, event));
-				}));
-	});
-var $elm$core$Dict$union = F2(
-	function (t1, t2) {
-		return A3($elm$core$Dict$foldl, $elm$core$Dict$insert, t2, t1);
-	});
-var $elm$browser$Browser$Events$onEffects = F3(
-	function (router, subs, state) {
-		var stepRight = F3(
-			function (key, sub, _v6) {
-				var deads = _v6.a;
-				var lives = _v6.b;
-				var news = _v6.c;
-				return _Utils_Tuple3(
-					deads,
-					lives,
-					A2(
-						$elm$core$List$cons,
-						A3($elm$browser$Browser$Events$spawn, router, key, sub),
-						news));
-			});
-		var stepLeft = F3(
-			function (_v4, pid, _v5) {
-				var deads = _v5.a;
-				var lives = _v5.b;
-				var news = _v5.c;
-				return _Utils_Tuple3(
-					A2($elm$core$List$cons, pid, deads),
-					lives,
-					news);
-			});
-		var stepBoth = F4(
-			function (key, pid, _v2, _v3) {
-				var deads = _v3.a;
-				var lives = _v3.b;
-				var news = _v3.c;
-				return _Utils_Tuple3(
-					deads,
-					A3($elm$core$Dict$insert, key, pid, lives),
-					news);
-			});
-		var newSubs = A2($elm$core$List$map, $elm$browser$Browser$Events$addKey, subs);
-		var _v0 = A6(
-			$elm$core$Dict$merge,
-			stepLeft,
-			stepBoth,
-			stepRight,
-			state.pids,
-			$elm$core$Dict$fromList(newSubs),
-			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
-		var deadPids = _v0.a;
-		var livePids = _v0.b;
-		var makeNewPids = _v0.c;
-		return A2(
-			$elm$core$Task$andThen,
-			function (pids) {
-				return $elm$core$Task$succeed(
-					A2(
-						$elm$browser$Browser$Events$State,
-						newSubs,
-						A2(
-							$elm$core$Dict$union,
-							livePids,
-							$elm$core$Dict$fromList(pids))));
-			},
-			A2(
-				$elm$core$Task$andThen,
-				function (_v1) {
-					return $elm$core$Task$sequence(makeNewPids);
-				},
-				$elm$core$Task$sequence(
-					A2($elm$core$List$map, $elm$core$Process$kill, deadPids))));
-	});
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (_v0.$ === 'Just') {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
-var $elm$browser$Browser$Events$onSelfMsg = F3(
-	function (router, _v0, state) {
-		var key = _v0.key;
-		var event = _v0.event;
-		var toMessage = function (_v2) {
-			var subKey = _v2.a;
-			var _v3 = _v2.b;
-			var node = _v3.a;
-			var name = _v3.b;
-			var decoder = _v3.c;
-			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
-		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.subs);
-		return A2(
-			$elm$core$Task$andThen,
-			function (_v1) {
-				return $elm$core$Task$succeed(state);
-			},
-			$elm$core$Task$sequence(
-				A2(
-					$elm$core$List$map,
-					$elm$core$Platform$sendToApp(router),
-					messages)));
-	});
-var $elm$browser$Browser$Events$subMap = F2(
-	function (func, _v0) {
-		var node = _v0.a;
-		var name = _v0.b;
-		var decoder = _v0.c;
-		return A3(
-			$elm$browser$Browser$Events$MySub,
-			node,
-			name,
-			A2($elm$json$Json$Decode$map, func, decoder));
-	});
-_Platform_effectManagers['Browser.Events'] = _Platform_createManager($elm$browser$Browser$Events$init, $elm$browser$Browser$Events$onEffects, $elm$browser$Browser$Events$onSelfMsg, 0, $elm$browser$Browser$Events$subMap);
-var $elm$browser$Browser$Events$subscription = _Platform_leaf('Browser.Events');
-var $elm$browser$Browser$Events$on = F3(
-	function (node, name, decoder) {
-		return $elm$browser$Browser$Events$subscription(
-			A3($elm$browser$Browser$Events$MySub, node, name, decoder));
-	});
-var $elm$browser$Browser$Events$onKeyDown = A2($elm$browser$Browser$Events$on, $elm$browser$Browser$Events$Document, 'keydown');
-var $elm$browser$Browser$Events$Window = {$: 'Window'};
-var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$browser$Browser$Events$onResize = function (func) {
-	return A3(
-		$elm$browser$Browser$Events$on,
-		$elm$browser$Browser$Events$Window,
-		'resize',
-		A2(
-			$elm$json$Json$Decode$field,
-			'target',
-			A3(
-				$elm$json$Json$Decode$map2,
-				func,
-				A2($elm$json$Json$Decode$field, 'innerWidth', $elm$json$Json$Decode$int),
-				A2($elm$json$Json$Decode$field, 'innerHeight', $elm$json$Json$Decode$int))));
-};
-var $author$project$Main$subscriptions = function (model) {
-	return $elm$core$Platform$Sub$batch(
-		_List_fromArray(
-			[
-				$elm$browser$Browser$Events$onKeyDown(
-				A2($elm$json$Json$Decode$map, $author$project$Message$AddKey, $author$project$Message$keyDecoder)),
-				_Utils_eq(model.state, $author$project$Message$Playing) ? $elm$core$Platform$Sub$batch(
-				_List_fromArray(
-					[
-						A2($elm$time$Time$every, 50, $author$project$Message$Tick),
-						$elm$browser$Browser$Events$onResize($author$project$Message$Resize)
-					])) : $elm$core$Platform$Sub$none
-			]));
-};
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
-var $author$project$Geometry$generateZone = function (pos) {
-	var j = pos.b;
-	var i = pos.a;
-	return _List_fromArray(
-		[
-			_Utils_Tuple2(i, j - 1),
-			_Utils_Tuple2(i, j + 1),
-			_Utils_Tuple2(i + 1, j),
-			_Utils_Tuple2(i + 1, j - 1),
-			_Utils_Tuple2(i - 1, j),
-			_Utils_Tuple2(i - 1, j + 1)
-		]);
-};
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			$elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
-	});
-var $elm$core$List$sum = function (numbers) {
-	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
-};
-var $author$project$Virus$countInfectedNeighbor = F2(
-	function (pos, lstv) {
-		var lstn = $author$project$Geometry$generateZone(pos);
-		return $elm$core$List$sum(
-			A2(
-				$elm$core$List$map,
-				function (x) {
-					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
-				},
-				lstn));
-	});
-var $elm$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _v0) {
-				var trues = _v0.a;
-				var falses = _v0.b;
-				return pred(x) ? _Utils_Tuple2(
-					A2($elm$core$List$cons, x, trues),
-					falses) : _Utils_Tuple2(
-					trues,
-					A2($elm$core$List$cons, x, falses));
-			});
-		return A3(
-			$elm$core$List$foldr,
-			step,
-			_Utils_Tuple2(_List_Nil, _List_Nil),
-			list);
-	});
-var $author$project$Virus$judgeAlive = F2(
-	function (lstp, vir) {
-		var lst = A2(
-			$elm$core$List$partition,
-			function (x) {
-				return A2(
-					$elm$core$List$member,
-					A2($author$project$Virus$countInfectedNeighbor, x, vir.pos),
-					vir.rules);
-			},
-			lstp).a;
-		return _Utils_update(
-			vir,
-			{pos: lst});
-	});
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$Set$Set_elm_builtin = function (a) {
-	return {$: 'Set_elm_builtin', a: a};
-};
-var $elm$core$Set$empty = $elm$core$Set$Set_elm_builtin($elm$core$Dict$empty);
-var $elm$core$Set$insert = F2(
-	function (key, _v0) {
-		var dict = _v0.a;
-		return $elm$core$Set$Set_elm_builtin(
-			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
-	});
-var $elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _v0 = A2($elm$core$Dict$get, key, dict);
-		if (_v0.$ === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var $elm$core$Set$member = F2(
-	function (key, _v0) {
-		var dict = _v0.a;
-		return A2($elm$core$Dict$member, key, dict);
-	});
-var $elm_community$list_extra$List$Extra$uniqueHelp = F4(
-	function (f, existing, remaining, accumulator) {
-		uniqueHelp:
-		while (true) {
-			if (!remaining.b) {
-				return $elm$core$List$reverse(accumulator);
-			} else {
-				var first = remaining.a;
-				var rest = remaining.b;
-				var computedFirst = f(first);
-				if (A2($elm$core$Set$member, computedFirst, existing)) {
-					var $temp$f = f,
-						$temp$existing = existing,
-						$temp$remaining = rest,
-						$temp$accumulator = accumulator;
-					f = $temp$f;
-					existing = $temp$existing;
-					remaining = $temp$remaining;
-					accumulator = $temp$accumulator;
-					continue uniqueHelp;
-				} else {
-					var $temp$f = f,
-						$temp$existing = A2($elm$core$Set$insert, computedFirst, existing),
-						$temp$remaining = rest,
-						$temp$accumulator = A2($elm$core$List$cons, first, accumulator);
-					f = $temp$f;
-					existing = $temp$existing;
-					remaining = $temp$remaining;
-					accumulator = $temp$accumulator;
-					continue uniqueHelp;
-				}
-			}
-		}
-	});
-var $elm_community$list_extra$List$Extra$unique = function (list) {
-	return A4($elm_community$list_extra$List$Extra$uniqueHelp, $elm$core$Basics$identity, $elm$core$Set$empty, list, _List_Nil);
-};
-var $author$project$Virus$searchNeighbor = function (virlst) {
-	return $elm_community$list_extra$List$Extra$unique(
-		$elm$core$List$concat(
-			A2(
-				$elm$core$List$map,
-				function (x) {
-					return $author$project$Geometry$generateZone(x);
-				},
-				virlst)));
-};
-var $author$project$Virus$change = function (virus) {
-	var lstn = $author$project$Virus$searchNeighbor(virus.pos);
-	return A2($author$project$Virus$judgeAlive, lstn, virus);
-};
-var $elm$core$Basics$round = _Basics_round;
-var $author$project$Geometry$converHextoTile = function (hexIn) {
-	var j = hexIn.b;
-	var i = hexIn.a;
-	var x = $elm$core$Basics$round(((2 * j) - i) / 7);
-	var y = $elm$core$Basics$round(((3 * i) + j) / 7);
-	return _Utils_Tuple2(x, y);
-};
-var $author$project$Model$sickupdate = F3(
-	function (t, lstvir, inf) {
-		return A2(
-			$elm$core$List$map,
-			function (x) {
-				return (A2($elm$core$List$member, x.indice, lstvir) && (_Utils_cmp(x.sick + inf, x.population) < 1)) ? _Utils_update(
-					x,
-					{sick: x.sick + inf}) : x;
-			},
-			t);
-	});
-var $author$project$Model$infect = F2(
-	function (city, virus) {
-		var lstvirHexIndice = virus.pos;
-		var lstvirTilesIndice = A2(
-			$elm$core$List$map,
-			function (x) {
-				return $author$project$Geometry$converHextoTile(x);
-			},
-			lstvirHexIndice);
-		var lstTile = city.tilesindex;
-		var inf = virus.infect;
-		return _Utils_update(
-			city,
-			{
-				tilesindex: A3($author$project$Model$sickupdate, lstTile, lstvirTilesIndice, inf)
-			});
-	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Update$update = F2(
+var $author$project$Main$init = function (flags) {
+	return _Utils_Tuple2(
+		{draft: '', messages: _List_Nil},
+		$elm$core$Platform$Cmd$none);
+};
+var $author$project$Main$Recv = function (a) {
+	return {$: 'Recv', a: a};
+};
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $author$project$Main$messageReceiver = _Platform_incomingPort('messageReceiver', $elm$json$Json$Decode$string);
+var $author$project$Main$subscriptions = function (_v0) {
+	return $author$project$Main$messageReceiver($author$project$Main$Recv);
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Main$sendMessage = _Platform_outgoingPort('sendMessage', $elm$json$Json$Encode$string);
+var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
-			case 'Resize':
-				var w = msg.a;
-				var h = msg.b;
+			case 'DraftChanged':
+				var draft = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							screenSize: _Utils_Tuple2(w, h)
-						}),
+						{draft: draft}),
 					$elm$core$Platform$Cmd$none);
-			case 'Tick':
-				var newTime = msg.a;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			case 'AddKey':
-				var kv = msg.a;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			case 'GotViewport':
-				var viewport = msg.a;
+			case 'Send':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							screenSize: _Utils_Tuple2(viewport.viewport.width, viewport.viewport.height),
-							viewport: $elm$core$Maybe$Just(viewport)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 'VirusEvolve':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							city: A2($author$project$Model$infect, model.city, model.virus),
-							virus: $author$project$Virus$change(model.virus)
-						}),
-					$elm$core$Platform$Cmd$none);
+						{draft: ''}),
+					$author$project$Main$sendMessage(model.draft));
 			default:
+				var message = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{currentRound: model.currentRound + 1}),
+						{
+							messages: _Utils_ap(
+								model.messages,
+								_List_fromArray(
+									[message]))
+						}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $author$project$Message$VirusEvolve = {$: 'VirusEvolve'};
+var $author$project$Main$DraftChanged = function (a) {
+	return {$: 'DraftChanged', a: a};
+};
+var $author$project$Main$Send = {$: 'Send'};
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $author$project$Main$ifIsEnter = function (msg) {
+	return A2(
+		$elm$json$Json$Decode$andThen,
+		function (key) {
+			return (key === 'Enter') ? $elm$json$Json$Decode$succeed(msg) : $elm$json$Json$Decode$fail('some other key');
+		},
+		A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string));
+};
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -6257,515 +5228,105 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$View$evolveButton = A2(
-	$elm$html$Html$button,
-	_List_fromArray(
-		[
-			$elm$html$Html$Events$onClick($author$project$Message$VirusEvolve)
-		]),
-	_List_fromArray(
-		[
-			$elm$html$Html$text('EVOLVE')
-		]));
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var $author$project$Message$NextRound = {$: 'NextRound'};
-var $author$project$View$nextRoundButton = A2(
-	$elm$html$Html$button,
-	_List_fromArray(
-		[
-			$elm$html$Html$Events$onClick($author$project$Message$NextRound)
-		]),
-	_List_fromArray(
-		[
-			$elm$html$Html$text('next round')
-		]));
-var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
-var $elm$core$Basics$min = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) < 0) ? x : y;
-	});
-var $author$project$Parameters$para = {
-	a: 15,
-	af: 12.0,
-	h: 600,
-	hlp: 25.0,
-	tileOrigin: _Utils_Tuple2(400.0, 400.0),
-	w: 1000,
-	wlp: 200.0,
-	xlp: 10.0,
-	ylp: 30.0
-};
-var $elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
-var $elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Geometry$polyPoint = F2(
-	function (l1, l2) {
-		if ($elm$core$List$isEmpty(l1) || $elm$core$List$isEmpty(l2)) {
-			return '';
-		} else {
-			var head2 = A2(
-				$elm$core$Maybe$withDefault,
-				0.0,
-				$elm$core$List$head(l2));
-			var s2 = $elm$core$String$fromFloat(head2);
-			var head1 = A2(
-				$elm$core$Maybe$withDefault,
-				0.0,
-				$elm$core$List$head(l1));
-			var s1 = $elm$core$String$fromFloat(head1);
-			var s = s1 + (',' + (s2 + ' '));
-			return _Utils_ap(
-				s,
-				A2(
-					$author$project$Geometry$polyPoint,
-					A2($elm$core$List$drop, 1, l1),
-					A2($elm$core$List$drop, 1, l2)));
-		}
-	});
-var $elm$svg$Svg$polygon = $elm$svg$Svg$trustedNode('polygon');
-var $elm$core$Basics$sqrt = _Basics_sqrt;
-var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var $elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
-var $elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var $elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var $elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
-var $author$project$View$renderFlag = function (i) {
-	var wg = (A2($elm$core$Basics$min, i, 20) / 20) * $author$project$Parameters$para.wlp;
-	var a = $author$project$Parameters$para.af;
-	return A2(
-		$elm$svg$Svg$svg,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$line,
-				_List_fromArray(
-					[
-						$elm$svg$Svg$Attributes$x1(
-						$elm$core$String$fromFloat($author$project$Parameters$para.xlp + wg)),
-						$elm$svg$Svg$Attributes$y1(
-						$elm$core$String$fromFloat($author$project$Parameters$para.ylp + $author$project$Parameters$para.hlp)),
-						$elm$svg$Svg$Attributes$x2(
-						$elm$core$String$fromFloat($author$project$Parameters$para.xlp + wg)),
-						$elm$svg$Svg$Attributes$y2(
-						$elm$core$String$fromFloat($author$project$Parameters$para.ylp)),
-						$elm$svg$Svg$Attributes$strokeWidth(
-						$elm$core$String$fromFloat(1.0)),
-						$elm$svg$Svg$Attributes$stroke('black')
-					]),
-				_List_Nil),
-				A2(
-				$elm$svg$Svg$polygon,
-				_List_fromArray(
-					[
-						$elm$svg$Svg$Attributes$points(
-						A2(
-							$author$project$Geometry$polyPoint,
-							_List_fromArray(
-								[
-									$author$project$Parameters$para.xlp + wg,
-									($author$project$Parameters$para.xlp + wg) + (($elm$core$Basics$sqrt(3) / 2) * a),
-									$author$project$Parameters$para.xlp + wg
-								]),
-							_List_fromArray(
-								[$author$project$Parameters$para.ylp, $author$project$Parameters$para.ylp - (a / 2), $author$project$Parameters$para.ylp - a]))),
-						$elm$svg$Svg$Attributes$fill('red')
-					]),
-				_List_Nil)
-			]));
-};
-var $author$project$View$renderFlags = function (li) {
-	return A2($elm$core$List$map, $author$project$View$renderFlag, li);
-};
-var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
-var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$View$renderLevelProgress = function (model) {
-	var wg = (A2($elm$core$Basics$min, model.currentRound, 20) / 20.0) * $author$project$Parameters$para.wlp;
-	return A2(
-		$elm$svg$Svg$svg,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$rect,
-				_List_fromArray(
-					[
-						$elm$svg$Svg$Attributes$x(
-						$elm$core$String$fromFloat($author$project$Parameters$para.xlp)),
-						$elm$svg$Svg$Attributes$y(
-						$elm$core$String$fromFloat($author$project$Parameters$para.ylp)),
-						$elm$svg$Svg$Attributes$width(
-						$elm$core$String$fromFloat($author$project$Parameters$para.wlp)),
-						$elm$svg$Svg$Attributes$height(
-						$elm$core$String$fromFloat($author$project$Parameters$para.hlp)),
-						$elm$svg$Svg$Attributes$fill('#666666')
-					]),
-				_List_Nil),
-				A2(
-				$elm$svg$Svg$rect,
-				_List_fromArray(
-					[
-						$elm$svg$Svg$Attributes$x(
-						$elm$core$String$fromFloat($author$project$Parameters$para.xlp)),
-						$elm$svg$Svg$Attributes$y(
-						$elm$core$String$fromFloat($author$project$Parameters$para.ylp)),
-						$elm$svg$Svg$Attributes$width(
-						$elm$core$String$fromFloat(wg)),
-						$elm$svg$Svg$Attributes$height(
-						$elm$core$String$fromFloat($author$project$Parameters$para.hlp)),
-						$elm$svg$Svg$Attributes$fill('green')
-					]),
-				_List_Nil)
-			]));
-};
-var $elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
-var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var $elm$svg$Svg$polyline = $elm$svg$Svg$trustedNode('polyline');
-var $author$project$Geometry$posAdd = F2(
-	function (_v0, _v1) {
-		var x1 = _v0.a;
-		var y1 = _v0.b;
-		var x2 = _v1.a;
-		var y2 = _v1.b;
-		return _Utils_Tuple2(x1 + x2, y1 + y2);
-	});
-var $author$project$Geometry$rc = function (_v0) {
-	var i = _v0.a;
-	var j = _v0.b;
-	var a = $author$project$Parameters$para.a;
-	var x = a * (i + (2 * j));
-	var y = -((a * i) * $elm$core$Basics$sqrt(3));
-	return _Utils_Tuple2(x, y);
-};
-var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
-var $author$project$View$renderHex = F3(
-	function (cstr, opa, _v0) {
-		var i = _v0.a;
-		var j = _v0.b;
-		var a = $author$project$Parameters$para.a;
-		var h = a / $elm$core$Basics$sqrt(3);
-		var _v1 = $author$project$Parameters$para.tileOrigin;
-		var x0 = _v1.a;
-		var y0 = _v1.b;
-		var _v2 = A2(
-			$author$project$Geometry$posAdd,
-			$author$project$Geometry$rc(
-				_Utils_Tuple2(i, j)),
-			_Utils_Tuple2(x0, y0));
-		var x = _v2.a;
-		var y = _v2.b;
-		return A2(
-			$elm$svg$Svg$svg,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points(
-							A2(
-								$author$project$Geometry$polyPoint,
-								_List_fromArray(
-									[x + a, x, x - a, x - a, x, x + a]),
-								_List_fromArray(
-									[y + h, y + (2 * h), y + h, y - h, y - (2 * h), y - h]))),
-							$elm$svg$Svg$Attributes$fill(cstr),
-							$elm$svg$Svg$Attributes$fillOpacity(
-							$elm$core$String$fromFloat(opa))
-						]),
-					_List_Nil)
-				]));
-	});
-var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
-var $author$project$View$renderTile = function (t) {
-	var ind = t.indice;
-	var t1 = ind.a;
-	var t2 = ind.b;
-	var j = t1 + (3 * t2);
-	var i = (2 * t1) - t2;
-	var lst = _List_fromArray(
-		[
-			_Utils_Tuple2(i, j),
-			_Utils_Tuple2(i, j - 1),
-			_Utils_Tuple2(i, j + 1),
-			_Utils_Tuple2(i + 1, j),
-			_Utils_Tuple2(i + 1, j - 1),
-			_Utils_Tuple2(i - 1, j),
-			_Utils_Tuple2(i - 1, j + 1)
-		]);
-	var constructionCaption = function () {
-		var _v8 = t.construction;
-		switch (_v8.$) {
-			case 'Hos':
-				return 'H';
-			case 'Qua':
-				return 'Q';
-			default:
-				return 'N';
-		}
-	}();
-	var a = $author$project$Parameters$para.a;
-	var h = a / $elm$core$Basics$sqrt(3);
-	var _v0 = $author$project$Parameters$para.tileOrigin;
-	var x0 = _v0.a;
-	var y0 = _v0.b;
-	var _v1 = A2(
-		$author$project$Geometry$posAdd,
-		$author$project$Geometry$rc(
-			_Utils_Tuple2(i, j + 1)),
-		_Utils_Tuple2(x0, y0));
-	var x1 = _v1.a;
-	var y1 = _v1.b;
-	var _v2 = A2(
-		$author$project$Geometry$posAdd,
-		$author$project$Geometry$rc(
-			_Utils_Tuple2(i - 1, j + 1)),
-		_Utils_Tuple2(x0, y0));
-	var x2 = _v2.a;
-	var y2 = _v2.b;
-	var _v3 = A2(
-		$author$project$Geometry$posAdd,
-		$author$project$Geometry$rc(
-			_Utils_Tuple2(i - 1, j)),
-		_Utils_Tuple2(x0, y0));
-	var x3 = _v3.a;
-	var y3 = _v3.b;
-	var _v4 = A2(
-		$author$project$Geometry$posAdd,
-		$author$project$Geometry$rc(
-			_Utils_Tuple2(i, j - 1)),
-		_Utils_Tuple2(x0, y0));
-	var x4 = _v4.a;
-	var y4 = _v4.b;
-	var _v5 = A2(
-		$author$project$Geometry$posAdd,
-		$author$project$Geometry$rc(
-			_Utils_Tuple2(i + 1, j - 1)),
-		_Utils_Tuple2(x0, y0));
-	var x5 = _v5.a;
-	var y5 = _v5.b;
-	var _v6 = A2(
-		$author$project$Geometry$posAdd,
-		$author$project$Geometry$rc(
-			_Utils_Tuple2(i + 1, j)),
-		_Utils_Tuple2(x0, y0));
-	var x6 = _v6.a;
-	var y6 = _v6.b;
-	var borderX = _Utils_ap(
-		_List_fromArray(
-			[x1, x1 + a, x1 + a]),
-		_Utils_ap(
-			_List_fromArray(
-				[x2 + a, x2 + a, x2]),
-			_Utils_ap(
-				_List_fromArray(
-					[x3 + a, x3, x3 - a]),
-				_Utils_ap(
-					_List_fromArray(
-						[x4, x4 - a, x4 - a]),
-					_Utils_ap(
-						_List_fromArray(
-							[x5 - a, x5 - a, x5]),
-						_List_fromArray(
-							[x6 - a, x6, x6 + a]))))));
-	var borderY = _Utils_ap(
-		_List_fromArray(
-			[y1 - (2 * h), y1 - h, y1 + h]),
-		_Utils_ap(
-			_List_fromArray(
-				[y2 - h, y2 + h, y2 + (2 * h)]),
-			_Utils_ap(
-				_List_fromArray(
-					[y3 + h, y3 + (2 * h), y3 + h]),
-				_Utils_ap(
-					_List_fromArray(
-						[y4 + (2 * h), y4 + h, y4 - h]),
-					_Utils_ap(
-						_List_fromArray(
-							[y5 + h, y5 - h, y5 - (2 * h)]),
-						_List_fromArray(
-							[y6 - h, y6 - (2 * h), y6 - h]))))));
-	var border = A2(
-		$elm$svg$Svg$svg,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$polyline,
-				_List_fromArray(
-					[
-						$elm$svg$Svg$Attributes$points(
-						A2($author$project$Geometry$polyPoint, borderX, borderY)),
-						$elm$svg$Svg$Attributes$strokeWidth('2'),
-						$elm$svg$Svg$Attributes$stroke('orange')
-					]),
-				_List_Nil)
-			]));
-	var _v7 = A2(
-		$author$project$Geometry$posAdd,
-		$author$project$Geometry$rc(
-			_Utils_Tuple2(i, j)),
-		_Utils_Tuple2(x0, y0));
-	var x = _v7.a;
-	var y = _v7.b;
-	var cons = A2(
-		$elm$svg$Svg$svg,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$text_,
-				_List_fromArray(
-					[
-						$elm$svg$Svg$Attributes$fontSize('10'),
-						$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
-						$elm$svg$Svg$Attributes$x(
-						$elm$core$String$fromFloat(x - 5.0)),
-						$elm$svg$Svg$Attributes$y(
-						$elm$core$String$fromFloat(y + 5.0)),
-						$elm$svg$Svg$Attributes$fill('white')
-					]),
-				_List_fromArray(
-					[
-						$elm$svg$Svg$text(constructionCaption)
-					]))
-			]));
-	return _Utils_ap(
-		A2(
-			$elm$core$List$map,
-			A2($author$project$View$renderHex, 'black', 0),
-			lst),
-		_Utils_ap(
-			_List_fromArray(
-				[border]),
-			_List_fromArray(
-				[cons])));
-};
-var $author$project$View$renderVirus = function (v) {
-	var pos = v.pos;
-	return A2(
-		$elm$core$List$map,
-		A2($author$project$View$renderHex, 'purple', 0.5),
-		pos);
-};
-var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var $author$project$View$view = function (model) {
-	var l1 = A2($elm$core$Debug$log, 'virus', model.virus);
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				$elm$svg$Svg$svg,
+				$elm$html$Html$h1,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$svg$Svg$Attributes$viewBox('0 0 1000 600'),
-						$elm$svg$Svg$Attributes$height('600'),
-						$elm$svg$Svg$Attributes$width('1000'),
-						$elm$svg$Svg$Attributes$width(
-						$elm$core$String$fromFloat(model.screenSize.a)),
-						$elm$svg$Svg$Attributes$height(
-						$elm$core$String$fromFloat(model.screenSize.b))
-					]),
-				_Utils_ap(
-					A3(
-						$elm$core$List$foldl,
-						function (x) {
-							return function (y) {
-								return _Utils_ap(x, y);
-							};
-						},
-						_List_Nil,
-						A2($elm$core$List$map, $author$project$View$renderTile, model.city.tilesindex)),
-					_Utils_ap(
-						$author$project$View$renderVirus(model.virus),
-						_Utils_ap(
+						$elm$html$Html$text('Echo Chat')
+					])),
+				A2(
+				$elm$html$Html$ul,
+				_List_Nil,
+				A2(
+					$elm$core$List$map,
+					function (msg) {
+						return A2(
+							$elm$html$Html$li,
+							_List_Nil,
 							_List_fromArray(
 								[
-									$author$project$View$renderLevelProgress(model)
-								]),
-							$author$project$View$renderFlags(
-								_List_fromArray(
-									[5, 10, 15])))))),
-				$author$project$View$evolveButton,
-				$author$project$View$nextRoundButton
+									$elm$html$Html$text(msg)
+								]));
+					},
+					model.messages)),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$placeholder('Draft'),
+						$elm$html$Html$Events$onInput($author$project$Main$DraftChanged),
+						A2(
+						$elm$html$Html$Events$on,
+						'keydown',
+						$author$project$Main$ifIsEnter($author$project$Main$Send)),
+						$elm$html$Html$Attributes$value(model.draft)
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$Send)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Send')
+					]))
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{init: $author$project$Model$initModel, subscriptions: $author$project$Main$subscriptions, update: $author$project$Update$update, view: $author$project$View$view});
+	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
-
-  var app = Elm.Main.init({ node: document.getElementById("elm") });
-}
-catch (e)
-{
-  // display initialization errors (e.g. bad flags, infinite recursion)
-  var header = document.createElement("h1");
-  header.style.fontFamily = "monospace";
-  header.innerText = "Initialization Error";
-  var pre = document.getElementById("elm");
-  document.body.insertBefore(header, pre);
-  pre.innerText = e;
-  throw e;
-}
-</script>
-
-</body>
-</html>

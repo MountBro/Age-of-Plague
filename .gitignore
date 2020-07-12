@@ -1,0 +1,6 @@
+# Ignore all tmp files created by matlab
+*.m~
+*.elm~
+elm-stuff
+
+

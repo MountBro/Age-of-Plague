@@ -74,6 +74,13 @@ update msg model =
             in
             ( { model | selectedHex = ( i, j ) }, Cmd.none )
 
+        MouseOver i j ->
+            let
+                log2 =
+                    log "over" ( i, j )
+            in
+            ( { model | mouseOver = ( i, j ) }, Cmd.none )
+
 
 ecoInc : Model -> Model
 ecoInc model =

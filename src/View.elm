@@ -21,6 +21,11 @@ onClick message =
     on "click" (D.succeed message)
 
 
+onOver : msg -> Svg.Attribute msg
+onOver message =
+    on "mouseover" (D.succeed message)
+
+
 view : Model -> Html Msg
 view model =
     --let
@@ -40,7 +45,7 @@ view model =
                 ++ renderantiVirus model.av
                 ++ [ renderLevelProgress model ]
                 ++ renderFlags [ 5, 10, 15 ]
-                ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTileFilm model.city.tilesindex)
+                ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesindex)
             )
         , evolveButton
         , nextRoundButton
@@ -170,8 +175,8 @@ renderHex cstr opa ( i, j ) =
         ]
 
 
-renderFilm : ( Int, Int ) -> Html Msg
-renderFilm ( i, j ) =
+renderFilm : Model -> ( Int, Int ) -> Html Msg
+renderFilm model ( i, j ) =
     let
         ( x0, y0 ) =
             para.tileOrigin
@@ -184,13 +189,32 @@ renderFilm ( i, j ) =
 
         ( x, y ) =
             posAdd (rc ( i, j )) ( x0, y0 )
+
+        tint =
+            if ( i, j ) == model.mouseOver then
+                polygon
+                    [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
+                        [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
+                        |> SA.points
+                    , 0.3 |> String.fromFloat |> SA.fillOpacity
+                    , SA.fill "yellow"
+                    ]
+                    []
+
+            else
+                polygon [] []
     in
-    svg [ onClick (SelectHex i j) ]
-        [ polygon
+    svg
+        [ onClick (SelectHex i j)
+        , onOver (MouseOver i j)
+        ]
+        [ tint
+        , polygon
             [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
                 [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
                 |> SA.points
-            , 0 |> String.fromFloat |> SA.fillOpacity
+            , 0.0 |> String.fromFloat |> SA.fillOpacity
+            , SA.fill "white"
             ]
             []
         ]
@@ -281,7 +305,9 @@ renderTile t =
                 [ polyline
                     [ polyPoint borderX borderY |> SA.points
                     , SA.strokeWidth "2"
-                    , SA.stroke "orange"
+                    , SA.stroke "#2A363B"
+                    , SA.fill "#99b898"
+                    , SA.fillOpacity "1"
                     ]
                     []
                 ]
@@ -311,11 +337,11 @@ renderTile t =
 
         -- list of positions of the seven hexs in a tile.
     in
-    List.map (renderHex "white" 0) lst ++ [ border ] ++ [ cons ]
+    [ border ] ++ [ cons ]
 
 
-renderTileFilm : Tile -> List (Html Msg)
-renderTileFilm t =
+renderTileFilm : Model -> Tile -> List (Html Msg)
+renderTileFilm model t =
     let
         a =
             para.a
@@ -350,7 +376,7 @@ renderTileFilm t =
 
         -- list of positions of the seven hexs in a tile.
     in
-    List.map renderFilm lst
+    List.map (renderFilm model) lst
 
 
 renderVirus : Virus -> List (Html Msg)

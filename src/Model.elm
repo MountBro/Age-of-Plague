@@ -6,11 +6,12 @@ import Debug
 import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (..)
+import Parameters exposing (..)
 import Task
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-import Parameters exposing (..)
+
 
 type alias Model =
     { -- to do : List Card
@@ -31,7 +32,8 @@ type alias Model =
     , basicEcoOutput : Int
     , warehouseNum : Int
     , ecoRatio : Int
-    , selectedHex : (Int, Int)
+    , selectedHex : ( Int, Int )
+    , mouseOver : ( Int, Int )
     }
 
 
@@ -124,7 +126,8 @@ initModel _ =
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
       , ecoRatio = 1
-      , selectedHex = (-233, -233)             
+      , selectedHex = ( -233, -233 )
+      , mouseOver = ( -233, -233 )
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

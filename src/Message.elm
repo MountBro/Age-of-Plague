@@ -1,12 +1,27 @@
 module Message exposing (..)
-import Time exposing (..)
+
+import Browser.Dom exposing (Error, Viewport)
+import Card exposing (..)
 import Json.Decode as Decode
+import Time exposing (..)
 
 
 type Msg
     = Resize Int Int
     | Tick Time.Posix
     | AddKey KeyValue
+    | GotViewport Viewport
+    | VirusEvolve
+    | NextRound
+    | PlayCard Card
+    | FreezeRet Float Float
+
+
+type Gamestatus
+    = Playing
+    | Drawing
+    | Playcard
+    | Stopped
 
 
 type Keyin
@@ -38,9 +53,9 @@ toKeyValue string =
             Control string
 
 
-toDirection : Char -> Keyin
-toDirection char =
-    case char of
+inKey : String -> Keyin
+inKey str =
+    case str of
         "tab" ->
             Tab
 

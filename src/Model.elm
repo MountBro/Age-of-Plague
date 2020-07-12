@@ -33,12 +33,19 @@ type alias Model =
     , warehouseNum : Int
     , ecoRatio : Int
     , selectedHex : ( Int, Int )
+    , mouseOver : ( Int, Int )
+    , selHex : SelHex
     }
 
 
 type Region
     = NoRegion
     | SelectRegion ( Int, Int )
+
+
+type SelHex
+    = SelHexOn
+    | SelHexOff
 
 
 type CardSelected
@@ -91,6 +98,8 @@ initVirus : Virus
 initVirus =
     { rules = [ 2, 4 ]
     , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
+
+    --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
     , number = 0
     , infect = 1
     , kill = 0.5
@@ -110,42 +119,39 @@ initBehavior =
 
 initModel : () -> ( Model, Cmd Msg )
 initModel _ =
-    let
-        model : Model
-        model =
-            { city =
-                initCity 10
-                    [ ( 0, 0 )
-                    , ( 0, 1 )
-                    , ( 0, 2 )
-                    , ( 1, -1 )
-                    , ( 1, 0 )
-                    , ( 1, 1 )
-                    , ( 2, -1 )
-                    , ( 2, 0 )
-                    , ( 2, 1 )
-                    , ( 3, -1 )
-                    ]
-            , behavior = initBehavior
-            , state = Playing
-            , currentRound = 1
-            , screenSize = ( 600, 800 )
-            , viewport = Nothing
-            , virus = initVirus
-            , region = NoRegion
-            , cardSelected = NoCard
-            , todo = []
-            , roundTodoCleared = False
-            , av = initAntiVirus
-            , power = 10
-            , economy = 10
-            , basicEcoOutput = para.basicEcoOutput
-            , warehouseNum = 0
-            , ecoRatio = 1
-            , selectedHex = ( -233, -233 )
-            }
-    in
-    ( model
+    ( { city =
+            initCity 10
+                [ ( 0, 0 )
+                , ( 0, 1 )
+                , ( 0, 2 )
+                , ( 1, -1 )
+                , ( 1, 0 )
+                , ( 1, 1 )
+                , ( 2, -1 )
+                , ( 2, 0 )
+                , ( 2, 1 )
+                , ( 3, -1 )
+                ]
+      , behavior = initBehavior
+      , state = Playing
+      , currentRound = 1
+      , screenSize = ( 600, 800 )
+      , viewport = Nothing
+      , virus = initVirus
+      , region = NoRegion
+      , cardSelected = NoCard
+      , todo = []
+      , roundTodoCleared = False
+      , av = initAntiVirus
+      , power = 10000
+      , economy = 10000
+      , basicEcoOutput = para.basicEcoOutput
+      , warehouseNum = 0
+      , ecoRatio = 1
+      , selectedHex = ( -233, -233 )
+      , mouseOver = ( -233, -233 )
+      , selHex = SelHexOff
+      }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
 
@@ -180,13 +186,11 @@ virusKill vir city =
             toFloat (sumSick city)
 
         death =
-            --理论死亡数目
             patients
                 * dr
                 |> round
 
         ( lstInfectedn, lstInfected1 ) =
-            -- lstInfectedn : List Tiles tiles上患者数目比1大 lstInfected1 : 只有一个患者
             city.tilesindex
                 |> List.partition (\x -> x.sick > 0)
                 |> Tuple.first
@@ -194,19 +198,14 @@ virusKill vir city =
                 |> List.partition (\x -> x.sick > 1)
 
         estimateDeath =
-            --只算患者数大于1的tiles死亡的预计数目
             List.map (\x -> round (toFloat x.sick * (0.05 + dr))) lstInfectedn
-                -- 0.05是为了curve，防止误差过大
                 |> List.sum
 
         deathlst =
-            --最终判定下来会死人的tiles list
             if death <= estimateDeath then
-                --这个情况下只会死在lstInfectedn上的人
                 List.take (round (toFloat death / toFloat estimateDeath) * List.length lstInfectedn) lstInfectedn
 
             else
-                -- 只有一个患者的tile会死人 -> 有的tile患者没来得急跑路就挂了
                 lstInfectedn ++ List.take (death - estimateDeath) lstInfected1
     in
     { city
@@ -215,7 +214,7 @@ virusKill vir city =
                 (\x ->
                     if List.member x deathlst then
                         { x
-                            | sick = x.sick - round (toFloat x.sick * dr) --根据tile上的sick数目死人
+                            | sick = x.sick - round (toFloat x.sick * dr)
                             , dead = x.dead + round (toFloat x.sick * dr)
                             , population = x.population - round (toFloat x.sick * dr)
                         }
@@ -256,7 +255,6 @@ populationFlow n city =
         t =
             List.take n citytileslst
                 |> List.drop (n - 1)
-                -- n是迭代次数 起始为1 目的是为了实时更新city
                 |> List.head
                 |> Maybe.withDefault (Tile ( -100, -100 ) 100 0 0 NoConstruction 0)
 
@@ -279,16 +277,12 @@ populationFlow n city =
         leaveLst =
             -- make a ordered list of tiles people would go. Compatible for population < numNeig
             List.sortBy (\x -> x.sick + x.dead * 2) lstnTile
-                -- dead占2权重， 会优先选择去sick dead较为少的地方
                 |> List.map (\x -> x.indice)
                 |> List.take t.population
 
-        --防止population < 相邻有效格子情况
         sickLst =
             leaveLst
                 |> List.take sickleave
-
-        --周围疫情权重轻的格子更容易接收到患者
     in
     if n <= List.length citytileslst then
         let
@@ -345,7 +339,6 @@ populationFlow n city =
                 }
         in
         populationFlow (n + 1) newcity
-        -- 迭代，把每一个tile都算一遍得到最终的city
 
     else
         city

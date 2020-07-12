@@ -2,16 +2,15 @@ classdef virus
     properties
         inf
         pos
-        kill %50 for death rate 50%
+        %sizexy
         name
     end
     
     methods
         % construction function
-        function obj = virus(inf, pos, kill)
+        function obj = virus(inf, pos)
             obj.inf = inf;
             obj.pos = pos;
-            obj.kill = kill;
         end
         
         function searched = search(obj)

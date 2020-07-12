@@ -110,9 +110,9 @@ converHextoTile hexIn =
             Tuple.second hexIn |> toFloat
 
         x =
-            round ((2 * j - i) / 7)
+            round ((3 * i + j) / 7)
 
         y =
-            round ((3 * i + j) / 7)
+            round ((2 * j - i) / 7)
     in
     ( x, y )

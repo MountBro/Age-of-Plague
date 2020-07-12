@@ -56,7 +56,7 @@ update msg model =
                       }
                     , Cmd.none
                     )
-                else if List.member card targetCardlst && card.cost < model.power && para.ecoThreshold < model.economy then
+                else if List.member card targetCardlst then
                     ( { model | cardSelected = SelectCard card
                               , selHex = SelHexOn
                               , power = model.power - card.cost
@@ -396,6 +396,25 @@ performAction action model =
                     { city_ | tilesindex = tilelst}
             in
             ( { model | city = city }, Cmd.none)
+
+        FreezevirusI (i, j) ->
+            let
+                pos =
+                    converHextoTile (i, j)
+
+                virus_ =
+                    model.virus
+
+                virpos =
+                    List.filter (\x -> (converHextoTile x) /= pos) virus_.pos
+
+                virus =
+                    { virus_ | pos = virpos}
+            in
+            ( { model | virus = virus }, Cmd.none)
+
+
+
         _ ->
             ( model, Cmd.none )
 
@@ -453,5 +472,9 @@ fillRegion card sel =
 
     else if card == sacrifice then
         ( ( True, [ SacrificeI sel ]), Cmd.none)
+
+    else if card == defenseline then
+        ( ( True, [ FreezevirusI sel, FreezevirusI sel ]), Cmd.none)
+
     else
         ( finishedEmptyQueue, Cmd.none )

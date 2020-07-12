@@ -72,6 +72,7 @@ view model =
         , cardButton purification
         , cardButton sacrifice
         , cardButton resurgence
+        , cardButton defenseline
         , Html.text (Debug.toString model.todo)
         ]
 

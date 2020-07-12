@@ -34,7 +34,7 @@ type Action
     | PurificationI (Int, Int)
     | SacrificeI (Int, Int)
     | ResurgenceI (Int, Int)
-
+    | FreezevirusI (Int, Int)
 
 powerOverload =
     Card NoSel 0 [ IncPowerI 3, IncPowerI (negate 3) ] "Power Overload"
@@ -92,4 +92,8 @@ resurgence =
     Card TileSel 8 [ ResurgenceI (0, 0) ] "Resurgence"
 
 
-targetCardlst = [ cut, organClone, humanClone, sacrifice, purification, resurgence ]
+defenseline =
+    Card TileSel 2 [ FreezevirusI (0, 0), FreezevirusI (0, 0) ] "Defenseline"
+
+
+targetCardlst = [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline ]

@@ -10,7 +10,7 @@ import Task
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-
+import Parameters exposing (..)
 
 type alias Model =
     { -- to do : List Card
@@ -31,6 +31,7 @@ type alias Model =
     , basicEcoOutput : Int
     , warehouseNum : Int
     , ecoRatio : Int
+    , selectedHex : (Int, Int)
     }
 
 
@@ -123,6 +124,7 @@ initModel _ =
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
       , ecoRatio = 1
+      , selectedHex = (-233, -233)             
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

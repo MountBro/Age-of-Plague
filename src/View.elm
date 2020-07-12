@@ -5,13 +5,20 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
+import Json.Decode as D
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
+import Svg.Events as SE
 import Tile exposing (..)
 import Virus exposing (..)
+
+
+onClick : msg -> Svg.Attribute msg
+onClick message =
+    on "click" (D.succeed message)
 
 
 view : Model -> Html Msg
@@ -33,6 +40,7 @@ view model =
                 ++ renderantiVirus model.av
                 ++ [ renderLevelProgress model ]
                 ++ renderFlags [ 5, 10, 15 ]
+                ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTileFilm model.city.tilesindex)
             )
         , evolveButton
         , nextRoundButton
@@ -162,6 +170,32 @@ renderHex cstr opa ( i, j ) =
         ]
 
 
+renderFilm : ( Int, Int ) -> Html Msg
+renderFilm ( i, j ) =
+    let
+        ( x0, y0 ) =
+            para.tileOrigin
+
+        a =
+            para.a
+
+        h =
+            a / sqrt 3
+
+        ( x, y ) =
+            posAdd (rc ( i, j )) ( x0, y0 )
+    in
+    svg [ onClick (SelectHex i j) ]
+        [ polygon
+            [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
+                [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
+                |> SA.points
+            , 0 |> String.fromFloat |> SA.fillOpacity
+            ]
+            []
+        ]
+
+
 
 -- k1, k2, K1, K2
 -- K1 = k2 + 2k1; K2 = 3k2 - k1
@@ -278,6 +312,45 @@ renderTile t =
         -- list of positions of the seven hexs in a tile.
     in
     List.map (renderHex "white" 0) lst ++ [ border ] ++ [ cons ]
+
+
+renderTileFilm : Tile -> List (Html Msg)
+renderTileFilm t =
+    let
+        a =
+            para.a
+
+        h =
+            a / sqrt 3
+
+        ind =
+            t.indice
+
+        t1 =
+            Tuple.first ind
+
+        t2 =
+            Tuple.second ind
+
+        i =
+            2 * t1 - t2
+
+        j =
+            t1 + 3 * t2
+
+        lst =
+            [ ( i, j )
+            , ( i, j - 1 )
+            , ( i, j + 1 )
+            , ( i + 1, j )
+            , ( i + 1, j - 1 )
+            , ( i - 1, j )
+            , ( i - 1, j + 1 )
+            ]
+
+        -- list of positions of the seven hexs in a tile.
+    in
+    List.map renderFilm lst
 
 
 renderVirus : Virus -> List (Html Msg)

@@ -67,6 +67,13 @@ update msg model =
             in
             ( { model | behavior = behavior }, Cmd.none )
 
+        SelectHex i j ->
+            let
+                log1 =
+                    log "i, j: " ( i, j )
+            in
+            ( { model | selectedHex = ( i, j ) }, Cmd.none )
+
 
 ecoInc : Model -> Model
 ecoInc model =

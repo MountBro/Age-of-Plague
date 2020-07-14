@@ -98,6 +98,8 @@ initVirus : Virus
 initVirus =
     { rules = [ 2, 4 ]
     , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
+
+    --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
     , number = 0
     , infect = 1
     , kill = 0.5
@@ -141,8 +143,8 @@ initModel _ =
       , todo = []
       , roundTodoCleared = False
       , av = initAntiVirus
-      , power = 10
-      , economy = 10
+      , power = 10000
+      , economy = 10000
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
       , ecoRatio = 1

@@ -10,6 +10,7 @@ import Parameters exposing (..)
 import Random exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
+import Tile exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -47,17 +48,7 @@ update msg model =
 
         PlayCard card ->
             if card.cost <= model.power && para.ecoThreshold <= model.economy then
-                if card == cut || card == megaCut then
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , selHex = SelHexOn
-                        , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
-                      }
-                    , Cmd.none
-                    )
-
-                else if List.member card targetCardlst then
+                if List.member card targetCardlst then
                     ( { model
                         | cardSelected = SelectCard card
                         , selHex = SelHexOn
@@ -103,6 +94,12 @@ update msg model =
             in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
 
+        HosInvalid ->
+            ( { model
+                | power = model.power + 4
+                , economy = model.economy + para.ecoThreshold
+             }, Cmd.none )
+
 
 ecoInc : Model -> Model
 ecoInc model =
@@ -119,8 +116,8 @@ virusEvolve : Model -> Model
 virusEvolve model =
     { model
         | city = updateCity model.city model.virus
-        , virus = change model.virus model.av |> Tuple.first
-        , av = change model.virus model.av |> Tuple.second
+        , virus = change model.virus model.av model.city |> Tuple.first
+        , av = change model.virus model.av model.city |> Tuple.second
     }
 
 
@@ -437,6 +434,48 @@ performAction action model =
             in
             ( { model | virus = virus }, Cmd.none )
 
+        HospitalI (i, j) ->
+            let
+                (ti, tj) =
+                    converHextoTile (i, j)
+
+                city_ =
+                    model.city
+
+                city =
+                    { city_ | tilesindex = List.map (\x ->
+                                                        if x.indice == (ti, tj) then
+                                                            { x | construction = Hos }
+
+                                                        else
+                                                            x ) city_.tilesindex
+                            }
+
+
+            in
+            ( { model | city = city }, Cmd.none)
+
+        QuarantineI (i, j) ->
+            let
+                (ti, tj) =
+                    converHextoTile (i, j)
+
+                city_ =
+                    model.city
+
+                city =
+                    { city_ | tilesindex = List.map (\x ->
+                                                        if x.indice == (ti, tj) then
+                                                            { x | construction = Qua }
+
+                                                        else
+                                                            x ) city_.tilesindex
+                            }
+
+
+            in
+            ( { model | city = city }, Cmd.none)
+
         _ ->
             ( model, Cmd.none )
 
@@ -497,6 +536,12 @@ fillRegion card sel =
 
     else if card == defenseline then
         ( ( True, [ FreezevirusI sel, FreezevirusI sel ] ), Cmd.none )
+
+    else if card == hospital then
+        ( ( True, [ HospitalI sel ] ), Cmd.none )
+
+    else if card == quarantine then
+        ( ( True, [ QuarantineI sel ] ), Cmd.none )
 
     else
         ( finishedEmptyQueue, Cmd.none )

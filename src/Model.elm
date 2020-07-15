@@ -102,7 +102,7 @@ initVirus =
     --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
     , number = 0
     , infect = 1
-    , kill = 0.5
+    , kill = 0.1
     }
 
 
@@ -120,7 +120,7 @@ initBehavior =
 initModel : () -> ( Model, Cmd Msg )
 initModel _ =
     ( { city =
-            initCity 10
+            initCity 20
                 [ ( 0, 0 )
                 , ( 0, 1 )
                 , ( 0, 2 )
@@ -160,18 +160,30 @@ sickupdate : List Tile -> List ( Int, Int ) -> Int -> List Tile
 sickupdate t lstvir inf =
     List.map
         (\x ->
-            if (LE.count ((==) x.indice) lstvir > 0) && x.sick + inf * LE.count ((==) x.indice) lstvir <= x.population then
-                { x
-                    | sick = x.sick + inf * LE.count ((==) x.indice) lstvir
-                }
+            let
+                s =
+                    LE.count ((==) x.indice) lstvir * inf
+            in
+            if x.construction == Hos then
+                if s + x.sick - 2 <= x.population && s + x.sick - 2 >= 0 then
+                    { x
+                        | sick = s + x.sick - 2
+                    }
 
-            else if LE.count ((==) x.indice) lstvir > 0 then
-                { x
-                    | sick = x.population
-                }
+                else if s + x.sick - 2 < 0 then
+                    { x
+                        | sick = 0
+                    }
+
+                else
+                    { x
+                        | sick = x.population
+                    }
 
             else
-                x
+                { x
+                    | sick = min (x.sick + s) x.population
+                }
         )
         t
 
@@ -195,18 +207,17 @@ virusKill vir city =
                 |> List.partition (\x -> x.sick > 0)
                 |> Tuple.first
                 |> List.sortBy .sick
-                |> List.partition (\x -> x.sick > 1)
+                |> List.partition (\x -> x.sick > 7)
 
         estimateDeath =
-            List.map (\x -> round (toFloat x.sick * (0.05 + dr))) lstInfectedn
-                |> List.sum
+            round (List.sum (List.map (\x -> toFloat x.sick) lstInfectedn) * dr)
 
         deathlst =
-            if death <= estimateDeath then
-                List.take (round (toFloat death / toFloat estimateDeath) * List.length lstInfectedn) lstInfectedn
+            if death < estimateDeath then
+                List.take (max (round (0.2 * toFloat death / toFloat estimateDeath) * List.length lstInfectedn) 1) lstInfectedn
 
             else
-                lstInfectedn ++ List.take (death - estimateDeath) lstInfected1
+                lstInfectedn ++ List.take (max (round (toFloat (death - estimateDeath) * 0.2)) 1) lstInfected1
     in
     { city
         | tilesindex =
@@ -214,9 +225,9 @@ virusKill vir city =
                 (\x ->
                     if List.member x deathlst then
                         { x
-                            | sick = x.sick - round (toFloat x.sick * dr)
-                            , dead = x.dead + round (toFloat x.sick * dr)
-                            , population = x.population - round (toFloat x.sick * dr)
+                            | sick = x.sick - max (round (toFloat x.sick * dr)) 1
+                            , dead = x.dead + max (round (toFloat x.sick * dr)) 1
+                            , population = x.population - max 1 (round (toFloat x.sick * dr))
                         }
 
                     else
@@ -279,6 +290,7 @@ populationFlow n city =
             List.sortBy (\x -> x.sick + x.dead * 2) lstnTile
                 |> List.map (\x -> x.indice)
                 |> List.take t.population
+                |> List.take numNeig
 
         sickLst =
             leaveLst
@@ -349,3 +361,18 @@ updateCity city vir =
     infect city vir
         |> virusKill vir
         |> populationFlow 1
+
+
+change : Virus -> AntiVirus -> City -> ( Virus, AntiVirus )
+change virus anti city =
+    let
+        lstvir =
+            searchNeighbor virus.pos
+
+        lstanti =
+            searchNeighbor anti.pos
+
+        lstquatile =
+            quarantineTiles city.tilesindex
+    in
+    judgeAlive lstvir virus lstanti anti lstquatile

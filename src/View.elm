@@ -63,7 +63,9 @@ view model =
         , evolveButton
         , nextRoundButton
         , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-        , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
+        , Html.text ("Population: " ++ Debug.toString (sumPopulation model.city) ++ ". "
+        ++ "Death: " ++ Debug.toString (sumDead model.city) ++ ". "
+        ++ "Sick: " ++ Debug.toString (sumSick model.city) ++ ". ")
         , powerEcoInfo model
         , cardButton powerOverload
         , cardButton onStandby
@@ -80,6 +82,8 @@ view model =
         , cardButton sacrifice
         , cardButton resurgence
         , cardButton defenseline
+        , cardButton hospital
+        , cardButton quarantine
         , Html.text (Debug.toString model.todo)
         ]
 
@@ -251,13 +255,27 @@ renderFilm model ( i, j ) =
 
             else
                 polygon [] []
+
+        hostilelst =
+            hospitalTiles model.city.tilesindex
+
     in
     svg
-        [ onClick (SelectHex i j)
-        , onOver (MouseOver i j)
-        ]
-        [ tint
-        , polygon
+        ([ onOver (MouseOver i j) ]
+        ++
+        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
+            []
+        else
+            [onClick (SelectHex i j)]
+        )
+        (
+        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
+            []
+        else
+            [tint]
+        ++
+        [
+        polygon
             [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
                 [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
                 |> SA.points
@@ -265,7 +283,7 @@ renderFilm model ( i, j ) =
             , SA.fill "white"
             ]
             []
-        ]
+        ])
 
 
 

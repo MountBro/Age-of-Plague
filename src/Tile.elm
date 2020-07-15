@@ -42,5 +42,20 @@ validNeighborTile tlst t =
         lstn =
             generateZone t.indice
     in
-    List.partition (\x -> List.member x.indice lstn && x.population > 0) tlst
-        |> Tuple.first
+    if t.construction /= Qua then
+        List.filter (\x -> List.member x.indice lstn && x.population > 0 && x.construction /= Qua) tlst
+    else
+        []
+
+
+quarantineTiles : List Tile -> List (Int, Int)
+quarantineTiles tlst =
+    tlst
+        |> List.filter (\x -> x.construction == Qua)
+        |> List.map (\x -> x.indice)
+
+hospitalTiles : List Tile -> List (Int, Int)
+hospitalTiles tlst =
+    tlst
+        |> List.filter (\x -> x.construction == Hos)
+        |> List.map (\x -> x.indice)

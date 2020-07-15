@@ -25,7 +25,6 @@ type Action
     | DisableEvolve Float
     | NoAction
     | CutHexI ( Int, Int )
-    | Summon (List Card)
     | CutTileI ( Int, Int )
     | Summon (List Card)
     | Activate996I
@@ -36,6 +35,8 @@ type Action
     | SacrificeI ( Int, Int )
     | ResurgenceI ( Int, Int )
     | FreezevirusI ( Int, Int )
+    | HospitalI (Int, Int)
+    | QuarantineI (Int, Int)
 
 
 powerOverload =
@@ -97,6 +98,14 @@ defenseline =
     Card TileSel 2 [ FreezevirusI ( 0, 0 ), FreezevirusI ( 0, 0 ) ] "Defenseline"
 
 
+hospital =
+    Card TileSel 4 [ HospitalI (0, 0) ] "Build Hospital"
+
+
+quarantine =
+    Card TileSel 4 [ QuarantineI (0, 0) ] "Build Quarantine"
+
+
 targetCardlst =
-    [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline ]
+    [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline, hospital, quarantine ]
 

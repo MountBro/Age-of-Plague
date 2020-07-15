@@ -56,12 +56,16 @@ update msg model =
                       }
                     , Cmd.none
                     )
-                else if List.member card targetCardlst then
-                    ( { model | cardSelected = SelectCard card
-                              , selHex = SelHexOn
-                              , power = model.power - card.cost
-                              , economy = model.economy - para.ecoThreshold}, Cmd.none )
 
+                else if List.member card targetCardlst then
+                    ( { model
+                        | cardSelected = SelectCard card
+                        , selHex = SelHexOn
+                        , power = model.power - card.cost
+                        , economy = model.economy - para.ecoThreshold
+                      }
+                    , Cmd.none
+                    )
 
                 else
                     ( { model
@@ -243,7 +247,7 @@ performAction action model =
             in
             ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus }, Cmd.none )
 
-        OrganCloneI (i, j) ->
+        OrganCloneI ( i, j ) ->
             let
                 city_ =
                     model.city
@@ -252,26 +256,29 @@ performAction action model =
                     model.city.tilesindex
 
                 pos =
-                    converHextoTile (i, j)
+                    converHextoTile ( i, j )
 
                 tilelst =
-                    List.map (\x -> if x.indice == pos then
-                                        if x.sick - x.dead > 0 then
-                                            { x | sick = x.sick - x.dead}
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                if x.sick - x.dead > 0 then
+                                    { x | sick = x.sick - x.dead }
 
-                                        else
-                                            { x | sick = 0 }
+                                else
+                                    { x | sick = 0 }
 
-                                    else
-                                        x
-                                    ) tilelst_
+                            else
+                                x
+                        )
+                        tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst}
+                    { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none)
+            ( { model | city = city }, Cmd.none )
 
-        HumanCloneI (i, j) ->
+        HumanCloneI ( i, j ) ->
             let
                 city_ =
                     model.city
@@ -280,19 +287,23 @@ performAction action model =
                     model.city.tilesindex
 
                 pos =
-                    converHextoTile (i, j)
+                    converHextoTile ( i, j )
 
                 tilelst =
-                    List.map (\x -> if x.indice == pos then
-                                        { x | population = x.population * 2 }
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                { x | population = x.population * 2 }
 
-                                    else
-                                        x
-                                    ) tilelst_
+                            else
+                                x
+                        )
+                        tilelst_
+
                 city =
-                    { city_ | tilesindex = tilelst}
+                    { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none)
+            ( { model | city = city }, Cmd.none )
 
         MegaCloneI ->
             let
@@ -303,14 +314,14 @@ performAction action model =
                     model.city.tilesindex
 
                 tilelst =
-                    List.map ( \x -> { x | population = round (toFloat x.population * 1.5) } ) tilelst_
+                    List.map (\x -> { x | population = round (toFloat x.population * 1.5) }) tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst}
+                    { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none)
+            ( { model | city = city }, Cmd.none )
 
-        PurificationI (i, j) ->
+        PurificationI ( i, j ) ->
             let
                 city_ =
                     model.city
@@ -319,21 +330,25 @@ performAction action model =
                     model.city.tilesindex
 
                 pos =
-                    converHextoTile (i, j)
+                    converHextoTile ( i, j )
 
                 tilelst =
-                    List.map (\x -> if x.indice == pos then
-                                        { x | sick = 0 }
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                { x | sick = 0 }
 
-                                    else
-                                        x
-                                    ) tilelst_
+                            else
+                                x
+                        )
+                        tilelst_
+
                 city =
-                    { city_ | tilesindex = tilelst}
+                    { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none)
+            ( { model | city = city }, Cmd.none )
 
-        SacrificeI (i, j) ->
+        SacrificeI ( i, j ) ->
             let
                 virus_ =
                     model.virus
@@ -342,7 +357,7 @@ performAction action model =
                     virus_.pos
 
                 virpos =
-                    List.filter (\x -> (converHextoTile x) /= (i,j) ) virpos_
+                    List.filter (\x -> converHextoTile x /= ( i, j )) virpos_
 
                 city_ =
                     model.city
@@ -351,29 +366,32 @@ performAction action model =
                     model.city.tilesindex
 
                 tilepos =
-                    converHextoTile (i, j)
-
+                    converHextoTile ( i, j )
 
                 tilelst =
-                    List.map (\x -> if x.indice == tilepos then
-                                        { x | population = x.population - x.sick
-                                            , sick = 0
-                                            , dead = x.dead + x.sick}
+                    List.map
+                        (\x ->
+                            if x.indice == tilepos then
+                                { x
+                                    | population = x.population - x.sick
+                                    , sick = 0
+                                    , dead = x.dead + x.sick
+                                }
 
-                                    else
-                                        x
-
-                                    ) tilelst_
+                            else
+                                x
+                        )
+                        tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst}
+                    { city_ | tilesindex = tilelst }
 
                 virus =
-                    { virus_ | pos = virpos}
+                    { virus_ | pos = virpos }
             in
-            ( { model | city = city, virus = virus }, Cmd.none)
+            ( { model | city = city, virus = virus }, Cmd.none )
 
-        ResurgenceI (i, j) ->
+        ResurgenceI ( i, j ) ->
             let
                 city_ =
                     model.city
@@ -382,38 +400,42 @@ performAction action model =
                     model.city.tilesindex
 
                 pos =
-                    converHextoTile (i, j)
+                    converHextoTile ( i, j )
 
                 tilelst =
-                    List.map (\x -> if x.indice == pos then
-                                        { x | population = x.population + round ( toFloat x.dead / 2)
-                                            , dead = x.dead - round ( toFloat x.dead / 2 ) }
+                    List.map
+                        (\x ->
+                            if x.indice == pos then
+                                { x
+                                    | population = x.population + round (toFloat x.dead / 2)
+                                    , dead = x.dead - round (toFloat x.dead / 2)
+                                }
 
-                                    else
-                                        x
-                                    ) tilelst_
+                            else
+                                x
+                        )
+                        tilelst_
+
                 city =
-                    { city_ | tilesindex = tilelst}
+                    { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none)
+            ( { model | city = city }, Cmd.none )
 
-        FreezevirusI (i, j) ->
+        FreezevirusI ( i, j ) ->
             let
                 pos =
-                    converHextoTile (i, j)
+                    converHextoTile ( i, j )
 
                 virus_ =
                     model.virus
 
                 virpos =
-                    List.filter (\x -> (converHextoTile x) /= pos) virus_.pos
+                    List.filter (\x -> converHextoTile x /= pos) virus_.pos
 
                 virus =
-                    { virus_ | pos = virpos}
+                    { virus_ | pos = virpos }
             in
-            ( { model | virus = virus }, Cmd.none)
-
-
+            ( { model | virus = virus }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -459,22 +481,22 @@ fillRegion card sel =
         ( ( True, [ CutTileI sel ] ), Cmd.none )
 
     else if card == organClone then
-        ( ( True, [ OrganCloneI sel ]), Cmd.none)
+        ( ( True, [ OrganCloneI sel ] ), Cmd.none )
 
     else if card == humanClone then
-        ( ( True, [ HumanCloneI sel ]), Cmd.none)
+        ( ( True, [ HumanCloneI sel ] ), Cmd.none )
 
     else if card == purification then
-        ( ( True, [ PurificationI sel ]), Cmd.none)
+        ( ( True, [ PurificationI sel ] ), Cmd.none )
 
     else if card == resurgence then
-        ( ( True, [ ResurgenceI sel ]), Cmd.none)
+        ( ( True, [ ResurgenceI sel ] ), Cmd.none )
 
     else if card == sacrifice then
-        ( ( True, [ SacrificeI sel ]), Cmd.none)
+        ( ( True, [ SacrificeI sel ] ), Cmd.none )
 
     else if card == defenseline then
-        ( ( True, [ FreezevirusI sel, FreezevirusI sel ]), Cmd.none)
+        ( ( True, [ FreezevirusI sel, FreezevirusI sel ] ), Cmd.none )
 
     else
         ( finishedEmptyQueue, Cmd.none )

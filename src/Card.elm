@@ -25,16 +25,17 @@ type Action
     | DisableEvolve Float
     | NoAction
     | CutHexI ( Int, Int )
-    | Summon (List Card)
     | CutTileI ( Int, Int )
+    | Summon (List Card)
     | Activate996I
-    | OrganCloneI (Int,Int)
-    | HumanCloneI (Int,Int)
+    | OrganCloneI ( Int, Int )
+    | HumanCloneI ( Int, Int )
     | MegaCloneI
-    | PurificationI (Int, Int)
-    | SacrificeI (Int, Int)
-    | ResurgenceI (Int, Int)
-    | FreezevirusI (Int, Int)
+    | PurificationI ( Int, Int )
+    | SacrificeI ( Int, Int )
+    | ResurgenceI ( Int, Int )
+    | FreezevirusI ( Int, Int )
+
 
 powerOverload =
     Card NoSel 0 [ IncPowerI 3, IncPowerI (negate 3) ] "Power Overload"
@@ -85,15 +86,16 @@ purification =
 
 
 sacrifice =
-    Card TileSel 4 [ SacrificeI (0, 0) ] "Sacrifice"
+    Card TileSel 4 [ SacrificeI ( 0, 0 ) ] "Sacrifice"
 
 
 resurgence =
-    Card TileSel 8 [ ResurgenceI (0, 0) ] "Resurgence"
+    Card TileSel 8 [ ResurgenceI ( 0, 0 ) ] "Resurgence"
 
 
 defenseline =
-    Card TileSel 2 [ FreezevirusI (0, 0), FreezevirusI (0, 0) ] "Defenseline"
+    Card TileSel 2 [ FreezevirusI ( 0, 0 ), FreezevirusI ( 0, 0 ) ] "Defenseline"
 
 
-targetCardlst = [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline ]
+targetCardlst =
+    [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline ]

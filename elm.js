@@ -6884,6 +6884,8 @@ var $author$project$Update$pickAction = function (model) {
 			model,
 			{todo: todo}));
 };
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Update$sendMsg = _Platform_outgoingPort('sendMsg', $elm$json$Json$Encode$string);
 var $author$project$Card$targetCardlst = _List_fromArray(
 	[$author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$sacrifice, $author$project$Card$purification, $author$project$Card$resurgence, $author$project$Card$defenseline]);
 var $elm$core$List$sum = function (numbers) {
@@ -7490,7 +7492,7 @@ var $author$project$Update$update = F2(
 							selectedHex: _Utils_Tuple2(i, j)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'MouseOver':
 				var i = msg.a;
 				var j = msg.b;
 				var log2 = A2(
@@ -7504,8 +7506,16 @@ var $author$project$Update$update = F2(
 							mouseOver: _Utils_Tuple2(i, j)
 						}),
 					$elm$core$Platform$Cmd$none);
+			default:
+				var txt = msg.a;
+				return _Utils_Tuple2(
+					model,
+					$author$project$Update$sendMsg(txt));
 		}
 	});
+var $author$project$Message$Alert = function (a) {
+	return {$: 'Alert', a: a};
+};
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
@@ -7533,6 +7543,7 @@ var $author$project$Card$blizzard = A4(
 	_List_fromArray(
 		[$author$project$Card$FreezeI, $author$project$Card$FreezeI, $author$project$Card$FreezeI]),
 	'Blizzard');
+var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
 var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var $elm$core$String$fromFloat = _String_fromNumber;
@@ -7561,7 +7572,6 @@ var $author$project$View$caption = F4(
 var $author$project$Message$PlayCard = function (a) {
 	return {$: 'PlayCard', a: a};
 };
-var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7644,6 +7654,12 @@ var $author$project$View$nextRoundButton = A2(
 		[
 			$elm$html$Html$text('next round')
 		]));
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $author$project$Card$IncPowerI = function (a) {
 	return {$: 'IncPowerI', a: a};
 };
@@ -8313,7 +8329,18 @@ var $author$project$View$view = function (model) {
 				$author$project$View$cardButton($author$project$Card$resurgence),
 				$author$project$View$cardButton($author$project$Card$defenseline),
 				$elm$html$Html$text(
-				$elm$core$Debug$toString(model.todo))
+				$elm$core$Debug$toString(model.todo)),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Message$Alert('Yo bro!'))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('hello')
+					]))
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(

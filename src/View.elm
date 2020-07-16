@@ -80,6 +80,7 @@ view model =
         , cardButton resurgence
         , cardButton defenseline
         , Html.text (Debug.toString model.todo)
+        , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
         ]
 
 

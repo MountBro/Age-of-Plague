@@ -12,6 +12,7 @@ import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
 import Svg.Events as SE
+import SvgSrc exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)
 
@@ -62,7 +63,9 @@ view model =
         , evolveButton
         , nextRoundButton
         , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-        , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
+        , Html.text ("Population: " ++ Debug.toString (sumPopulation model.city) ++ ". "
+        ++ "Death: " ++ Debug.toString (sumDead model.city) ++ ". "
+        ++ "Sick: " ++ Debug.toString (sumSick model.city) ++ ". ")
         , powerEcoInfo model
         , cardButton powerOverload
         , cardButton onStandby
@@ -79,6 +82,8 @@ view model =
         , cardButton sacrifice
         , cardButton resurgence
         , cardButton defenseline
+        , cardButton hospital
+        , cardButton quarantine
         , Html.text (Debug.toString model.todo)
         , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
         ]
@@ -251,13 +256,27 @@ renderFilm model ( i, j ) =
 
             else
                 polygon [] []
+
+        hostilelst =
+            hospitalTiles model.city.tilesindex
+
     in
     svg
-        [ onClick (SelectHex i j)
-        , onOver (MouseOver i j)
-        ]
-        [ tint
-        , polygon
+        ([ onOver (MouseOver i j) ]
+        ++
+        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
+            []
+        else
+            [onClick (SelectHex i j)]
+        )
+        (
+        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
+            []
+        else
+            [tint]
+        ++
+        [
+        polygon
             [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
                 [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
                 |> SA.points
@@ -265,7 +284,7 @@ renderFilm model ( i, j ) =
             , SA.fill "white"
             ]
             []
-        ]
+        ])
 
 
 
@@ -339,6 +358,7 @@ renderTile t =
                 ++ [ x4, x4 - a, x4 - a ]
                 ++ [ x5 - a, x5 - a, x5 ]
                 ++ [ x6 - a, x6, x6 + a ]
+                ++ [ x1, x1 + a, x1 + a ]
 
         borderY =
             [ y1 - 2 * h, y1 - h, y1 + h ]
@@ -347,15 +367,16 @@ renderTile t =
                 ++ [ y4 + 2 * h, y4 + h, y4 - h ]
                 ++ [ y5 + h, y5 - h, y5 - 2 * h ]
                 ++ [ y6 - h, y6 - 2 * h, y6 - h ]
+                ++ [ y1 - 2 * h, y1 - h, y1 + h ]
 
         border =
             svg []
                 [ polyline
                     [ polyPoint borderX borderY |> SA.points
                     , SA.strokeWidth "2"
-                    , SA.stroke "#2A363B"
+                    , SA.stroke "orange"
                     , SA.fill "#99b898"
-                    , SA.fillOpacity "1"
+                    , SA.fillOpacity "0"
                     ]
                     []
                 ]
@@ -396,7 +417,7 @@ renderTile t =
                 , text_
                     [ SA.fontSize "15"
                     , SA.fontFamily "sans-serif"
-                    , x |> String.fromFloat |> SA.x
+                    , x + 3.0 |> String.fromFloat |> SA.x
                     , y - 10.0 |> String.fromFloat |> SA.y
                     , SA.fill "orange"
                     ]
@@ -405,15 +426,18 @@ renderTile t =
                     [ SA.fontSize "15"
                     , SA.fontFamily "sans-serif"
                     , x - 5.0 |> String.fromFloat |> SA.x
-                    , y + 20.0 |> String.fromFloat |> SA.y
+                    , y + 23.0 |> String.fromFloat |> SA.y
                     , SA.fill "red"
                     ]
                     [ t.dead |> String.fromInt |> Svg.text ]
                 ]
 
+        tiles =
+            List.map (\( u, v ) -> myTile u v) [ ( x, y ), ( x1, y1 ), ( x2, y2 ), ( x3, y3 ), ( x4, y4 ), ( x5, y5 ), ( x6, y6 ) ]
+
         -- list of positions of the seven hexs in a tile.
     in
-    [ border ] ++ [ cons ] ++ [ populationInfo ]
+    tiles ++ [ border ] ++ [ cons ] ++ [ populationInfo ]
 
 
 renderTileFilm : Model -> Tile -> List (Html Msg)

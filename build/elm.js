@@ -1,17 +1,3 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Main</title>
-  <style>body { padding: 0; margin: 0; }</style>
-</head>
-
-<body>
-
-<pre id="elm"></pre>
-
-<script>
-try {
 (function(scope){
 'use strict';
 
@@ -4369,6 +4355,8 @@ function _Browser_load(url)
 		}
 	}));
 }
+<<<<<<< HEAD:elm.js
+=======
 
 
 
@@ -4415,6 +4403,44 @@ function _Time_getZoneName()
 		callback(_Scheduler_succeed(name));
 	});
 }
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+>>>>>>> 09f2ce7eff536eccfb7a5fac8e160af6d180d9ee:build/elm.js
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5204,15 +5230,214 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+<<<<<<< HEAD:elm.js
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$init = function (flags) {
+	return _Utils_Tuple2(
+		{draft: '', messages: _List_Nil},
+		$elm$core$Platform$Cmd$none);
+};
+var $author$project$Main$Recv = function (a) {
+	return {$: 'Recv', a: a};
+};
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $author$project$Main$messageReceiver = _Platform_incomingPort('messageReceiver', $elm$json$Json$Decode$string);
+var $author$project$Main$subscriptions = function (_v0) {
+	return $author$project$Main$messageReceiver($author$project$Main$Recv);
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Main$sendMessage = _Platform_outgoingPort('sendMessage', $elm$json$Json$Encode$string);
+var $author$project$Main$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'DraftChanged':
+				var draft = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{draft: draft}),
+					$elm$core$Platform$Cmd$none);
+			case 'Send':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{draft: ''}),
+					$author$project$Main$sendMessage(model.draft));
+			default:
+				var message = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							messages: _Utils_ap(
+								model.messages,
+								_List_fromArray(
+									[message]))
+						}),
+					$elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$Main$DraftChanged = function (a) {
+	return {$: 'DraftChanged', a: a};
+};
+var $author$project$Main$Send = {$: 'Send'};
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $author$project$Main$ifIsEnter = function (msg) {
+	return A2(
+		$elm$json$Json$Decode$andThen,
+		function (key) {
+			return (key === 'Enter') ? $elm$json$Json$Decode$succeed(msg) : $elm$json$Json$Decode$fail('some other key');
+		},
+		A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string));
+};
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$view = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h1,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Echo Chat')
+					])),
+				A2(
+				$elm$html$Html$ul,
+				_List_Nil,
+				A2(
+					$elm$core$List$map,
+					function (msg) {
+						return A2(
+							$elm$html$Html$li,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(msg)
+								]));
+					},
+					model.messages)),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$placeholder('Draft'),
+						$elm$html$Html$Events$onInput($author$project$Main$DraftChanged),
+						A2(
+						$elm$html$Html$Events$on,
+						'keydown',
+						$author$project$Main$ifIsEnter($author$project$Main$Send)),
+						$elm$html$Html$Attributes$value(model.draft)
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$Send)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Send')
+					]))
+			]));
+};
+var $author$project$Main$main = $elm$browser$Browser$element(
+	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
+=======
 var $author$project$Message$GotViewport = function (a) {
 	return {$: 'GotViewport', a: a};
 };
+var $author$project$Model$NoCard = {$: 'NoCard'};
+var $author$project$Model$NoRegion = {$: 'NoRegion'};
 var $author$project$Message$Playing = {$: 'Playing'};
+var $author$project$Model$SelHexOff = {$: 'SelHexOff'};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
+var $author$project$Model$initAntiVirus = {
+	pos: _List_fromArray(
+		[
+			_Utils_Tuple2(3, 2),
+			_Utils_Tuple2(3, 3)
+		]),
+	rules: _List_fromArray(
+		[2])
+};
+var $author$project$Model$initBehavior = {populationFlow: true, virusEvolve: true};
 var $author$project$Model$City = function (tilesindex) {
 	return {tilesindex: tilesindex};
 };
-var $author$project$Tile$None = {$: 'None'};
+var $author$project$Tile$NoConstruction = {$: 'NoConstruction'};
 var $author$project$Tile$Tile = F6(
 	function (indice, population, sick, dead, construction, cureEff) {
 		return {construction: construction, cureEff: cureEff, dead: dead, indice: indice, population: population, sick: sick};
@@ -5227,7 +5452,7 @@ var $author$project$Tile$initTile = F2(
 			population,
 			0,
 			0,
-			$author$project$Tile$None,
+			$author$project$Tile$NoConstruction,
 			0);
 	});
 var $author$project$Tile$initTiles = F2(
@@ -5262,10 +5487,27 @@ var $author$project$Model$initVirus = {
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
+var $author$project$Parameters$para = {
+	a: 15,
+	af: 12.0,
+	basicEcoOutput: 3,
+	ecoThreshold: 1,
+	h: 600,
+	hlp: 25.0,
+	tileOrigin: _Utils_Tuple2(400.0, 400.0),
+	w: 1000,
+	warehouseOutput: 1,
+	wlp: 200.0,
+	xlp: 10.0,
+	ylp: 30.0
+};
 var $author$project$Model$initModel = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			behavior: {populationFlow: true, virusEvolve: true},
+			av: $author$project$Model$initAntiVirus,
+			basicEcoOutput: $author$project$Parameters$para.basicEcoOutput,
+			behavior: $author$project$Model$initBehavior,
+			cardSelected: $author$project$Model$NoCard,
 			city: A2(
 				$author$project$Model$initCity,
 				10,
@@ -5282,11 +5524,21 @@ var $author$project$Model$initModel = function (_v0) {
 						_Utils_Tuple2(2, 1),
 						_Utils_Tuple2(3, -1)
 					])),
-			currentRound: 0,
+			currentRound: 1,
+			ecoRatio: 1,
+			economy: 10000,
+			mouseOver: _Utils_Tuple2(-233, -233),
+			power: 10000,
+			region: $author$project$Model$NoRegion,
+			roundTodoCleared: false,
 			screenSize: _Utils_Tuple2(600, 800),
+			selHex: $author$project$Model$SelHexOff,
+			selectedHex: _Utils_Tuple2(-233, -233),
 			state: $author$project$Message$Playing,
+			todo: _List_Nil,
 			viewport: $elm$core$Maybe$Nothing,
-			virus: $author$project$Model$initVirus
+			virus: $author$project$Model$initVirus,
+			warehouseNum: 0
 		},
 		A2($elm$core$Task$perform, $author$project$Message$GotViewport, $elm$browser$Browser$Dom$getViewport));
 };
@@ -5973,22 +6225,305 @@ var $author$project$Main$subscriptions = function (model) {
 					])) : $elm$core$Platform$Sub$none
 			]));
 };
+var $author$project$Model$SelHexOn = {$: 'SelHexOn'};
+var $author$project$Model$SelectCard = function (a) {
+	return {$: 'SelectCard', a: a};
+};
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$core$Basics$not = _Basics_not;
+var $author$project$Update$clearCurrentRoundTodo = function (model) {
+	var todo_ = model.todo;
+	var todo = A2(
+		$elm$core$List$map,
+		function (_v2) {
+			var x = _v2.a;
+			var y = _v2.b;
+			return _Utils_Tuple2(true, y);
+		},
+		A2(
+			$elm$core$List$filter,
+			function (_v1) {
+				var x = _v1.a;
+				var y = _v1.b;
+				return !$elm$core$List$isEmpty(y);
+			},
+			A2(
+				$elm$core$List$map,
+				function (_v0) {
+					var x = _v0.a;
+					var y = _v0.b;
+					return _Utils_Tuple2(
+						x,
+						A2($elm$core$List$drop, 1, y));
+				},
+				todo_)));
+	return _Utils_update(
+		model,
+		{roundTodoCleared: false, todo: todo});
+};
+var $author$project$Card$Card = F4(
+	function (selMode, cost, action, name) {
+		return {action: action, cost: cost, name: name, selMode: selMode};
+	});
+var $author$project$Card$CutHexI = function (a) {
+	return {$: 'CutHexI', a: a};
+};
+var $author$project$Card$HexSel = {$: 'HexSel'};
+var $author$project$Card$cut = A4(
+	$author$project$Card$Card,
+	$author$project$Card$HexSel,
+	1,
+	_List_fromArray(
+		[
+			$author$project$Card$CutHexI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Cut');
+var $author$project$Update$ecoInc = function (model) {
+	return _Utils_update(
+		model,
+		{ecoRatio: 1, economy: model.economy + ((model.basicEcoOutput + (model.warehouseNum * $author$project$Parameters$para.warehouseOutput)) * model.ecoRatio)});
+};
+var $author$project$Todo$finished = function (todo) {
+	return $elm$core$List$isEmpty(
+		A2($elm$core$List$filter, $elm$core$Tuple$first, todo));
+};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $author$project$Card$CutTileI = function (a) {
+	return {$: 'CutTileI', a: a};
+};
+var $author$project$Card$FreezevirusI = function (a) {
+	return {$: 'FreezevirusI', a: a};
+};
+var $author$project$Card$HumanCloneI = function (a) {
+	return {$: 'HumanCloneI', a: a};
+};
+var $author$project$Card$OrganCloneI = function (a) {
+	return {$: 'OrganCloneI', a: a};
+};
+var $author$project$Card$PurificationI = function (a) {
+	return {$: 'PurificationI', a: a};
+};
+var $author$project$Card$ResurgenceI = function (a) {
+	return {$: 'ResurgenceI', a: a};
+};
+var $author$project$Card$SacrificeI = function (a) {
+	return {$: 'SacrificeI', a: a};
+};
+var $author$project$Card$TileSel = {$: 'TileSel'};
+var $author$project$Card$defenseline = A4(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	2,
+	_List_fromArray(
+		[
+			$author$project$Card$FreezevirusI(
+			_Utils_Tuple2(0, 0)),
+			$author$project$Card$FreezevirusI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Defenseline');
+var $author$project$Todo$finishedEmptyQueue = _Utils_Tuple2(false, _List_Nil);
+var $author$project$Card$humanClone = A4(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	3,
+	_List_fromArray(
+		[
+			$author$project$Card$HumanCloneI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Human Clone');
+var $author$project$Card$megaCut = A4(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	5,
+	_List_fromArray(
+		[
+			$author$project$Card$CutTileI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Mega Cut');
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Card$organClone = A4(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	3,
+	_List_fromArray(
+		[
+			$author$project$Card$OrganCloneI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Organ Clone');
+var $author$project$Card$purification = A4(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	3,
+	_List_fromArray(
+		[
+			$author$project$Card$PurificationI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Purification');
+var $author$project$Card$resurgence = A4(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	8,
+	_List_fromArray(
+		[
+			$author$project$Card$ResurgenceI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Resurgence');
+var $author$project$Card$sacrifice = A4(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	4,
+	_List_fromArray(
+		[
+			$author$project$Card$SacrificeI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Sacrifice');
+var $author$project$Update$fillRegion = F2(
+	function (card, sel) {
+		return _Utils_eq(card, $author$project$Card$cut) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$CutHexI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$megaCut) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$CutTileI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$organClone) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$OrganCloneI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$humanClone) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$HumanCloneI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$purification) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$PurificationI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$resurgence) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$ResurgenceI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$sacrifice) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$SacrificeI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$defenseline) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$FreezevirusI(sel),
+						$author$project$Card$FreezevirusI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : _Utils_Tuple2($author$project$Todo$finishedEmptyQueue, $elm$core$Platform$Cmd$none))))))));
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
 };
-var $author$project$Geometry$generateZone = function (pos) {
-	var j = pos.b;
-	var i = pos.a;
-	return _List_fromArray(
-		[
-			_Utils_Tuple2(i, j - 1),
-			_Utils_Tuple2(i, j + 1),
-			_Utils_Tuple2(i + 1, j),
-			_Utils_Tuple2(i + 1, j - 1),
-			_Utils_Tuple2(i - 1, j),
-			_Utils_Tuple2(i - 1, j + 1)
-		]);
+var $author$project$Update$mFillRegion = function (_v0) {
+	var model = _v0.a;
+	var cm = _v0.b;
+	var _v1 = model.cardSelected;
+	if (_v1.$ === 'NoCard') {
+		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+	} else {
+		var card = _v1.a;
+		var _v2 = model.selHex;
+		if (_v2.$ === 'SelHexOn') {
+			return (!_Utils_eq(
+				model.selectedHex,
+				_Utils_Tuple2(-233, -233))) ? _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						selHex: $author$project$Model$SelHexOff,
+						selectedHex: _Utils_Tuple2(-233, -233),
+						todo: _Utils_ap(
+							model.todo,
+							_List_fromArray(
+								[
+									A2($author$project$Update$fillRegion, card, model.selectedHex).a
+								]))
+					}),
+				$elm$core$Platform$Cmd$batch(
+					_List_fromArray(
+						[
+							cm,
+							A2($author$project$Update$fillRegion, card, model.selectedHex).b
+						]))) : _Utils_Tuple2(model, cm);
+		} else {
+			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		}
+	}
 };
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -6020,20 +6555,16 @@ var $elm$core$List$member = F2(
 			},
 			xs);
 	});
-var $elm$core$List$sum = function (numbers) {
-	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+var $author$project$Card$NoAction = {$: 'NoAction'};
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
 };
-var $author$project$Virus$countInfectedNeighbor = F2(
-	function (pos, lstv) {
-		var lstn = $author$project$Geometry$generateZone(pos);
-		return $elm$core$List$sum(
-			A2(
-				$elm$core$List$map,
-				function (x) {
-					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
-				},
-				lstn));
-	});
 var $elm$core$List$partition = F2(
 	function (pred, list) {
 		var step = F2(
@@ -6052,20 +6583,590 @@ var $elm$core$List$partition = F2(
 			_Utils_Tuple2(_List_Nil, _List_Nil),
 			list);
 	});
-var $author$project$Virus$judgeAlive = F2(
-	function (lstp, vir) {
-		var lst = A2(
+var $author$project$Message$FreezeRet = F2(
+	function (a, b) {
+		return {$: 'FreezeRet', a: a, b: b};
+	});
+var $author$project$Geometry$generateZone = function (pos) {
+	var j = pos.b;
+	var i = pos.a;
+	return _List_fromArray(
+		[
+			_Utils_Tuple2(i, j - 1),
+			_Utils_Tuple2(i, j + 1),
+			_Utils_Tuple2(i + 1, j),
+			_Utils_Tuple2(i + 1, j - 1),
+			_Utils_Tuple2(i - 1, j),
+			_Utils_Tuple2(i - 1, j + 1)
+		]);
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $elm$core$Basics$round = _Basics_round;
+var $author$project$Geometry$isInt = function (x) {
+	return $elm$core$Basics$abs(
+		x - $elm$core$Basics$round(x)) < 0.00001;
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Geometry$converHextoTile = function (_v0) {
+	var i = _v0.a;
+	var j = _v0.b;
+	return function (_v4) {
+		var x = _v4.a;
+		var y = _v4.b;
+		return _Utils_Tuple2(
+			$elm$core$Basics$round(x),
+			$elm$core$Basics$round(y));
+	}(
+		A2(
+			$elm$core$Maybe$withDefault,
+			_Utils_Tuple2(0, 0),
+			$elm$core$List$head(
+				A2(
+					$elm$core$List$filter,
+					function (_v3) {
+						var x = _v3.a;
+						var y = _v3.b;
+						return $author$project$Geometry$isInt(x) && $author$project$Geometry$isInt(y);
+					},
+					A2(
+						$elm$core$List$map,
+						function (_v2) {
+							var x = _v2.a;
+							var y = _v2.b;
+							return _Utils_Tuple2(((3 * x) + y) / 7, ((2 * y) - x) / 7);
+						},
+						A2(
+							$elm$core$List$map,
+							function (_v1) {
+								var x = _v1.a;
+								var y = _v1.b;
+								return _Utils_Tuple2(x, y);
+							},
+							A2(
+								$elm$core$List$cons,
+								_Utils_Tuple2(i, j),
+								$author$project$Geometry$generateZone(
+									_Utils_Tuple2(i, j)))))))));
+};
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$float = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var seed1 = $elm$random$Random$next(seed0);
+				var range = $elm$core$Basics$abs(b - a);
+				var n1 = $elm$random$Random$peel(seed1);
+				var n0 = $elm$random$Random$peel(seed0);
+				var lo = (134217727 & n1) * 1.0;
+				var hi = (67108863 & n0) * 1.0;
+				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
+				var scaled = (val * range) + a;
+				return _Utils_Tuple2(
+					scaled,
+					$elm$random$Random$next(seed1));
+			});
+	});
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$time$Time$posixToMillis = function (_v0) {
+	var millis = _v0.a;
+	return millis;
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $author$project$Update$performAction = F2(
+	function (action, model) {
+		switch (action.$) {
+			case 'IncPowerI':
+				var inc = action.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{power: model.power + inc}),
+					$elm$core$Platform$Cmd$none);
+			case 'Freeze':
+				var prob = action.a;
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$FreezeRet(prob),
+						A2($elm$random$Random$float, 0, 1)));
+			case 'FreezeI':
+				var behavior_ = model.behavior;
+				var behavior = _Utils_update(
+					behavior_,
+					{virusEvolve: false});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{behavior: behavior}),
+					$elm$core$Platform$Cmd$none);
+			case 'EcoDoubleI':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ecoRatio: 2 * model.ecoRatio}),
+					$elm$core$Platform$Cmd$none);
+			case 'EcoDoubleI_Freeze':
+				var prob = action.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ecoRatio: 2 * model.ecoRatio}),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$FreezeRet(prob),
+						A2($elm$random$Random$float, 0, 1)));
+			case 'CutHexI':
+				var _v1 = action.a;
+				var i = _v1.a;
+				var j = _v1.b;
+				var virus_ = model.virus;
+				var pos_ = virus_.pos;
+				var pos = A2(
+					$elm$core$List$filter,
+					function (_v2) {
+						var x = _v2.a;
+						var y = _v2.b;
+						return !_Utils_eq(
+							_Utils_Tuple2(x, y),
+							_Utils_Tuple2(i, j));
+					},
+					pos_);
+				var virus = _Utils_update(
+					virus_,
+					{pos: pos});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{virus: virus}),
+					$elm$core$Platform$Cmd$none);
+			case 'CutTileI':
+				var _v3 = action.a;
+				var i = _v3.a;
+				var j = _v3.b;
+				var virus_ = model.virus;
+				var pos_ = virus_.pos;
+				var _v4 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var t1 = _v4.a;
+				var t2 = _v4.b;
+				var lc = A2(
+					$elm$core$Debug$log,
+					'chosenTile',
+					_Utils_Tuple2(t1, t2));
+				var _v5 = _Utils_Tuple2((2 * t1) - t2, t1 + (3 * t2));
+				var c1 = _v5.a;
+				var c2 = _v5.b;
+				var pos = A2(
+					$elm$core$List$filter,
+					function (_v6) {
+						var x = _v6.a;
+						var y = _v6.b;
+						return !A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(x, y),
+							A2(
+								$elm$core$List$cons,
+								_Utils_Tuple2(c1, c2),
+								$author$project$Geometry$generateZone(
+									_Utils_Tuple2(c1, c2))));
+					},
+					pos_);
+				var virus = _Utils_update(
+					virus_,
+					{pos: pos});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{virus: virus}),
+					$elm$core$Platform$Cmd$none);
+			case 'Activate996I':
+				var virus_ = model.virus;
+				var dr = 1.05 * virus_.kill;
+				var virus = _Utils_update(
+					virus_,
+					{kill: dr});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ecoRatio: 2 * model.ecoRatio, virus: virus}),
+					$elm$core$Platform$Cmd$none);
+			case 'OrganCloneI':
+				var _v7 = action.a;
+				var i = _v7.a;
+				var j = _v7.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? (((x.sick - x.dead) > 0) ? _Utils_update(
+							x,
+							{sick: x.sick - x.dead}) : _Utils_update(
+							x,
+							{sick: 0})) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city}),
+					$elm$core$Platform$Cmd$none);
+			case 'HumanCloneI':
+				var _v8 = action.a;
+				var i = _v8.a;
+				var j = _v8.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? _Utils_update(
+							x,
+							{population: x.population * 2}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city}),
+					$elm$core$Platform$Cmd$none);
+			case 'MegaCloneI':
+				var tilelst_ = model.city.tilesindex;
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_update(
+							x,
+							{
+								population: $elm$core$Basics$round(x.population * 1.5)
+							});
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city}),
+					$elm$core$Platform$Cmd$none);
+			case 'PurificationI':
+				var _v9 = action.a;
+				var i = _v9.a;
+				var j = _v9.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? _Utils_update(
+							x,
+							{sick: 0}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city}),
+					$elm$core$Platform$Cmd$none);
+			case 'SacrificeI':
+				var _v10 = action.a;
+				var i = _v10.a;
+				var j = _v10.b;
+				var virus_ = model.virus;
+				var virpos_ = virus_.pos;
+				var virpos = A2(
+					$elm$core$List$filter,
+					function (x) {
+						return !_Utils_eq(
+							$author$project$Geometry$converHextoTile(x),
+							_Utils_Tuple2(i, j));
+					},
+					virpos_);
+				var virus = _Utils_update(
+					virus_,
+					{pos: virpos});
+				var tilepos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst_ = model.city.tilesindex;
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, tilepos) ? _Utils_update(
+							x,
+							{dead: x.dead + x.sick, population: x.population - x.sick, sick: 0}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city, virus: virus}),
+					$elm$core$Platform$Cmd$none);
+			case 'ResurgenceI':
+				var _v11 = action.a;
+				var i = _v11.a;
+				var j = _v11.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? _Utils_update(
+							x,
+							{
+								dead: x.dead - $elm$core$Basics$round(x.dead / 2),
+								population: x.population + $elm$core$Basics$round(x.dead / 2)
+							}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city}),
+					$elm$core$Platform$Cmd$none);
+			case 'FreezevirusI':
+				var _v12 = action.a;
+				var i = _v12.a;
+				var j = _v12.b;
+				var virus_ = model.virus;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var virpos = A2(
+					$elm$core$List$filter,
+					function (x) {
+						return !_Utils_eq(
+							$author$project$Geometry$converHextoTile(x),
+							pos);
+					},
+					virus_.pos);
+				var virus = _Utils_update(
+					virus_,
+					{pos: virpos});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{virus: virus}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$Update$pickAction = function (model) {
+	var _v0 = A2(
+		$elm$core$List$partition,
+		function (_v1) {
+			var x = _v1.a;
+			var y = _v1.b;
+			return !x;
+		},
+		model.todo);
+	var finished = _v0.a;
+	var unfinished_ = _v0.b;
+	var headQueue_ = A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$Todo$finishedEmptyQueue,
+		$elm$core$List$head(unfinished_));
+	var headAction = A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$Card$NoAction,
+		$elm$core$List$head(headQueue_.b));
+	var headQueue = _Utils_Tuple2(false, headQueue_.b);
+	var todo = _Utils_ap(
+		finished,
+		_Utils_ap(
+			_List_fromArray(
+				[headQueue]),
+			A2($elm$core$List$drop, 1, unfinished_)));
+	return A2(
+		$author$project$Update$performAction,
+		headAction,
+		_Utils_update(
+			model,
+			{todo: todo}));
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Update$sendMsg = _Platform_outgoingPort('sendMsg', $elm$json$Json$Encode$string);
+var $author$project$Card$targetCardlst = _List_fromArray(
+	[$author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$sacrifice, $author$project$Card$purification, $author$project$Card$resurgence, $author$project$Card$defenseline]);
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $author$project$Virus$countInfectedNeighbor = F2(
+	function (pos, lstv) {
+		var lstn = $author$project$Geometry$generateZone(pos);
+		return $elm$core$List$sum(
+			A2(
+				$elm$core$List$map,
+				function (x) {
+					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
+				},
+				lstn));
+	});
+var $author$project$Virus$countavNeighbor = F2(
+	function (pos, lstv) {
+		var lstn = $author$project$Geometry$generateZone(pos);
+		return $elm$core$List$sum(
+			A2(
+				$elm$core$List$map,
+				function (x) {
+					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
+				},
+				lstn));
+	});
+var $author$project$Virus$judgeAlivevir = F4(
+	function (lstvir, vir, lstanti, anti) {
+		var lstv = A2(
 			$elm$core$List$partition,
 			function (x) {
 				return A2(
 					$elm$core$List$member,
 					A2($author$project$Virus$countInfectedNeighbor, x, vir.pos),
-					vir.rules);
+					vir.rules) && (!A2($elm$core$List$member, x, anti.pos));
 			},
-			lstp).a;
-		return _Utils_update(
-			vir,
-			{pos: lst});
+			lstvir).a;
+		var lsta = A2(
+			$elm$core$List$partition,
+			function (x) {
+				return A2(
+					$elm$core$List$member,
+					A2($author$project$Virus$countavNeighbor, x, anti.pos),
+					anti.rules) && (!A2($elm$core$List$member, x, vir.pos));
+			},
+			lstanti).a;
+		return _Utils_Tuple2(
+			_Utils_update(
+				vir,
+				{pos: lstv}),
+			_Utils_update(
+				anti,
+				{pos: lsta}));
 	});
 var $elm$core$List$append = F2(
 	function (xs, ys) {
@@ -6149,26 +7250,47 @@ var $author$project$Virus$searchNeighbor = function (virlst) {
 				},
 				virlst)));
 };
-var $author$project$Virus$change = function (virus) {
-	var lstn = $author$project$Virus$searchNeighbor(virus.pos);
-	return A2($author$project$Virus$judgeAlive, lstn, virus);
-};
-var $elm$core$Basics$round = _Basics_round;
-var $author$project$Geometry$converHextoTile = function (hexIn) {
-	var j = hexIn.b;
-	var i = hexIn.a;
-	var x = $elm$core$Basics$round(((2 * j) - i) / 7);
-	var y = $elm$core$Basics$round(((3 * i) + j) / 7);
-	return _Utils_Tuple2(x, y);
+var $author$project$Virus$change = F2(
+	function (virus, anti) {
+		var lstvir = $author$project$Virus$searchNeighbor(virus.pos);
+		var lstanti = $author$project$Virus$searchNeighbor(anti.pos);
+		return A4($author$project$Virus$judgeAlivevir, lstvir, virus, lstanti, anti);
+	});
+var $elm_community$list_extra$List$Extra$count = function (predicate) {
+	return A2(
+		$elm$core$List$foldl,
+		F2(
+			function (x, acc) {
+				return predicate(x) ? (acc + 1) : acc;
+			}),
+		0);
 };
 var $author$project$Model$sickupdate = F3(
 	function (t, lstvir, inf) {
 		return A2(
 			$elm$core$List$map,
 			function (x) {
-				return (A2($elm$core$List$member, x.indice, lstvir) && (_Utils_cmp(x.sick + inf, x.population) < 1)) ? _Utils_update(
+				return ((A2(
+					$elm_community$list_extra$List$Extra$count,
+					$elm$core$Basics$eq(x.indice),
+					lstvir) > 0) && (_Utils_cmp(
+					x.sick + (inf * A2(
+						$elm_community$list_extra$List$Extra$count,
+						$elm$core$Basics$eq(x.indice),
+						lstvir)),
+					x.population) < 1)) ? _Utils_update(
 					x,
-					{sick: x.sick + inf}) : x;
+					{
+						sick: x.sick + (inf * A2(
+							$elm_community$list_extra$List$Extra$count,
+							$elm$core$Basics$eq(x.indice),
+							lstvir))
+					}) : ((A2(
+					$elm_community$list_extra$List$Extra$count,
+					$elm$core$Basics$eq(x.indice),
+					lstvir) > 0) ? _Utils_update(
+					x,
+					{sick: x.population}) : x);
 			},
 			t);
 	});
@@ -6189,8 +7311,302 @@ var $author$project$Model$infect = F2(
 				tilesindex: A3($author$project$Model$sickupdate, lstTile, lstvirTilesIndice, inf)
 			});
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$List$sortBy = _List_sortBy;
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
+	});
+var $author$project$Tile$validNeighborTile = F2(
+	function (tlst, t) {
+		var lstn = $author$project$Geometry$generateZone(t.indice);
+		return A2(
+			$elm$core$List$partition,
+			function (x) {
+				return A2($elm$core$List$member, x.indice, lstn) && (x.population > 0);
+			},
+			tlst).a;
+	});
+var $author$project$Model$populationFlow = F2(
+	function (n, city) {
+		populationFlow:
+		while (true) {
+			var citytileslst = city.tilesindex;
+			var t = A2(
+				$elm$core$Maybe$withDefault,
+				A6(
+					$author$project$Tile$Tile,
+					_Utils_Tuple2(-100, -100),
+					100,
+					0,
+					0,
+					$author$project$Tile$NoConstruction,
+					0),
+				$elm$core$List$head(
+					A2(
+						$elm$core$List$drop,
+						n - 1,
+						A2($elm$core$List$take, n, citytileslst))));
+			var lstnTile = A2($author$project$Tile$validNeighborTile, citytileslst, t);
+			var leaveLst = A2(
+				$elm$core$List$take,
+				t.population,
+				A2(
+					$elm$core$List$map,
+					function (x) {
+						return x.indice;
+					},
+					A2(
+						$elm$core$List$sortBy,
+						function (x) {
+							return x.sick + (x.dead * 2);
+						},
+						lstnTile)));
+			var numNeig = $elm$core$List$length(lstnTile);
+			var sickleave = (_Utils_cmp(t.population, numNeig) > 0) ? $elm$core$Basics$round((t.sick * numNeig) / t.population) : t.sick;
+			var sickLst = A2($elm$core$List$take, sickleave, leaveLst);
+			if (_Utils_cmp(
+				n,
+				$elm$core$List$length(citytileslst)) < 1) {
+				var newcitytileslst = (_Utils_cmp(t.population, numNeig) > -1) ? A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x, t) ? _Utils_update(
+							x,
+							{population: x.population - numNeig, sick: x.sick - sickleave}) : (A2($elm$core$List$member, x.indice, sickLst) ? _Utils_update(
+							x,
+							{population: x.population + 1, sick: x.sick + 1}) : (A2($elm$core$List$member, x.indice, leaveLst) ? _Utils_update(
+							x,
+							{population: x.population + 1}) : x));
+					},
+					citytileslst) : A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x, t) ? _Utils_update(
+							x,
+							{population: 0, sick: 0}) : (A2($elm$core$List$member, x.indice, sickLst) ? _Utils_update(
+							x,
+							{population: x.population + 1, sick: x.sick + 1}) : (A2($elm$core$List$member, x.indice, leaveLst) ? _Utils_update(
+							x,
+							{population: x.population + 1}) : x));
+					},
+					citytileslst);
+				var newcity = _Utils_update(
+					city,
+					{tilesindex: newcitytileslst});
+				var $temp$n = n + 1,
+					$temp$city = newcity;
+				n = $temp$n;
+				city = $temp$city;
+				continue populationFlow;
+			} else {
+				return city;
+			}
+		}
+	});
+var $author$project$Model$sumSick = function (city) {
+	return $elm$core$List$sum(
+		A2(
+			$elm$core$List$map,
+			function (x) {
+				return x.sick;
+			},
+			city.tilesindex));
+};
+var $author$project$Model$virusKill = F2(
+	function (vir, city) {
+		var patients = $author$project$Model$sumSick(city);
+		var dr = vir.kill;
+		var death = $elm$core$Basics$round(patients * dr);
+		var _v0 = A2(
+			$elm$core$List$partition,
+			function (x) {
+				return x.sick > 1;
+			},
+			A2(
+				$elm$core$List$sortBy,
+				function ($) {
+					return $.sick;
+				},
+				A2(
+					$elm$core$List$partition,
+					function (x) {
+						return x.sick > 0;
+					},
+					city.tilesindex).a));
+		var lstInfectedn = _v0.a;
+		var lstInfected1 = _v0.b;
+		var estimateDeath = $elm$core$List$sum(
+			A2(
+				$elm$core$List$map,
+				function (x) {
+					return $elm$core$Basics$round(x.sick * (0.05 + dr));
+				},
+				lstInfectedn));
+		var deathlst = (_Utils_cmp(death, estimateDeath) < 1) ? A2(
+			$elm$core$List$take,
+			$elm$core$Basics$round(death / estimateDeath) * $elm$core$List$length(lstInfectedn),
+			lstInfectedn) : _Utils_ap(
+			lstInfectedn,
+			A2($elm$core$List$take, death - estimateDeath, lstInfected1));
+		return _Utils_update(
+			city,
+			{
+				tilesindex: A2(
+					$elm$core$List$map,
+					function (x) {
+						return A2($elm$core$List$member, x, deathlst) ? _Utils_update(
+							x,
+							{
+								dead: x.dead + $elm$core$Basics$round(x.sick * dr),
+								population: x.population - $elm$core$Basics$round(x.sick * dr),
+								sick: x.sick - $elm$core$Basics$round(x.sick * dr)
+							}) : x;
+					},
+					city.tilesindex)
+			});
+	});
+var $author$project$Model$updateCity = F2(
+	function (city, vir) {
+		return A2(
+			$author$project$Model$populationFlow,
+			1,
+			A2(
+				$author$project$Model$virusKill,
+				vir,
+				A2($author$project$Model$infect, city, vir)));
+	});
+var $author$project$Update$virusEvolve = function (model) {
+	return _Utils_update(
+		model,
+		{
+			av: A2($author$project$Virus$change, model.virus, model.av).b,
+			city: A2($author$project$Model$updateCity, model.city, model.virus),
+			virus: A2($author$project$Virus$change, model.virus, model.av).a
+		});
+};
 var $author$project$Update$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -6206,7 +7622,9 @@ var $author$project$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'Tick':
 				var newTime = msg.a;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return (!$author$project$Todo$finished(model.todo)) ? $author$project$Update$mFillRegion(
+					$author$project$Update$pickAction(model)) : $author$project$Update$mFillRegion(
+					_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
 			case 'AddKey':
 				var kv = msg.a;
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -6222,24 +7640,165 @@ var $author$project$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'VirusEvolve':
 				return _Utils_Tuple2(
+					$author$project$Update$virusEvolve(model),
+					$elm$core$Platform$Cmd$none);
+			case 'NextRound':
+				return model.behavior.virusEvolve ? _Utils_Tuple2(
+					$author$project$Update$ecoInc(
+						$author$project$Update$virusEvolve(
+							$author$project$Update$clearCurrentRoundTodo(
+								_Utils_update(
+									model,
+									{currentRound: model.currentRound + 1})))),
+					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					$author$project$Update$ecoInc(
+						$author$project$Update$clearCurrentRoundTodo(
+							_Utils_update(
+								model,
+								{behavior: $author$project$Model$initBehavior, currentRound: model.currentRound + 1}))),
+					$elm$core$Platform$Cmd$none);
+			case 'PlayCard':
+				var card = msg.a;
+				return ((_Utils_cmp(card.cost, model.power) < 1) && (_Utils_cmp($author$project$Parameters$para.ecoThreshold, model.economy) < 1)) ? ((_Utils_eq(card, $author$project$Card$cut) || _Utils_eq(card, $author$project$Card$megaCut)) ? _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							city: A2($author$project$Model$infect, model.city, model.virus),
-							virus: $author$project$Virus$change(model.virus)
+							cardSelected: $author$project$Model$SelectCard(card),
+							economy: model.economy - $author$project$Parameters$para.ecoThreshold,
+							power: model.power - card.cost,
+							selHex: $author$project$Model$SelHexOn
 						}),
-					$elm$core$Platform$Cmd$none);
-			default:
+					$elm$core$Platform$Cmd$none) : (A2($elm$core$List$member, card, $author$project$Card$targetCardlst) ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							cardSelected: $author$project$Model$SelectCard(card),
+							economy: model.economy - $author$project$Parameters$para.ecoThreshold,
+							power: model.power - card.cost,
+							selHex: $author$project$Model$SelHexOn
+						}),
+					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							economy: model.economy - $author$project$Parameters$para.ecoThreshold,
+							power: model.power - card.cost,
+							todo: _Utils_ap(
+								model.todo,
+								_List_fromArray(
+									[
+										_Utils_Tuple2(true, card.action)
+									]))
+						}),
+					$elm$core$Platform$Cmd$none))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'FreezeRet':
+				var prob = msg.a;
+				var rand = msg.b;
+				var behavior_ = model.behavior;
+				var behavior = _Utils_update(
+					behavior_,
+					{
+						virusEvolve: !(_Utils_cmp(rand, prob) < 0)
+					});
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{currentRound: model.currentRound + 1}),
+						{behavior: behavior}),
 					$elm$core$Platform$Cmd$none);
+			case 'SelectHex':
+				var i = msg.a;
+				var j = msg.b;
+				var log1 = A2(
+					$elm$core$Debug$log,
+					'i, j: ',
+					_Utils_Tuple2(i, j));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							selectedHex: _Utils_Tuple2(i, j)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'MouseOver':
+				var i = msg.a;
+				var j = msg.b;
+				var log2 = A2(
+					$elm$core$Debug$log,
+					'over',
+					_Utils_Tuple2(i, j));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							mouseOver: _Utils_Tuple2(i, j)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var txt = msg.a;
+				return _Utils_Tuple2(
+					model,
+					$author$project$Update$sendMsg(txt));
 		}
 	});
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $author$project$Message$VirusEvolve = {$: 'VirusEvolve'};
+var $author$project$Message$Alert = function (a) {
+	return {$: 'Alert', a: a};
+};
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var $author$project$View$bkg = A2(
+	$elm$svg$Svg$rect,
+	_List_fromArray(
+		[
+			$elm$svg$Svg$Attributes$x('0'),
+			$elm$svg$Svg$Attributes$y('0'),
+			$elm$svg$Svg$Attributes$width('1000'),
+			$elm$svg$Svg$Attributes$height('600'),
+			$elm$svg$Svg$Attributes$fill('#2A363b')
+		]),
+	_List_Nil);
+var $author$project$Card$FreezeI = {$: 'FreezeI'};
+var $author$project$Card$NoSel = {$: 'NoSel'};
+var $author$project$Card$blizzard = A4(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	8,
+	_List_fromArray(
+		[$author$project$Card$FreezeI, $author$project$Card$FreezeI, $author$project$Card$FreezeI]),
+	'Blizzard');
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
+var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $author$project$View$caption = F4(
+	function (x, y, cstr, text) {
+		return A2(
+			$elm$svg$Svg$text_,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$fontSize('15'),
+					$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
+					$elm$svg$Svg$Attributes$x(
+					$elm$core$String$fromFloat(x)),
+					$elm$svg$Svg$Attributes$y(
+					$elm$core$String$fromFloat(y)),
+					$elm$svg$Svg$Attributes$fill(cstr)
+				]),
+			_List_fromArray(
+				[
+					$elm$svg$Svg$text(text)
+				]));
+	});
+var $author$project$Message$PlayCard = function (a) {
+	return {$: 'PlayCard', a: a};
+};
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -6251,102 +7810,130 @@ var $elm$html$Html$Events$on = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
+var $author$project$View$onClick = function (message) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(message));
+};
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$View$cardButton = function (card) {
+	return A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				$author$project$View$onClick(
+				$author$project$Message$PlayCard(card))
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text(card.name)
+			]));
+};
+var $author$project$Card$Freeze = function (a) {
+	return {$: 'Freeze', a: a};
+};
+var $author$project$Card$coldWave = A4(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	1,
+	_List_fromArray(
+		[
+			$author$project$Card$Freeze(0.5)
+		]),
+	'Cold Wave');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$Message$VirusEvolve = {$: 'VirusEvolve'};
+var $author$project$View$evolveButton = A2(
+	$elm$html$Html$button,
+	_List_fromArray(
+		[
+			$author$project$View$onClick($author$project$Message$VirusEvolve)
+		]),
+	_List_fromArray(
+		[
+			$elm$html$Html$text('EVOLVE')
+		]));
+var $author$project$Card$Activate996I = {$: 'Activate996I'};
+var $author$project$Card$fubao = A4(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	1,
+	_List_fromArray(
+		[$author$project$Card$Activate996I, $author$project$Card$Activate996I]),
+	'996');
+var $author$project$Card$MegaCloneI = {$: 'MegaCloneI'};
+var $author$project$Card$megaClone = A4(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	8,
+	_List_fromArray(
+		[$author$project$Card$MegaCloneI]),
+	'Mega Clone');
+var $author$project$Message$NextRound = {$: 'NextRound'};
+var $author$project$View$nextRoundButton = A2(
+	$elm$html$Html$button,
+	_List_fromArray(
+		[
+			$author$project$View$onClick($author$project$Message$NextRound)
+		]),
+	_List_fromArray(
+		[
+			$elm$html$Html$text('next round')
+		]));
 var $elm$html$Html$Events$onClick = function (msg) {
 	return A2(
 		$elm$html$Html$Events$on,
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$View$evolveButton = A2(
-	$elm$html$Html$button,
+var $author$project$Card$IncPowerI = function (a) {
+	return {$: 'IncPowerI', a: a};
+};
+var $author$project$Card$onStandby = A4(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	0,
 	_List_fromArray(
 		[
-			$elm$html$Html$Events$onClick($author$project$Message$VirusEvolve)
+			$author$project$Card$IncPowerI(2)
 		]),
+	'On Standby');
+var $author$project$View$powerEcoInfo = function (model) {
+	var p = $elm$core$String$fromInt(model.power);
+	var ec = $elm$core$String$fromInt(model.economy);
+	return $elm$html$Html$text('power: ' + (p + ('. ' + ('economy: ' + (ec + '. ')))));
+};
+var $author$project$Card$powerOverload = A4(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	0,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('EVOLVE')
-		]));
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var $author$project$Message$NextRound = {$: 'NextRound'};
-var $author$project$View$nextRoundButton = A2(
-	$elm$html$Html$button,
-	_List_fromArray(
-		[
-			$elm$html$Html$Events$onClick($author$project$Message$NextRound)
+			$author$project$Card$IncPowerI(3),
+			$author$project$Card$IncPowerI(-3)
 		]),
+	'Power Overload');
+var $author$project$Card$EcoDoubleI = {$: 'EcoDoubleI'};
+var $author$project$Card$EcoDoubleI_Freeze = function (a) {
+	return {$: 'EcoDoubleI_Freeze', a: a};
+};
+var $author$project$Card$rain = A4(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	3,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('next round')
-		]));
-var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+			$author$project$Card$EcoDoubleI,
+			$author$project$Card$EcoDoubleI_Freeze(0.5)
+		]),
+	'Rain');
 var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
 var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
 	});
-var $author$project$Parameters$para = {
-	a: 15,
-	af: 12.0,
-	h: 600,
-	hlp: 25.0,
-	tileOrigin: _Utils_Tuple2(400.0, 400.0),
-	w: 1000,
-	wlp: 200.0,
-	xlp: 10.0,
-	ylp: 30.0
-};
 var $elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
-var $elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$Geometry$polyPoint = F2(
 	function (l1, l2) {
 		if ($elm$core$List$isEmpty(l1) || $elm$core$List$isEmpty(l2)) {
@@ -6420,7 +8007,7 @@ var $author$project$View$renderFlag = function (i) {
 								]),
 							_List_fromArray(
 								[$author$project$Parameters$para.ylp, $author$project$Parameters$para.ylp - (a / 2), $author$project$Parameters$para.ylp - a]))),
-						$elm$svg$Svg$Attributes$fill('red')
+						$elm$svg$Svg$Attributes$fill('orange')
 					]),
 				_List_Nil)
 			]));
@@ -6428,10 +8015,6 @@ var $author$project$View$renderFlag = function (i) {
 var $author$project$View$renderFlags = function (li) {
 	return A2($elm$core$List$map, $author$project$View$renderFlag, li);
 };
-var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
-var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
 var $author$project$View$renderLevelProgress = function (model) {
 	var wg = (A2($elm$core$Basics$min, model.currentRound, 20) / 20.0) * $author$project$Parameters$para.wlp;
 	return A2(
@@ -6471,8 +8054,7 @@ var $author$project$View$renderLevelProgress = function (model) {
 				_List_Nil)
 			]));
 };
-var $elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
-var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
+var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
 var $elm$svg$Svg$polyline = $elm$svg$Svg$trustedNode('polyline');
 var $author$project$Geometry$posAdd = F2(
 	function (_v0, _v1) {
@@ -6490,48 +8072,6 @@ var $author$project$Geometry$rc = function (_v0) {
 	var y = -((a * i) * $elm$core$Basics$sqrt(3));
 	return _Utils_Tuple2(x, y);
 };
-var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
-var $author$project$View$renderHex = F3(
-	function (cstr, opa, _v0) {
-		var i = _v0.a;
-		var j = _v0.b;
-		var a = $author$project$Parameters$para.a;
-		var h = a / $elm$core$Basics$sqrt(3);
-		var _v1 = $author$project$Parameters$para.tileOrigin;
-		var x0 = _v1.a;
-		var y0 = _v1.b;
-		var _v2 = A2(
-			$author$project$Geometry$posAdd,
-			$author$project$Geometry$rc(
-				_Utils_Tuple2(i, j)),
-			_Utils_Tuple2(x0, y0));
-		var x = _v2.a;
-		var y = _v2.b;
-		return A2(
-			$elm$svg$Svg$svg,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points(
-							A2(
-								$author$project$Geometry$polyPoint,
-								_List_fromArray(
-									[x + a, x, x - a, x - a, x, x + a]),
-								_List_fromArray(
-									[y + h, y + (2 * h), y + h, y - h, y - (2 * h), y - h]))),
-							$elm$svg$Svg$Attributes$fill(cstr),
-							$elm$svg$Svg$Attributes$fillOpacity(
-							$elm$core$String$fromFloat(opa))
-						]),
-					_List_Nil)
-				]));
-	});
-var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
 var $author$project$View$renderTile = function (t) {
 	var ind = t.indice;
 	var t1 = ind.a;
@@ -6652,7 +8192,9 @@ var $author$project$View$renderTile = function (t) {
 						$elm$svg$Svg$Attributes$points(
 						A2($author$project$Geometry$polyPoint, borderX, borderY)),
 						$elm$svg$Svg$Attributes$strokeWidth('2'),
-						$elm$svg$Svg$Attributes$stroke('orange')
+						$elm$svg$Svg$Attributes$stroke('#2A363B'),
+						$elm$svg$Svg$Attributes$fill('#99b898'),
+						$elm$svg$Svg$Attributes$fillOpacity('1')
 					]),
 				_List_Nil)
 			]));
@@ -6685,17 +8227,213 @@ var $author$project$View$renderTile = function (t) {
 						$elm$svg$Svg$text(constructionCaption)
 					]))
 			]));
+	var populationInfo = A2(
+		$elm$svg$Svg$svg,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$text_,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$fontSize('15'),
+						$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
+						$elm$svg$Svg$Attributes$x(
+						$elm$core$String$fromFloat(x - 15.0)),
+						$elm$svg$Svg$Attributes$y(
+						$elm$core$String$fromFloat(y - 10.0)),
+						$elm$svg$Svg$Attributes$fill('green')
+					]),
+				_List_fromArray(
+					[
+						$elm$svg$Svg$text(
+						$elm$core$String$fromInt(t.population - t.sick))
+					])),
+				A2(
+				$elm$svg$Svg$text_,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$fontSize('15'),
+						$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
+						$elm$svg$Svg$Attributes$x(
+						$elm$core$String$fromFloat(x + 3.0)),
+						$elm$svg$Svg$Attributes$y(
+						$elm$core$String$fromFloat(y - 10.0)),
+						$elm$svg$Svg$Attributes$fill('orange')
+					]),
+				_List_fromArray(
+					[
+						$elm$svg$Svg$text(
+						$elm$core$String$fromInt(t.sick))
+					])),
+				A2(
+				$elm$svg$Svg$text_,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$fontSize('15'),
+						$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
+						$elm$svg$Svg$Attributes$x(
+						$elm$core$String$fromFloat(x - 5.0)),
+						$elm$svg$Svg$Attributes$y(
+						$elm$core$String$fromFloat(y + 23.0)),
+						$elm$svg$Svg$Attributes$fill('red')
+					]),
+				_List_fromArray(
+					[
+						$elm$svg$Svg$text(
+						$elm$core$String$fromInt(t.dead))
+					]))
+			]));
 	return _Utils_ap(
-		A2(
-			$elm$core$List$map,
-			A2($author$project$View$renderHex, 'black', 0),
-			lst),
+		_List_fromArray(
+			[border]),
 		_Utils_ap(
 			_List_fromArray(
-				[border]),
+				[cons]),
 			_List_fromArray(
-				[cons])));
+				[populationInfo])));
 };
+var $author$project$Message$MouseOver = F2(
+	function (a, b) {
+		return {$: 'MouseOver', a: a, b: b};
+	});
+var $author$project$Message$SelectHex = F2(
+	function (a, b) {
+		return {$: 'SelectHex', a: a, b: b};
+	});
+var $author$project$View$onOver = function (message) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mouseover',
+		$elm$json$Json$Decode$succeed(message));
+};
+var $author$project$View$renderFilm = F2(
+	function (model, _v0) {
+		var i = _v0.a;
+		var j = _v0.b;
+		var a = $author$project$Parameters$para.a;
+		var h = a / $elm$core$Basics$sqrt(3);
+		var _v1 = $author$project$Parameters$para.tileOrigin;
+		var x0 = _v1.a;
+		var y0 = _v1.b;
+		var _v2 = A2(
+			$author$project$Geometry$posAdd,
+			$author$project$Geometry$rc(
+				_Utils_Tuple2(i, j)),
+			_Utils_Tuple2(x0, y0));
+		var x = _v2.a;
+		var y = _v2.b;
+		var tint = _Utils_eq(
+			_Utils_Tuple2(i, j),
+			model.mouseOver) ? A2(
+			$elm$svg$Svg$polygon,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$points(
+					A2(
+						$author$project$Geometry$polyPoint,
+						_List_fromArray(
+							[x + a, x, x - a, x - a, x, x + a]),
+						_List_fromArray(
+							[y + h, y + (2 * h), y + h, y - h, y - (2 * h), y - h]))),
+					$elm$svg$Svg$Attributes$fillOpacity(
+					$elm$core$String$fromFloat(0.3)),
+					$elm$svg$Svg$Attributes$fill('yellow')
+				]),
+			_List_Nil) : A2($elm$svg$Svg$polygon, _List_Nil, _List_Nil);
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					$author$project$View$onClick(
+					A2($author$project$Message$SelectHex, i, j)),
+					$author$project$View$onOver(
+					A2($author$project$Message$MouseOver, i, j))
+				]),
+			_List_fromArray(
+				[
+					tint,
+					A2(
+					$elm$svg$Svg$polygon,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$points(
+							A2(
+								$author$project$Geometry$polyPoint,
+								_List_fromArray(
+									[x + a, x, x - a, x - a, x, x + a]),
+								_List_fromArray(
+									[y + h, y + (2 * h), y + h, y - h, y - (2 * h), y - h]))),
+							$elm$svg$Svg$Attributes$fillOpacity(
+							$elm$core$String$fromFloat(0.0)),
+							$elm$svg$Svg$Attributes$fill('white')
+						]),
+					_List_Nil)
+				]));
+	});
+var $author$project$View$renderTileFilm = F2(
+	function (model, t) {
+		var ind = t.indice;
+		var t1 = ind.a;
+		var t2 = ind.b;
+		var j = t1 + (3 * t2);
+		var i = (2 * t1) - t2;
+		var lst = _List_fromArray(
+			[
+				_Utils_Tuple2(i, j),
+				_Utils_Tuple2(i, j - 1),
+				_Utils_Tuple2(i, j + 1),
+				_Utils_Tuple2(i + 1, j),
+				_Utils_Tuple2(i + 1, j - 1),
+				_Utils_Tuple2(i - 1, j),
+				_Utils_Tuple2(i - 1, j + 1)
+			]);
+		var a = $author$project$Parameters$para.a;
+		var h = a / $elm$core$Basics$sqrt(3);
+		return A2(
+			$elm$core$List$map,
+			$author$project$View$renderFilm(model),
+			lst);
+	});
+var $author$project$View$renderHex = F3(
+	function (cstr, opa, _v0) {
+		var i = _v0.a;
+		var j = _v0.b;
+		var a = $author$project$Parameters$para.a;
+		var h = a / $elm$core$Basics$sqrt(3);
+		var _v1 = $author$project$Parameters$para.tileOrigin;
+		var x0 = _v1.a;
+		var y0 = _v1.b;
+		var _v2 = A2(
+			$author$project$Geometry$posAdd,
+			$author$project$Geometry$rc(
+				_Utils_Tuple2(i, j)),
+			_Utils_Tuple2(x0, y0));
+		var x = _v2.a;
+		var y = _v2.b;
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$polygon,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$points(
+							A2(
+								$author$project$Geometry$polyPoint,
+								_List_fromArray(
+									[x + a, x, x - a, x - a, x, x + a]),
+								_List_fromArray(
+									[y + h, y + (2 * h), y + h, y - h, y - (2 * h), y - h]))),
+							$elm$svg$Svg$Attributes$fill(cstr),
+							$elm$svg$Svg$Attributes$fillOpacity(
+							$elm$core$String$fromFloat(opa))
+						]),
+					_List_Nil)
+				]));
+	});
 var $author$project$View$renderVirus = function (v) {
 	var pos = v.pos;
 	return A2(
@@ -6703,9 +8441,44 @@ var $author$project$View$renderVirus = function (v) {
 		A2($author$project$View$renderHex, 'purple', 0.5),
 		pos);
 };
+var $author$project$View$renderantiVirus = function (av) {
+	var pos = av.pos;
+	return A2(
+		$elm$core$List$map,
+		A2($author$project$View$renderHex, 'blue', 0.5),
+		pos);
+};
+var $author$project$Model$sumPopulation = function (city) {
+	return $elm$core$List$sum(
+		A2(
+			$elm$core$List$map,
+			function (x) {
+				return x.population;
+			},
+			city.tilesindex));
+};
+var $elm$core$Debug$toString = _Debug_toString;
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $author$project$View$view = function (model) {
-	var l1 = A2($elm$core$Debug$log, 'virus', model.virus);
+	var film = function () {
+		var _v0 = model.selHex;
+		if (_v0.$ === 'SelHexOn') {
+			return A3(
+				$elm$core$List$foldl,
+				function (x) {
+					return function (y) {
+						return _Utils_ap(x, y);
+					};
+				},
+				_List_Nil,
+				A2(
+					$elm$core$List$map,
+					$author$project$View$renderTileFilm(model),
+					model.city.tilesindex));
+		} else {
+			return _List_Nil;
+		}
+	}();
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -6724,48 +8497,81 @@ var $author$project$View$view = function (model) {
 						$elm$core$String$fromFloat(model.screenSize.b))
 					]),
 				_Utils_ap(
-					A3(
-						$elm$core$List$foldl,
-						function (x) {
-							return function (y) {
-								return _Utils_ap(x, y);
-							};
-						},
-						_List_Nil,
-						A2($elm$core$List$map, $author$project$View$renderTile, model.city.tilesindex)),
+					_List_fromArray(
+						[$author$project$View$bkg]),
 					_Utils_ap(
-						$author$project$View$renderVirus(model.virus),
+						A3(
+							$elm$core$List$foldl,
+							function (x) {
+								return function (y) {
+									return _Utils_ap(x, y);
+								};
+							},
+							_List_Nil,
+							A2($elm$core$List$map, $author$project$View$renderTile, model.city.tilesindex)),
 						_Utils_ap(
-							_List_fromArray(
-								[
-									$author$project$View$renderLevelProgress(model)
-								]),
-							$author$project$View$renderFlags(
-								_List_fromArray(
-									[5, 10, 15])))))),
+							$author$project$View$renderVirus(model.virus),
+							_Utils_ap(
+								$author$project$View$renderantiVirus(model.av),
+								_Utils_ap(
+									_List_fromArray(
+										[
+											$author$project$View$renderLevelProgress(model)
+										]),
+									_Utils_ap(
+										$author$project$View$renderFlags(
+											_List_fromArray(
+												[5, 10, 15])),
+										_Utils_ap(
+											film,
+											_List_fromArray(
+												[
+													A4($author$project$View$caption, 15, 70, 'green', 'green: healthy population'),
+													A4($author$project$View$caption, 15, 90, 'orange', 'orange: infected population'),
+													A4($author$project$View$caption, 15, 110, 'red', 'red: dead population'),
+													A4($author$project$View$caption, 15, 130, 'purple', 'purple hex: Virus'),
+													A4($author$project$View$caption, 15, 150, 'blue', 'blue hex: AntiVirus')
+												]))))))))),
 				$author$project$View$evolveButton,
-				$author$project$View$nextRoundButton
+				$author$project$View$nextRoundButton,
+				$elm$html$Html$text(
+				'round ' + ($elm$core$String$fromInt(model.currentRound) + '. ')),
+				$elm$html$Html$text(
+				'sumPopulation: ' + ($elm$core$Debug$toString(
+					$author$project$Model$sumPopulation(model.city)) + '. ')),
+				$author$project$View$powerEcoInfo(model),
+				$author$project$View$cardButton($author$project$Card$powerOverload),
+				$author$project$View$cardButton($author$project$Card$onStandby),
+				$author$project$View$cardButton($author$project$Card$coldWave),
+				$author$project$View$cardButton($author$project$Card$blizzard),
+				$author$project$View$cardButton($author$project$Card$rain),
+				$author$project$View$cardButton($author$project$Card$cut),
+				$author$project$View$cardButton($author$project$Card$fubao),
+				$author$project$View$cardButton($author$project$Card$megaCut),
+				$author$project$View$cardButton($author$project$Card$organClone),
+				$author$project$View$cardButton($author$project$Card$humanClone),
+				$author$project$View$cardButton($author$project$Card$megaClone),
+				$author$project$View$cardButton($author$project$Card$purification),
+				$author$project$View$cardButton($author$project$Card$sacrifice),
+				$author$project$View$cardButton($author$project$Card$resurgence),
+				$author$project$View$cardButton($author$project$Card$defenseline),
+				$elm$html$Html$text(
+				$elm$core$Debug$toString(model.todo)),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Message$Alert('Yo bro!'))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('hello')
+					]))
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Model$initModel, subscriptions: $author$project$Main$subscriptions, update: $author$project$Update$update, view: $author$project$View$view});
+>>>>>>> 09f2ce7eff536eccfb7a5fac8e160af6d180d9ee:build/elm.js
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
-
-  var app = Elm.Main.init({ node: document.getElementById("elm") });
-}
-catch (e)
-{
-  // display initialization errors (e.g. bad flags, infinite recursion)
-  var header = document.createElement("h1");
-  header.style.fontFamily = "monospace";
-  header.innerText = "Initialization Error";
-  var pre = document.getElementById("elm");
-  document.body.insertBefore(header, pre);
-  pre.innerText = e;
-  throw e;
-}
-</script>
-
-</body>
-</html>

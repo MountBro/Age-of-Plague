@@ -18,6 +18,7 @@ type Msg
     | SelectHex Int Int
     | MouseOver Int Int
     | Alert String
+    | HosInvalid
 
 
 type Gamestatus

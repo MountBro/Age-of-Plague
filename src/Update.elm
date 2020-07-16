@@ -1,4 +1,4 @@
-port module Update exposing (..)
+module Update exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
@@ -7,6 +7,7 @@ import Geometry exposing (..)
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
+import Ports exposing (..)
 import Random exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
@@ -105,9 +106,6 @@ update msg model =
 
         Message.Alert txt ->
             ( model, sendMsg txt )
-
-
-port sendMsg : String -> Cmd msg
 
 
 ecoInc : Model -> Model

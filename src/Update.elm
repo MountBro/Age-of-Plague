@@ -52,7 +52,10 @@ update msg model =
             ( model, Cmd.none )
 
         GotViewport viewport ->
-            ( { model | viewport = Just viewport, screenSize = ( viewport.viewport.width, viewport.viewport.height ) }
+            ( { model
+                | viewport = Just viewport
+                , screenSize = ( viewport.viewport.width, viewport.viewport.height )
+              }
             , Cmd.none
             )
 

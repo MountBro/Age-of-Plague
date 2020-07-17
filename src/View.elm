@@ -520,7 +520,7 @@ renderCardFilm : Int -> Float -> Float -> Card -> Model -> Html Msg
 renderCardFilm n x y c model =
     let
         tint =
-            if n == model.mouseOverCardToReplace then
+            if n == model.mouseOverCardToReplace && model.replaceChance > 0 then
                 rect
                     [ x |> String.fromFloat |> SA.x
                     , y |> String.fromFloat |> SA.y

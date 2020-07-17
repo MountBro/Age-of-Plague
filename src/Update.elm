@@ -19,6 +19,10 @@ update msg model =
             ( levelInit n model, Random.generate InitializeHands (cardGenerator 10) )
 
         InitializeHands lc ->
+            let
+                loglc =
+                    log "lc" lc
+            in
             ( { model | hands = lc }, Cmd.none )
 
         Resize w h ->
@@ -455,7 +459,7 @@ mFillRegion : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 mFillRegion ( model, cm ) =
     case model.cardSelected of
         NoCard ->
-            ( model, Cmd.none )
+            ( model, cm )
 
         SelectCard card ->
             case model.selHex of
@@ -475,7 +479,7 @@ mFillRegion ( model, cm ) =
                         ( model, cm )
 
                 SelHexOff ->
-                    ( model, Cmd.none )
+                    ( model, cm )
 
 
 fillRegion : Card -> Sel -> ( Queue, Cmd Msg )
@@ -510,4 +514,4 @@ fillRegion card sel =
 
 levelInit : Int -> Model -> Model
 levelInit n model =
-    model
+    { model | behavior = initBehavior, state = Drawing }

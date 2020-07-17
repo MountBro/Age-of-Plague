@@ -81,6 +81,13 @@ initModel _ =
     )
 
 
+type Gamestatus
+    = Playing
+    | Drawing
+    | Playcard
+    | Stopped
+
+
 type Region
     = NoRegion
     | SelectRegion ( Int, Int )

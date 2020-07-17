@@ -21,13 +21,6 @@ type Msg
     | LevelBegin Int
 
 
-type Gamestatus
-    = Playing
-    | Drawing
-    | Playcard
-    | Stopped
-
-
 type Keyin
     = Tab
     | Other

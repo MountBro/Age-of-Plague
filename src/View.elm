@@ -63,9 +63,17 @@ view model =
         , evolveButton
         , nextRoundButton
         , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-        , Html.text ("Population: " ++ Debug.toString (sumPopulation model.city) ++ ". "
-        ++ "Death: " ++ Debug.toString (sumDead model.city) ++ ". "
-        ++ "Sick: " ++ Debug.toString (sumSick model.city) ++ ". ")
+        , Html.text
+            ("Population: "
+                ++ Debug.toString (sumPopulation model.city)
+                ++ ". "
+                ++ "Death: "
+                ++ Debug.toString (sumDead model.city)
+                ++ ". "
+                ++ "Sick: "
+                ++ Debug.toString (sumSick model.city)
+                ++ ". "
+            )
         , powerEcoInfo model
         , cardButton powerOverload
         , cardButton onStandby
@@ -85,6 +93,13 @@ view model =
         , cardButton hospital
         , cardButton quarantine
         , cardButton enhanceHealing
+        , cardButton cellBroadcast
+        , cardButton drought
+        , cardButton warehouse
+        , cardButton warmwave
+        , cardButton goingViral
+        , cardButton judgement
+        ,cardButton lowSoundWaves
         , Html.text (Debug.toString model.todo ++ Debug.toString model.actionDescribe)
         , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
         ]
@@ -257,38 +272,31 @@ renderFilm model ( i, j ) =
 
             else
                 polygon [] []
-
-        hostilelst =
-            hospitalTiles model.city.tilesindex
-
-        quatilelst =
-            quarantineTiles model.city.tilesindex
-
     in
     svg
         ([ onOver (MouseOver i j) ]
-        ++
-        if (model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst) || (model.cardSelected == SelectCard quarantine && List.member (converHextoTile (i, j)) quatilelst) then
-            []
-        else
-            [onClick (SelectHex i j)]
+            ++ (if judgeBuild model ( i, j ) then
+                    []
+
+                else
+                    [ onClick (SelectHex i j) ]
+               )
         )
-        (
-        if (model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst) || (model.cardSelected == SelectCard quarantine && List.member (converHextoTile (i, j)) quatilelst) then
+        (if judgeBuild model ( i, j ) then
             []
-        else
-            [tint]
-        ++
-        [
-        polygon
-            [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
-                [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
-                |> SA.points
-            , 0.0 |> String.fromFloat |> SA.fillOpacity
-            , SA.fill "white"
-            ]
-            []
-        ])
+
+         else
+            [ tint ]
+                ++ [ polygon
+                        [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
+                            [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
+                            |> SA.points
+                        , 0.0 |> String.fromFloat |> SA.fillOpacity
+                        , SA.fill "white"
+                        ]
+                        []
+                   ]
+        )
 
 
 
@@ -386,15 +394,29 @@ renderTile t =
                 ]
 
         constructionCaption =
-            case t.construction of
-                Hos ->
-                    "H"
+            if t.hos && t.qua && t.wareHouse then
+                "H&Q&W"
 
-                Qua ->
-                    "Q"
+            else if t.qua && t.wareHouse then
+                "Q&W"
 
-                NoConstruction ->
-                    "N"
+            else if t.hos && t.wareHouse then
+                "H&W"
+
+            else if t.hos && t.qua then
+                "H&Q"
+
+            else if t.hos then
+                "H"
+
+            else if t.wareHouse then
+                "W"
+
+            else if t.qua then
+                "Q"
+
+            else
+                "N"
 
         cons =
             svg []

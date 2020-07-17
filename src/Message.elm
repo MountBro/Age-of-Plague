@@ -19,6 +19,8 @@ type Msg
     | MouseOver Int Int
     | Alert String
     | HosInvalid
+    | KillTileVir ((Int, Int),Float) Float
+    | JudgeVirPeo ((Int, Int),Float) Float
 
 
 type Gamestatus

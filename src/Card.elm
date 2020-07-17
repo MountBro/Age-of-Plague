@@ -39,6 +39,15 @@ type Action
     | HospitalI (Int, Int)
     | QuarantineI (Int, Int)
     | EnhanceHealingI
+    | AttractPeoI (Int, Int)
+    | StopAttractI (Int, Int)
+    | DroughtI_Kill ((Int, Int), Float)
+    | WarehouseI (Int, Int)
+    | Warmwave_KIA ((Int, Int), Float)
+    | AVI (Int, Int)
+    | JudgeI_Kill ((Int, Int), Float)
+    | EvacuateI (Int, Int)
+    | StopEVAI (Int, Int)
 
 -- Card -> String
 
@@ -60,7 +69,7 @@ blizzard =
 
 
 rain =
-    Card NoSel 3 [ EcoDoubleI, EcoDoubleI_Freeze 0.5 ] "Rain" "In two rounds, there is a probability of 50% to freeze the spread of viruses for 1 round. The economy output doubles for two rounds."
+    Card NoSel 3 [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ] "Rain" "In two rounds, there is a probability of 50% to freeze the spread of viruses for 1 round. The economy output doubles for two rounds."
 
 
 cut =
@@ -115,9 +124,34 @@ enhanceHealing =
     Card NoSel 4 [ EnhanceHealingI ] "Enhance healing" "Raise the efficiency of hospital healing by 1."
 
 
+cellBroadcast =
+    Card TileSel 4 [ AttractPeoI (0, 0), StopAttractI (0, 0) ] "Cell Broadcast" "In the selected tile, no one could go out during the next population flow."
 
+
+drought =
+    Card TileSel 2 [ DroughtI_Kill ((0, 0), 0.5), DroughtI_Kill ((0, 0), 0.5) ] "Drought" "In two rounds in the selected tile, the viruses have a probability of 50% to die. The economy output halves for two rounds."
+
+
+warehouse =
+    Card TileSel 2 [ WarehouseI (0, 0) ] "Warehouse" "Put a warehouse on a tile, +5 economy per round."
+
+
+warmwave =
+    Card TileSel 1 [Warmwave_KIA ((0,0), 0.25) ] "Warmwave" "Choose a tile. There is a probability of 25% to kill the viruses."
+
+
+goingViral =
+    Card TileSel 8 [ AVI (0, 0) ] "Going Viral" "Release the nano-viruses, which move randomly for 3 rounds and have a cut effect."
+
+
+judgement =
+    Card TileSel 6 [ JudgeI_Kill ((0,0), 0.25) ] "Judgement" "On the selected tile, either the people or the viruses die. The probability is 50%."
+
+
+lowSoundWaves =
+    Card TileSel 4 [ EvacuateI (0,0), StopEVAI (0, 0) ] "LowSoundWaves" "Select a tile. Distribute all population to the neighboring tiles during the next population flow."
 
 
 targetCardlst =
-    [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline, hospital, quarantine ]
+    [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline, hospital, quarantine, cellBroadcast, drought, warehouse, warmwave, goingViral, judgement, lowSoundWaves ]
 

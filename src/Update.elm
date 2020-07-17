@@ -7,7 +7,7 @@ import Geometry exposing (..)
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
-import Random exposing (..)
+import Random exposing (float, generate)
 import Todo exposing (..)
 import Virus exposing (..)
 
@@ -15,6 +15,12 @@ import Virus exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        LevelBegin n ->
+            ( levelInit n model, Random.generate InitializeHands (cardGenerator 10) )
+
+        InitializeHands lc ->
+            ( { model | hands = lc }, Cmd.none )
+
         Resize w h ->
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
@@ -500,3 +506,8 @@ fillRegion card sel =
 
     else
         ( finishedEmptyQueue, Cmd.none )
+
+
+levelInit : Int -> Model -> Model
+levelInit n model =
+    model

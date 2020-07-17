@@ -17,6 +17,8 @@ type Msg
     | FreezeRet Float Float
     | SelectHex Int Int
     | MouseOver Int Int
+    | InitializeHands (List Card)
+    | LevelBegin Int
 
 
 type Gamestatus

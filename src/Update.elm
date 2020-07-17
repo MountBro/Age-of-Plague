@@ -485,7 +485,7 @@ performAction action model =
                                 city_.tilesindex
                     }
             in
-            ( { model | city = city } |> initlog |> updatelog, Cmd.none )
+            ( { model | city = city } |> updatelog, Cmd.none )
 
         EnhanceHealingI ->
             let

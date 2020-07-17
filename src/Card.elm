@@ -37,6 +37,9 @@ type Action
     | FreezevirusI ( Int, Int )
     | HospitalI (Int, Int)
     | QuarantineI (Int, Int)
+    | EnhanceHealingI
+
+-- Card -> String
 
 
 powerOverload =
@@ -61,6 +64,7 @@ rain =
 
 cut =
     Card HexSel 1 [ CutHexI ( 0, 0 ) ] "Cut"
+
 
 megaCut =
     Card TileSel 5 [ CutTileI ( 0, 0 ) ] "Mega Cut"
@@ -104,6 +108,13 @@ hospital =
 
 quarantine =
     Card TileSel 4 [ QuarantineI (0, 0) ] "Build Quarantine"
+
+
+enhanceHealing =
+    Card NoSel 4 [ EnhanceHealingI ] "Enhance healing"
+
+
+
 
 
 targetCardlst =

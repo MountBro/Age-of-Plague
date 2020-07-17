@@ -17,6 +17,7 @@ type Msg
     | FreezeRet Float Float
     | SelectHex Int Int
     | MouseOver Int Int
+    | Alert String
     | HosInvalid
 
 

@@ -84,7 +84,9 @@ view model =
         , cardButton defenseline
         , cardButton hospital
         , cardButton quarantine
+        , cardButton enhanceHealing
         , Html.text (Debug.toString model.todo)
+        , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
         ]
 
 
@@ -259,17 +261,20 @@ renderFilm model ( i, j ) =
         hostilelst =
             hospitalTiles model.city.tilesindex
 
+        quatilelst =
+            quarantineTiles model.city.tilesindex
+
     in
     svg
         ([ onOver (MouseOver i j) ]
         ++
-        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
+        if (model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst) || (model.cardSelected == SelectCard quarantine && List.member (converHextoTile (i, j)) quatilelst) then
             []
         else
             [onClick (SelectHex i j)]
         )
         (
-        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
+        if (model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst) || (model.cardSelected == SelectCard quarantine && List.member (converHextoTile (i, j)) quatilelst) then
             []
         else
             [tint]

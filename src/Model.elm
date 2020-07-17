@@ -163,14 +163,17 @@ sickupdate t lstvir inf =
             let
                 s =
                     LE.count ((==) x.indice) lstvir * inf
+
+                cure =
+                    x.cureEff
             in
             if x.construction == Hos then
-                if s + x.sick - 2 <= x.population && s + x.sick - 2 >= 0 then
+                if s + x.sick - cure <= x.population && s + x.sick - cure >= 0 then
                     { x
-                        | sick = s + x.sick - 2
+                        | sick = s + x.sick - cure
                     }
 
-                else if s + x.sick - 2 < 0 then
+                else if s + x.sick - cure < 0 then
                     { x
                         | sick = 0
                     }
@@ -218,6 +221,7 @@ virusKill vir city =
 
             else
                 lstInfectedn ++ List.take (max (round (toFloat (death - estimateDeath) * 0.2)) 1) lstInfected1
+
     in
     { city
         | tilesindex =

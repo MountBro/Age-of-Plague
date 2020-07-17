@@ -7,10 +7,11 @@ import Geometry exposing (..)
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
+import Ports as P exposing (..)
 import Random exposing (..)
+import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-import Tile exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -55,7 +56,7 @@ update msg model =
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
                       }
-                    , Cmd.none
+                    , P.cardToMusic ""
                     )
 
                 else
@@ -98,7 +99,12 @@ update msg model =
             ( { model
                 | power = model.power + 4
                 , economy = model.economy + para.ecoThreshold
-             }, Cmd.none )
+              }
+            , Cmd.none
+            )
+
+        Message.Alert txt ->
+            ( model, sendMsg txt )
 
 
 ecoInc : Model -> Model
@@ -445,7 +451,8 @@ performAction action model =
                 city =
                     { city_ | tilesindex = List.map (\x ->
                                                         if x.indice == (ti, tj) then
-                                                            { x | construction = Hos }
+                                                            { x | construction = Hos
+                                                                , cureEff = 2}
 
                                                         else
                                                             x ) city_.tilesindex
@@ -455,26 +462,50 @@ performAction action model =
             in
             ( { model | city = city }, Cmd.none)
 
-        QuarantineI (i, j) ->
+        QuarantineI ( i, j ) ->
             let
-                (ti, tj) =
-                    converHextoTile (i, j)
+                ( ti, tj ) =
+                    converHextoTile ( i, j )
 
                 city_ =
                     model.city
 
                 city =
-                    { city_ | tilesindex = List.map (\x ->
-                                                        if x.indice == (ti, tj) then
-                                                            { x | construction = Qua }
+                    { city_
+                        | tilesindex =
+                            List.map
+                                (\x ->
+                                    if x.indice == ( ti, tj ) then
+                                        { x | construction = Qua }
 
-                                                        else
-                                                            x ) city_.tilesindex
-                            }
-
-
+                                    else
+                                        x
+                                )
+                                city_.tilesindex
+                    }
             in
-            ( { model | city = city }, Cmd.none)
+            ( { model | city = city }, Cmd.none )
+
+        EnhanceHealingI ->
+            let
+                city_ =
+                    model.city
+
+                city =
+                    { city_
+                        | tilesindex =
+                            List.map
+                                (\x ->
+                                    if x.construction == Hos then
+                                        { x | cureEff = x.cureEff + 1 }
+
+                                    else
+                                        x
+                                )
+                                city_.tilesindex
+                    }
+            in
+            ( { model | city = city }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

@@ -37,6 +37,8 @@ type alias Model =
     , selHex : SelHex
     , hands : List Card
     , deck : List Card
+    , mouseOverCardToReplace : Int
+    , replaceChance : Int
     }
 
 
@@ -76,6 +78,8 @@ initModel _ =
       , selHex = SelHexOff
       , hands = []
       , deck = allCards
+      , mouseOverCardToReplace = 0
+      , replaceChance = 3
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

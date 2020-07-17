@@ -4,6 +4,7 @@ import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
+import List.Extra as LE
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
@@ -16,7 +17,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         LevelBegin n ->
-            ( levelInit n model, Random.generate InitializeHands (cardGenerator 10) )
+            ( levelInit n model, Random.generate InitializeHands (cardsGenerator 10) )
 
         InitializeHands lc ->
             let
@@ -24,6 +25,18 @@ update msg model =
                     log "lc" lc
             in
             ( { model | hands = lc }, Cmd.none )
+
+        ReplaceCard c replacement ->
+            let
+                hands_ =
+                    model.hands
+
+                hands =
+                    hands_
+                        |> LE.remove c
+                        |> List.append [ replacement ]
+            in
+            ( { model | hands = hands }, Cmd.none )
 
         Resize w h ->
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
@@ -112,6 +125,19 @@ update msg model =
                     log "over" ( i, j )
             in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
+
+        MouseOverCardToReplace n ->
+            if model.state == Drawing then
+                ( { model | mouseOverCardToReplace = n }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        SelectCardToReplace c ->
+            model |> replaceCard c
+
+        StartRound1 ->
+            ( { model | state = Playing }, Cmd.none )
 
 
 ecoInc : Model -> Model
@@ -515,3 +541,16 @@ fillRegion card sel =
 levelInit : Int -> Model -> Model
 levelInit n model =
     { model | behavior = initBehavior, state = Drawing }
+
+
+replaceCard : Card -> Model -> ( Model, Cmd Msg )
+replaceCard c model =
+    if List.member c model.hands && model.replaceChance > 0 then
+        ( { model | replaceChance = model.replaceChance - 1 }, Random.generate (ReplaceCard c) cardGenerator )
+
+    else
+        let
+            logreplace =
+                log "card to replace does not exist in hands!" ""
+        in
+        ( model, Cmd.none )

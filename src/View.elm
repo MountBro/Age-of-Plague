@@ -98,7 +98,9 @@ view model =
                     ([ bkg ]
                         ++ renderInitCards model
                         ++ [ caption 20 200 "white" "click on card to replace" 20 ]
+                        ++ [ caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
                     )
+                , Html.button [ onClick StartRound1 ] [ Html.text "Start round 1" ]
                 ]
 
         _ ->
@@ -499,8 +501,8 @@ renderantiVirus av =
     List.map (renderHex "blue" 0.5) pos
 
 
-renderCard : Float -> Float -> Card -> Html Msg
-renderCard x y c =
+renderCard : Int -> Float -> Float -> Card -> Html Msg
+renderCard n x y c =
     svg []
         [ rect
             [ x |> String.fromFloat |> SA.x
@@ -514,6 +516,38 @@ renderCard x y c =
         ]
 
 
+renderCardFilm : Int -> Float -> Float -> Card -> Model -> Html Msg
+renderCardFilm n x y c model =
+    let
+        tint =
+            if n == model.mouseOverCardToReplace then
+                rect
+                    [ x |> String.fromFloat |> SA.x
+                    , y |> String.fromFloat |> SA.y
+                    , "yellow" |> SA.fill
+                    , SA.fillOpacity "0.3"
+                    , 70.0 |> String.fromFloat |> SA.width
+                    , 100.0 |> String.fromFloat |> SA.height
+                    ]
+                    []
+
+            else
+                rect [] []
+    in
+    svg [ onClick (SelectCardToReplace c), onOver (MouseOverCardToReplace n) ]
+        [ tint
+        , rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "white" |> SA.fill
+            , SA.fillOpacity "0.0"
+            , 70.0 |> String.fromFloat |> SA.width
+            , 100.0 |> String.fromFloat |> SA.height
+            ]
+            []
+        ]
+
+
 renderInitCards : Model -> List (Html Msg)
 renderInitCards model =
     let
@@ -524,12 +558,15 @@ renderInitCards model =
             List.indexedMap Tuple.pair hands
                 |> List.map
                     (\( n, c ) ->
-                        ( ( toFloat (20 + 80 * n), 20.0 ), c )
+                        ( n, ( toFloat (20 + 80 * n), 20.0 ), c )
                     )
     in
     List.map
-        (\( ( x, y ), c ) -> renderCard x y c)
+        (\( n, ( x, y ), c ) -> renderCard n x y c)
         indexed
+        ++ List.map
+            (\( n, ( x, y ), c ) -> renderCardFilm n x y c model)
+            indexed
 
 
 

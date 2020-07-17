@@ -59,8 +59,14 @@ allCards =
     ]
 
 
-cardGenerator : Int -> Generator (List Card)
-cardGenerator n =
+cardGenerator : Generator Card
+cardGenerator =
+    choose allCards
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+
+
+cardsGenerator : Int -> Generator (List Card)
+cardsGenerator n =
     choose allCards
         |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
         |> Random.list n

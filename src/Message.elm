@@ -19,6 +19,10 @@ type Msg
     | MouseOver Int Int
     | InitializeHands (List Card)
     | LevelBegin Int
+    | SelectCardToReplace Card
+    | MouseOverCardToReplace Int
+    | ReplaceCard Card Card
+    | StartRound1
 
 
 type Keyin

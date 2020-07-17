@@ -85,7 +85,7 @@ view model =
         , cardButton hospital
         , cardButton quarantine
         , cardButton enhanceHealing
-        , Html.text (Debug.toString model.todo)
+        , Html.text (Debug.toString model.todo ++ Debug.toString model.actionDescribe)
         , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
         ]
 

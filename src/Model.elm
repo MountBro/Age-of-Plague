@@ -35,7 +35,23 @@ type alias Model =
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
+    , actionDescribe : List String
     }
+
+
+updatelog : Model -> Model
+updatelog model =
+    case model.cardSelected of
+        NoCard ->
+            model
+
+        SelectCard card ->
+            { model | actionDescribe = List.append model.actionDescribe ["Used card : " ++ card.name ++ ". " ++ card.describe] }
+
+
+initlog : Model -> Model
+initlog model =
+    { model | actionDescribe = [] }
 
 
 type Region
@@ -151,6 +167,7 @@ initModel _ =
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
+      , actionDescribe = []
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

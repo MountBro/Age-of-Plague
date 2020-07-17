@@ -6040,6 +6040,8 @@ var $author$project$Model$SelHexOn = {$: 'SelHexOn'};
 var $author$project$Model$SelectCard = function (a) {
 	return {$: 'SelectCard', a: a};
 };
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Ports$cardToMusic = _Platform_outgoingPort('cardToMusic', $elm$json$Json$Encode$string);
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -7020,7 +7022,6 @@ var $author$project$Update$pickAction = function (model) {
 			model,
 			{todo: todo}));
 };
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Ports$sendMsg = _Platform_outgoingPort('sendMsg', $elm$json$Json$Encode$string);
 var $author$project$Card$targetCardlst = _List_fromArray(
 	[$author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$sacrifice, $author$project$Card$purification, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$quarantine]);
@@ -7617,7 +7618,7 @@ var $author$project$Update$update = F2(
 							power: model.power - card.cost,
 							selHex: $author$project$Model$SelHexOn
 						}),
-					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					$author$project$Ports$cardToMusic('')) : _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{

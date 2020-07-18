@@ -17,18 +17,16 @@ type Msg
     | FreezeRet Float Float
     | SelectHex Int Int
     | MouseOver Int Int
+    | InitializeHands (List Card)
+    | LevelBegin Int
+    | SelectCardToReplace Card
+    | MouseOverCardToReplace Int
+    | ReplaceCard Card Card
+    | StartRound1
     | Alert String
     | HosInvalid
-    | KillTileVir ((Int, Int),Float) Float
-    | JudgeVirPeo ((Int, Int),Float) Float
-    | Return
-
-
-type Gamestatus
-    = Playing
-    | Drawing
-    | Playcard
-    | Stopped
+    | KillTileVir ( ( Int, Int ), Float ) Float
+    | JudgeVirPeo ( ( Int, Int ), Float ) Float
 
 
 type Keyin

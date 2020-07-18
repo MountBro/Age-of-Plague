@@ -46,19 +46,21 @@ validNeighborTile tlst t =
         []
 
 
-quarantineTiles : List Tile -> List (Int, Int)
+quarantineTiles : List Tile -> List ( Int, Int )
 quarantineTiles tlst =
     tlst
         |> List.filter (\x -> x.qua == True)
         |> List.map (\x -> x.indice)
 
-hospitalTiles : List Tile -> List (Int, Int)
+
+hospitalTiles : List Tile -> List ( Int, Int )
 hospitalTiles tlst =
     tlst
         |> List.filter (\x -> x.hos == True)
         |> List.map (\x -> x.indice)
 
-warehouseTiles : List Tile -> List (Int, Int)
+
+warehouseTiles : List Tile -> List ( Int, Int )
 warehouseTiles tlst =
     tlst
         |> List.filter (\x -> x.wareHouse == True)

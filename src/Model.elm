@@ -35,8 +35,63 @@ type alias Model =
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
+    , hands : List Card
+    , deck : List Card
+    , mouseOverCardToReplace : Int
+    , replaceChance : Int
     , actionDescribe : List String
     }
+
+
+initModel : () -> ( Model, Cmd Msg )
+initModel _ =
+    ( { city =
+            initCity 10
+                [ ( 0, 0 )
+                , ( 0, 1 )
+                , ( 0, 2 )
+                , ( 1, -1 )
+                , ( 1, 0 )
+                , ( 1, 1 )
+                , ( 2, -1 )
+                , ( 2, 0 )
+                , ( 2, 1 )
+                , ( 3, -1 )
+                ]
+      , behavior = initBehavior
+      , currentRound = 1
+      , state = Playing
+      , screenSize = ( 600, 800 )
+      , viewport = Nothing
+      , virus = initVirus
+      , region = NoRegion
+      , cardSelected = NoCard
+      , todo = []
+      , roundTodoCleared = False
+      , av = initAntiVirus
+      , power = 10000
+      , economy = 10000
+      , basicEcoOutput = para.basicEcoOutput
+      , warehouseNum = 0
+      , ecoRatio = 1
+      , selectedHex = ( -233, -233 )
+      , mouseOver = ( -233, -233 )
+      , selHex = SelHexOff
+      , hands = []
+      , deck = allCards
+      , mouseOverCardToReplace = 0
+      , replaceChance = 3
+      , actionDescribe = []
+      }
+    , Task.perform GotViewport Browser.Dom.getViewport
+    )
+
+
+type Gamestatus
+    = Playing
+    | Drawing
+    | Playcard
+    | Stopped
 
 
 updatelog : Model -> Model
@@ -46,7 +101,7 @@ updatelog model =
             model
 
         SelectCard card ->
-            { model | actionDescribe = List.append model.actionDescribe ["Used card : " ++ card.name ++ ". " ++ card.describe] }
+            { model | actionDescribe = List.append model.actionDescribe [ "Used card : " ++ card.name ++ ". " ++ card.describe ] }
 
 
 initlog : Model -> Model
@@ -125,12 +180,12 @@ initVirus =
 initAntiVirus : AntiVirus
 initAntiVirus =
     { rules = [ 0, 1, 2, 3 ]
-    , pos = [ ]
+    , pos = []
     , life = 0
     }
 
 
-createAV : (Int, Int) -> AntiVirus
+createAV : ( Int, Int ) -> AntiVirus
 createAV hlst =
     { rules = [ 0, 1, 2, 3 ]
     , pos = [ hlst ]
@@ -140,46 +195,6 @@ createAV hlst =
 
 initBehavior =
     { populationFlow = True, virusEvolve = True }
-
-
-initModel : () -> ( Model, Cmd Msg )
-initModel _ =
-    ( { city =
-            initCity 20
-                [ ( 0, 0 )
-                , ( 0, 1 )
-                , ( 0, 2 )
-                , ( 1, -1 )
-                , ( 1, 0 )
-                , ( 1, 1 )
-                , ( 2, -1 )
-                , ( 2, 0 )
-                , ( 2, 1 )
-                , ( 3, -1 )
-                ]
-      , behavior = initBehavior
-      , state = Playing
-      , currentRound = 1
-      , screenSize = ( 600, 800 )
-      , viewport = Nothing
-      , virus = initVirus
-      , region = NoRegion
-      , cardSelected = NoCard
-      , todo = []
-      , roundTodoCleared = False
-      , av = initAntiVirus
-      , power = 10000
-      , economy = 10000
-      , basicEcoOutput = para.basicEcoOutput
-      , warehouseNum = 0
-      , ecoRatio = 1
-      , selectedHex = ( -233, -233 )
-      , mouseOver = ( -233, -233 )
-      , selHex = SelHexOff
-      , actionDescribe = []
-      }
-    , Task.perform GotViewport Browser.Dom.getViewport
-    )
 
 
 sickupdate : List Tile -> List ( Int, Int ) -> Int -> List Tile
@@ -247,7 +262,6 @@ virusKill vir city =
 
             else
                 lstInfectedn ++ List.take (max (round (toFloat (death - estimateDeath) * 0.2)) 1) lstInfected1
-
     in
     { city
         | tilesindex =
@@ -329,7 +343,6 @@ populationFlow n city =
         sickLst =
             leaveLst
                 |> List.take sickleave
-
     in
     if n <= List.length citytileslst then
         let
@@ -402,7 +415,7 @@ updateCity city vir =
 
 
 evacuate : Tile -> City -> List Tile
-evacuate t city=
+evacuate t city =
     let
         lstnTile =
             validNeighborTile city.tilesindex t
@@ -451,33 +464,45 @@ evacuate t city=
 
         sicklst1 =
             List.drop sa leavelst
-
     in
-    List.map (\x -> if List.member x ln then
-                        if List.member x sicklst1 then
-                            { x | population = x.population + b + 1
-                                , sick = x.sick + sb }
+    List.map
+        (\x ->
+            if List.member x ln then
+                if List.member x sicklst1 then
+                    { x
+                        | population = x.population + b + 1
+                        , sick = x.sick + sb
+                    }
 
-                        else
-                            { x | population = x.population + b + 1
-                                , sick = x.sick + sb + 1 }
+                else
+                    { x
+                        | population = x.population + b + 1
+                        , sick = x.sick + sb + 1
+                    }
 
-                    else if List.member x l1 then
-                        if List.member x sicklst1 then
-                            { x | population = x.population + b
-                                , sick = x.sick + sb }
+            else if List.member x l1 then
+                if List.member x sicklst1 then
+                    { x
+                        | population = x.population + b
+                        , sick = x.sick + sb
+                    }
 
-                        else
-                            { x | population = x.population + b
-                                , sick = x.sick + sb + 1 }
+                else
+                    { x
+                        | population = x.population + b
+                        , sick = x.sick + sb + 1
+                    }
 
-                    else if x == t then
-                        {x | population = 0
-                           , sick = 0}
+            else if x == t then
+                { x
+                    | population = 0
+                    , sick = 0
+                }
 
-                    else
-                        x
-                                ) city.tilesindex
+            else
+                x
+        )
+        city.tilesindex
 
 
 change : Virus -> AntiVirus -> City -> ( Virus, AntiVirus )
@@ -495,8 +520,8 @@ change virus anti city =
     judgeAlive lstvir virus lstanti anti lstquatile
 
 
-judgeBuild : Model -> (Int, Int) -> Bool
-judgeBuild model (i, j) =
+judgeBuild : Model -> ( Int, Int ) -> Bool
+judgeBuild model ( i, j ) =
     let
         hostilelst =
             hospitalTiles model.city.tilesindex
@@ -507,6 +532,12 @@ judgeBuild model (i, j) =
         waretilelst =
             warehouseTiles model.city.tilesindex
     in
-    model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst
-    || model.cardSelected == SelectCard quarantine && List.member (converHextoTile (i, j)) quatilelst
-    || model.cardSelected == SelectCard warehouse && List.member (converHextoTile (i, j)) waretilelst
+    model.cardSelected
+        == SelectCard hospital
+        && List.member (converHextoTile ( i, j )) hostilelst
+        || model.cardSelected
+        == SelectCard quarantine
+        && List.member (converHextoTile ( i, j )) quatilelst
+        || model.cardSelected
+        == SelectCard warehouse
+        && List.member (converHextoTile ( i, j )) waretilelst

@@ -65,7 +65,7 @@ searchNeighbor virlst =
         |> LE.unique
 
 
-judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List (Int, Int) -> ( Virus, AntiVirus )
+judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )
 judgeAlive lstvir vir lstanti anti lstquatile =
     let
         lstv =
@@ -77,10 +77,5 @@ judgeAlive lstvir vir lstanti anti lstquatile =
 
             else
                 []
-
     in
     ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )
-
-
-
-

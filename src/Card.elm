@@ -1,5 +1,8 @@
 module Card exposing (..)
 
+import Random exposing (Generator, list, map)
+import Random.List exposing (choose)
+
 
 type alias Card =
     { selMode : Selection
@@ -36,20 +39,72 @@ type Action
     | SacrificeI ( Int, Int )
     | ResurgenceI ( Int, Int )
     | FreezevirusI ( Int, Int )
-    | HospitalI (Int, Int)
-    | QuarantineI (Int, Int)
+    | HospitalI ( Int, Int )
+    | QuarantineI ( Int, Int )
     | EnhanceHealingI
-    | AttractPeoI (Int, Int)
-    | StopAttractI (Int, Int)
-    | DroughtI_Kill ((Int, Int), Float)
-    | WarehouseI (Int, Int)
-    | Warmwave_KIA ((Int, Int), Float)
-    | AVI (Int, Int)
-    | JudgeI_Kill ((Int, Int), Float)
-    | EvacuateI (Int, Int)
-    | StopEVAI (Int, Int)
+    | AttractPeoI ( Int, Int )
+    | StopAttractI ( Int, Int )
+    | DroughtI_Kill ( ( Int, Int ), Float )
+    | WarehouseI ( Int, Int )
+    | Warmwave_KIA ( ( Int, Int ), Float )
+    | AVI ( Int, Int )
+    | JudgeI_Kill ( ( Int, Int ), Float )
+    | EvacuateI ( Int, Int )
+    | StopEVAI ( Int, Int )
+
+
 
 -- Card -> String
+
+
+allCards =
+    [ powerOverload
+    , onStandby
+    , coldWave
+    , blizzard
+    , rain
+    , cut
+    , megaCut
+    , fubao
+    , organClone
+    , humanClone
+    , megaClone
+    , purification
+    , sacrifice
+    , resurgence
+    , defenseline
+    ]
+
+
+cardGenerator : Generator Card
+cardGenerator =
+    choose allCards
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+
+
+cardsGenerator : Int -> Generator (List Card)
+cardsGenerator n =
+    choose allCards
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+        |> Random.list n
+
+
+cardComparison : Card -> Card -> Order
+cardComparison c1 c2 =
+    if c1.cost < c2.cost then
+        LT
+
+    else if c1.cost > c2.cost then
+        GT
+
+    else if String.length c1.name > String.length c2.name then
+        GT
+
+    else if String.length c1.name < String.length c2.name then
+        LT
+
+    else
+        EQ
 
 
 powerOverload =
@@ -113,11 +168,11 @@ defenseline =
 
 
 hospital =
-    Card TileSel 4 [ HospitalI (0, 0) ] "Build Hospital" "Put a hospital on a tile."
+    Card TileSel 4 [ HospitalI ( 0, 0 ) ] "Build Hospital" "Put a hospital on a tile."
 
 
 quarantine =
-    Card TileSel 4 [ QuarantineI (0, 0) ] "Build Quarantine" "Put one tile in quarantine."
+    Card TileSel 4 [ QuarantineI ( 0, 0 ) ] "Build Quarantine" "Put one tile in quarantine."
 
 
 enhanceHealing =
@@ -125,33 +180,32 @@ enhanceHealing =
 
 
 cellBroadcast =
-    Card TileSel 4 [ AttractPeoI (0, 0), StopAttractI (0, 0) ] "Cell Broadcast" "In the selected tile, no one could go out during the next population flow."
+    Card TileSel 4 [ AttractPeoI ( 0, 0 ), StopAttractI ( 0, 0 ) ] "Cell Broadcast" "In the selected tile, no one could go out during the next population flow."
 
 
 drought =
-    Card TileSel 2 [ DroughtI_Kill ((0, 0), 0.5), DroughtI_Kill ((0, 0), 0.5) ] "Drought" "In two rounds in the selected tile, the viruses have a probability of 50% to die. The economy output halves for two rounds."
+    Card TileSel 2 [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ] "Drought" "In two rounds in the selected tile, the viruses have a probability of 50% to die. The economy output halves for two rounds."
 
 
 warehouse =
-    Card TileSel 2 [ WarehouseI (0, 0) ] "Warehouse" "Put a warehouse on a tile, +5 economy per round."
+    Card TileSel 2 [ WarehouseI ( 0, 0 ) ] "Warehouse" "Put a warehouse on a tile, +5 economy per round."
 
 
 warmwave =
-    Card TileSel 1 [Warmwave_KIA ((0,0), 0.25) ] "Warmwave" "Choose a tile. There is a probability of 25% to kill the viruses."
+    Card TileSel 1 [ Warmwave_KIA ( ( 0, 0 ), 0.25 ) ] "Warmwave" "Choose a tile. There is a probability of 25% to kill the viruses."
 
 
 goingViral =
-    Card TileSel 8 [ AVI (0, 0) ] "Going Viral" "Release the nano-viruses, which move randomly for 3 rounds and have a cut effect."
+    Card TileSel 8 [ AVI ( 0, 0 ) ] "Going Viral" "Release the nano-viruses, which move randomly for 3 rounds and have a cut effect."
 
 
 judgement =
-    Card TileSel 6 [ JudgeI_Kill ((0,0), 0.25) ] "Judgement" "On the selected tile, either the people or the viruses die. The probability is 50%."
+    Card TileSel 6 [ JudgeI_Kill ( ( 0, 0 ), 0.25 ) ] "Judgement" "On the selected tile, either the people or the viruses die. The probability is 50%."
 
 
 lowSoundWaves =
-    Card TileSel 4 [ EvacuateI (0,0), StopEVAI (0, 0) ] "LowSoundWaves" "Select a tile. Distribute all population to the neighboring tiles during the next population flow."
+    Card TileSel 4 [ EvacuateI ( 0, 0 ), StopEVAI ( 0, 0 ) ] "LowSoundWaves" "Select a tile. Distribute all population to the neighboring tiles during the next population flow."
 
 
 targetCardlst =
     [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline, hospital, quarantine, cellBroadcast, drought, warehouse, warmwave, goingViral, judgement, lowSoundWaves ]
-

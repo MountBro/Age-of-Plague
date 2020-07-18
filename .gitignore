@@ -4,5 +4,8 @@
 *.elmo
 *.dat
 
-/elm-stuff/*
-/.idea/*
+# elm-package generate files 
+elm-stuff/
+
+# webstorm generate directory
+.idea/

@@ -1,10 +1,6 @@
 # Project 2 for team 3,
 
-## Intro
 
-This is Hiafeng Jia's branch.
-
-## File Tree
 
 - simsrc:
   This is for Matlab simulation.

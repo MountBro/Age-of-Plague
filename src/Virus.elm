@@ -16,6 +16,7 @@ type alias Virus =
 type alias AntiVirus =
     { rules : List Int
     , pos : List ( Int, Int )
+    , life : Int
     }
 
 
@@ -64,27 +65,17 @@ searchNeighbor virlst =
         |> LE.unique
 
 
-judgeAlivevir : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> ( Virus, AntiVirus )
-judgeAlivevir lstvir vir lstanti anti =
+judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )
+judgeAlive lstvir vir lstanti anti lstquatile =
     let
         lstv =
-            List.partition (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x anti.pos)) lstvir
-                |> Tuple.first
+            List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x anti.pos) && not (List.member (converHextoTile x) lstquatile)) lstvir
 
         lsta =
-            List.partition (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member x vir.pos)) lstanti
-                |> Tuple.first
+            if anti.life > 0 then
+                List.filter (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member x vir.pos) && not (List.member (converHextoTile x) lstquatile)) lstanti
+
+            else
+                []
     in
-    ( { vir | pos = lstv }, { anti | pos = lsta } )
-
-
-change : Virus -> AntiVirus -> ( Virus, AntiVirus )
-change virus anti =
-    let
-        lstvir =
-            searchNeighbor virus.pos
-
-        lstanti =
-            searchNeighbor anti.pos
-    in
-    judgeAlivevir lstvir virus lstanti anti
+    ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )

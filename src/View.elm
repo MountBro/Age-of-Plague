@@ -82,6 +82,18 @@ view model =
                 , cardButton sacrifice
                 , cardButton resurgence
                 , cardButton defenseline
+                , cardButton hospital
+                , cardButton quarantine
+                , cardButton enhanceHealing
+                , cardButton cellBroadcast
+                , cardButton drought
+                , cardButton warehouse
+                , cardButton warmwave
+                , cardButton goingViral
+                , cardButton judgement
+                , cardButton lowSoundWaves
+                , Html.text (Debug.toString model.todo ++ Debug.toString model.actionDescribe)
+                , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
                 ]
@@ -276,19 +288,29 @@ renderFilm model ( i, j ) =
                 polygon [] []
     in
     svg
-        [ onClick (SelectHex i j)
-        , onOver (MouseOver i j)
-        ]
-        [ tint
-        , polygon
-            [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
-                [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
-                |> SA.points
-            , 0.0 |> String.fromFloat |> SA.fillOpacity
-            , SA.fill "white"
-            ]
+        ([ onOver (MouseOver i j) ]
+            ++ (if judgeBuild model ( i, j ) then
+                    []
+
+                else
+                    [ onClick (SelectHex i j) ]
+               )
+        )
+        (if judgeBuild model ( i, j ) then
             []
-        ]
+
+         else
+            [ tint ]
+                ++ [ polygon
+                        [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
+                            [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
+                            |> SA.points
+                        , 0.0 |> String.fromFloat |> SA.fillOpacity
+                        , SA.fill "white"
+                        ]
+                        []
+                   ]
+        )
 
 
 
@@ -386,15 +408,29 @@ renderTile t =
                 ]
 
         constructionCaption =
-            case t.construction of
-                Hos ->
-                    "H"
+            if t.hos && t.qua && t.wareHouse then
+                "H&Q&W"
 
-                Qua ->
-                    "Q"
+            else if t.qua && t.wareHouse then
+                "Q&W"
 
-                NoConstruction ->
-                    "N"
+            else if t.hos && t.wareHouse then
+                "H&W"
+
+            else if t.hos && t.qua then
+                "H&Q"
+
+            else if t.hos then
+                "H"
+
+            else if t.wareHouse then
+                "W"
+
+            else if t.qua then
+                "Q"
+
+            else
+                "N"
 
         cons =
             svg []

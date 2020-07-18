@@ -16,6 +16,7 @@ type alias Virus =
 type alias AntiVirus =
     { rules : List Int
     , pos : List ( Int, Int )
+    , life : Int
     }
 
 
@@ -71,10 +72,15 @@ judgeAlive lstvir vir lstanti anti lstquatile =
             List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x anti.pos) && not (List.member (converHextoTile x) lstquatile)) lstvir
 
         lsta =
-            List.filter (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member x vir.pos) && not (List.member (converHextoTile x) lstquatile)) lstanti
+            if anti.life > 0 then
+                List.filter (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member x vir.pos) && not (List.member (converHextoTile x) lstquatile)) lstanti
+
+            else
+                []
 
     in
-    ( { vir | pos = lstv }, { anti | pos = lsta } )
+    ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )
+
 
 
 

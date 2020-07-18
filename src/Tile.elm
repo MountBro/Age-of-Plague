@@ -8,20 +8,17 @@ type alias Tile =
     , population : Int
     , sick : Int
     , dead : Int
-    , construction : Construction
     , cureEff : Int
+    , peoFlow : Bool -- whether population will flow or not (different from quarantine)
+    , hos : Bool
+    , qua : Bool
+    , wareHouse : Bool
     }
-
-
-type Construction
-    = Hos -- Hospital
-    | Qua --Quarantine
-    | NoConstruction
 
 
 initTile : ( Int, Int ) -> Int -> Tile
 initTile ( x, y ) population =
-    Tile ( x, y ) population 0 0 NoConstruction 0
+    Tile ( x, y ) population 0 0 0 True False False False
 
 
 cartesianProduct : List a -> List b -> List ( a, b )
@@ -42,8 +39,9 @@ validNeighborTile tlst t =
         lstn =
             generateZone t.indice
     in
-    if t.construction /= Qua then
-        List.filter (\x -> List.member x.indice lstn && x.population > 0 && x.construction /= Qua) tlst
+    if not t.qua && t.peoFlow then
+        List.filter (\x -> List.member x.indice lstn && x.population > 0 && not x.qua) tlst
+
     else
         []
 
@@ -51,11 +49,17 @@ validNeighborTile tlst t =
 quarantineTiles : List Tile -> List (Int, Int)
 quarantineTiles tlst =
     tlst
-        |> List.filter (\x -> x.construction == Qua)
+        |> List.filter (\x -> x.qua == True)
         |> List.map (\x -> x.indice)
 
 hospitalTiles : List Tile -> List (Int, Int)
 hospitalTiles tlst =
     tlst
-        |> List.filter (\x -> x.construction == Hos)
+        |> List.filter (\x -> x.hos == True)
+        |> List.map (\x -> x.indice)
+
+warehouseTiles : List Tile -> List (Int, Int)
+warehouseTiles tlst =
+    tlst
+        |> List.filter (\x -> x.wareHouse == True)
         |> List.map (\x -> x.indice)

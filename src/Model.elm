@@ -35,7 +35,23 @@ type alias Model =
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
+    , actionDescribe : List String
     }
+
+
+updatelog : Model -> Model
+updatelog model =
+    case model.cardSelected of
+        NoCard ->
+            model
+
+        SelectCard card ->
+            { model | actionDescribe = List.append model.actionDescribe ["Used card : " ++ card.name ++ ". " ++ card.describe] }
+
+
+initlog : Model -> Model
+initlog model =
+    { model | actionDescribe = [] }
 
 
 type Region
@@ -108,8 +124,17 @@ initVirus =
 
 initAntiVirus : AntiVirus
 initAntiVirus =
-    { rules = [ 2 ]
-    , pos = [ ( 3, 2 ), ( 3, 3 ) ]
+    { rules = [ 0, 1, 2, 3 ]
+    , pos = [ ]
+    , life = 0
+    }
+
+
+createAV : (Int, Int) -> AntiVirus
+createAV hlst =
+    { rules = [ 0, 1, 2, 3 ]
+    , pos = [ hlst ]
+    , life = 3
     }
 
 
@@ -151,6 +176,7 @@ initModel _ =
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
+      , actionDescribe = []
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -163,14 +189,17 @@ sickupdate t lstvir inf =
             let
                 s =
                     LE.count ((==) x.indice) lstvir * inf
+
+                cure =
+                    x.cureEff
             in
-            if x.construction == Hos then
-                if s + x.sick - 2 <= x.population && s + x.sick - 2 >= 0 then
+            if x.hos then
+                if s + x.sick - cure <= x.population && s + x.sick - cure >= 0 then
                     { x
-                        | sick = s + x.sick - 2
+                        | sick = s + x.sick - cure
                     }
 
-                else if s + x.sick - 2 < 0 then
+                else if s + x.sick - cure < 0 then
                     { x
                         | sick = 0
                     }
@@ -218,6 +247,7 @@ virusKill vir city =
 
             else
                 lstInfectedn ++ List.take (max (round (toFloat (death - estimateDeath) * 0.2)) 1) lstInfected1
+
     in
     { city
         | tilesindex =
@@ -267,7 +297,7 @@ populationFlow n city =
             List.take n citytileslst
                 |> List.drop (n - 1)
                 |> List.head
-                |> Maybe.withDefault (Tile ( -100, -100 ) 100 0 0 NoConstruction 0)
+                |> Maybe.withDefault (Tile ( -100, -100 ) 0 0 0 0 True False False False)
 
         lstnTile =
             --not include tile t itself
@@ -287,19 +317,24 @@ populationFlow n city =
 
         leaveLst =
             -- make a ordered list of tiles people would go. Compatible for population < numNeig
-            List.sortBy (\x -> x.sick + x.dead * 2) lstnTile
-                |> List.map (\x -> x.indice)
-                |> List.take t.population
-                |> List.take numNeig
+            if t.peoFlow then
+                List.sortBy (\x -> x.sick + x.dead * 2) lstnTile
+                    |> List.map (\x -> x.indice)
+                    |> List.take t.population
+                    |> List.take numNeig
+
+            else
+                []
 
         sickLst =
             leaveLst
                 |> List.take sickleave
+
     in
     if n <= List.length citytileslst then
         let
             newcitytileslst =
-                if t.population >= numNeig then
+                if t.population >= numNeig && t.peoFlow then
                     List.map
                         (\x ->
                             if x == t then
@@ -322,7 +357,7 @@ populationFlow n city =
                         )
                         citytileslst
 
-                else
+                else if t.peoFlow then
                     List.map
                         (\x ->
                             if x == t then
@@ -345,6 +380,9 @@ populationFlow n city =
                         )
                         citytileslst
 
+                else
+                    citytileslst
+
             newcity =
                 { city
                     | tilesindex = newcitytileslst
@@ -363,6 +401,85 @@ updateCity city vir =
         |> populationFlow 1
 
 
+evacuate : Tile -> City -> List Tile
+evacuate t city=
+    let
+        lstnTile =
+            validNeighborTile city.tilesindex t
+                |> List.sortBy .sick
+
+        l =
+            List.length lstnTile
+
+        a =
+            if t.population == 0 then
+                0
+
+            else
+                modBy l t.population
+
+        b =
+            if t.population == 0 then
+                0
+
+            else
+                round (toFloat (t.population - a) / toFloat l)
+
+        sa =
+            if t.sick == 0 then
+                0
+
+            else
+                modBy l t.sick
+
+        sb =
+            if t.sick == 0 then
+                0
+
+            else
+                round (toFloat (t.sick - sa) / toFloat l)
+
+        leavelst =
+            lstnTile
+                |> List.take t.population
+
+        ln =
+            List.take a leavelst
+
+        l1 =
+            List.drop a leavelst
+
+        sicklst1 =
+            List.drop sa leavelst
+
+    in
+    List.map (\x -> if List.member x ln then
+                        if List.member x sicklst1 then
+                            { x | population = x.population + b + 1
+                                , sick = x.sick + sb }
+
+                        else
+                            { x | population = x.population + b + 1
+                                , sick = x.sick + sb + 1 }
+
+                    else if List.member x l1 then
+                        if List.member x sicklst1 then
+                            { x | population = x.population + b
+                                , sick = x.sick + sb }
+
+                        else
+                            { x | population = x.population + b
+                                , sick = x.sick + sb + 1 }
+
+                    else if x == t then
+                        {x | population = 0
+                           , sick = 0}
+
+                    else
+                        x
+                                ) city.tilesindex
+
+
 change : Virus -> AntiVirus -> City -> ( Virus, AntiVirus )
 change virus anti city =
     let
@@ -376,3 +493,20 @@ change virus anti city =
             quarantineTiles city.tilesindex
     in
     judgeAlive lstvir virus lstanti anti lstquatile
+
+
+judgeBuild : Model -> (Int, Int) -> Bool
+judgeBuild model (i, j) =
+    let
+        hostilelst =
+            hospitalTiles model.city.tilesindex
+
+        quatilelst =
+            quarantineTiles model.city.tilesindex
+
+        waretilelst =
+            warehouseTiles model.city.tilesindex
+    in
+    model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst
+    || model.cardSelected == SelectCard quarantine && List.member (converHextoTile (i, j)) quatilelst
+    || model.cardSelected == SelectCard warehouse && List.member (converHextoTile (i, j)) waretilelst

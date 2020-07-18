@@ -42,10 +42,10 @@ update msg model =
 
         NextRound ->
             if model.behavior.virusEvolve then
-                ( { model | currentRound = model.currentRound + 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc |> initlog, Cmd.none )
 
             else
-                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc |> initlog, Cmd.none )
 
         PlayCard card ->
             if card.cost <= model.power && para.ecoThreshold <= model.economy then
@@ -61,7 +61,8 @@ update msg model =
 
                 else
                     ( { model
-                        | todo = model.todo ++ [ ( True, card.action ) ]
+                        | cardSelected = SelectCard card
+                        , todo = model.todo ++ [ ( True, card.action ) ]
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
                       }
@@ -106,6 +107,62 @@ update msg model =
         Message.Alert txt ->
             ( model, sendMsg txt )
 
+        KillTileVir ((i, j), prob) rand ->
+            let
+                (ti, tj) =
+                    converHextoTile (i, j)
+
+                virus_ =
+                    model.virus
+
+                vir =
+                    if prob <= rand then
+                        { virus_ |
+                            pos = List.filter (\x -> (converHextoTile x) /= (ti, tj)) virus_.pos }
+
+                    else
+                        virus_
+
+            in
+            ( { model | virus = vir }, Cmd.none)
+
+        JudgeVirPeo ((i, j), prob) rand ->
+            let
+                (ti, tj) =
+                    converHextoTile (i, j)
+
+                virus =
+                    model.virus
+
+                tilelst =
+                    model.city.tilesindex
+
+                city =
+                    model.city
+
+                virus_ =
+                    if prob <= rand then
+                        { virus |
+                            pos = List.filter (\x -> (converHextoTile x) /= (ti, tj)) virus.pos }
+
+                    else
+                        virus
+
+                city_ =
+                    if prob > rand then
+                        { city |
+                            tilesindex = List.map (\x -> if x.indice == (ti, tj) then
+                                                                { x | dead = x.population + x.dead
+                                                                    , sick = 0
+                                                                    , population = 0 }
+                                                         else
+                                                            x
+                                                         ) tilelst }
+
+                    else
+                        city
+            in
+            ({ model | city = city_, virus = virus_}, Cmd.none)
         Message.Return ->
             ( model, returnMainPage "return" )
 
@@ -174,10 +231,10 @@ performAction : Action -> Model -> ( Model, Cmd Msg )
 performAction action model =
     case action of
         IncPowerI inc ->
-            ( { model | power = model.power + inc }, Cmd.none )
+            ( { model | power = model.power + inc } |> updatelog, Cmd.none )
 
         Freeze prob ->
-            ( model, Random.generate (FreezeRet prob) (Random.float 0 1) )
+            ( model |> updatelog, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         FreezeI ->
             let
@@ -187,13 +244,10 @@ performAction action model =
                 behavior =
                     { behavior_ | virusEvolve = False }
             in
-            ( { model | behavior = behavior }, Cmd.none )
-
-        EcoDoubleI ->
-            ( { model | ecoRatio = 2 * model.ecoRatio }, Cmd.none )
+            ( { model | behavior = behavior } |> updatelog, Cmd.none )
 
         EcoDoubleI_Freeze prob ->
-            ( { model | ecoRatio = 2 * model.ecoRatio }, Random.generate (FreezeRet prob) (Random.float 0 1) )
+            ( { model | ecoRatio = 2 * model.ecoRatio } |> updatelog, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         CutHexI ( i, j ) ->
             let
@@ -209,7 +263,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = pos }
             in
-            ( { model | virus = virus }, Cmd.none )
+            ( { model | virus = virus } |> updatelog, Cmd.none )
 
         CutTileI ( i, j ) ->
             let
@@ -238,7 +292,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = pos }
             in
-            ( { model | virus = virus }, Cmd.none )
+            ( { model | virus = virus } |> updatelog, Cmd.none )
 
         Activate996I ->
             let
@@ -246,12 +300,12 @@ performAction action model =
                     model.virus
 
                 dr =
-                    1.05 * virus_.kill
+                    1.024 * virus_.kill
 
                 virus =
                     { virus_ | kill = dr }
             in
-            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus }, Cmd.none )
+            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus } |> updatelog, Cmd.none )
 
         OrganCloneI ( i, j ) ->
             let
@@ -282,7 +336,7 @@ performAction action model =
                 city =
                     { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none )
+            ( { model | city = city } |> updatelog, Cmd.none )
 
         HumanCloneI ( i, j ) ->
             let
@@ -309,7 +363,7 @@ performAction action model =
                 city =
                     { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none )
+            ( { model | city = city } |> updatelog, Cmd.none )
 
         MegaCloneI ->
             let
@@ -325,7 +379,7 @@ performAction action model =
                 city =
                     { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none )
+            ( { model | city = city } |> updatelog, Cmd.none )
 
         PurificationI ( i, j ) ->
             let
@@ -352,7 +406,7 @@ performAction action model =
                 city =
                     { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none )
+            ( { model | city = city } |> updatelog, Cmd.none )
 
         SacrificeI ( i, j ) ->
             let
@@ -395,7 +449,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = virpos }
             in
-            ( { model | city = city, virus = virus }, Cmd.none )
+            ( { model | city = city, virus = virus } |> updatelog, Cmd.none )
 
         ResurgenceI ( i, j ) ->
             let
@@ -425,7 +479,7 @@ performAction action model =
                 city =
                     { city_ | tilesindex = tilelst }
             in
-            ( { model | city = city }, Cmd.none )
+            ( { model | city = city } |> updatelog, Cmd.none )
 
         FreezevirusI ( i, j ) ->
             let
@@ -441,7 +495,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = virpos }
             in
-            ( { model | virus = virus }, Cmd.none )
+            ( { model | virus = virus } |> updatelog, Cmd.none )
 
         HospitalI ( i, j ) ->
             let
@@ -452,20 +506,18 @@ performAction action model =
                     model.city
 
                 city =
-                    { city_
-                        | tilesindex =
-                            List.map
-                                (\x ->
-                                    if x.indice == ( ti, tj ) then
-                                        { x | construction = Hos }
+                    { city_ | tilesindex = List.map (\x ->
+                                                        if x.indice == (ti, tj) then
+                                                            { x | hos = True
+                                                                , cureEff = 2}
 
-                                    else
-                                        x
-                                )
-                                city_.tilesindex
-                    }
+                                                        else
+                                                            x ) city_.tilesindex
+                            }
+
+
             in
-            ( { model | city = city }, Cmd.none )
+            ( { model | city = city } |> updatelog, Cmd.none)
 
         QuarantineI ( i, j ) ->
             let
@@ -481,7 +533,76 @@ performAction action model =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
-                                        { x | construction = Qua }
+                                        { x | qua = True }
+
+                                    else
+                                        x
+                                )
+                                city_.tilesindex
+                    }
+            in
+            ( { model | city = city } |> updatelog, Cmd.none )
+
+        EnhanceHealingI ->
+            let
+                city_ =
+                    model.city
+
+                city =
+                    { city_
+                        | tilesindex =
+                            List.map
+                                (\x ->
+                                    if x.hos then
+                                        { x | cureEff = x.cureEff + 1 }
+
+                                    else
+                                        x
+                                )
+                                city_.tilesindex
+                    }
+            in
+            ( { model | city = city } |> updatelog, Cmd.none )
+
+        AttractPeoI ( i, j ) ->
+            let
+                ( ti, tj ) =
+                    converHextoTile ( i, j )
+
+                city_ =
+                    model.city
+
+                city =
+                    { city_
+                        | tilesindex =
+                            List.map
+                                (\x ->
+                                    if x.indice == ( ti, tj ) then
+                                        { x | peoFlow = False }
+
+                                    else
+                                        x
+                                )
+                                city_.tilesindex
+                    }
+            in
+            ( { model | city = city } |> updatelog, Cmd.none )
+
+        StopAttractI ( i, j ) ->
+            let
+                ( ti, tj ) =
+                    converHextoTile ( i, j )
+
+                city_ =
+                    model.city
+
+                city =
+                    { city_
+                        | tilesindex =
+                            List.map
+                                (\x ->
+                                    if x.indice == ( ti, tj ) then
+                                        { x | peoFlow = True }
 
                                     else
                                         x
@@ -490,6 +611,61 @@ performAction action model =
                     }
             in
             ( { model | city = city }, Cmd.none )
+
+        DroughtI_Kill ((i, j), prob) ->
+            ( { model | ecoRatio = round (0.5 * toFloat model.ecoRatio) } |> updatelog, Random.generate (KillTileVir ((i, j), prob)) (Random.float 0 1) )
+
+        WarehouseI (i, j) ->
+            let
+                ( ti, tj ) =
+                    converHextoTile ( i, j )
+
+                city_ =
+                    model.city
+
+                city =
+                    { city_ | tilesindex = List.map (\x -> if x.indice == (ti, tj) then
+                                                                { x | wareHouse = True}
+
+                                                           else
+                                                                x ) city_.tilesindex }
+
+                num =
+                    model.warehouseNum + 1
+            in
+            ( { model | city = city, warehouseNum = num }, Cmd.none)
+
+        Warmwave_KIA ((i, j), prob) ->
+            ( model |> updatelog, Random.generate (KillTileVir ((i, j), prob)) (Random.float 0 1) )
+
+        AVI (i, j) ->
+            ( { model | av = createAV (i, j) } |> updatelog, Cmd.none)
+
+        JudgeI_Kill ((i, j), prob) ->
+            ( model |> updatelog, Random.generate (JudgeVirPeo ((i, j), prob)) (Random.float 0 1))
+
+        EvacuateI (i, j) ->
+            let
+                (ti, tj) =
+                    converHextoTile (i, j)
+
+                tlst =
+                    model.city.tilesindex
+
+                t =
+                    List.filter (\x -> x.indice == (ti, tj)) tlst
+                        |> List.head
+                        |> Maybe.withDefault (Tile ( -100, -100 ) 0 0 0 0 True False False False)
+
+                city =
+                    model.city
+
+                city_ =
+                    { city | tilesindex =
+                                evacuate t city}
+
+            in
+            ( { model | city = city_ } |> updatelog, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -503,7 +679,7 @@ mFillRegion : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 mFillRegion ( model, cm ) =
     case model.cardSelected of
         NoCard ->
-            ( model, Cmd.none )
+            ( model, cm )
 
         SelectCard card ->
             case model.selHex of
@@ -523,7 +699,7 @@ mFillRegion ( model, cm ) =
                         ( model, cm )
 
                 SelHexOff ->
-                    ( model, Cmd.none )
+                    ( model, cm )
 
 
 fillRegion : Card -> Sel -> ( Queue, Cmd Msg )
@@ -557,6 +733,27 @@ fillRegion card sel =
 
     else if card == quarantine then
         ( ( True, [ QuarantineI sel ] ), Cmd.none )
+
+    else if card == cellBroadcast then
+        ( ( True, [ AttractPeoI sel, StopAttractI sel ] ), Cmd.none )
+
+    else if card == drought then
+        ( ( True, [ DroughtI_Kill ( sel, 0.5 ), DroughtI_Kill ( sel, 0.5 ) ] ), Cmd.none )
+
+    else if card == warehouse then
+        ( ( True, [ WarehouseI sel ] ), Cmd.none )
+
+    else if card == warmwave then
+        ( ( True, [ Warmwave_KIA (sel, 0.25) ] ), Cmd.none)
+
+    else if card == goingViral then
+        ( ( True, [ AVI sel ] ), Cmd.none )
+
+    else if card == judgement then
+        ( ( True, [ JudgeI_Kill (sel, 0.5) ] ), Cmd.none)
+
+    else if card == lowSoundWaves then
+        ( ( True, [ EvacuateI sel, StopEVAI sel ] ), Cmd.none )
 
     else
         ( finishedEmptyQueue, Cmd.none )

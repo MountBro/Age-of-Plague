@@ -92,9 +92,16 @@ view model =
         , cardButton defenseline
         , cardButton hospital
         , cardButton quarantine
-        , Html.text (Debug.toString model.todo)
+        , cardButton enhanceHealing
+        , cardButton cellBroadcast
+        , cardButton drought
+        , cardButton warehouse
+        , cardButton warmwave
+        , cardButton goingViral
+        , cardButton judgement
+        ,cardButton lowSoundWaves
+        , Html.text (Debug.toString model.todo ++ Debug.toString model.actionDescribe)
         , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
-        , Html.button [ Html.Events.onClick Message.Return ] [ Html.text "return!" ]
         ]
 
 
@@ -265,20 +272,17 @@ renderFilm model ( i, j ) =
 
             else
                 polygon [] []
-
-        hostilelst =
-            hospitalTiles model.city.tilesindex
     in
     svg
         ([ onOver (MouseOver i j) ]
-            ++ (if model.cardSelected == SelectCard hospital && List.member (converHextoTile ( i, j )) hostilelst then
+            ++ (if judgeBuild model ( i, j ) then
                     []
 
                 else
                     [ onClick (SelectHex i j) ]
                )
         )
-        (if model.cardSelected == SelectCard hospital && List.member (converHextoTile ( i, j )) hostilelst then
+        (if judgeBuild model ( i, j ) then
             []
 
          else
@@ -390,15 +394,29 @@ renderTile t =
                 ]
 
         constructionCaption =
-            case t.construction of
-                Hos ->
-                    "H"
+            if t.hos && t.qua && t.wareHouse then
+                "H&Q&W"
 
-                Qua ->
-                    "Q"
+            else if t.qua && t.wareHouse then
+                "Q&W"
 
-                NoConstruction ->
-                    "N"
+            else if t.hos && t.wareHouse then
+                "H&W"
+
+            else if t.hos && t.qua then
+                "H&Q"
+
+            else if t.hos then
+                "H"
+
+            else if t.wareHouse then
+                "W"
+
+            else if t.qua then
+                "Q"
+
+            else
+                "N"
 
         cons =
             svg []

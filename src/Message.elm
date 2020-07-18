@@ -23,6 +23,10 @@ type Msg
     | MouseOverCardToReplace Int
     | ReplaceCard Card Card
     | StartRound1
+    | Alert String
+    | HosInvalid
+    | KillTileVir ( ( Int, Int ), Float ) Float
+    | JudgeVirPeo ( ( Int, Int ), Float ) Float
 
 
 type Keyin

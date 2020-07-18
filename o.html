@@ -1,3 +1,17 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Main</title>
+  <style>body { padding: 0; margin: 0; }</style>
+</head>
+
+<body>
+
+<pre id="elm"></pre>
+
+<script>
+try {
 (function(scope){
 'use strict';
 
@@ -4355,8 +4369,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-<<<<<<< HEAD:elm.js
-=======
 
 
 
@@ -4440,7 +4452,6 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
->>>>>>> 09f2ce7eff536eccfb7a5fac8e160af6d180d9ee:build/elm.js
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5230,192 +5241,6 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-<<<<<<< HEAD:elm.js
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (flags) {
-	return _Utils_Tuple2(
-		{draft: '', messages: _List_Nil},
-		$elm$core$Platform$Cmd$none);
-};
-var $author$project$Main$Recv = function (a) {
-	return {$: 'Recv', a: a};
-};
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Main$messageReceiver = _Platform_incomingPort('messageReceiver', $elm$json$Json$Decode$string);
-var $author$project$Main$subscriptions = function (_v0) {
-	return $author$project$Main$messageReceiver($author$project$Main$Recv);
-};
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Main$sendMessage = _Platform_outgoingPort('sendMessage', $elm$json$Json$Encode$string);
-var $author$project$Main$update = F2(
-	function (msg, model) {
-		switch (msg.$) {
-			case 'DraftChanged':
-				var draft = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{draft: draft}),
-					$elm$core$Platform$Cmd$none);
-			case 'Send':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{draft: ''}),
-					$author$project$Main$sendMessage(model.draft));
-			default:
-				var message = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							messages: _Utils_ap(
-								model.messages,
-								_List_fromArray(
-									[message]))
-						}),
-					$elm$core$Platform$Cmd$none);
-		}
-	});
-var $author$project$Main$DraftChanged = function (a) {
-	return {$: 'DraftChanged', a: a};
-};
-var $author$project$Main$Send = {$: 'Send'};
-var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$json$Json$Decode$andThen = _Json_andThen;
-var $elm$json$Json$Decode$fail = _Json_fail;
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $author$project$Main$ifIsEnter = function (msg) {
-	return A2(
-		$elm$json$Json$Decode$andThen,
-		function (key) {
-			return (key === 'Enter') ? $elm$json$Json$Decode$succeed(msg) : $elm$json$Json$Decode$fail('some other key');
-		},
-		A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string));
-};
-var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$li = _VirtualDom_node('li');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var $elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
-var $elm$html$Html$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
-var $elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		$elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			$elm$json$Json$Decode$map,
-			$elm$html$Html$Events$alwaysStop,
-			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
-};
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
-var $elm$html$Html$ul = _VirtualDom_node('ul');
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$view = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$h1,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Echo Chat')
-					])),
-				A2(
-				$elm$html$Html$ul,
-				_List_Nil,
-				A2(
-					$elm$core$List$map,
-					function (msg) {
-						return A2(
-							$elm$html$Html$li,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text(msg)
-								]));
-					},
-					model.messages)),
-				A2(
-				$elm$html$Html$input,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$type_('text'),
-						$elm$html$Html$Attributes$placeholder('Draft'),
-						$elm$html$Html$Events$onInput($author$project$Main$DraftChanged),
-						A2(
-						$elm$html$Html$Events$on,
-						'keydown',
-						$author$project$Main$ifIsEnter($author$project$Main$Send)),
-						$elm$html$Html$Attributes$value(model.draft)
-					]),
-				_List_Nil),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick($author$project$Main$Send)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Send')
-					]))
-			]));
-};
-var $author$project$Main$main = $elm$browser$Browser$element(
-	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
-=======
 var $author$project$Message$GotViewport = function (a) {
 	return {$: 'GotViewport', a: a};
 };
@@ -8039,6 +7864,158 @@ var $author$project$View$renderLevelProgress = function (model) {
 			]));
 };
 var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
+var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
+var $elm$svg$Svg$g = $elm$svg$Svg$trustedNode('g');
+var $elm$svg$Svg$Attributes$gradientUnits = _VirtualDom_attribute('gradientUnits');
+var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var $elm$svg$Svg$Attributes$offset = _VirtualDom_attribute('offset');
+var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
+var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $elm$svg$Svg$radialGradient = $elm$svg$Svg$trustedNode('radialGradient');
+var $elm$svg$Svg$stop = $elm$svg$Svg$trustedNode('stop');
+var $elm$svg$Svg$style = $elm$svg$Svg$trustedNode('style');
+var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
+var $elm$svg$Svg$Attributes$type_ = _VirtualDom_attribute('type');
+var $elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
+var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var $author$project$SvgSrc$myTile = F2(
+	function (x1, x2) {
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$version('1.0'),
+					$elm$svg$Svg$Attributes$id('Layer_1'),
+					$elm$svg$Svg$Attributes$x(
+					$elm$core$String$fromFloat(x1 - 15.0)),
+					$elm$svg$Svg$Attributes$y(
+					$elm$core$String$fromFloat(x2 - 17.3)),
+					$elm$svg$Svg$Attributes$viewBox('0 0 30 34.6'),
+					$elm$svg$Svg$Attributes$style('enable-background:new 0 0 30 34.6;'),
+					$elm$svg$Svg$Attributes$width('30'),
+					$elm$svg$Svg$Attributes$height('34.6')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$style,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$type_('text/css')
+						]),
+					_List_fromArray(
+						[
+							$elm$svg$Svg$text('.st0{fill:url(#SVGID_1_);}\n    .st1{fill:#006837;}\n    .st2{fill:none;}\n    .st3{fill:none;stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;}\n')
+						])),
+					A2(
+					$elm$svg$Svg$g,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$radialGradient,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$id('SVGID_1_'),
+									$elm$svg$Svg$Attributes$cx('15'),
+									$elm$svg$Svg$Attributes$cy('17.344'),
+									$elm$svg$Svg$Attributes$r('16.0435'),
+									$elm$svg$Svg$Attributes$gradientUnits('userSpaceOnUse')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('0'),
+											$elm$svg$Svg$Attributes$style('stop-color:#FFFFFF')
+										]),
+									_List_Nil),
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('0'),
+											$elm$svg$Svg$Attributes$style('stop-color:#009245')
+										]),
+									_List_Nil),
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('1'),
+											$elm$svg$Svg$Attributes$style('stop-color:#006837')
+										]),
+									_List_Nil),
+									A2(
+									$elm$svg$Svg$stop,
+									_List_fromArray(
+										[
+											$elm$svg$Svg$Attributes$offset('1'),
+											$elm$svg$Svg$Attributes$style('stop-color:#000000')
+										]),
+									_List_Nil)
+								])),
+							A2(
+							$elm$svg$Svg$polygon,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$class('st0'),
+									$elm$svg$Svg$Attributes$points('0.1,25.9 0.1,8.8 15,0.2 29.9,8.8 29.9,25.9 15,34.5   ')
+								]),
+							_List_Nil),
+							A2(
+							$elm$svg$Svg$path,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$d('M15,0.3l14.7,8.5l0,17L15,34.4L0.3,25.8v-17L15,0.3 M15,0L0,8.7V26l15,8.6L30,26l0-17.3L15,0L15,0z')
+								]),
+							_List_Nil)
+						])),
+					A2(
+					$elm$svg$Svg$path,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$class('st1'),
+							$elm$svg$Svg$Attributes$d('M20.7,14.4c-0.2,0.1-0.5,0.1-0.8,0.1c-0.1,0-0.2,0-0.3-0.1s-0.1-0.2-0.1-0.3c-0.3-0.2-0.4-0.7-0.2-1\n    c0.2-0.3,0.5-0.5,0.9-0.5c0.3-0.1,0.7,0,1,0c-0.1-0.3,0-0.7,0.3-0.9c0.2-0.2,0.6-0.3,0.9-0.4c0.2,0,0.3-0.1,0.5,0\n    c0.2,0.1,0.3,0.2,0.4,0.3c0.8,0.8,1.4,1.9,1.7,3c0,0.1,0.1,0.2,0,0.3c0,0.1-0.2,0.2-0.3,0.2c-0.4,0.2-0.8,0.5-1.2,0.7\n    c-0.2,0.1-0.4,0.2-0.6,0.2c-0.2-0.1-0.3-0.2-0.4-0.4c-0.3-0.2-0.6-0.3-1-0.5C21.2,15.2,20.8,14.7,20.7,14.4z')
+						]),
+					_List_Nil),
+					A2(
+					$elm$svg$Svg$path,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$class('st2'),
+							$elm$svg$Svg$Attributes$d('M-5.8,8.8c0,0.1-0.1,0.1-0.1,0.2')
+						]),
+					_List_Nil),
+					A2(
+					$elm$svg$Svg$g,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$svg$Svg$path,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$class('st3'),
+									$elm$svg$Svg$Attributes$d('M21.3,14.5c0.6,0.2,1,0.6,1.1,1.2c0,0.3-0.1,0.7-0.1,1.1c0,0.8,0.2,1.5,0.3,2.3c0,0,0-0.1,0-0.1')
+								]),
+							_List_Nil),
+							A2(
+							$elm$svg$Svg$path,
+							_List_fromArray(
+								[
+									$elm$svg$Svg$Attributes$class('st3'),
+									$elm$svg$Svg$Attributes$d('M23,14.3C23,14.3,23,14.3,23,14.3C23,14.3,23,14.3,23,14.3c-0.3,0.2-0.5,0.5-0.6,0.9')
+								]),
+							_List_Nil)
+						]))
+				]));
+	});
 var $elm$svg$Svg$polyline = $elm$svg$Svg$trustedNode('polyline');
 var $author$project$Geometry$posAdd = F2(
 	function (_v0, _v1) {
@@ -8073,8 +8050,8 @@ var $author$project$View$renderTile = function (t) {
 			_Utils_Tuple2(i - 1, j + 1)
 		]);
 	var constructionCaption = function () {
-		var _v8 = t.construction;
-		switch (_v8.$) {
+		var _v9 = t.construction;
+		switch (_v9.$) {
 			case 'Hos':
 				return 'H';
 			case 'Qua':
@@ -8145,8 +8122,11 @@ var $author$project$View$renderTile = function (t) {
 					_Utils_ap(
 						_List_fromArray(
 							[x5 - a, x5 - a, x5]),
-						_List_fromArray(
-							[x6 - a, x6, x6 + a]))))));
+						_Utils_ap(
+							_List_fromArray(
+								[x6 - a, x6, x6 + a]),
+							_List_fromArray(
+								[x1, x1 + a, x1 + a])))))));
 	var borderY = _Utils_ap(
 		_List_fromArray(
 			[y1 - (2 * h), y1 - h, y1 + h]),
@@ -8162,8 +8142,11 @@ var $author$project$View$renderTile = function (t) {
 					_Utils_ap(
 						_List_fromArray(
 							[y5 + h, y5 - h, y5 - (2 * h)]),
-						_List_fromArray(
-							[y6 - h, y6 - (2 * h), y6 - h]))))));
+						_Utils_ap(
+							_List_fromArray(
+								[y6 - h, y6 - (2 * h), y6 - h]),
+							_List_fromArray(
+								[y1 - (2 * h), y1 - h, y1 + h])))))));
 	var border = A2(
 		$elm$svg$Svg$svg,
 		_List_Nil,
@@ -8176,9 +8159,9 @@ var $author$project$View$renderTile = function (t) {
 						$elm$svg$Svg$Attributes$points(
 						A2($author$project$Geometry$polyPoint, borderX, borderY)),
 						$elm$svg$Svg$Attributes$strokeWidth('2'),
-						$elm$svg$Svg$Attributes$stroke('#2A363B'),
+						$elm$svg$Svg$Attributes$stroke('orange'),
 						$elm$svg$Svg$Attributes$fill('#99b898'),
-						$elm$svg$Svg$Attributes$fillOpacity('1')
+						$elm$svg$Svg$Attributes$fillOpacity('0')
 					]),
 				_List_Nil)
 			]));
@@ -8268,14 +8251,33 @@ var $author$project$View$renderTile = function (t) {
 						$elm$core$String$fromInt(t.dead))
 					]))
 			]));
-	return _Utils_ap(
+	var tiles = A2(
+		$elm$core$List$map,
+		function (_v8) {
+			var u = _v8.a;
+			var v = _v8.b;
+			return A2($author$project$SvgSrc$myTile, u, v);
+		},
 		_List_fromArray(
-			[border]),
+			[
+				_Utils_Tuple2(x, y),
+				_Utils_Tuple2(x1, y1),
+				_Utils_Tuple2(x2, y2),
+				_Utils_Tuple2(x3, y3),
+				_Utils_Tuple2(x4, y4),
+				_Utils_Tuple2(x5, y5),
+				_Utils_Tuple2(x6, y6)
+			]));
+	return _Utils_ap(
+		tiles,
 		_Utils_ap(
 			_List_fromArray(
-				[cons]),
-			_List_fromArray(
-				[populationInfo])));
+				[border]),
+			_Utils_ap(
+				_List_fromArray(
+					[cons]),
+				_List_fromArray(
+					[populationInfo]))));
 };
 var $author$project$Message$MouseOver = F2(
 	function (a, b) {
@@ -8442,7 +8444,6 @@ var $author$project$Model$sumPopulation = function (city) {
 			city.tilesindex));
 };
 var $elm$core$Debug$toString = _Debug_toString;
-var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $author$project$View$view = function (model) {
 	var film = function () {
 		var _v0 = model.selHex;
@@ -8545,6 +8546,23 @@ var $author$project$View$view = function (model) {
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Model$initModel, subscriptions: $author$project$Main$subscriptions, update: $author$project$Update$update, view: $author$project$View$view});
->>>>>>> 09f2ce7eff536eccfb7a5fac8e160af6d180d9ee:build/elm.js
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
+
+  var app = Elm.Main.init({ node: document.getElementById("elm") });
+}
+catch (e)
+{
+  // display initialization errors (e.g. bad flags, infinite recursion)
+  var header = document.createElement("h1");
+  header.style.fontFamily = "monospace";
+  header.innerText = "Initialization Error";
+  var pre = document.getElementById("elm");
+  document.body.insertBefore(header, pre);
+  pre.innerText = e;
+  throw e;
+}
+</script>
+
+</body>
+</html>

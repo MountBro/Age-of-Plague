@@ -5226,45 +5226,248 @@ var $elm$core$Task$perform = F2(
 			$elm$core$Task$Perform(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
-var $elm$browser$Browser$element = _Browser_element;
+var $elm$browser$Browser$document = _Browser_document;
 var $author$project$Message$GotViewport = function (a) {
 	return {$: 'GotViewport', a: a};
 };
+var $author$project$Model$HomePage = {$: 'HomePage'};
 var $author$project$Model$NoCard = {$: 'NoCard'};
 var $author$project$Model$NoRegion = {$: 'NoRegion'};
-var $author$project$Message$Playing = {$: 'Playing'};
 var $author$project$Model$SelHexOff = {$: 'SelHexOff'};
+var $author$project$Card$Card = F5(
+	function (selMode, cost, action, name, describe) {
+		return {action: action, cost: cost, describe: describe, name: name, selMode: selMode};
+	});
+var $author$project$Card$FreezeI = {$: 'FreezeI'};
+var $author$project$Card$NoSel = {$: 'NoSel'};
+var $author$project$Card$blizzard = A5(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	8,
+	_List_fromArray(
+		[$author$project$Card$FreezeI, $author$project$Card$FreezeI, $author$project$Card$FreezeI]),
+	'Blizzard',
+	'Freeze the spread of viruses spread for 3 rounds.');
+var $author$project$Card$Freeze = function (a) {
+	return {$: 'Freeze', a: a};
+};
+var $author$project$Card$coldWave = A5(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	1,
+	_List_fromArray(
+		[
+			$author$project$Card$Freeze(0.5)
+		]),
+	'Cold Wave',
+	'There is a probability of 50% to freeze the spread of viruses spread for 1 round.');
+var $author$project$Card$CutHexI = function (a) {
+	return {$: 'CutHexI', a: a};
+};
+var $author$project$Card$HexSel = {$: 'HexSel'};
+var $author$project$Card$cut = A5(
+	$author$project$Card$Card,
+	$author$project$Card$HexSel,
+	1,
+	_List_fromArray(
+		[
+			$author$project$Card$CutHexI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Cut',
+	'Eliminate the virus on the chosen hex.');
+var $author$project$Card$FreezevirusI = function (a) {
+	return {$: 'FreezevirusI', a: a};
+};
+var $author$project$Card$TileSel = {$: 'TileSel'};
+var $author$project$Card$defenseline = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	2,
+	_List_fromArray(
+		[
+			$author$project$Card$FreezevirusI(
+			_Utils_Tuple2(0, 0)),
+			$author$project$Card$FreezevirusI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Defenseline',
+	'Froze the spread of viruses for 2 rounds.');
+var $author$project$Card$Activate996I = {$: 'Activate996I'};
+var $author$project$Card$fubao = A5(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	1,
+	_List_fromArray(
+		[$author$project$Card$Activate996I, $author$project$Card$Activate996I]),
+	'996',
+	'The next 2 rounds, economy temporarily doubles, but the death rate permanently rises 5%.');
+var $author$project$Card$HumanCloneI = function (a) {
+	return {$: 'HumanCloneI', a: a};
+};
+var $author$project$Card$humanClone = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	3,
+	_List_fromArray(
+		[
+			$author$project$Card$HumanCloneI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Human Clone',
+	'Double the population of a certain tile.');
+var $author$project$Card$MegaCloneI = {$: 'MegaCloneI'};
+var $author$project$Card$megaClone = A5(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	8,
+	_List_fromArray(
+		[$author$project$Card$MegaCloneI]),
+	'Mega Clone',
+	'The whole population x1.25.');
+var $author$project$Card$CutTileI = function (a) {
+	return {$: 'CutTileI', a: a};
+};
+var $author$project$Card$megaCut = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	5,
+	_List_fromArray(
+		[
+			$author$project$Card$CutTileI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Mega Cut',
+	'Eliminate the virus on the chosen tile.');
+var $author$project$Card$IncPowerI = function (a) {
+	return {$: 'IncPowerI', a: a};
+};
+var $author$project$Card$onStandby = A5(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	0,
+	_List_fromArray(
+		[
+			$author$project$Card$IncPowerI(2)
+		]),
+	'On Standby',
+	'+2 power');
+var $author$project$Card$OrganCloneI = function (a) {
+	return {$: 'OrganCloneI', a: a};
+};
+var $author$project$Card$organClone = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	3,
+	_List_fromArray(
+		[
+			$author$project$Card$OrganCloneI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Organ Clone',
+	'Each one of the dead on the selected tile could save one infected.');
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $author$project$Card$powerOverload = A5(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	0,
+	_List_fromArray(
+		[
+			$author$project$Card$IncPowerI(3),
+			$author$project$Card$IncPowerI(-3)
+		]),
+	'Power Overload',
+	'+3 power, next round -3 power.');
+var $author$project$Card$PurificationI = function (a) {
+	return {$: 'PurificationI', a: a};
+};
+var $author$project$Card$purification = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	3,
+	_List_fromArray(
+		[
+			$author$project$Card$PurificationI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Purification',
+	'Heal all patients in a certain tile.');
+var $author$project$Card$EcoDoubleI_Freeze = function (a) {
+	return {$: 'EcoDoubleI_Freeze', a: a};
+};
+var $author$project$Card$rain = A5(
+	$author$project$Card$Card,
+	$author$project$Card$NoSel,
+	3,
+	_List_fromArray(
+		[
+			$author$project$Card$EcoDoubleI_Freeze(0.5),
+			$author$project$Card$EcoDoubleI_Freeze(0.5)
+		]),
+	'Rain',
+	'In two rounds, there is a probability of 50% to freeze the spread of viruses for 1 round. The economy output doubles for two rounds.');
+var $author$project$Card$ResurgenceI = function (a) {
+	return {$: 'ResurgenceI', a: a};
+};
+var $author$project$Card$resurgence = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	8,
+	_List_fromArray(
+		[
+			$author$project$Card$ResurgenceI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Resurgence',
+	'For each tile, restore 20% of the dead.');
+var $author$project$Card$SacrificeI = function (a) {
+	return {$: 'SacrificeI', a: a};
+};
+var $author$project$Card$sacrifice = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	4,
+	_List_fromArray(
+		[
+			$author$project$Card$SacrificeI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Sacrifice',
+	'Select a tile. Kill both the viruses and the infected people.');
+var $author$project$Card$allCards = _List_fromArray(
+	[$author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$blizzard, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$megaClone, $author$project$Card$purification, $author$project$Card$sacrifice, $author$project$Card$resurgence, $author$project$Card$defenseline]);
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Model$initAntiVirus = {
-	pos: _List_fromArray(
-		[
-			_Utils_Tuple2(3, 2),
-			_Utils_Tuple2(3, 3)
-		]),
+	life: 0,
+	pos: _List_Nil,
 	rules: _List_fromArray(
-		[2])
+		[0, 1, 2, 3])
 };
 var $author$project$Model$initBehavior = {populationFlow: true, virusEvolve: true};
 var $author$project$Model$City = function (tilesindex) {
 	return {tilesindex: tilesindex};
 };
-var $author$project$Tile$NoConstruction = {$: 'NoConstruction'};
-var $author$project$Tile$Tile = F6(
-	function (indice, population, sick, dead, construction, cureEff) {
-		return {construction: construction, cureEff: cureEff, dead: dead, indice: indice, population: population, sick: sick};
+var $author$project$Tile$Tile = F9(
+	function (indice, population, sick, dead, cureEff, peoFlow, hos, qua, wareHouse) {
+		return {cureEff: cureEff, dead: dead, hos: hos, indice: indice, peoFlow: peoFlow, population: population, qua: qua, sick: sick, wareHouse: wareHouse};
 	});
 var $author$project$Tile$initTile = F2(
 	function (_v0, population) {
 		var x = _v0.a;
 		var y = _v0.b;
-		return A6(
+		return A9(
 			$author$project$Tile$Tile,
 			_Utils_Tuple2(x, y),
 			population,
 			0,
 			0,
-			$author$project$Tile$NoConstruction,
-			0);
+			0,
+			true,
+			false,
+			false,
+			false);
 	});
 var $author$project$Tile$initTiles = F2(
 	function (p, l) {
@@ -5295,9 +5498,6 @@ var $author$project$Model$initVirus = {
 	rules: _List_fromArray(
 		[2, 4])
 };
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $author$project$Parameters$para = {
 	a: 15,
 	af: 12.0,
@@ -5307,7 +5507,7 @@ var $author$project$Parameters$para = {
 	hlp: 25.0,
 	tileOrigin: _Utils_Tuple2(400.0, 400.0),
 	w: 1000,
-	warehouseOutput: 1,
+	warehouseOutput: 5,
 	wlp: 200.0,
 	xlp: 10.0,
 	ylp: 30.0
@@ -5315,13 +5515,14 @@ var $author$project$Parameters$para = {
 var $author$project$Model$initModel = function (_v0) {
 	return _Utils_Tuple2(
 		{
+			actionDescribe: _List_Nil,
 			av: $author$project$Model$initAntiVirus,
 			basicEcoOutput: $author$project$Parameters$para.basicEcoOutput,
 			behavior: $author$project$Model$initBehavior,
 			cardSelected: $author$project$Model$NoCard,
 			city: A2(
 				$author$project$Model$initCity,
-				20,
+				10,
 				_List_fromArray(
 					[
 						_Utils_Tuple2(0, 0),
@@ -5336,16 +5537,20 @@ var $author$project$Model$initModel = function (_v0) {
 						_Utils_Tuple2(3, -1)
 					])),
 			currentRound: 1,
+			deck: $author$project$Card$allCards,
 			ecoRatio: 1,
 			economy: 10000,
+			hands: _List_Nil,
 			mouseOver: _Utils_Tuple2(-233, -233),
+			mouseOverCardToReplace: 0,
 			power: 10000,
 			region: $author$project$Model$NoRegion,
+			replaceChance: 3,
 			roundTodoCleared: false,
 			screenSize: _Utils_Tuple2(600, 800),
 			selHex: $author$project$Model$SelHexOff,
 			selectedHex: _Utils_Tuple2(-233, -233),
-			state: $author$project$Message$Playing,
+			state: $author$project$Model$HomePage,
 			todo: _List_Nil,
 			viewport: $elm$core$Maybe$Nothing,
 			virus: $author$project$Model$initVirus,
@@ -5356,6 +5561,7 @@ var $author$project$Model$initModel = function (_v0) {
 var $author$project$Message$AddKey = function (a) {
 	return {$: 'AddKey', a: a};
 };
+var $author$project$Model$Playing = {$: 'Playing'};
 var $author$project$Message$Resize = F2(
 	function (a, b) {
 		return {$: 'Resize', a: a, b: b};
@@ -6028,7 +6234,7 @@ var $author$project$Main$subscriptions = function (model) {
 			[
 				$elm$browser$Browser$Events$onKeyDown(
 				A2($elm$json$Json$Decode$map, $author$project$Message$AddKey, $author$project$Message$keyDecoder)),
-				_Utils_eq(model.state, $author$project$Message$Playing) ? $elm$core$Platform$Sub$batch(
+				_Utils_eq(model.state, $author$project$Model$Playing) ? $elm$core$Platform$Sub$batch(
 				_List_fromArray(
 					[
 						A2($elm$time$Time$every, 50, $author$project$Message$Tick),
@@ -6036,12 +6242,34 @@ var $author$project$Main$subscriptions = function (model) {
 					])) : $elm$core$Platform$Sub$none
 			]));
 };
+var $author$project$Model$CardPage = {$: 'CardPage'};
+var $author$project$Model$Drawing = {$: 'Drawing'};
+var $author$project$Message$InitializeHands = function (a) {
+	return {$: 'InitializeHands', a: a};
+};
 var $author$project$Model$SelHexOn = {$: 'SelHexOn'};
 var $author$project$Model$SelectCard = function (a) {
 	return {$: 'SelectCard', a: a};
 };
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Ports$cardToMusic = _Platform_outgoingPort('cardToMusic', $elm$json$Json$Encode$string);
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$constant = function (value) {
+	return $elm$random$Random$Generator(
+		function (seed) {
+			return _Utils_Tuple2(value, seed);
+		});
+};
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -6063,352 +6291,6 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Basics$not = _Basics_not;
-var $author$project$Update$clearCurrentRoundTodo = function (model) {
-	var todo_ = model.todo;
-	var todo = A2(
-		$elm$core$List$map,
-		function (_v2) {
-			var x = _v2.a;
-			var y = _v2.b;
-			return _Utils_Tuple2(true, y);
-		},
-		A2(
-			$elm$core$List$filter,
-			function (_v1) {
-				var x = _v1.a;
-				var y = _v1.b;
-				return !$elm$core$List$isEmpty(y);
-			},
-			A2(
-				$elm$core$List$map,
-				function (_v0) {
-					var x = _v0.a;
-					var y = _v0.b;
-					return _Utils_Tuple2(
-						x,
-						A2($elm$core$List$drop, 1, y));
-				},
-				todo_)));
-	return _Utils_update(
-		model,
-		{roundTodoCleared: false, todo: todo});
-};
-var $author$project$Update$ecoInc = function (model) {
-	return _Utils_update(
-		model,
-		{ecoRatio: 1, economy: model.economy + ((model.basicEcoOutput + (model.warehouseNum * $author$project$Parameters$para.warehouseOutput)) * model.ecoRatio)});
-};
-var $author$project$Todo$finished = function (todo) {
-	return $elm$core$List$isEmpty(
-		A2($elm$core$List$filter, $elm$core$Tuple$first, todo));
-};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Card$CutHexI = function (a) {
-	return {$: 'CutHexI', a: a};
-};
-var $author$project$Card$CutTileI = function (a) {
-	return {$: 'CutTileI', a: a};
-};
-var $author$project$Card$FreezevirusI = function (a) {
-	return {$: 'FreezevirusI', a: a};
-};
-var $author$project$Card$HospitalI = function (a) {
-	return {$: 'HospitalI', a: a};
-};
-var $author$project$Card$HumanCloneI = function (a) {
-	return {$: 'HumanCloneI', a: a};
-};
-var $author$project$Card$OrganCloneI = function (a) {
-	return {$: 'OrganCloneI', a: a};
-};
-var $author$project$Card$PurificationI = function (a) {
-	return {$: 'PurificationI', a: a};
-};
-var $author$project$Card$QuarantineI = function (a) {
-	return {$: 'QuarantineI', a: a};
-};
-var $author$project$Card$ResurgenceI = function (a) {
-	return {$: 'ResurgenceI', a: a};
-};
-var $author$project$Card$SacrificeI = function (a) {
-	return {$: 'SacrificeI', a: a};
-};
-var $author$project$Card$Card = F4(
-	function (selMode, cost, action, name) {
-		return {action: action, cost: cost, name: name, selMode: selMode};
-	});
-var $author$project$Card$HexSel = {$: 'HexSel'};
-var $author$project$Card$cut = A4(
-	$author$project$Card$Card,
-	$author$project$Card$HexSel,
-	1,
-	_List_fromArray(
-		[
-			$author$project$Card$CutHexI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Cut');
-var $author$project$Card$TileSel = {$: 'TileSel'};
-var $author$project$Card$defenseline = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	2,
-	_List_fromArray(
-		[
-			$author$project$Card$FreezevirusI(
-			_Utils_Tuple2(0, 0)),
-			$author$project$Card$FreezevirusI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Defenseline');
-var $author$project$Todo$finishedEmptyQueue = _Utils_Tuple2(false, _List_Nil);
-var $author$project$Card$hospital = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	4,
-	_List_fromArray(
-		[
-			$author$project$Card$HospitalI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Build Hospital');
-var $author$project$Card$humanClone = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	3,
-	_List_fromArray(
-		[
-			$author$project$Card$HumanCloneI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Human Clone');
-var $author$project$Card$megaCut = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	5,
-	_List_fromArray(
-		[
-			$author$project$Card$CutTileI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Mega Cut');
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Card$organClone = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	3,
-	_List_fromArray(
-		[
-			$author$project$Card$OrganCloneI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Organ Clone');
-var $author$project$Card$purification = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	3,
-	_List_fromArray(
-		[
-			$author$project$Card$PurificationI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Purification');
-var $author$project$Card$quarantine = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	4,
-	_List_fromArray(
-		[
-			$author$project$Card$QuarantineI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Build Quarantine');
-var $author$project$Card$resurgence = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	8,
-	_List_fromArray(
-		[
-			$author$project$Card$ResurgenceI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Resurgence');
-var $author$project$Card$sacrifice = A4(
-	$author$project$Card$Card,
-	$author$project$Card$TileSel,
-	4,
-	_List_fromArray(
-		[
-			$author$project$Card$SacrificeI(
-			_Utils_Tuple2(0, 0))
-		]),
-	'Sacrifice');
-var $author$project$Update$fillRegion = F2(
-	function (card, sel) {
-		return _Utils_eq(card, $author$project$Card$cut) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$CutHexI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$megaCut) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$CutTileI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$organClone) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$OrganCloneI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$humanClone) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$HumanCloneI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$purification) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$PurificationI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$resurgence) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$ResurgenceI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$sacrifice) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$SacrificeI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$defenseline) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$FreezevirusI(sel),
-						$author$project$Card$FreezevirusI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$hospital) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$HospitalI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$quarantine) ? _Utils_Tuple2(
-			_Utils_Tuple2(
-				true,
-				_List_fromArray(
-					[
-						$author$project$Card$QuarantineI(sel)
-					])),
-			$elm$core$Platform$Cmd$none) : _Utils_Tuple2($author$project$Todo$finishedEmptyQueue, $elm$core$Platform$Cmd$none))))))))));
-	});
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
-var $author$project$Update$mFillRegion = function (_v0) {
-	var model = _v0.a;
-	var cm = _v0.b;
-	var _v1 = model.cardSelected;
-	if (_v1.$ === 'NoCard') {
-		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-	} else {
-		var card = _v1.a;
-		var _v2 = model.selHex;
-		if (_v2.$ === 'SelHexOn') {
-			return (!_Utils_eq(
-				model.selectedHex,
-				_Utils_Tuple2(-233, -233))) ? _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{
-						selHex: $author$project$Model$SelHexOff,
-						selectedHex: _Utils_Tuple2(-233, -233),
-						todo: _Utils_ap(
-							model.todo,
-							_List_fromArray(
-								[
-									A2($author$project$Update$fillRegion, card, model.selectedHex).a
-								]))
-					}),
-				$elm$core$Platform$Cmd$batch(
-					_List_fromArray(
-						[
-							cm,
-							A2($author$project$Update$fillRegion, card, model.selectedHex).b
-						]))) : _Utils_Tuple2(model, cm);
-		} else {
-			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-		}
-	}
-};
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			$elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
-	});
-var $author$project$Card$NoAction = {$: 'NoAction'};
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -6418,104 +6300,11 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _v0) {
-				var trues = _v0.a;
-				var falses = _v0.b;
-				return pred(x) ? _Utils_Tuple2(
-					A2($elm$core$List$cons, x, trues),
-					falses) : _Utils_Tuple2(
-					trues,
-					A2($elm$core$List$cons, x, falses));
-			});
-		return A3(
-			$elm$core$List$foldr,
-			step,
-			_Utils_Tuple2(_List_Nil, _List_Nil),
-			list);
+var $elm_community$random_extra$Random$List$get = F2(
+	function (index, list) {
+		return $elm$core$List$head(
+			A2($elm$core$List$drop, index, list));
 	});
-var $author$project$Message$FreezeRet = F2(
-	function (a, b) {
-		return {$: 'FreezeRet', a: a, b: b};
-	});
-var $author$project$Tile$Hos = {$: 'Hos'};
-var $author$project$Tile$Qua = {$: 'Qua'};
-var $author$project$Geometry$generateZone = function (pos) {
-	var j = pos.b;
-	var i = pos.a;
-	return _List_fromArray(
-		[
-			_Utils_Tuple2(i, j - 1),
-			_Utils_Tuple2(i, j + 1),
-			_Utils_Tuple2(i + 1, j),
-			_Utils_Tuple2(i + 1, j - 1),
-			_Utils_Tuple2(i - 1, j),
-			_Utils_Tuple2(i - 1, j + 1)
-		]);
-};
-var $elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
-var $elm$core$Basics$round = _Basics_round;
-var $author$project$Geometry$isInt = function (x) {
-	return $elm$core$Basics$abs(
-		x - $elm$core$Basics$round(x)) < 0.00001;
-};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Geometry$converHextoTile = function (_v0) {
-	var i = _v0.a;
-	var j = _v0.b;
-	return function (_v4) {
-		var x = _v4.a;
-		var y = _v4.b;
-		return _Utils_Tuple2(
-			$elm$core$Basics$round(x),
-			$elm$core$Basics$round(y));
-	}(
-		A2(
-			$elm$core$Maybe$withDefault,
-			_Utils_Tuple2(0, 0),
-			$elm$core$List$head(
-				A2(
-					$elm$core$List$filter,
-					function (_v3) {
-						var x = _v3.a;
-						var y = _v3.b;
-						return $author$project$Geometry$isInt(x) && $author$project$Geometry$isInt(y);
-					},
-					A2(
-						$elm$core$List$map,
-						function (_v2) {
-							var x = _v2.a;
-							var y = _v2.b;
-							return _Utils_Tuple2(((3 * x) + y) / 7, ((2 * y) - x) / 7);
-						},
-						A2(
-							$elm$core$List$map,
-							function (_v1) {
-								var x = _v1.a;
-								var y = _v1.b;
-								return _Utils_Tuple2(x, y);
-							},
-							A2(
-								$elm$core$List$cons,
-								_Utils_Tuple2(i, j),
-								$author$project$Geometry$generateZone(
-									_Utils_Tuple2(i, j)))))))));
-};
-var $elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
@@ -6533,74 +6322,45 @@ var $elm$random$Random$peel = function (_v0) {
 	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
 	return ((word >>> 22) ^ word) >>> 0;
 };
-var $elm$random$Random$float = F2(
+var $elm$random$Random$int = F2(
 	function (a, b) {
 		return $elm$random$Random$Generator(
 			function (seed0) {
-				var seed1 = $elm$random$Random$next(seed0);
-				var range = $elm$core$Basics$abs(b - a);
-				var n1 = $elm$random$Random$peel(seed1);
-				var n0 = $elm$random$Random$peel(seed0);
-				var lo = (134217727 & n1) * 1.0;
-				var hi = (67108863 & n0) * 1.0;
-				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
-				var scaled = (val * range) + a;
-				return _Utils_Tuple2(
-					scaled,
-					$elm$random$Random$next(seed1));
+				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _v0.a;
+				var hi = _v0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
+						$elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = $elm$random$Random$peel(seed);
+							var seedN = $elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
 			});
 	});
-var $elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
 };
-var $elm$random$Random$initialSeed = function (x) {
-	var _v0 = $elm$random$Random$next(
-		A2($elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _v0.a;
-	var incr = _v0.b;
-	var state2 = (state1 + x) >>> 0;
-	return $elm$random$Random$next(
-		A2($elm$random$Random$Seed, state2, incr));
-};
-var $elm$time$Time$posixToMillis = function (_v0) {
-	var millis = _v0.a;
-	return millis;
-};
-var $elm$random$Random$init = A2(
-	$elm$core$Task$andThen,
-	function (time) {
-		return $elm$core$Task$succeed(
-			$elm$random$Random$initialSeed(
-				$elm$time$Time$posixToMillis(time)));
-	},
-	$elm$time$Time$now);
-var $elm$random$Random$step = F2(
-	function (_v0, seed) {
-		var generator = _v0.a;
-		return generator(seed);
-	});
-var $elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return $elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _v1 = A2($elm$random$Random$step, generator, seed);
-			var value = _v1.a;
-			var newSeed = _v1.b;
-			return A2(
-				$elm$core$Task$andThen,
-				function (_v2) {
-					return A3($elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2($elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var $elm$random$Random$onSelfMsg = F3(
-	function (_v0, _v1, seed) {
-		return $elm$core$Task$succeed(seed);
-	});
 var $elm$random$Random$map = F2(
 	function (func, _v0) {
 		var genA = _v0.a;
@@ -6614,634 +6374,6 @@ var $elm$random$Random$map = F2(
 					seed1);
 			});
 	});
-var $elm$random$Random$cmdMap = F2(
-	function (func, _v0) {
-		var generator = _v0.a;
-		return $elm$random$Random$Generate(
-			A2($elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
-var $elm$random$Random$command = _Platform_leaf('Random');
-var $elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return $elm$random$Random$command(
-			$elm$random$Random$Generate(
-				A2($elm$random$Random$map, tagger, generator)));
-	});
-var $author$project$Update$performAction = F2(
-	function (action, model) {
-		switch (action.$) {
-			case 'IncPowerI':
-				var inc = action.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{power: model.power + inc}),
-					$elm$core$Platform$Cmd$none);
-			case 'Freeze':
-				var prob = action.a;
-				return _Utils_Tuple2(
-					model,
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$FreezeRet(prob),
-						A2($elm$random$Random$float, 0, 1)));
-			case 'FreezeI':
-				var behavior_ = model.behavior;
-				var behavior = _Utils_update(
-					behavior_,
-					{virusEvolve: false});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{behavior: behavior}),
-					$elm$core$Platform$Cmd$none);
-			case 'EcoDoubleI':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{ecoRatio: 2 * model.ecoRatio}),
-					$elm$core$Platform$Cmd$none);
-			case 'EcoDoubleI_Freeze':
-				var prob = action.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{ecoRatio: 2 * model.ecoRatio}),
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$FreezeRet(prob),
-						A2($elm$random$Random$float, 0, 1)));
-			case 'CutHexI':
-				var _v1 = action.a;
-				var i = _v1.a;
-				var j = _v1.b;
-				var virus_ = model.virus;
-				var pos_ = virus_.pos;
-				var pos = A2(
-					$elm$core$List$filter,
-					function (_v2) {
-						var x = _v2.a;
-						var y = _v2.b;
-						return !_Utils_eq(
-							_Utils_Tuple2(x, y),
-							_Utils_Tuple2(i, j));
-					},
-					pos_);
-				var virus = _Utils_update(
-					virus_,
-					{pos: pos});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{virus: virus}),
-					$elm$core$Platform$Cmd$none);
-			case 'CutTileI':
-				var _v3 = action.a;
-				var i = _v3.a;
-				var j = _v3.b;
-				var virus_ = model.virus;
-				var pos_ = virus_.pos;
-				var _v4 = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var t1 = _v4.a;
-				var t2 = _v4.b;
-				var lc = A2(
-					$elm$core$Debug$log,
-					'chosenTile',
-					_Utils_Tuple2(t1, t2));
-				var _v5 = _Utils_Tuple2((2 * t1) - t2, t1 + (3 * t2));
-				var c1 = _v5.a;
-				var c2 = _v5.b;
-				var pos = A2(
-					$elm$core$List$filter,
-					function (_v6) {
-						var x = _v6.a;
-						var y = _v6.b;
-						return !A2(
-							$elm$core$List$member,
-							_Utils_Tuple2(x, y),
-							A2(
-								$elm$core$List$cons,
-								_Utils_Tuple2(c1, c2),
-								$author$project$Geometry$generateZone(
-									_Utils_Tuple2(c1, c2))));
-					},
-					pos_);
-				var virus = _Utils_update(
-					virus_,
-					{pos: pos});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{virus: virus}),
-					$elm$core$Platform$Cmd$none);
-			case 'Activate996I':
-				var virus_ = model.virus;
-				var dr = 1.05 * virus_.kill;
-				var virus = _Utils_update(
-					virus_,
-					{kill: dr});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{ecoRatio: 2 * model.ecoRatio, virus: virus}),
-					$elm$core$Platform$Cmd$none);
-			case 'OrganCloneI':
-				var _v7 = action.a;
-				var i = _v7.a;
-				var j = _v7.b;
-				var tilelst_ = model.city.tilesindex;
-				var pos = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var tilelst = A2(
-					$elm$core$List$map,
-					function (x) {
-						return _Utils_eq(x.indice, pos) ? (((x.sick - x.dead) > 0) ? _Utils_update(
-							x,
-							{sick: x.sick - x.dead}) : _Utils_update(
-							x,
-							{sick: 0})) : x;
-					},
-					tilelst_);
-				var city_ = model.city;
-				var city = _Utils_update(
-					city_,
-					{tilesindex: tilelst});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city}),
-					$elm$core$Platform$Cmd$none);
-			case 'HumanCloneI':
-				var _v8 = action.a;
-				var i = _v8.a;
-				var j = _v8.b;
-				var tilelst_ = model.city.tilesindex;
-				var pos = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var tilelst = A2(
-					$elm$core$List$map,
-					function (x) {
-						return _Utils_eq(x.indice, pos) ? _Utils_update(
-							x,
-							{population: x.population * 2}) : x;
-					},
-					tilelst_);
-				var city_ = model.city;
-				var city = _Utils_update(
-					city_,
-					{tilesindex: tilelst});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city}),
-					$elm$core$Platform$Cmd$none);
-			case 'MegaCloneI':
-				var tilelst_ = model.city.tilesindex;
-				var tilelst = A2(
-					$elm$core$List$map,
-					function (x) {
-						return _Utils_update(
-							x,
-							{
-								population: $elm$core$Basics$round(x.population * 1.5)
-							});
-					},
-					tilelst_);
-				var city_ = model.city;
-				var city = _Utils_update(
-					city_,
-					{tilesindex: tilelst});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city}),
-					$elm$core$Platform$Cmd$none);
-			case 'PurificationI':
-				var _v9 = action.a;
-				var i = _v9.a;
-				var j = _v9.b;
-				var tilelst_ = model.city.tilesindex;
-				var pos = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var tilelst = A2(
-					$elm$core$List$map,
-					function (x) {
-						return _Utils_eq(x.indice, pos) ? _Utils_update(
-							x,
-							{sick: 0}) : x;
-					},
-					tilelst_);
-				var city_ = model.city;
-				var city = _Utils_update(
-					city_,
-					{tilesindex: tilelst});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city}),
-					$elm$core$Platform$Cmd$none);
-			case 'SacrificeI':
-				var _v10 = action.a;
-				var i = _v10.a;
-				var j = _v10.b;
-				var virus_ = model.virus;
-				var virpos_ = virus_.pos;
-				var virpos = A2(
-					$elm$core$List$filter,
-					function (x) {
-						return !_Utils_eq(
-							$author$project$Geometry$converHextoTile(x),
-							_Utils_Tuple2(i, j));
-					},
-					virpos_);
-				var virus = _Utils_update(
-					virus_,
-					{pos: virpos});
-				var tilepos = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var tilelst_ = model.city.tilesindex;
-				var tilelst = A2(
-					$elm$core$List$map,
-					function (x) {
-						return _Utils_eq(x.indice, tilepos) ? _Utils_update(
-							x,
-							{dead: x.dead + x.sick, population: x.population - x.sick, sick: 0}) : x;
-					},
-					tilelst_);
-				var city_ = model.city;
-				var city = _Utils_update(
-					city_,
-					{tilesindex: tilelst});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city, virus: virus}),
-					$elm$core$Platform$Cmd$none);
-			case 'ResurgenceI':
-				var _v11 = action.a;
-				var i = _v11.a;
-				var j = _v11.b;
-				var tilelst_ = model.city.tilesindex;
-				var pos = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var tilelst = A2(
-					$elm$core$List$map,
-					function (x) {
-						return _Utils_eq(x.indice, pos) ? _Utils_update(
-							x,
-							{
-								dead: x.dead - $elm$core$Basics$round(x.dead / 2),
-								population: x.population + $elm$core$Basics$round(x.dead / 2)
-							}) : x;
-					},
-					tilelst_);
-				var city_ = model.city;
-				var city = _Utils_update(
-					city_,
-					{tilesindex: tilelst});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city}),
-					$elm$core$Platform$Cmd$none);
-			case 'FreezevirusI':
-				var _v12 = action.a;
-				var i = _v12.a;
-				var j = _v12.b;
-				var virus_ = model.virus;
-				var pos = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var virpos = A2(
-					$elm$core$List$filter,
-					function (x) {
-						return !_Utils_eq(
-							$author$project$Geometry$converHextoTile(x),
-							pos);
-					},
-					virus_.pos);
-				var virus = _Utils_update(
-					virus_,
-					{pos: virpos});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{virus: virus}),
-					$elm$core$Platform$Cmd$none);
-			case 'HospitalI':
-				var _v13 = action.a;
-				var i = _v13.a;
-				var j = _v13.b;
-				var city_ = model.city;
-				var _v14 = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var ti = _v14.a;
-				var tj = _v14.b;
-				var city = _Utils_update(
-					city_,
-					{
-						tilesindex: A2(
-							$elm$core$List$map,
-							function (x) {
-								return _Utils_eq(
-									x.indice,
-									_Utils_Tuple2(ti, tj)) ? _Utils_update(
-									x,
-									{construction: $author$project$Tile$Hos}) : x;
-							},
-							city_.tilesindex)
-					});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city}),
-					$elm$core$Platform$Cmd$none);
-			case 'QuarantineI':
-				var _v15 = action.a;
-				var i = _v15.a;
-				var j = _v15.b;
-				var city_ = model.city;
-				var _v16 = $author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j));
-				var ti = _v16.a;
-				var tj = _v16.b;
-				var city = _Utils_update(
-					city_,
-					{
-						tilesindex: A2(
-							$elm$core$List$map,
-							function (x) {
-								return _Utils_eq(
-									x.indice,
-									_Utils_Tuple2(ti, tj)) ? _Utils_update(
-									x,
-									{construction: $author$project$Tile$Qua}) : x;
-							},
-							city_.tilesindex)
-					});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{city: city}),
-					$elm$core$Platform$Cmd$none);
-			default:
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-		}
-	});
-var $author$project$Update$pickAction = function (model) {
-	var _v0 = A2(
-		$elm$core$List$partition,
-		function (_v1) {
-			var x = _v1.a;
-			var y = _v1.b;
-			return !x;
-		},
-		model.todo);
-	var finished = _v0.a;
-	var unfinished_ = _v0.b;
-	var headQueue_ = A2(
-		$elm$core$Maybe$withDefault,
-		$author$project$Todo$finishedEmptyQueue,
-		$elm$core$List$head(unfinished_));
-	var headAction = A2(
-		$elm$core$Maybe$withDefault,
-		$author$project$Card$NoAction,
-		$elm$core$List$head(headQueue_.b));
-	var headQueue = _Utils_Tuple2(false, headQueue_.b);
-	var todo = _Utils_ap(
-		finished,
-		_Utils_ap(
-			_List_fromArray(
-				[headQueue]),
-			A2($elm$core$List$drop, 1, unfinished_)));
-	return A2(
-		$author$project$Update$performAction,
-		headAction,
-		_Utils_update(
-			model,
-			{todo: todo}));
-};
-var $author$project$Ports$returnMainPage = _Platform_outgoingPort('returnMainPage', $elm$json$Json$Encode$string);
-var $author$project$Ports$sendMsg = _Platform_outgoingPort('sendMsg', $elm$json$Json$Encode$string);
-var $author$project$Card$targetCardlst = _List_fromArray(
-	[$author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$sacrifice, $author$project$Card$purification, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$quarantine]);
-var $elm$core$List$sum = function (numbers) {
-	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
-};
-var $author$project$Virus$countInfectedNeighbor = F2(
-	function (pos, lstv) {
-		var lstn = $author$project$Geometry$generateZone(pos);
-		return $elm$core$List$sum(
-			A2(
-				$elm$core$List$map,
-				function (x) {
-					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
-				},
-				lstn));
-	});
-var $author$project$Virus$countavNeighbor = F2(
-	function (pos, lstv) {
-		var lstn = $author$project$Geometry$generateZone(pos);
-		return $elm$core$List$sum(
-			A2(
-				$elm$core$List$map,
-				function (x) {
-					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
-				},
-				lstn));
-	});
-var $author$project$Virus$judgeAlive = F5(
-	function (lstvir, vir, lstanti, anti, lstquatile) {
-		var lstv = A2(
-			$elm$core$List$filter,
-			function (x) {
-				return A2(
-					$elm$core$List$member,
-					A2($author$project$Virus$countInfectedNeighbor, x, vir.pos),
-					vir.rules) && ((!A2($elm$core$List$member, x, anti.pos)) && (!A2(
-					$elm$core$List$member,
-					$author$project$Geometry$converHextoTile(x),
-					lstquatile)));
-			},
-			lstvir);
-		var lsta = A2(
-			$elm$core$List$filter,
-			function (x) {
-				return A2(
-					$elm$core$List$member,
-					A2($author$project$Virus$countavNeighbor, x, anti.pos),
-					anti.rules) && ((!A2($elm$core$List$member, x, vir.pos)) && (!A2(
-					$elm$core$List$member,
-					$author$project$Geometry$converHextoTile(x),
-					lstquatile)));
-			},
-			lstanti);
-		return _Utils_Tuple2(
-			_Utils_update(
-				vir,
-				{pos: lstv}),
-			_Utils_update(
-				anti,
-				{pos: lsta}));
-	});
-var $author$project$Tile$quarantineTiles = function (tlst) {
-	return A2(
-		$elm$core$List$map,
-		function (x) {
-			return x.indice;
-		},
-		A2(
-			$elm$core$List$filter,
-			function (x) {
-				return _Utils_eq(x.construction, $author$project$Tile$Qua);
-			},
-			tlst));
-};
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$Set$Set_elm_builtin = function (a) {
-	return {$: 'Set_elm_builtin', a: a};
-};
-var $elm$core$Set$empty = $elm$core$Set$Set_elm_builtin($elm$core$Dict$empty);
-var $elm$core$Set$insert = F2(
-	function (key, _v0) {
-		var dict = _v0.a;
-		return $elm$core$Set$Set_elm_builtin(
-			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
-	});
-var $elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _v0 = A2($elm$core$Dict$get, key, dict);
-		if (_v0.$ === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var $elm$core$Set$member = F2(
-	function (key, _v0) {
-		var dict = _v0.a;
-		return A2($elm$core$Dict$member, key, dict);
-	});
-var $elm_community$list_extra$List$Extra$uniqueHelp = F4(
-	function (f, existing, remaining, accumulator) {
-		uniqueHelp:
-		while (true) {
-			if (!remaining.b) {
-				return $elm$core$List$reverse(accumulator);
-			} else {
-				var first = remaining.a;
-				var rest = remaining.b;
-				var computedFirst = f(first);
-				if (A2($elm$core$Set$member, computedFirst, existing)) {
-					var $temp$f = f,
-						$temp$existing = existing,
-						$temp$remaining = rest,
-						$temp$accumulator = accumulator;
-					f = $temp$f;
-					existing = $temp$existing;
-					remaining = $temp$remaining;
-					accumulator = $temp$accumulator;
-					continue uniqueHelp;
-				} else {
-					var $temp$f = f,
-						$temp$existing = A2($elm$core$Set$insert, computedFirst, existing),
-						$temp$remaining = rest,
-						$temp$accumulator = A2($elm$core$List$cons, first, accumulator);
-					f = $temp$f;
-					existing = $temp$existing;
-					remaining = $temp$remaining;
-					accumulator = $temp$accumulator;
-					continue uniqueHelp;
-				}
-			}
-		}
-	});
-var $elm_community$list_extra$List$Extra$unique = function (list) {
-	return A4($elm_community$list_extra$List$Extra$uniqueHelp, $elm$core$Basics$identity, $elm$core$Set$empty, list, _List_Nil);
-};
-var $author$project$Virus$searchNeighbor = function (virlst) {
-	return $elm_community$list_extra$List$Extra$unique(
-		$elm$core$List$concat(
-			A2(
-				$elm$core$List$map,
-				function (x) {
-					return $author$project$Geometry$generateZone(x);
-				},
-				virlst)));
-};
-var $author$project$Model$change = F3(
-	function (virus, anti, city) {
-		var lstvir = $author$project$Virus$searchNeighbor(virus.pos);
-		var lstquatile = $author$project$Tile$quarantineTiles(city.tilesindex);
-		var lstanti = $author$project$Virus$searchNeighbor(anti.pos);
-		return A5($author$project$Virus$judgeAlive, lstvir, virus, lstanti, anti, lstquatile);
-	});
-var $elm_community$list_extra$List$Extra$count = function (predicate) {
-	return A2(
-		$elm$core$List$foldl,
-		F2(
-			function (x, acc) {
-				return predicate(x) ? (acc + 1) : acc;
-			}),
-		0);
-};
-var $elm$core$Basics$ge = _Utils_ge;
-var $elm$core$Basics$min = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) < 0) ? x : y;
-	});
-var $author$project$Model$sickupdate = F3(
-	function (t, lstvir, inf) {
-		return A2(
-			$elm$core$List$map,
-			function (x) {
-				var s = A2(
-					$elm_community$list_extra$List$Extra$count,
-					$elm$core$Basics$eq(x.indice),
-					lstvir) * inf;
-				return _Utils_eq(x.construction, $author$project$Tile$Hos) ? (((_Utils_cmp((s + x.sick) - 2, x.population) < 1) && (((s + x.sick) - 2) >= 0)) ? _Utils_update(
-					x,
-					{sick: (s + x.sick) - 2}) : ((((s + x.sick) - 2) < 0) ? _Utils_update(
-					x,
-					{sick: 0}) : _Utils_update(
-					x,
-					{sick: x.population}))) : _Utils_update(
-					x,
-					{
-						sick: A2($elm$core$Basics$min, x.sick + s, x.population)
-					});
-			},
-			t);
-	});
-var $author$project$Model$infect = F2(
-	function (city, virus) {
-		var lstvirHexIndice = virus.pos;
-		var lstvirTilesIndice = A2(
-			$elm$core$List$map,
-			function (x) {
-				return $author$project$Geometry$converHextoTile(x);
-			},
-			lstvirHexIndice);
-		var lstTile = city.tilesindex;
-		var inf = virus.infect;
-		return _Utils_update(
-			city,
-			{
-				tilesindex: A3($author$project$Model$sickupdate, lstTile, lstvirTilesIndice, inf)
-			});
-	});
-var $elm$core$List$sortBy = _List_sortBy;
 var $elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
 		takeReverse:
@@ -7368,15 +6500,1613 @@ var $elm$core$List$take = F2(
 	function (n, list) {
 		return A3($elm$core$List$takeFast, 0, n, list);
 	});
+var $elm_community$random_extra$Random$List$choose = function (list) {
+	if ($elm$core$List$isEmpty(list)) {
+		return $elm$random$Random$constant(
+			_Utils_Tuple2($elm$core$Maybe$Nothing, list));
+	} else {
+		var lastIndex = $elm$core$List$length(list) - 1;
+		var gen = A2($elm$random$Random$int, 0, lastIndex);
+		var front = function (i) {
+			return A2($elm$core$List$take, i, list);
+		};
+		var back = function (i) {
+			return A2($elm$core$List$drop, i + 1, list);
+		};
+		return A2(
+			$elm$random$Random$map,
+			function (index) {
+				return _Utils_Tuple2(
+					A2($elm_community$random_extra$Random$List$get, index, list),
+					A2(
+						$elm$core$List$append,
+						front(index),
+						back(index)));
+			},
+			gen);
+	}
+};
+var $elm$random$Random$listHelp = F4(
+	function (revList, n, gen, seed) {
+		listHelp:
+		while (true) {
+			if (n < 1) {
+				return _Utils_Tuple2(revList, seed);
+			} else {
+				var _v0 = gen(seed);
+				var value = _v0.a;
+				var newSeed = _v0.b;
+				var $temp$revList = A2($elm$core$List$cons, value, revList),
+					$temp$n = n - 1,
+					$temp$gen = gen,
+					$temp$seed = newSeed;
+				revList = $temp$revList;
+				n = $temp$n;
+				gen = $temp$gen;
+				seed = $temp$seed;
+				continue listHelp;
+			}
+		}
+	});
+var $elm$random$Random$list = F2(
+	function (n, _v0) {
+		var gen = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed) {
+				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+			});
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Card$cardsGenerator = function (n) {
+	return A2(
+		$elm$random$Random$list,
+		n,
+		A2(
+			$elm$random$Random$map,
+			function (_v0) {
+				var x = _v0.a;
+				var y = _v0.b;
+				return A2($elm$core$Maybe$withDefault, $author$project$Card$cut, x);
+			},
+			$elm_community$random_extra$Random$List$choose($author$project$Card$allCards)));
+};
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $author$project$Update$clearCurrentRoundTodo = function (model) {
+	var todo_ = model.todo;
+	var todo = A2(
+		$elm$core$List$map,
+		function (_v2) {
+			var x = _v2.a;
+			var y = _v2.b;
+			return _Utils_Tuple2(true, y);
+		},
+		A2(
+			$elm$core$List$filter,
+			function (_v1) {
+				var x = _v1.a;
+				var y = _v1.b;
+				return !$elm$core$List$isEmpty(y);
+			},
+			A2(
+				$elm$core$List$map,
+				function (_v0) {
+					var x = _v0.a;
+					var y = _v0.b;
+					return _Utils_Tuple2(
+						x,
+						A2($elm$core$List$drop, 1, y));
+				},
+				todo_)));
+	return _Utils_update(
+		model,
+		{roundTodoCleared: false, todo: todo});
+};
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $author$project$Geometry$generateZone = function (pos) {
+	var j = pos.b;
+	var i = pos.a;
+	return _List_fromArray(
+		[
+			_Utils_Tuple2(i, j - 1),
+			_Utils_Tuple2(i, j + 1),
+			_Utils_Tuple2(i + 1, j),
+			_Utils_Tuple2(i + 1, j - 1),
+			_Utils_Tuple2(i - 1, j),
+			_Utils_Tuple2(i - 1, j + 1)
+		]);
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $elm$core$Basics$round = _Basics_round;
+var $author$project$Geometry$isInt = function (x) {
+	return $elm$core$Basics$abs(
+		x - $elm$core$Basics$round(x)) < 0.00001;
+};
+var $author$project$Geometry$converHextoTile = function (_v0) {
+	var i = _v0.a;
+	var j = _v0.b;
+	return function (_v4) {
+		var x = _v4.a;
+		var y = _v4.b;
+		return _Utils_Tuple2(
+			$elm$core$Basics$round(x),
+			$elm$core$Basics$round(y));
+	}(
+		A2(
+			$elm$core$Maybe$withDefault,
+			_Utils_Tuple2(0, 0),
+			$elm$core$List$head(
+				A2(
+					$elm$core$List$filter,
+					function (_v3) {
+						var x = _v3.a;
+						var y = _v3.b;
+						return $author$project$Geometry$isInt(x) && $author$project$Geometry$isInt(y);
+					},
+					A2(
+						$elm$core$List$map,
+						function (_v2) {
+							var x = _v2.a;
+							var y = _v2.b;
+							return _Utils_Tuple2(((3 * x) + y) / 7, ((2 * y) - x) / 7);
+						},
+						A2(
+							$elm$core$List$map,
+							function (_v1) {
+								var x = _v1.a;
+								var y = _v1.b;
+								return _Utils_Tuple2(x, y);
+							},
+							A2(
+								$elm$core$List$cons,
+								_Utils_Tuple2(i, j),
+								$author$project$Geometry$generateZone(
+									_Utils_Tuple2(i, j)))))))));
+};
+var $author$project$Update$ecoInc = function (model) {
+	return _Utils_update(
+		model,
+		{ecoRatio: 1, economy: model.economy + ((model.basicEcoOutput + (model.warehouseNum * $author$project$Parameters$para.warehouseOutput)) * model.ecoRatio)});
+};
+var $author$project$Todo$finished = function (todo) {
+	return $elm$core$List$isEmpty(
+		A2($elm$core$List$filter, $elm$core$Tuple$first, todo));
+};
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$time$Time$posixToMillis = function (_v0) {
+	var millis = _v0.a;
+	return millis;
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $author$project$Model$initlog = function (model) {
+	return _Utils_update(
+		model,
+		{actionDescribe: _List_Nil});
+};
+var $author$project$Update$levelInit = F2(
+	function (n, model) {
+		return _Utils_update(
+			model,
+			{behavior: $author$project$Model$initBehavior, state: $author$project$Model$Drawing});
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $author$project$Card$AVI = function (a) {
+	return {$: 'AVI', a: a};
+};
+var $author$project$Card$AttractPeoI = function (a) {
+	return {$: 'AttractPeoI', a: a};
+};
+var $author$project$Card$DroughtI_Kill = function (a) {
+	return {$: 'DroughtI_Kill', a: a};
+};
+var $author$project$Card$EvacuateI = function (a) {
+	return {$: 'EvacuateI', a: a};
+};
+var $author$project$Card$HospitalI = function (a) {
+	return {$: 'HospitalI', a: a};
+};
+var $author$project$Card$JudgeI_Kill = function (a) {
+	return {$: 'JudgeI_Kill', a: a};
+};
+var $author$project$Card$QuarantineI = function (a) {
+	return {$: 'QuarantineI', a: a};
+};
+var $author$project$Card$StopAttractI = function (a) {
+	return {$: 'StopAttractI', a: a};
+};
+var $author$project$Card$StopEVAI = function (a) {
+	return {$: 'StopEVAI', a: a};
+};
+var $author$project$Card$WarehouseI = function (a) {
+	return {$: 'WarehouseI', a: a};
+};
+var $author$project$Card$Warmwave_KIA = function (a) {
+	return {$: 'Warmwave_KIA', a: a};
+};
+var $author$project$Card$cellBroadcast = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	4,
+	_List_fromArray(
+		[
+			$author$project$Card$AttractPeoI(
+			_Utils_Tuple2(0, 0)),
+			$author$project$Card$StopAttractI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Cell Broadcast',
+	'In the selected tile, no one could go out during the next population flow.');
+var $author$project$Card$drought = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	2,
+	_List_fromArray(
+		[
+			$author$project$Card$DroughtI_Kill(
+			_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				0.5)),
+			$author$project$Card$DroughtI_Kill(
+			_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				0.5))
+		]),
+	'Drought',
+	'In two rounds in the selected tile, the viruses have a probability of 50% to die. The economy output halves for two rounds.');
+var $author$project$Todo$finishedEmptyQueue = _Utils_Tuple2(false, _List_Nil);
+var $author$project$Card$goingViral = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	8,
+	_List_fromArray(
+		[
+			$author$project$Card$AVI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Going Viral',
+	'Release the nano-viruses, which move randomly for 3 rounds and have a cut effect.');
+var $author$project$Card$hospital = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	4,
+	_List_fromArray(
+		[
+			$author$project$Card$HospitalI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Build Hospital',
+	'Put a hospital on a tile.');
+var $author$project$Card$judgement = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	6,
+	_List_fromArray(
+		[
+			$author$project$Card$JudgeI_Kill(
+			_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				0.25))
+		]),
+	'Judgement',
+	'On the selected tile, either the people or the viruses die. The probability is 50%.');
+var $author$project$Card$lowSoundWaves = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	4,
+	_List_fromArray(
+		[
+			$author$project$Card$EvacuateI(
+			_Utils_Tuple2(0, 0)),
+			$author$project$Card$StopEVAI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'LowSoundWaves',
+	'Select a tile. Distribute all population to the neighboring tiles during the next population flow.');
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Card$quarantine = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	4,
+	_List_fromArray(
+		[
+			$author$project$Card$QuarantineI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Build Quarantine',
+	'Put one tile in quarantine.');
+var $author$project$Card$warehouse = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	2,
+	_List_fromArray(
+		[
+			$author$project$Card$WarehouseI(
+			_Utils_Tuple2(0, 0))
+		]),
+	'Warehouse',
+	'Put a warehouse on a tile, +5 economy per round.');
+var $author$project$Card$warmwave = A5(
+	$author$project$Card$Card,
+	$author$project$Card$TileSel,
+	1,
+	_List_fromArray(
+		[
+			$author$project$Card$Warmwave_KIA(
+			_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				0.25))
+		]),
+	'Warmwave',
+	'Choose a tile. There is a probability of 25% to kill the viruses.');
+var $author$project$Update$fillRegion = F2(
+	function (card, sel) {
+		return _Utils_eq(card, $author$project$Card$cut) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$CutHexI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$megaCut) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$CutTileI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$organClone) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$OrganCloneI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$humanClone) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$HumanCloneI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$purification) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$PurificationI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$resurgence) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$ResurgenceI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$sacrifice) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$SacrificeI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$defenseline) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$FreezevirusI(sel),
+						$author$project$Card$FreezevirusI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$hospital) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$HospitalI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$quarantine) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$QuarantineI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$cellBroadcast) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$AttractPeoI(sel),
+						$author$project$Card$StopAttractI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$drought) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$DroughtI_Kill(
+						_Utils_Tuple2(sel, 0.5)),
+						$author$project$Card$DroughtI_Kill(
+						_Utils_Tuple2(sel, 0.5))
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$warehouse) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$WarehouseI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$warmwave) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$Warmwave_KIA(
+						_Utils_Tuple2(sel, 0.25))
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$goingViral) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$AVI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$judgement) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$JudgeI_Kill(
+						_Utils_Tuple2(sel, 0.5))
+					])),
+			$elm$core$Platform$Cmd$none) : (_Utils_eq(card, $author$project$Card$lowSoundWaves) ? _Utils_Tuple2(
+			_Utils_Tuple2(
+				true,
+				_List_fromArray(
+					[
+						$author$project$Card$EvacuateI(sel),
+						$author$project$Card$StopEVAI(sel)
+					])),
+			$elm$core$Platform$Cmd$none) : _Utils_Tuple2($author$project$Todo$finishedEmptyQueue, $elm$core$Platform$Cmd$none)))))))))))))))));
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Update$mFillRegion = function (_v0) {
+	var model = _v0.a;
+	var cm = _v0.b;
+	var _v1 = model.cardSelected;
+	if (_v1.$ === 'NoCard') {
+		return _Utils_Tuple2(model, cm);
+	} else {
+		var card = _v1.a;
+		var _v2 = model.selHex;
+		if (_v2.$ === 'SelHexOn') {
+			return (!_Utils_eq(
+				model.selectedHex,
+				_Utils_Tuple2(-233, -233))) ? _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						selHex: $author$project$Model$SelHexOff,
+						selectedHex: _Utils_Tuple2(-233, -233),
+						todo: _Utils_ap(
+							model.todo,
+							_List_fromArray(
+								[
+									A2($author$project$Update$fillRegion, card, model.selectedHex).a
+								]))
+					}),
+				$elm$core$Platform$Cmd$batch(
+					_List_fromArray(
+						[
+							cm,
+							A2($author$project$Update$fillRegion, card, model.selectedHex).b
+						]))) : _Utils_Tuple2(model, cm);
+		} else {
+			return _Utils_Tuple2(model, cm);
+		}
+	}
+};
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $author$project$Card$NoAction = {$: 'NoAction'};
+var $elm$core$List$partition = F2(
+	function (pred, list) {
+		var step = F2(
+			function (x, _v0) {
+				var trues = _v0.a;
+				var falses = _v0.b;
+				return pred(x) ? _Utils_Tuple2(
+					A2($elm$core$List$cons, x, trues),
+					falses) : _Utils_Tuple2(
+					trues,
+					A2($elm$core$List$cons, x, falses));
+			});
+		return A3(
+			$elm$core$List$foldr,
+			step,
+			_Utils_Tuple2(_List_Nil, _List_Nil),
+			list);
+	});
+var $author$project$Message$FreezeRet = F2(
+	function (a, b) {
+		return {$: 'FreezeRet', a: a, b: b};
+	});
+var $author$project$Message$JudgeVirPeo = F2(
+	function (a, b) {
+		return {$: 'JudgeVirPeo', a: a, b: b};
+	});
+var $author$project$Message$KillTileVir = F2(
+	function (a, b) {
+		return {$: 'KillTileVir', a: a, b: b};
+	});
+var $author$project$Model$createAV = function (hlst) {
+	return {
+		life: 3,
+		pos: _List_fromArray(
+			[hlst]),
+		rules: _List_fromArray(
+			[0, 1, 2, 3])
+	};
+};
+var $elm$core$Basics$modBy = _Basics_modBy;
+var $elm$core$List$sortBy = _List_sortBy;
 var $author$project$Tile$validNeighborTile = F2(
 	function (tlst, t) {
 		var lstn = $author$project$Geometry$generateZone(t.indice);
-		return (!_Utils_eq(t.construction, $author$project$Tile$Qua)) ? A2(
+		return ((!t.qua) && t.peoFlow) ? A2(
 			$elm$core$List$filter,
 			function (x) {
-				return A2($elm$core$List$member, x.indice, lstn) && ((x.population > 0) && (!_Utils_eq(x.construction, $author$project$Tile$Qua)));
+				return A2($elm$core$List$member, x.indice, lstn) && ((x.population > 0) && (!x.qua));
 			},
 			tlst) : _List_Nil;
+	});
+var $author$project$Model$evacuate = F2(
+	function (t, city) {
+		var lstnTile = A2(
+			$elm$core$List$sortBy,
+			function ($) {
+				return $.sick;
+			},
+			A2($author$project$Tile$validNeighborTile, city.tilesindex, t));
+		var leavelst = A2($elm$core$List$take, t.population, lstnTile);
+		var l = $elm$core$List$length(lstnTile);
+		var sa = (!t.sick) ? 0 : A2($elm$core$Basics$modBy, l, t.sick);
+		var sicklst1 = A2($elm$core$List$drop, sa, leavelst);
+		var sb = (!t.sick) ? 0 : $elm$core$Basics$round((t.sick - sa) / l);
+		var a = (!t.population) ? 0 : A2($elm$core$Basics$modBy, l, t.population);
+		var b = (!t.population) ? 0 : $elm$core$Basics$round((t.population - a) / l);
+		var l1 = A2($elm$core$List$drop, a, leavelst);
+		var ln = A2($elm$core$List$take, a, leavelst);
+		return A2(
+			$elm$core$List$map,
+			function (x) {
+				return A2($elm$core$List$member, x, ln) ? (A2($elm$core$List$member, x, sicklst1) ? _Utils_update(
+					x,
+					{population: (x.population + b) + 1, sick: x.sick + sb}) : _Utils_update(
+					x,
+					{population: (x.population + b) + 1, sick: (x.sick + sb) + 1})) : (A2($elm$core$List$member, x, l1) ? (A2($elm$core$List$member, x, sicklst1) ? _Utils_update(
+					x,
+					{population: x.population + b, sick: x.sick + sb}) : _Utils_update(
+					x,
+					{population: x.population + b, sick: (x.sick + sb) + 1})) : (_Utils_eq(x, t) ? _Utils_update(
+					x,
+					{population: 0, sick: 0}) : x));
+			},
+			city.tilesindex);
+	});
+var $elm$random$Random$float = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var seed1 = $elm$random$Random$next(seed0);
+				var range = $elm$core$Basics$abs(b - a);
+				var n1 = $elm$random$Random$peel(seed1);
+				var n0 = $elm$random$Random$peel(seed0);
+				var lo = (134217727 & n1) * 1.0;
+				var hi = (67108863 & n0) * 1.0;
+				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
+				var scaled = (val * range) + a;
+				return _Utils_Tuple2(
+					scaled,
+					$elm$random$Random$next(seed1));
+			});
+	});
+var $author$project$Model$updatelog = function (model) {
+	var _v0 = model.cardSelected;
+	if (_v0.$ === 'NoCard') {
+		return model;
+	} else {
+		var card = _v0.a;
+		return _Utils_update(
+			model,
+			{
+				actionDescribe: A2(
+					$elm$core$List$append,
+					model.actionDescribe,
+					_List_fromArray(
+						['Used card : ' + (card.name + ('. ' + card.describe))]))
+			});
+	}
+};
+var $author$project$Update$performAction = F2(
+	function (action, model) {
+		switch (action.$) {
+			case 'IncPowerI':
+				var inc = action.a;
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{power: model.power + inc})),
+					$elm$core$Platform$Cmd$none);
+			case 'Freeze':
+				var prob = action.a;
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(model),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$FreezeRet(prob),
+						A2($elm$random$Random$float, 0, 1)));
+			case 'FreezeI':
+				var behavior_ = model.behavior;
+				var behavior = _Utils_update(
+					behavior_,
+					{virusEvolve: false});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{behavior: behavior})),
+					$elm$core$Platform$Cmd$none);
+			case 'EcoDoubleI_Freeze':
+				var prob = action.a;
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{ecoRatio: 2 * model.ecoRatio})),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$FreezeRet(prob),
+						A2($elm$random$Random$float, 0, 1)));
+			case 'CutHexI':
+				var _v1 = action.a;
+				var i = _v1.a;
+				var j = _v1.b;
+				var virus_ = model.virus;
+				var pos_ = virus_.pos;
+				var pos = A2(
+					$elm$core$List$filter,
+					function (_v2) {
+						var x = _v2.a;
+						var y = _v2.b;
+						return !_Utils_eq(
+							_Utils_Tuple2(x, y),
+							_Utils_Tuple2(i, j));
+					},
+					pos_);
+				var virus = _Utils_update(
+					virus_,
+					{pos: pos});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{virus: virus})),
+					$elm$core$Platform$Cmd$none);
+			case 'CutTileI':
+				var _v3 = action.a;
+				var i = _v3.a;
+				var j = _v3.b;
+				var virus_ = model.virus;
+				var pos_ = virus_.pos;
+				var _v4 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var t1 = _v4.a;
+				var t2 = _v4.b;
+				var lc = A2(
+					$elm$core$Debug$log,
+					'chosenTile',
+					_Utils_Tuple2(t1, t2));
+				var _v5 = _Utils_Tuple2((2 * t1) - t2, t1 + (3 * t2));
+				var c1 = _v5.a;
+				var c2 = _v5.b;
+				var pos = A2(
+					$elm$core$List$filter,
+					function (_v6) {
+						var x = _v6.a;
+						var y = _v6.b;
+						return !A2(
+							$elm$core$List$member,
+							_Utils_Tuple2(x, y),
+							A2(
+								$elm$core$List$cons,
+								_Utils_Tuple2(c1, c2),
+								$author$project$Geometry$generateZone(
+									_Utils_Tuple2(c1, c2))));
+					},
+					pos_);
+				var virus = _Utils_update(
+					virus_,
+					{pos: pos});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{virus: virus})),
+					$elm$core$Platform$Cmd$none);
+			case 'Activate996I':
+				var virus_ = model.virus;
+				var dr = 1.024 * virus_.kill;
+				var virus = _Utils_update(
+					virus_,
+					{kill: dr});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{ecoRatio: 2 * model.ecoRatio, virus: virus})),
+					$elm$core$Platform$Cmd$none);
+			case 'OrganCloneI':
+				var _v7 = action.a;
+				var i = _v7.a;
+				var j = _v7.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? (((x.sick - x.dead) > 0) ? _Utils_update(
+							x,
+							{sick: x.sick - x.dead}) : _Utils_update(
+							x,
+							{sick: 0})) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'HumanCloneI':
+				var _v8 = action.a;
+				var i = _v8.a;
+				var j = _v8.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? _Utils_update(
+							x,
+							{population: x.population * 2}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'MegaCloneI':
+				var tilelst_ = model.city.tilesindex;
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_update(
+							x,
+							{
+								population: $elm$core$Basics$round(x.population * 1.5)
+							});
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'PurificationI':
+				var _v9 = action.a;
+				var i = _v9.a;
+				var j = _v9.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? _Utils_update(
+							x,
+							{sick: 0}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'SacrificeI':
+				var _v10 = action.a;
+				var i = _v10.a;
+				var j = _v10.b;
+				var virus_ = model.virus;
+				var virpos_ = virus_.pos;
+				var virpos = A2(
+					$elm$core$List$filter,
+					function (x) {
+						return !_Utils_eq(
+							$author$project$Geometry$converHextoTile(x),
+							_Utils_Tuple2(i, j));
+					},
+					virpos_);
+				var virus = _Utils_update(
+					virus_,
+					{pos: virpos});
+				var tilepos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst_ = model.city.tilesindex;
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, tilepos) ? _Utils_update(
+							x,
+							{dead: x.dead + x.sick, population: x.population - x.sick, sick: 0}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city, virus: virus})),
+					$elm$core$Platform$Cmd$none);
+			case 'ResurgenceI':
+				var _v11 = action.a;
+				var i = _v11.a;
+				var j = _v11.b;
+				var tilelst_ = model.city.tilesindex;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var tilelst = A2(
+					$elm$core$List$map,
+					function (x) {
+						return _Utils_eq(x.indice, pos) ? _Utils_update(
+							x,
+							{
+								dead: x.dead - $elm$core$Basics$round(x.dead / 2),
+								population: x.population + $elm$core$Basics$round(x.dead / 2)
+							}) : x;
+					},
+					tilelst_);
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{tilesindex: tilelst});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'FreezevirusI':
+				var _v12 = action.a;
+				var i = _v12.a;
+				var j = _v12.b;
+				var virus_ = model.virus;
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var virpos = A2(
+					$elm$core$List$filter,
+					function (x) {
+						return !_Utils_eq(
+							$author$project$Geometry$converHextoTile(x),
+							pos);
+					},
+					virus_.pos);
+				var virus = _Utils_update(
+					virus_,
+					{pos: virpos});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{virus: virus})),
+					$elm$core$Platform$Cmd$none);
+			case 'HospitalI':
+				var _v13 = action.a;
+				var i = _v13.a;
+				var j = _v13.b;
+				var city_ = model.city;
+				var _v14 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v14.a;
+				var tj = _v14.b;
+				var city = _Utils_update(
+					city_,
+					{
+						tilesindex: A2(
+							$elm$core$List$map,
+							function (x) {
+								return _Utils_eq(
+									x.indice,
+									_Utils_Tuple2(ti, tj)) ? _Utils_update(
+									x,
+									{cureEff: 2, hos: true}) : x;
+							},
+							city_.tilesindex)
+					});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'QuarantineI':
+				var _v15 = action.a;
+				var i = _v15.a;
+				var j = _v15.b;
+				var city_ = model.city;
+				var _v16 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v16.a;
+				var tj = _v16.b;
+				var city = _Utils_update(
+					city_,
+					{
+						tilesindex: A2(
+							$elm$core$List$map,
+							function (x) {
+								return _Utils_eq(
+									x.indice,
+									_Utils_Tuple2(ti, tj)) ? _Utils_update(
+									x,
+									{qua: true}) : x;
+							},
+							city_.tilesindex)
+					});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'EnhanceHealingI':
+				var city_ = model.city;
+				var city = _Utils_update(
+					city_,
+					{
+						tilesindex: A2(
+							$elm$core$List$map,
+							function (x) {
+								return x.hos ? _Utils_update(
+									x,
+									{cureEff: x.cureEff + 1}) : x;
+							},
+							city_.tilesindex)
+					});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'AttractPeoI':
+				var _v17 = action.a;
+				var i = _v17.a;
+				var j = _v17.b;
+				var city_ = model.city;
+				var _v18 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v18.a;
+				var tj = _v18.b;
+				var city = _Utils_update(
+					city_,
+					{
+						tilesindex: A2(
+							$elm$core$List$map,
+							function (x) {
+								return _Utils_eq(
+									x.indice,
+									_Utils_Tuple2(ti, tj)) ? _Utils_update(
+									x,
+									{peoFlow: false}) : x;
+							},
+							city_.tilesindex)
+					});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city})),
+					$elm$core$Platform$Cmd$none);
+			case 'StopAttractI':
+				var _v19 = action.a;
+				var i = _v19.a;
+				var j = _v19.b;
+				var city_ = model.city;
+				var _v20 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v20.a;
+				var tj = _v20.b;
+				var city = _Utils_update(
+					city_,
+					{
+						tilesindex: A2(
+							$elm$core$List$map,
+							function (x) {
+								return _Utils_eq(
+									x.indice,
+									_Utils_Tuple2(ti, tj)) ? _Utils_update(
+									x,
+									{peoFlow: true}) : x;
+							},
+							city_.tilesindex)
+					});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city}),
+					$elm$core$Platform$Cmd$none);
+			case 'DroughtI_Kill':
+				var _v21 = action.a;
+				var _v22 = _v21.a;
+				var i = _v22.a;
+				var j = _v22.b;
+				var prob = _v21.b;
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{
+								ecoRatio: $elm$core$Basics$round(0.5 * model.ecoRatio)
+							})),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$KillTileVir(
+							_Utils_Tuple2(
+								_Utils_Tuple2(i, j),
+								prob)),
+						A2($elm$random$Random$float, 0, 1)));
+			case 'WarehouseI':
+				var _v23 = action.a;
+				var i = _v23.a;
+				var j = _v23.b;
+				var num = model.warehouseNum + 1;
+				var city_ = model.city;
+				var _v24 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v24.a;
+				var tj = _v24.b;
+				var city = _Utils_update(
+					city_,
+					{
+						tilesindex: A2(
+							$elm$core$List$map,
+							function (x) {
+								return _Utils_eq(
+									x.indice,
+									_Utils_Tuple2(ti, tj)) ? _Utils_update(
+									x,
+									{wareHouse: true}) : x;
+							},
+							city_.tilesindex)
+					});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city, warehouseNum: num}),
+					$elm$core$Platform$Cmd$none);
+			case 'Warmwave_KIA':
+				var _v25 = action.a;
+				var _v26 = _v25.a;
+				var i = _v26.a;
+				var j = _v26.b;
+				var prob = _v25.b;
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(model),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$KillTileVir(
+							_Utils_Tuple2(
+								_Utils_Tuple2(i, j),
+								prob)),
+						A2($elm$random$Random$float, 0, 1)));
+			case 'AVI':
+				var _v27 = action.a;
+				var i = _v27.a;
+				var j = _v27.b;
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{
+								av: $author$project$Model$createAV(
+									_Utils_Tuple2(i, j))
+							})),
+					$elm$core$Platform$Cmd$none);
+			case 'JudgeI_Kill':
+				var _v28 = action.a;
+				var _v29 = _v28.a;
+				var i = _v29.a;
+				var j = _v29.b;
+				var prob = _v28.b;
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(model),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$JudgeVirPeo(
+							_Utils_Tuple2(
+								_Utils_Tuple2(i, j),
+								prob)),
+						A2($elm$random$Random$float, 0, 1)));
+			case 'EvacuateI':
+				var _v30 = action.a;
+				var i = _v30.a;
+				var j = _v30.b;
+				var tlst = model.city.tilesindex;
+				var city = model.city;
+				var _v31 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v31.a;
+				var tj = _v31.b;
+				var t = A2(
+					$elm$core$Maybe$withDefault,
+					A9(
+						$author$project$Tile$Tile,
+						_Utils_Tuple2(-100, -100),
+						0,
+						0,
+						0,
+						0,
+						true,
+						false,
+						false,
+						false),
+					$elm$core$List$head(
+						A2(
+							$elm$core$List$filter,
+							function (x) {
+								return _Utils_eq(
+									x.indice,
+									_Utils_Tuple2(ti, tj));
+							},
+							tlst)));
+				var city_ = _Utils_update(
+					city,
+					{
+						tilesindex: A2($author$project$Model$evacuate, t, city)
+					});
+				return _Utils_Tuple2(
+					$author$project$Model$updatelog(
+						_Utils_update(
+							model,
+							{city: city_})),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$Update$pickAction = function (model) {
+	var _v0 = A2(
+		$elm$core$List$partition,
+		function (_v1) {
+			var x = _v1.a;
+			var y = _v1.b;
+			return !x;
+		},
+		model.todo);
+	var finished = _v0.a;
+	var unfinished_ = _v0.b;
+	var headQueue_ = A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$Todo$finishedEmptyQueue,
+		$elm$core$List$head(unfinished_));
+	var headAction = A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$Card$NoAction,
+		$elm$core$List$head(headQueue_.b));
+	var headQueue = _Utils_Tuple2(false, headQueue_.b);
+	var todo = _Utils_ap(
+		finished,
+		_Utils_ap(
+			_List_fromArray(
+				[headQueue]),
+			A2($elm$core$List$drop, 1, unfinished_)));
+	return A2(
+		$author$project$Update$performAction,
+		headAction,
+		_Utils_update(
+			model,
+			{todo: todo}));
+};
+var $elm_community$list_extra$List$Extra$remove = F2(
+	function (x, xs) {
+		if (!xs.b) {
+			return _List_Nil;
+		} else {
+			var y = xs.a;
+			var ys = xs.b;
+			return _Utils_eq(x, y) ? ys : A2(
+				$elm$core$List$cons,
+				y,
+				A2($elm_community$list_extra$List$Extra$remove, x, ys));
+		}
+	});
+var $author$project$Message$ReplaceCard = F2(
+	function (a, b) {
+		return {$: 'ReplaceCard', a: a, b: b};
+	});
+var $author$project$Card$cardGenerator = A2(
+	$elm$random$Random$map,
+	function (_v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return A2($elm$core$Maybe$withDefault, $author$project$Card$cut, x);
+	},
+	$elm_community$random_extra$Random$List$choose($author$project$Card$allCards));
+var $author$project$Update$replaceCard = F2(
+	function (c, model) {
+		if (A2($elm$core$List$member, c, model.hands) && (model.replaceChance > 0)) {
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{replaceChance: model.replaceChance - 1}),
+				A2(
+					$elm$random$Random$generate,
+					$author$project$Message$ReplaceCard(c),
+					$author$project$Card$cardGenerator));
+		} else {
+			var logreplace = A2($elm$core$Debug$log, 'card to replace does not exist in hands!', '');
+			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$Ports$sendMsg = _Platform_outgoingPort('sendMsg', $elm$json$Json$Encode$string);
+var $author$project$Card$targetCardlst = _List_fromArray(
+	[$author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$sacrifice, $author$project$Card$purification, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$cellBroadcast, $author$project$Card$drought, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$lowSoundWaves]);
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $author$project$Virus$countInfectedNeighbor = F2(
+	function (pos, lstv) {
+		var lstn = $author$project$Geometry$generateZone(pos);
+		return $elm$core$List$sum(
+			A2(
+				$elm$core$List$map,
+				function (x) {
+					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
+				},
+				lstn));
+	});
+var $author$project$Virus$countavNeighbor = F2(
+	function (pos, lstv) {
+		var lstn = $author$project$Geometry$generateZone(pos);
+		return $elm$core$List$sum(
+			A2(
+				$elm$core$List$map,
+				function (x) {
+					return A2($elm$core$List$member, x, lstv) ? 1 : 0;
+				},
+				lstn));
+	});
+var $author$project$Virus$judgeAlive = F5(
+	function (lstvir, vir, lstanti, anti, lstquatile) {
+		var lstv = A2(
+			$elm$core$List$filter,
+			function (x) {
+				return A2(
+					$elm$core$List$member,
+					A2($author$project$Virus$countInfectedNeighbor, x, vir.pos),
+					vir.rules) && ((!A2($elm$core$List$member, x, anti.pos)) && (!A2(
+					$elm$core$List$member,
+					$author$project$Geometry$converHextoTile(x),
+					lstquatile)));
+			},
+			lstvir);
+		var lsta = (anti.life > 0) ? A2(
+			$elm$core$List$filter,
+			function (x) {
+				return A2(
+					$elm$core$List$member,
+					A2($author$project$Virus$countavNeighbor, x, anti.pos),
+					anti.rules) && ((!A2($elm$core$List$member, x, vir.pos)) && (!A2(
+					$elm$core$List$member,
+					$author$project$Geometry$converHextoTile(x),
+					lstquatile)));
+			},
+			lstanti) : _List_Nil;
+		return _Utils_Tuple2(
+			_Utils_update(
+				vir,
+				{pos: lstv}),
+			_Utils_update(
+				anti,
+				{
+					life: A2($elm$core$Basics$max, anti.life - 1, 0),
+					pos: lsta
+				}));
+	});
+var $author$project$Tile$quarantineTiles = function (tlst) {
+	return A2(
+		$elm$core$List$map,
+		function (x) {
+			return x.indice;
+		},
+		A2(
+			$elm$core$List$filter,
+			function (x) {
+				return x.qua;
+			},
+			tlst));
+};
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$Set$Set_elm_builtin = function (a) {
+	return {$: 'Set_elm_builtin', a: a};
+};
+var $elm$core$Set$empty = $elm$core$Set$Set_elm_builtin($elm$core$Dict$empty);
+var $elm$core$Set$insert = F2(
+	function (key, _v0) {
+		var dict = _v0.a;
+		return $elm$core$Set$Set_elm_builtin(
+			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
+	});
+var $elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$get, key, dict);
+		if (_v0.$ === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var $elm$core$Set$member = F2(
+	function (key, _v0) {
+		var dict = _v0.a;
+		return A2($elm$core$Dict$member, key, dict);
+	});
+var $elm_community$list_extra$List$Extra$uniqueHelp = F4(
+	function (f, existing, remaining, accumulator) {
+		uniqueHelp:
+		while (true) {
+			if (!remaining.b) {
+				return $elm$core$List$reverse(accumulator);
+			} else {
+				var first = remaining.a;
+				var rest = remaining.b;
+				var computedFirst = f(first);
+				if (A2($elm$core$Set$member, computedFirst, existing)) {
+					var $temp$f = f,
+						$temp$existing = existing,
+						$temp$remaining = rest,
+						$temp$accumulator = accumulator;
+					f = $temp$f;
+					existing = $temp$existing;
+					remaining = $temp$remaining;
+					accumulator = $temp$accumulator;
+					continue uniqueHelp;
+				} else {
+					var $temp$f = f,
+						$temp$existing = A2($elm$core$Set$insert, computedFirst, existing),
+						$temp$remaining = rest,
+						$temp$accumulator = A2($elm$core$List$cons, first, accumulator);
+					f = $temp$f;
+					existing = $temp$existing;
+					remaining = $temp$remaining;
+					accumulator = $temp$accumulator;
+					continue uniqueHelp;
+				}
+			}
+		}
+	});
+var $elm_community$list_extra$List$Extra$unique = function (list) {
+	return A4($elm_community$list_extra$List$Extra$uniqueHelp, $elm$core$Basics$identity, $elm$core$Set$empty, list, _List_Nil);
+};
+var $author$project$Virus$searchNeighbor = function (virlst) {
+	return $elm_community$list_extra$List$Extra$unique(
+		$elm$core$List$concat(
+			A2(
+				$elm$core$List$map,
+				function (x) {
+					return $author$project$Geometry$generateZone(x);
+				},
+				virlst)));
+};
+var $author$project$Model$change = F3(
+	function (virus, anti, city) {
+		var lstvir = $author$project$Virus$searchNeighbor(virus.pos);
+		var lstquatile = $author$project$Tile$quarantineTiles(city.tilesindex);
+		var lstanti = $author$project$Virus$searchNeighbor(anti.pos);
+		return A5($author$project$Virus$judgeAlive, lstvir, virus, lstanti, anti, lstquatile);
+	});
+var $elm_community$list_extra$List$Extra$count = function (predicate) {
+	return A2(
+		$elm$core$List$foldl,
+		F2(
+			function (x, acc) {
+				return predicate(x) ? (acc + 1) : acc;
+			}),
+		0);
+};
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
+var $author$project$Model$sickupdate = F3(
+	function (t, lstvir, inf) {
+		return A2(
+			$elm$core$List$map,
+			function (x) {
+				var s = A2(
+					$elm_community$list_extra$List$Extra$count,
+					$elm$core$Basics$eq(x.indice),
+					lstvir) * inf;
+				var cure = x.cureEff;
+				return x.hos ? (((_Utils_cmp((s + x.sick) - cure, x.population) < 1) && (((s + x.sick) - cure) >= 0)) ? _Utils_update(
+					x,
+					{sick: (s + x.sick) - cure}) : ((((s + x.sick) - cure) < 0) ? _Utils_update(
+					x,
+					{sick: 0}) : _Utils_update(
+					x,
+					{sick: x.population}))) : _Utils_update(
+					x,
+					{
+						sick: A2($elm$core$Basics$min, x.sick + s, x.population)
+					});
+			},
+			t);
+	});
+var $author$project$Model$infect = F2(
+	function (city, virus) {
+		var lstvirHexIndice = virus.pos;
+		var lstvirTilesIndice = A2(
+			$elm$core$List$map,
+			function (x) {
+				return $author$project$Geometry$converHextoTile(x);
+			},
+			lstvirHexIndice);
+		var lstTile = city.tilesindex;
+		var inf = virus.infect;
+		return _Utils_update(
+			city,
+			{
+				tilesindex: A3($author$project$Model$sickupdate, lstTile, lstvirTilesIndice, inf)
+			});
 	});
 var $author$project$Model$populationFlow = F2(
 	function (n, city) {
@@ -7385,14 +8115,17 @@ var $author$project$Model$populationFlow = F2(
 			var citytileslst = city.tilesindex;
 			var t = A2(
 				$elm$core$Maybe$withDefault,
-				A6(
+				A9(
 					$author$project$Tile$Tile,
 					_Utils_Tuple2(-100, -100),
-					100,
 					0,
 					0,
-					$author$project$Tile$NoConstruction,
-					0),
+					0,
+					0,
+					true,
+					false,
+					false,
+					false),
 				$elm$core$List$head(
 					A2(
 						$elm$core$List$drop,
@@ -7400,7 +8133,7 @@ var $author$project$Model$populationFlow = F2(
 						A2($elm$core$List$take, n, citytileslst))));
 			var lstnTile = A2($author$project$Tile$validNeighborTile, citytileslst, t);
 			var numNeig = $elm$core$List$length(lstnTile);
-			var leaveLst = A2(
+			var leaveLst = t.peoFlow ? A2(
 				$elm$core$List$take,
 				numNeig,
 				A2(
@@ -7416,13 +8149,13 @@ var $author$project$Model$populationFlow = F2(
 							function (x) {
 								return x.sick + (x.dead * 2);
 							},
-							lstnTile))));
+							lstnTile)))) : _List_Nil;
 			var sickleave = (_Utils_cmp(t.population, numNeig) > 0) ? $elm$core$Basics$round((t.sick * numNeig) / t.population) : t.sick;
 			var sickLst = A2($elm$core$List$take, sickleave, leaveLst);
 			if (_Utils_cmp(
 				n,
 				$elm$core$List$length(citytileslst)) < 1) {
-				var newcitytileslst = (_Utils_cmp(t.population, numNeig) > -1) ? A2(
+				var newcitytileslst = ((_Utils_cmp(t.population, numNeig) > -1) && t.peoFlow) ? A2(
 					$elm$core$List$map,
 					function (x) {
 						return _Utils_eq(x, t) ? _Utils_update(
@@ -7433,7 +8166,7 @@ var $author$project$Model$populationFlow = F2(
 							x,
 							{population: x.population + 1}) : x));
 					},
-					citytileslst) : A2(
+					citytileslst) : (t.peoFlow ? A2(
 					$elm$core$List$map,
 					function (x) {
 						return _Utils_eq(x, t) ? _Utils_update(
@@ -7444,7 +8177,7 @@ var $author$project$Model$populationFlow = F2(
 							x,
 							{population: x.population + 1}) : x));
 					},
-					citytileslst);
+					citytileslst) : citytileslst);
 				var newcity = _Utils_update(
 					city,
 					{tilesindex: newcitytileslst});
@@ -7561,6 +8294,36 @@ var $author$project$Update$virusEvolve = function (model) {
 var $author$project$Update$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
+			case 'LevelBegin':
+				var n = msg.a;
+				return _Utils_Tuple2(
+					A2($author$project$Update$levelInit, n, model),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$InitializeHands,
+						$author$project$Card$cardsGenerator(10)));
+			case 'InitializeHands':
+				var lc = msg.a;
+				var loglc = A2($elm$core$Debug$log, 'lc', lc);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{hands: lc}),
+					$elm$core$Platform$Cmd$none);
+			case 'ReplaceCard':
+				var c = msg.a;
+				var replacement = msg.b;
+				var hands_ = model.hands;
+				var hands = A2(
+					$elm$core$List$append,
+					_List_fromArray(
+						[replacement]),
+					A2($elm_community$list_extra$List$Extra$remove, c, hands_));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{hands: hands}),
+					$elm$core$Platform$Cmd$none);
 			case 'Resize':
 				var w = msg.a;
 				var h = msg.b;
@@ -7595,18 +8358,20 @@ var $author$project$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'NextRound':
 				return model.behavior.virusEvolve ? _Utils_Tuple2(
-					$author$project$Update$ecoInc(
-						$author$project$Update$virusEvolve(
+					$author$project$Model$initlog(
+						$author$project$Update$ecoInc(
+							$author$project$Update$virusEvolve(
+								$author$project$Update$clearCurrentRoundTodo(
+									_Utils_update(
+										model,
+										{currentRound: model.currentRound + 1}))))),
+					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					$author$project$Model$initlog(
+						$author$project$Update$ecoInc(
 							$author$project$Update$clearCurrentRoundTodo(
 								_Utils_update(
 									model,
-									{currentRound: model.currentRound + 1})))),
-					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
-					$author$project$Update$ecoInc(
-						$author$project$Update$clearCurrentRoundTodo(
-							_Utils_update(
-								model,
-								{behavior: $author$project$Model$initBehavior, currentRound: model.currentRound + 1}))),
+									{behavior: $author$project$Model$initBehavior, currentRound: model.currentRound + 1})))),
 					$elm$core$Platform$Cmd$none);
 			case 'PlayCard':
 				var card = msg.a;
@@ -7623,6 +8388,7 @@ var $author$project$Update$update = F2(
 					_Utils_update(
 						model,
 						{
+							cardSelected: $author$project$Model$SelectCard(card),
 							economy: model.economy - $author$project$Parameters$para.ecoThreshold,
 							power: model.power - card.cost,
 							todo: _Utils_ap(
@@ -7675,6 +8441,22 @@ var $author$project$Update$update = F2(
 							mouseOver: _Utils_Tuple2(i, j)
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 'MouseOverCardToReplace':
+				var n = msg.a;
+				return _Utils_eq(model.state, $author$project$Model$Drawing) ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{mouseOverCardToReplace: n}),
+					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'SelectCardToReplace':
+				var c = msg.a;
+				return A2($author$project$Update$replaceCard, c, model);
+			case 'StartRound1':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{state: $author$project$Model$Playing}),
+					$elm$core$Platform$Cmd$none);
 			case 'HosInvalid':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -7686,16 +8468,116 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Ports$sendMsg(txt));
-			default:
+			case 'KillTileVir':
+				var _v1 = msg.a;
+				var _v2 = _v1.a;
+				var i = _v2.a;
+				var j = _v2.b;
+				var prob = _v1.b;
+				var rand = msg.b;
+				var virus_ = model.virus;
+				var _v3 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v3.a;
+				var tj = _v3.b;
+				var vir = (_Utils_cmp(prob, rand) < 1) ? _Utils_update(
+					virus_,
+					{
+						pos: A2(
+							$elm$core$List$filter,
+							function (x) {
+								return !_Utils_eq(
+									$author$project$Geometry$converHextoTile(x),
+									_Utils_Tuple2(ti, tj));
+							},
+							virus_.pos)
+					}) : virus_;
 				return _Utils_Tuple2(
-					model,
-					$author$project$Ports$returnMainPage('return'));
+					_Utils_update(
+						model,
+						{virus: vir}),
+					$elm$core$Platform$Cmd$none);
+			case 'JudgeVirPeo':
+				var _v4 = msg.a;
+				var _v5 = _v4.a;
+				var i = _v5.a;
+				var j = _v5.b;
+				var prob = _v4.b;
+				var rand = msg.b;
+				var virus = model.virus;
+				var tilelst = model.city.tilesindex;
+				var city = model.city;
+				var _v6 = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var ti = _v6.a;
+				var tj = _v6.b;
+				var city_ = (_Utils_cmp(prob, rand) > 0) ? _Utils_update(
+					city,
+					{
+						tilesindex: A2(
+							$elm$core$List$map,
+							function (x) {
+								return _Utils_eq(
+									x.indice,
+									_Utils_Tuple2(ti, tj)) ? _Utils_update(
+									x,
+									{dead: x.population + x.dead, population: 0, sick: 0}) : x;
+							},
+							tilelst)
+					}) : city;
+				var virus_ = (_Utils_cmp(prob, rand) < 1) ? _Utils_update(
+					virus,
+					{
+						pos: A2(
+							$elm$core$List$filter,
+							function (x) {
+								return !_Utils_eq(
+									$author$project$Geometry$converHextoTile(x),
+									_Utils_Tuple2(ti, tj));
+							},
+							virus.pos)
+					}) : virus;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{city: city_, virus: virus_}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				switch (msg.a) {
+					case 'home':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{state: $author$project$Model$HomePage}),
+							$elm$core$Platform$Cmd$none);
+					case 'card':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{state: $author$project$Model$CardPage}),
+							$elm$core$Platform$Cmd$none);
+					case 'startGame':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{state: $author$project$Model$Playing}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 		}
+	});
+var $author$project$View$Document = F2(
+	function (title, body) {
+		return {body: body, title: title};
 	});
 var $author$project$Message$Alert = function (a) {
 	return {$: 'Alert', a: a};
 };
-var $author$project$Message$Return = {$: 'Return'};
+var $author$project$Message$LevelBegin = function (a) {
+	return {$: 'LevelBegin', a: a};
+};
+var $author$project$Message$StartRound1 = {$: 'StartRound1'};
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
@@ -7714,15 +8596,6 @@ var $author$project$View$bkg = A2(
 			$elm$svg$Svg$Attributes$fill('#2A363b')
 		]),
 	_List_Nil);
-var $author$project$Card$FreezeI = {$: 'FreezeI'};
-var $author$project$Card$NoSel = {$: 'NoSel'};
-var $author$project$Card$blizzard = A4(
-	$author$project$Card$Card,
-	$author$project$Card$NoSel,
-	8,
-	_List_fromArray(
-		[$author$project$Card$FreezeI, $author$project$Card$FreezeI, $author$project$Card$FreezeI]),
-	'Blizzard');
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
 var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
@@ -7730,13 +8603,14 @@ var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
-var $author$project$View$caption = F4(
-	function (x, y, cstr, text) {
+var $author$project$View$caption = F5(
+	function (x, y, cstr, text, fontSize) {
 		return A2(
 			$elm$svg$Svg$text_,
 			_List_fromArray(
 				[
-					$elm$svg$Svg$Attributes$fontSize('15'),
+					$elm$svg$Svg$Attributes$fontSize(
+					$elm$core$String$fromInt(fontSize)),
 					$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
 					$elm$svg$Svg$Attributes$x(
 					$elm$core$String$fromFloat(x)),
@@ -7783,19 +8657,16 @@ var $author$project$View$cardButton = function (card) {
 				$elm$html$Html$text(card.name)
 			]));
 };
-var $author$project$Card$Freeze = function (a) {
-	return {$: 'Freeze', a: a};
-};
-var $author$project$Card$coldWave = A4(
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$Card$EnhanceHealingI = {$: 'EnhanceHealingI'};
+var $author$project$Card$enhanceHealing = A5(
 	$author$project$Card$Card,
 	$author$project$Card$NoSel,
-	1,
+	4,
 	_List_fromArray(
-		[
-			$author$project$Card$Freeze(0.5)
-		]),
-	'Cold Wave');
-var $elm$html$Html$div = _VirtualDom_node('div');
+		[$author$project$Card$EnhanceHealingI]),
+	'Enhance healing',
+	'Raise the efficiency of hospital healing by 1.');
 var $author$project$Message$VirusEvolve = {$: 'VirusEvolve'};
 var $author$project$View$evolveButton = A2(
 	$elm$html$Html$button,
@@ -7807,22 +8678,6 @@ var $author$project$View$evolveButton = A2(
 		[
 			$elm$html$Html$text('EVOLVE')
 		]));
-var $author$project$Card$Activate996I = {$: 'Activate996I'};
-var $author$project$Card$fubao = A4(
-	$author$project$Card$Card,
-	$author$project$Card$NoSel,
-	1,
-	_List_fromArray(
-		[$author$project$Card$Activate996I, $author$project$Card$Activate996I]),
-	'996');
-var $author$project$Card$MegaCloneI = {$: 'MegaCloneI'};
-var $author$project$Card$megaClone = A4(
-	$author$project$Card$Card,
-	$author$project$Card$NoSel,
-	8,
-	_List_fromArray(
-		[$author$project$Card$MegaCloneI]),
-	'Mega Clone');
 var $author$project$Message$NextRound = {$: 'NextRound'};
 var $author$project$View$nextRoundButton = A2(
 	$elm$html$Html$button,
@@ -7840,47 +8695,11 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $author$project$Card$IncPowerI = function (a) {
-	return {$: 'IncPowerI', a: a};
-};
-var $author$project$Card$onStandby = A4(
-	$author$project$Card$Card,
-	$author$project$Card$NoSel,
-	0,
-	_List_fromArray(
-		[
-			$author$project$Card$IncPowerI(2)
-		]),
-	'On Standby');
 var $author$project$View$powerEcoInfo = function (model) {
 	var p = $elm$core$String$fromInt(model.power);
 	var ec = $elm$core$String$fromInt(model.economy);
 	return $elm$html$Html$text('power: ' + (p + ('. ' + ('economy: ' + (ec + '. ')))));
 };
-var $author$project$Card$powerOverload = A4(
-	$author$project$Card$Card,
-	$author$project$Card$NoSel,
-	0,
-	_List_fromArray(
-		[
-			$author$project$Card$IncPowerI(3),
-			$author$project$Card$IncPowerI(-3)
-		]),
-	'Power Overload');
-var $author$project$Card$EcoDoubleI = {$: 'EcoDoubleI'};
-var $author$project$Card$EcoDoubleI_Freeze = function (a) {
-	return {$: 'EcoDoubleI_Freeze', a: a};
-};
-var $author$project$Card$rain = A4(
-	$author$project$Card$Card,
-	$author$project$Card$NoSel,
-	3,
-	_List_fromArray(
-		[
-			$author$project$Card$EcoDoubleI,
-			$author$project$Card$EcoDoubleI_Freeze(0.5)
-		]),
-	'Rain');
 var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
 var $elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
 var $author$project$Geometry$polyPoint = F2(
@@ -7964,6 +8783,142 @@ var $author$project$View$renderFlag = function (i) {
 var $author$project$View$renderFlags = function (li) {
 	return A2($elm$core$List$map, $author$project$View$renderFlag, li);
 };
+var $author$project$Card$cardComparison = F2(
+	function (c1, c2) {
+		return (_Utils_cmp(c1.cost, c2.cost) < 0) ? $elm$core$Basics$LT : ((_Utils_cmp(c1.cost, c2.cost) > 0) ? $elm$core$Basics$GT : ((_Utils_cmp(
+			$elm$core$String$length(c1.name),
+			$elm$core$String$length(c2.name)) > 0) ? $elm$core$Basics$GT : ((_Utils_cmp(
+			$elm$core$String$length(c1.name),
+			$elm$core$String$length(c2.name)) < 0) ? $elm$core$Basics$LT : $elm$core$Basics$EQ)));
+	});
+var $elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
+	});
+var $author$project$View$renderCard = F4(
+	function (n, x, y, c) {
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$String$fromFloat(x)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(y)),
+							$elm$svg$Svg$Attributes$fill('black'),
+							$elm$svg$Svg$Attributes$width(
+							$elm$core$String$fromFloat(70.0)),
+							$elm$svg$Svg$Attributes$height(
+							$elm$core$String$fromFloat(100.0))
+						]),
+					_List_Nil),
+					A5($author$project$View$caption, x + 10.0, y + 10.0, 'white', c.name, 10)
+				]));
+	});
+var $author$project$Message$MouseOverCardToReplace = function (a) {
+	return {$: 'MouseOverCardToReplace', a: a};
+};
+var $author$project$Message$SelectCardToReplace = function (a) {
+	return {$: 'SelectCardToReplace', a: a};
+};
+var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
+var $author$project$View$onOver = function (message) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mouseover',
+		$elm$json$Json$Decode$succeed(message));
+};
+var $author$project$View$renderCardFilm = F5(
+	function (n, x, y, c, model) {
+		var tint = (_Utils_eq(n, model.mouseOverCardToReplace) && (model.replaceChance > 0)) ? A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x(
+					$elm$core$String$fromFloat(x)),
+					$elm$svg$Svg$Attributes$y(
+					$elm$core$String$fromFloat(y)),
+					$elm$svg$Svg$Attributes$fill('yellow'),
+					$elm$svg$Svg$Attributes$fillOpacity('0.3'),
+					$elm$svg$Svg$Attributes$width(
+					$elm$core$String$fromFloat(70.0)),
+					$elm$svg$Svg$Attributes$height(
+					$elm$core$String$fromFloat(100.0))
+				]),
+			_List_Nil) : A2($elm$svg$Svg$rect, _List_Nil, _List_Nil);
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					$author$project$View$onClick(
+					$author$project$Message$SelectCardToReplace(c)),
+					$author$project$View$onOver(
+					$author$project$Message$MouseOverCardToReplace(n))
+				]),
+			_List_fromArray(
+				[
+					tint,
+					A2(
+					$elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$String$fromFloat(x)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(y)),
+							$elm$svg$Svg$Attributes$fill('white'),
+							$elm$svg$Svg$Attributes$fillOpacity('0.0'),
+							$elm$svg$Svg$Attributes$width(
+							$elm$core$String$fromFloat(70.0)),
+							$elm$svg$Svg$Attributes$height(
+							$elm$core$String$fromFloat(100.0))
+						]),
+					_List_Nil)
+				]));
+	});
+var $elm$core$List$sortWith = _List_sortWith;
+var $author$project$View$renderInitCards = function (model) {
+	var hands = A2($elm$core$List$sortWith, $author$project$Card$cardComparison, model.hands);
+	var indexed = A2(
+		$elm$core$List$map,
+		function (_v4) {
+			var n = _v4.a;
+			var c = _v4.b;
+			return _Utils_Tuple3(
+				n,
+				_Utils_Tuple2(20 + (80 * n), 20.0),
+				c);
+		},
+		A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, hands));
+	return _Utils_ap(
+		A2(
+			$elm$core$List$map,
+			function (_v0) {
+				var n = _v0.a;
+				var _v1 = _v0.b;
+				var x = _v1.a;
+				var y = _v1.b;
+				var c = _v0.c;
+				return A4($author$project$View$renderCard, n, x, y, c);
+			},
+			indexed),
+		A2(
+			$elm$core$List$map,
+			function (_v2) {
+				var n = _v2.a;
+				var _v3 = _v2.b;
+				var x = _v3.a;
+				var y = _v3.b;
+				var c = _v2.c;
+				return A5($author$project$View$renderCardFilm, n, x, y, c, model);
+			},
+			indexed));
+};
 var $author$project$View$renderLevelProgress = function (model) {
 	var wg = (A2($elm$core$Basics$min, model.currentRound, 20) / 20.0) * $author$project$Parameters$para.wlp;
 	return A2(
@@ -8003,7 +8958,6 @@ var $author$project$View$renderLevelProgress = function (model) {
 				_List_Nil)
 			]));
 };
-var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
@@ -8189,17 +9143,7 @@ var $author$project$View$renderTile = function (t) {
 			_Utils_Tuple2(i - 1, j),
 			_Utils_Tuple2(i - 1, j + 1)
 		]);
-	var constructionCaption = function () {
-		var _v9 = t.construction;
-		switch (_v9.$) {
-			case 'Hos':
-				return 'H';
-			case 'Qua':
-				return 'Q';
-			default:
-				return 'N';
-		}
-	}();
+	var constructionCaption = (t.hos && (t.qua && t.wareHouse)) ? 'H&Q&W' : ((t.qua && t.wareHouse) ? 'Q&W' : ((t.hos && t.wareHouse) ? 'H&W' : ((t.hos && t.qua) ? 'H&Q' : (t.hos ? 'H' : (t.wareHouse ? 'W' : (t.qua ? 'Q' : 'N'))))));
 	var a = $author$project$Parameters$para.a;
 	var h = a / $elm$core$Basics$sqrt(3);
 	var _v0 = $author$project$Parameters$para.tileOrigin;
@@ -8436,21 +9380,54 @@ var $author$project$Tile$hospitalTiles = function (tlst) {
 		A2(
 			$elm$core$List$filter,
 			function (x) {
-				return _Utils_eq(x.construction, $author$project$Tile$Hos);
+				return x.hos;
 			},
 			tlst));
 };
-var $author$project$View$onOver = function (message) {
+var $author$project$Tile$warehouseTiles = function (tlst) {
 	return A2(
-		$elm$html$Html$Events$on,
-		'mouseover',
-		$elm$json$Json$Decode$succeed(message));
+		$elm$core$List$map,
+		function (x) {
+			return x.indice;
+		},
+		A2(
+			$elm$core$List$filter,
+			function (x) {
+				return x.wareHouse;
+			},
+			tlst));
 };
+var $author$project$Model$judgeBuild = F2(
+	function (model, _v0) {
+		var i = _v0.a;
+		var j = _v0.b;
+		var waretilelst = $author$project$Tile$warehouseTiles(model.city.tilesindex);
+		var quatilelst = $author$project$Tile$quarantineTiles(model.city.tilesindex);
+		var hostilelst = $author$project$Tile$hospitalTiles(model.city.tilesindex);
+		return (_Utils_eq(
+			model.cardSelected,
+			$author$project$Model$SelectCard($author$project$Card$hospital)) && A2(
+			$elm$core$List$member,
+			$author$project$Geometry$converHextoTile(
+				_Utils_Tuple2(i, j)),
+			hostilelst)) || ((_Utils_eq(
+			model.cardSelected,
+			$author$project$Model$SelectCard($author$project$Card$quarantine)) && A2(
+			$elm$core$List$member,
+			$author$project$Geometry$converHextoTile(
+				_Utils_Tuple2(i, j)),
+			quatilelst)) || (_Utils_eq(
+			model.cardSelected,
+			$author$project$Model$SelectCard($author$project$Card$warehouse)) && A2(
+			$elm$core$List$member,
+			$author$project$Geometry$converHextoTile(
+				_Utils_Tuple2(i, j)),
+			waretilelst)));
+	});
 var $author$project$View$renderFilm = F2(
 	function (model, _v0) {
 		var i = _v0.a;
 		var j = _v0.b;
-		var hostilelst = $author$project$Tile$hospitalTiles(model.city.tilesindex);
 		var a = $author$project$Parameters$para.a;
 		var h = a / $elm$core$Basics$sqrt(3);
 		var _v1 = $author$project$Parameters$para.tileOrigin;
@@ -8489,24 +9466,18 @@ var $author$project$View$renderFilm = F2(
 						$author$project$View$onOver(
 						A2($author$project$Message$MouseOver, i, j))
 					]),
-				(_Utils_eq(
-					model.cardSelected,
-					$author$project$Model$SelectCard($author$project$Card$hospital)) && A2(
-					$elm$core$List$member,
-					$author$project$Geometry$converHextoTile(
-						_Utils_Tuple2(i, j)),
-					hostilelst)) ? _List_Nil : _List_fromArray(
+				A2(
+					$author$project$Model$judgeBuild,
+					model,
+					_Utils_Tuple2(i, j)) ? _List_Nil : _List_fromArray(
 					[
 						$author$project$View$onClick(
 						A2($author$project$Message$SelectHex, i, j))
 					])),
-			(_Utils_eq(
-				model.cardSelected,
-				$author$project$Model$SelectCard($author$project$Card$hospital)) && A2(
-				$elm$core$List$member,
-				$author$project$Geometry$converHextoTile(
-					_Utils_Tuple2(i, j)),
-				hostilelst)) ? _List_Nil : _Utils_ap(
+			A2(
+				$author$project$Model$judgeBuild,
+				model,
+				_Utils_Tuple2(i, j)) ? _List_Nil : _Utils_ap(
 				_List_fromArray(
 					[tint]),
 				_List_fromArray(
@@ -8606,15 +9577,6 @@ var $author$project$View$renderantiVirus = function (av) {
 		A2($author$project$View$renderHex, 'blue', 0.5),
 		pos);
 };
-var $author$project$Model$sumDead = function (city) {
-	return $elm$core$List$sum(
-		A2(
-			$elm$core$List$map,
-			function (x) {
-				return x.dead;
-			},
-			city.tilesindex));
-};
 var $author$project$Model$sumPopulation = function (city) {
 	return $elm$core$List$sum(
 		A2(
@@ -8627,8 +9589,8 @@ var $author$project$Model$sumPopulation = function (city) {
 var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$View$view = function (model) {
 	var film = function () {
-		var _v0 = model.selHex;
-		if (_v0.$ === 'SelHexOn') {
+		var _v1 = model.selHex;
+		if (_v1.$ === 'SelHexOn') {
 			return A3(
 				$elm$core$List$foldl,
 				function (x) {
@@ -8645,112 +9607,1703 @@ var $author$project$View$view = function (model) {
 			return _List_Nil;
 		}
 	}();
-	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$svg$Svg$svg,
+	var _v0 = model.state;
+	switch (_v0.$) {
+		case 'Playing':
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$svg$Svg$Attributes$viewBox('0 0 1000 600'),
-						$elm$svg$Svg$Attributes$height('600'),
-						$elm$svg$Svg$Attributes$width('1000'),
-						$elm$svg$Svg$Attributes$width(
-						$elm$core$String$fromFloat(model.screenSize.a)),
-						$elm$svg$Svg$Attributes$height(
-						$elm$core$String$fromFloat(model.screenSize.b))
-					]),
-				_Utils_ap(
-					_List_fromArray(
-						[$author$project$View$bkg]),
-					_Utils_ap(
-						A3(
-							$elm$core$List$foldl,
-							function (x) {
-								return function (y) {
-									return _Utils_ap(x, y);
-								};
-							},
-							_List_Nil,
-							A2($elm$core$List$map, $author$project$View$renderTile, model.city.tilesindex)),
+						A2(
+						$elm$svg$Svg$svg,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$viewBox('0 0 1000 600'),
+								$elm$svg$Svg$Attributes$height('600'),
+								$elm$svg$Svg$Attributes$width('1000'),
+								$elm$svg$Svg$Attributes$width(
+								$elm$core$String$fromFloat(model.screenSize.a)),
+								$elm$svg$Svg$Attributes$height(
+								$elm$core$String$fromFloat(model.screenSize.b))
+							]),
 						_Utils_ap(
-							$author$project$View$renderVirus(model.virus),
+							_List_fromArray(
+								[$author$project$View$bkg]),
 							_Utils_ap(
-								$author$project$View$renderantiVirus(model.av),
+								A3(
+									$elm$core$List$foldl,
+									function (x) {
+										return function (y) {
+											return _Utils_ap(x, y);
+										};
+									},
+									_List_Nil,
+									A2($elm$core$List$map, $author$project$View$renderTile, model.city.tilesindex)),
+								_Utils_ap(
+									$author$project$View$renderVirus(model.virus),
+									_Utils_ap(
+										$author$project$View$renderantiVirus(model.av),
+										_Utils_ap(
+											_List_fromArray(
+												[
+													$author$project$View$renderLevelProgress(model)
+												]),
+											_Utils_ap(
+												$author$project$View$renderFlags(
+													_List_fromArray(
+														[5, 10, 15])),
+												_Utils_ap(
+													film,
+													_List_fromArray(
+														[
+															A5($author$project$View$caption, 15, 70, 'green', 'green: healthy population', 15),
+															A5($author$project$View$caption, 15, 90, 'orange', 'orange: infected population', 15),
+															A5($author$project$View$caption, 15, 110, 'red', 'red: dead population', 15),
+															A5($author$project$View$caption, 15, 130, 'purple', 'purple hex: Virus', 15),
+															A5($author$project$View$caption, 15, 150, 'blue', 'blue hex: AntiVirus', 15)
+														]))))))))),
+						$author$project$View$evolveButton,
+						$author$project$View$nextRoundButton,
+						$elm$html$Html$text(
+						'round ' + ($elm$core$String$fromInt(model.currentRound) + '. ')),
+						$elm$html$Html$text(
+						'sumPopulation: ' + ($elm$core$Debug$toString(
+							$author$project$Model$sumPopulation(model.city)) + '. ')),
+						$author$project$View$powerEcoInfo(model),
+						$author$project$View$cardButton($author$project$Card$powerOverload),
+						$author$project$View$cardButton($author$project$Card$onStandby),
+						$author$project$View$cardButton($author$project$Card$coldWave),
+						$author$project$View$cardButton($author$project$Card$blizzard),
+						$author$project$View$cardButton($author$project$Card$rain),
+						$author$project$View$cardButton($author$project$Card$cut),
+						$author$project$View$cardButton($author$project$Card$fubao),
+						$author$project$View$cardButton($author$project$Card$megaCut),
+						$author$project$View$cardButton($author$project$Card$organClone),
+						$author$project$View$cardButton($author$project$Card$humanClone),
+						$author$project$View$cardButton($author$project$Card$megaClone),
+						$author$project$View$cardButton($author$project$Card$purification),
+						$author$project$View$cardButton($author$project$Card$sacrifice),
+						$author$project$View$cardButton($author$project$Card$resurgence),
+						$author$project$View$cardButton($author$project$Card$defenseline),
+						$author$project$View$cardButton($author$project$Card$hospital),
+						$author$project$View$cardButton($author$project$Card$quarantine),
+						$author$project$View$cardButton($author$project$Card$enhanceHealing),
+						$author$project$View$cardButton($author$project$Card$cellBroadcast),
+						$author$project$View$cardButton($author$project$Card$drought),
+						$author$project$View$cardButton($author$project$Card$warehouse),
+						$author$project$View$cardButton($author$project$Card$warmwave),
+						$author$project$View$cardButton($author$project$Card$goingViral),
+						$author$project$View$cardButton($author$project$Card$judgement),
+						$author$project$View$cardButton($author$project$Card$lowSoundWaves),
+						$elm$html$Html$text(
+						_Utils_ap(
+							$elm$core$Debug$toString(model.todo),
+							$elm$core$Debug$toString(model.actionDescribe))),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Message$Alert('Yo bro!'))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('hello')
+							])),
+						$elm$html$Html$text(
+						$elm$core$Debug$toString(model.todo)),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$author$project$View$onClick(
+								$author$project$Message$LevelBegin(0))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('begin level0')
+							]))
+					]));
+		case 'Drawing':
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$svg,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$viewBox('0 0 1000 600'),
+								$elm$svg$Svg$Attributes$height('600'),
+								$elm$svg$Svg$Attributes$width('1000'),
+								$elm$svg$Svg$Attributes$width(
+								$elm$core$String$fromFloat(model.screenSize.a)),
+								$elm$svg$Svg$Attributes$height(
+								$elm$core$String$fromFloat(model.screenSize.b))
+							]),
+						_Utils_ap(
+							_List_fromArray(
+								[$author$project$View$bkg]),
+							_Utils_ap(
+								$author$project$View$renderInitCards(model),
 								_Utils_ap(
 									_List_fromArray(
 										[
-											$author$project$View$renderLevelProgress(model)
+											A5($author$project$View$caption, 20, 200, 'white', 'click on card to replace', 20)
 										]),
-									_Utils_ap(
-										$author$project$View$renderFlags(
-											_List_fromArray(
-												[5, 10, 15])),
-										_Utils_ap(
-											film,
-											_List_fromArray(
-												[
-													A4($author$project$View$caption, 15, 70, 'green', 'green: healthy population'),
-													A4($author$project$View$caption, 15, 90, 'orange', 'orange: infected population'),
-													A4($author$project$View$caption, 15, 110, 'red', 'red: dead population'),
-													A4($author$project$View$caption, 15, 130, 'purple', 'purple hex: Virus'),
-													A4($author$project$View$caption, 15, 150, 'blue', 'blue hex: AntiVirus')
-												]))))))))),
-				$author$project$View$evolveButton,
-				$author$project$View$nextRoundButton,
-				$elm$html$Html$text(
-				'round ' + ($elm$core$String$fromInt(model.currentRound) + '. ')),
-				$elm$html$Html$text(
-				'Population: ' + ($elm$core$Debug$toString(
-					$author$project$Model$sumPopulation(model.city)) + ('. ' + ('Death: ' + ($elm$core$Debug$toString(
-					$author$project$Model$sumDead(model.city)) + ('. ' + ('Sick: ' + ($elm$core$Debug$toString(
-					$author$project$Model$sumSick(model.city)) + '. ')))))))),
-				$author$project$View$powerEcoInfo(model),
-				$author$project$View$cardButton($author$project$Card$powerOverload),
-				$author$project$View$cardButton($author$project$Card$onStandby),
-				$author$project$View$cardButton($author$project$Card$coldWave),
-				$author$project$View$cardButton($author$project$Card$blizzard),
-				$author$project$View$cardButton($author$project$Card$rain),
-				$author$project$View$cardButton($author$project$Card$cut),
-				$author$project$View$cardButton($author$project$Card$fubao),
-				$author$project$View$cardButton($author$project$Card$megaCut),
-				$author$project$View$cardButton($author$project$Card$organClone),
-				$author$project$View$cardButton($author$project$Card$humanClone),
-				$author$project$View$cardButton($author$project$Card$megaClone),
-				$author$project$View$cardButton($author$project$Card$purification),
-				$author$project$View$cardButton($author$project$Card$sacrifice),
-				$author$project$View$cardButton($author$project$Card$resurgence),
-				$author$project$View$cardButton($author$project$Card$defenseline),
-				$author$project$View$cardButton($author$project$Card$hospital),
-				$author$project$View$cardButton($author$project$Card$quarantine),
-				$elm$html$Html$text(
-				$elm$core$Debug$toString(model.todo)),
+									_List_fromArray(
+										[
+											A5(
+											$author$project$View$caption,
+											20,
+											250,
+											'white',
+											'you still have ' + ($elm$core$String$fromInt(model.replaceChance) + ' chances.'),
+											20)
+										]))))),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$author$project$View$onClick($author$project$Message$StartRound1)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Start round 1')
+							]))
+					]));
+		default:
+			return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+	}
+};
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $author$project$ViewCards$viewCard = _List_fromArray(
+	[
+		A2(
+		$elm$html$Html$h1,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Cards Gallery')
+			])),
+		A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('wrapper')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c1'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', '+3 power, next round -3 power')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Power Overload')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c2'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', '+2 power')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('On Standby')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c3'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', 'There is a probability of 50% to freeze the spread of viruses spread for 1 round.')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Cold Wave')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c4'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', 'Freeze the spread of viruses spread for 3 rounds.')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Blizzard')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c5'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', 'In two rounds, there is a probability of 50% to freeze the spread of viruses for 1 round. The economy output doubles for two rounds.')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Rain')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c6'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', 'Cut the virus on one hexagon.')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Cut')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c7'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', 'The next 2 rounds, economy temporarily doubles, but the death rate permanently rises 5%.')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('996')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c8'),
+						A2($elm$html$Html$Attributes$attribute, 'data-info', 'Cut the virus on one tile.')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Mega Cut')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c9')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('9')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('9')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c10')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('10')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('10')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c11')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('11')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('11')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c12')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('12')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('12')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c13')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('13')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('13')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c14')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('14')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('14')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c15')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('15')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('15')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c16')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('16')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('16')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c17')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('17')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('17')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c18')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('18')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('18')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c19')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('19')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('19')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c20')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('20')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('20')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c21')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('21')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('21')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c22')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('22')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('22')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c23')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('23')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('23')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c24')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('24')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('24')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c25')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('25')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('25')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c26')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('26')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('26')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c27')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('27')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('27')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c28')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('28')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('28')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c29')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('29')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('29')
+											]))
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container'),
+						$elm$html$Html$Attributes$id('c30')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('image')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('story')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('info')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('30')
+											])),
+										A2(
+										$elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('30')
+											]))
+									]))
+							]))
+					]))
+			]))
+	]);
+var $author$project$Message$Click = function (a) {
+	return {$: 'Click', a: a};
+};
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$br = _VirtualDom_node('br');
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $author$project$ViewHome$viewHome = _List_fromArray(
+	[
+		A2(
+		$elm$html$Html$p,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Age of Plague:'),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
+				$elm$html$Html$text('After the Apocalypse')
+			])),
+		A2(
+		$elm$html$Html$a,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
 				A2(
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
 						$elm$html$Html$Events$onClick(
-						$author$project$Message$Alert('Yo bro!'))
+						$author$project$Message$Click('startGame'))
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('hello')
-					])),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick($author$project$Message$Return)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('return!')
+						$elm$html$Html$text('Game')
 					]))
-			]));
+			]))
+	]);
+var $author$project$View$viewAll = function (model) {
+	var _v0 = model.state;
+	switch (_v0.$) {
+		case 'Playing':
+			return A2(
+				$author$project$View$Document,
+				'game',
+				_List_fromArray(
+					[
+						$author$project$View$view(model)
+					]));
+		case 'HomePage':
+			return A2($author$project$View$Document, 'main', $author$project$ViewHome$viewHome);
+		case 'CardPage':
+			return A2($author$project$View$Document, 'card', $author$project$ViewCards$viewCard);
+		default:
+			return A2(
+				$author$project$View$Document,
+				'game',
+				_List_fromArray(
+					[
+						$author$project$View$view(model)
+					]));
+	}
 };
-var $author$project$Main$main = $elm$browser$Browser$element(
-	{init: $author$project$Model$initModel, subscriptions: $author$project$Main$subscriptions, update: $author$project$Update$update, view: $author$project$View$view});
+var $author$project$Main$main = $elm$browser$Browser$document(
+	{init: $author$project$Model$initModel, subscriptions: $author$project$Main$subscriptions, update: $author$project$Update$update, view: $author$project$View$viewAll});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));

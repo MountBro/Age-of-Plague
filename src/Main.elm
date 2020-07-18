@@ -12,11 +12,11 @@ import View exposing (..)
 
 main : Program () Model.Model Message.Msg
 main =
-    Browser.element
+    Browser.document
         { init = initModel
         , subscriptions = subscriptions
         , update = update
-        , view = view
+        , view = View.viewAll
         }
 
 

@@ -14,6 +14,8 @@ import Svg.Attributes as SA
 import Svg.Events as SE
 import SvgSrc exposing (..)
 import Tile exposing (..)
+import ViewCards as VC exposing (..)
+import ViewHome as VH exposing (..)
 import Virus exposing (..)
 
 
@@ -25,6 +27,28 @@ onClick message =
 onOver : msg -> Svg.Attribute msg
 onOver message =
     on "mouseover" (D.succeed message)
+
+
+type alias Document msg =
+    { title : String
+    , body : List (Html msg)
+    }
+
+
+viewAll : Model -> Document Msg
+viewAll model =
+    case model.state of
+        Model.Playing ->
+            Document "game" [ view model ]
+
+        Model.HomePage ->
+            Document "main" VH.viewHome
+
+        Model.CardPage ->
+            Document "card" VC.viewCard
+
+        _ ->
+            Document "game" [ view model ]
 
 
 view : Model -> Html Msg

@@ -27,6 +27,7 @@ type Msg
     | HosInvalid
     | KillTileVir ( ( Int, Int ), Float ) Float
     | JudgeVirPeo ( ( Int, Int ), Float ) Float
+    | Click String
 
 
 type Keyin

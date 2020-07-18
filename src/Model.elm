@@ -60,7 +60,7 @@ initModel _ =
                 ]
       , behavior = initBehavior
       , currentRound = 1
-      , state = Playing
+      , state = HomePage
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
@@ -92,6 +92,8 @@ type Gamestatus
     | Drawing
     | Playcard
     | Stopped
+    | HomePage
+    | CardPage
 
 
 updatelog : Model -> Model

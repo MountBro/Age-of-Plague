@@ -210,9 +210,19 @@ update msg model =
                     else
                         city
             in
-            ({ model | city = city_, virus = virus_}, Cmd.none)
-        Message.Return ->
-            ( model, returnMainPage "return" )
+            ( { model | city = city_, virus = virus_ }, Cmd.none )
+
+        Message.Click "home" ->
+            ( { model | state = Model.HomePage }, Cmd.none )
+
+        Message.Click "card" ->
+            ( { model | state = Model.CardPage }, Cmd.none )
+
+        Message.Click "startGame" ->
+            ( { model | state = Model.Playing }, Cmd.none )
+
+        Message.Click _ ->
+            ( model, Cmd.none )
 
 
 ecoInc : Model -> Model

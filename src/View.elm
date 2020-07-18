@@ -20,8 +20,6 @@ import ViewHome as VH exposing (..)
 import Virus exposing (..)
 
 
-
-
 type alias Document msg =
     { title : String
     , body : List (Html msg)

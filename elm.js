@@ -9797,7 +9797,6 @@ var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $elm$html$Html$p = _VirtualDom_node('p');
 var $author$project$ViewCards$viewCard = _List_fromArray(
 	[
 		A2(
@@ -10197,13 +10196,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('9')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('9')
 											]))
 									]))
 							]))
@@ -10242,13 +10234,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('10')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10295,13 +10280,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('11')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('11')
 											]))
 									]))
 							]))
@@ -10340,13 +10318,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('12')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10393,13 +10364,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('13')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('13')
 											]))
 									]))
 							]))
@@ -10438,13 +10402,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('14')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10491,13 +10448,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('15')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('15')
 											]))
 									]))
 							]))
@@ -10536,13 +10486,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('16')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10589,13 +10532,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('17')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('17')
 											]))
 									]))
 							]))
@@ -10634,13 +10570,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('18')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10687,13 +10616,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('19')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('19')
 											]))
 									]))
 							]))
@@ -10732,13 +10654,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('20')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10785,13 +10700,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('21')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('21')
 											]))
 									]))
 							]))
@@ -10830,13 +10738,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('22')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10883,13 +10784,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('23')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('23')
 											]))
 									]))
 							]))
@@ -10928,13 +10822,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('24')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -10981,13 +10868,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('25')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('25')
 											]))
 									]))
 							]))
@@ -11026,13 +10906,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('26')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -11079,13 +10952,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('27')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('27')
 											]))
 									]))
 							]))
@@ -11124,13 +10990,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 									[
 										A2(
 										$elm$html$Html$h3,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('28')
-											])),
-										A2(
-										$elm$html$Html$p,
 										_List_Nil,
 										_List_fromArray(
 											[
@@ -11177,13 +11036,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('29')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('29')
 											]))
 									]))
 							]))
@@ -11226,13 +11078,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 										_List_fromArray(
 											[
 												$elm$html$Html$text('30')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('30')
 											]))
 									]))
 							]))
@@ -11244,6 +11089,7 @@ var $author$project$Message$Click = function (a) {
 };
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$br = _VirtualDom_node('br');
+var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$ViewHome$viewHome = _List_fromArray(
 	[
@@ -11258,24 +11104,48 @@ var $author$project$ViewHome$viewHome = _List_fromArray(
 			])),
 		A2(
 		$elm$html$Html$a,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick(
+				$author$project$Message$Click('startGame'))
+			]),
 		_List_fromArray(
 			[
 				A2($elm$html$Html$span, _List_Nil, _List_Nil),
 				A2($elm$html$Html$span, _List_Nil, _List_Nil),
 				A2($elm$html$Html$span, _List_Nil, _List_Nil),
 				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick(
-						$author$project$Message$Click('startGame'))
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Game')
-					]))
+				$elm$html$Html$text('Game')
+			])),
+		A2(
+		$elm$html$Html$a,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick(
+				$author$project$Message$Click('card'))
+			]),
+		_List_fromArray(
+			[
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				$elm$html$Html$text('Card Gallery')
+			])),
+		A2(
+		$elm$html$Html$a,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick(
+				$author$project$Message$Click('about'))
+			]),
+		_List_fromArray(
+			[
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				A2($elm$html$Html$span, _List_Nil, _List_Nil),
+				$elm$html$Html$text('About Us')
 			]))
 	]);
 var $author$project$View$viewAll = function (model) {

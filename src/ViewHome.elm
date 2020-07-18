@@ -15,11 +15,25 @@ viewHome =
         , br [] []
         , H.text "After the Apocalypse"
         ]
-    , H.a []
+    , H.a [ HE.onClick (M.Click "startGame") ]
         [ H.span [] []
         , H.span [] []
         , H.span [] []
         , H.span [] []
-        , H.button [ HE.onClick (M.Click "startGame") ] [ H.text "Game" ]
+        , H.text "Game"
+        ]
+    , H.a [ HE.onClick (M.Click "card") ]
+        [ H.span [] []
+        , H.span [] []
+        , H.span [] []
+        , H.span [] []
+        , H.text "Card Gallery"
+        ]
+    , H.a [ HE.onClick (M.Click "about") ]
+        [ H.span [] []
+        , H.span [] []
+        , H.span [] []
+        , H.span [] []
+        , H.text "About Us"
         ]
     ]

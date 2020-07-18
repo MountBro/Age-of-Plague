@@ -107,7 +107,6 @@ updatelog model =
 initlog : Model -> Model
 initlog model =
     { model | actionDescribe = [] }
-        >>>>>>> d5ca43a632bb57368c87fbcbb46b7692b193789e
 
 
 type Region

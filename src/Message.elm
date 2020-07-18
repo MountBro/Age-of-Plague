@@ -29,13 +29,6 @@ type Msg
     | JudgeVirPeo ( ( Int, Int ), Float ) Float
 
 
-type Gamestatus
-    = Playing
-    | Drawing
-    | Playcard
-    | Stopped
-
-
 type Keyin
     = Tab
     | Other

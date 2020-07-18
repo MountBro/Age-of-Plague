@@ -14,8 +14,7 @@ import Virus exposing (..)
 
 
 type alias Model =
-    { -- to do : List Card
-      city : City
+    { city : City
     , behavior : Behavior
     , state : Gamestatus
     , currentRound : Int

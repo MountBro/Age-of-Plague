@@ -1,6 +1,7 @@
 module Tile exposing (..)
 
 import Geometry exposing (..)
+import List.Extra as LE exposing (..)
 
 
 type alias Tile =
@@ -16,21 +17,84 @@ type alias Tile =
     }
 
 
+type alias City =
+    { tilesindex : List Tile
+    }
+
+
+initCity : Int -> List ( Int, Int ) -> City
+initCity tilepeo l =
+    let
+        tiles =
+            initTiles tilepeo l
+    in
+    City tiles
+
+
+sumPopulation : City -> Int
+sumPopulation city =
+    city.tilesindex
+        |> List.map (\x -> x.population)
+        |> List.sum
+
+
+sumSick : City -> Int
+sumSick city =
+    city.tilesindex
+        |> List.map (\x -> x.sick)
+        |> List.sum
+
+
+sumDead : City -> Int
+sumDead city =
+    city.tilesindex
+        |> List.map (\x -> x.dead)
+        |> List.sum
+
+
 initTile : ( Int, Int ) -> Int -> Tile
 initTile ( x, y ) population =
     Tile ( x, y ) population 0 0 0 True False False False
 
 
-cartesianProduct : List a -> List b -> List ( a, b )
-cartesianProduct l1 l2 =
-    List.foldr (\li1 -> \li2 -> li1 ++ li2)
-        []
-        (List.map (\x -> List.map (\y -> ( x, y )) l2) l1)
-
-
 initTiles : Int -> List ( Int, Int ) -> List Tile
 initTiles p l =
     List.map (\x -> initTile x p) l
+
+
+sickupdate : List Tile -> List ( Int, Int ) -> Int -> List Tile
+sickupdate t lstvir inf =
+    List.map
+        (\x ->
+            let
+                s =
+                    LE.count ((==) x.indice) lstvir * inf
+
+                cure =
+                    x.cureEff
+            in
+            if x.hos then
+                if s + x.sick - cure <= x.population && s + x.sick - cure >= 0 then
+                    { x
+                        | sick = s + x.sick - cure
+                    }
+
+                else if s + x.sick - cure < 0 then
+                    { x
+                        | sick = 0
+                    }
+
+                else
+                    { x
+                        | sick = x.population
+                    }
+
+            else
+                { x
+                    | sick = min (x.sick + s) x.population
+                }
+        )
+        t
 
 
 validNeighborTile : List Tile -> Tile -> List Tile

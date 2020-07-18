@@ -114,3 +114,10 @@ converHextoTile ( i, j ) =
 isInt : Float -> Bool
 isInt x =
     abs (x - toFloat (round x)) < 0.00001
+
+
+cartesianProduct : List a -> List b -> List ( a, b )
+cartesianProduct l1 l2 =
+    List.foldr (\li1 -> \li2 -> li1 ++ li2)
+        []
+        (List.map (\x -> List.map (\y -> ( x, y )) l2) l1)

@@ -11082,49 +11082,58 @@ var $author$project$ViewHome$viewHome = _List_fromArray(
 				$elm$html$Html$text('After the Apocalypse')
 			])),
 		A2(
-		$elm$html$Html$a,
+		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Events$onClick(
-				$author$project$Message$Click('startGame'))
+				$elm$html$Html$Attributes$id('ctnr')
 			]),
 		_List_fromArray(
 			[
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				$elm$html$Html$text('Game')
-			])),
-		A2(
-		$elm$html$Html$a,
-		_List_fromArray(
-			[
-				$elm$html$Html$Events$onClick(
-				$author$project$Message$Click('card'))
-			]),
-		_List_fromArray(
-			[
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				$elm$html$Html$text('Card Gallery')
-			])),
-		A2(
-		$elm$html$Html$a,
-		_List_fromArray(
-			[
-				$elm$html$Html$Events$onClick(
-				$author$project$Message$Click('about'))
-			]),
-		_List_fromArray(
-			[
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				A2($elm$html$Html$span, _List_Nil, _List_Nil),
-				$elm$html$Html$text('About Us')
+				A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Message$Click('startGame'))
+					]),
+				_List_fromArray(
+					[
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						$elm$html$Html$text('Start the Game')
+					])),
+				A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Message$Click('card'))
+					]),
+				_List_fromArray(
+					[
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						$elm$html$Html$text('Card Gallery')
+					])),
+				A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Message$Click('about'))
+					]),
+				_List_fromArray(
+					[
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						A2($elm$html$Html$span, _List_Nil, _List_Nil),
+						$elm$html$Html$text('About Us')
+					]))
 			]))
 	]);
 var $author$project$View$viewAll = function (model) {

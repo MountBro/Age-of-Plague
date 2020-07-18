@@ -19,6 +19,7 @@ type Msg
     | MouseOver Int Int
     | Alert String
     | HosInvalid
+    | Return
 
 
 type Gamestatus

@@ -7022,6 +7022,7 @@ var $author$project$Update$pickAction = function (model) {
 			model,
 			{todo: todo}));
 };
+var $author$project$Ports$returnMainPage = _Platform_outgoingPort('returnMainPage', $elm$json$Json$Encode$string);
 var $author$project$Ports$sendMsg = _Platform_outgoingPort('sendMsg', $elm$json$Json$Encode$string);
 var $author$project$Card$targetCardlst = _List_fromArray(
 	[$author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$sacrifice, $author$project$Card$purification, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$quarantine]);
@@ -7680,16 +7681,21 @@ var $author$project$Update$update = F2(
 						model,
 						{economy: model.economy + $author$project$Parameters$para.ecoThreshold, power: model.power + 4}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'Alert':
 				var txt = msg.a;
 				return _Utils_Tuple2(
 					model,
 					$author$project$Ports$sendMsg(txt));
+			default:
+				return _Utils_Tuple2(
+					model,
+					$author$project$Ports$returnMainPage('return'));
 		}
 	});
 var $author$project$Message$Alert = function (a) {
 	return {$: 'Alert', a: a};
 };
+var $author$project$Message$Return = {$: 'Return'};
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
@@ -8731,6 +8737,16 @@ var $author$project$View$view = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('hello')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Message$Return)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('return!')
 					]))
 			]));
 };

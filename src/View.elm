@@ -63,9 +63,17 @@ view model =
         , evolveButton
         , nextRoundButton
         , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-        , Html.text ("Population: " ++ Debug.toString (sumPopulation model.city) ++ ". "
-        ++ "Death: " ++ Debug.toString (sumDead model.city) ++ ". "
-        ++ "Sick: " ++ Debug.toString (sumSick model.city) ++ ". ")
+        , Html.text
+            ("Population: "
+                ++ Debug.toString (sumPopulation model.city)
+                ++ ". "
+                ++ "Death: "
+                ++ Debug.toString (sumDead model.city)
+                ++ ". "
+                ++ "Sick: "
+                ++ Debug.toString (sumSick model.city)
+                ++ ". "
+            )
         , powerEcoInfo model
         , cardButton powerOverload
         , cardButton onStandby
@@ -86,6 +94,7 @@ view model =
         , cardButton quarantine
         , Html.text (Debug.toString model.todo)
         , Html.button [ Html.Events.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
+        , Html.button [ Html.Events.onClick Message.Return ] [ Html.text "return!" ]
         ]
 
 
@@ -259,32 +268,31 @@ renderFilm model ( i, j ) =
 
         hostilelst =
             hospitalTiles model.city.tilesindex
-
     in
     svg
         ([ onOver (MouseOver i j) ]
-        ++
-        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
-            []
-        else
-            [onClick (SelectHex i j)]
+            ++ (if model.cardSelected == SelectCard hospital && List.member (converHextoTile ( i, j )) hostilelst then
+                    []
+
+                else
+                    [ onClick (SelectHex i j) ]
+               )
         )
-        (
-        if model.cardSelected == SelectCard hospital && List.member (converHextoTile (i, j)) hostilelst then
+        (if model.cardSelected == SelectCard hospital && List.member (converHextoTile ( i, j )) hostilelst then
             []
-        else
-            [tint]
-        ++
-        [
-        polygon
-            [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
-                [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
-                |> SA.points
-            , 0.0 |> String.fromFloat |> SA.fillOpacity
-            , SA.fill "white"
-            ]
-            []
-        ])
+
+         else
+            [ tint ]
+                ++ [ polygon
+                        [ polyPoint [ x + a, x, x - a, x - a, x, x + a ]
+                            [ y + h, y + 2 * h, y + h, y - h, y - 2 * h, y - h ]
+                            |> SA.points
+                        , 0.0 |> String.fromFloat |> SA.fillOpacity
+                        , SA.fill "white"
+                        ]
+                        []
+                   ]
+        )
 
 
 

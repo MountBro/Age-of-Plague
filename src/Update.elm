@@ -106,6 +106,9 @@ update msg model =
         Message.Alert txt ->
             ( model, sendMsg txt )
 
+        Message.Return ->
+            ( model, returnMainPage "return" )
+
 
 ecoInc : Model -> Model
 ecoInc model =

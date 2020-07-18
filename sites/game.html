@@ -16,7 +16,11 @@
         var warn = function(msg) {
             alert(msg);
         }
+        var returnMain = function(msg) {
+            history.back(-1);
+        }
         app.ports.sendMsg.subscribe(warn);
+        app.ports.returnMainPage.subscribe(returnMain);
     </script>
 </body>
 

@@ -4,10 +4,11 @@ import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
+import List.Extra as LE
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
-import Random exposing (..)
+import Random exposing (float, generate)
 import Todo exposing (..)
 import Virus exposing (..)
 
@@ -15,6 +16,28 @@ import Virus exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        LevelBegin n ->
+            ( levelInit n model, Random.generate InitializeHands (cardsGenerator 10) )
+
+        InitializeHands lc ->
+            let
+                loglc =
+                    log "lc" lc
+            in
+            ( { model | hands = lc }, Cmd.none )
+
+        ReplaceCard c replacement ->
+            let
+                hands_ =
+                    model.hands
+
+                hands =
+                    hands_
+                        |> LE.remove c
+                        |> List.append [ replacement ]
+            in
+            ( { model | hands = hands }, Cmd.none )
+
         Resize w h ->
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
@@ -29,7 +52,10 @@ update msg model =
             ( model, Cmd.none )
 
         GotViewport viewport ->
-            ( { model | viewport = Just viewport, screenSize = ( viewport.viewport.width, viewport.viewport.height ) }
+            ( { model
+                | viewport = Just viewport
+                , screenSize = ( viewport.viewport.width, viewport.viewport.height )
+              }
             , Cmd.none
             )
 
@@ -111,6 +137,19 @@ update msg model =
                     log "over" ( i, j )
             in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
+
+        MouseOverCardToReplace n ->
+            if model.state == Drawing then
+                ( { model | mouseOverCardToReplace = n }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        SelectCardToReplace c ->
+            model |> replaceCard c
+
+        StartRound1 ->
+            ( { model | state = Playing }, Cmd.none )
 
 
 ecoInc : Model -> Model
@@ -458,7 +497,7 @@ mFillRegion : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 mFillRegion ( model, cm ) =
     case model.cardSelected of
         NoCard ->
-            ( model, Cmd.none )
+            ( model, cm )
 
         SelectCard card ->
             case model.selHex of
@@ -478,7 +517,7 @@ mFillRegion ( model, cm ) =
                         ( model, cm )
 
                 SelHexOff ->
-                    ( model, Cmd.none )
+                    ( model, cm )
 
 
 fillRegion : Card -> Sel -> ( Queue, Cmd Msg )
@@ -509,3 +548,21 @@ fillRegion card sel =
 
     else
         ( finishedEmptyQueue, Cmd.none )
+
+
+levelInit : Int -> Model -> Model
+levelInit n model =
+    { model | behavior = initBehavior, state = Drawing }
+
+
+replaceCard : Card -> Model -> ( Model, Cmd Msg )
+replaceCard c model =
+    if List.member c model.hands && model.replaceChance > 0 then
+        ( { model | replaceChance = model.replaceChance - 1 }, Random.generate (ReplaceCard c) cardGenerator )
+
+    else
+        let
+            logreplace =
+                log "card to replace does not exist in hands!" ""
+        in
+        ( model, Cmd.none )

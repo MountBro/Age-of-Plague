@@ -35,7 +35,61 @@ type alias Model =
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
+    , hands : List Card
+    , deck : List Card
+    , mouseOverCardToReplace : Int
+    , replaceChance : Int
     }
+
+
+initModel : () -> ( Model, Cmd Msg )
+initModel _ =
+    ( { city =
+            initCity 10
+                [ ( 0, 0 )
+                , ( 0, 1 )
+                , ( 0, 2 )
+                , ( 1, -1 )
+                , ( 1, 0 )
+                , ( 1, 1 )
+                , ( 2, -1 )
+                , ( 2, 0 )
+                , ( 2, 1 )
+                , ( 3, -1 )
+                ]
+      , behavior = initBehavior
+      , currentRound = 1
+      , state = Playing
+      , screenSize = ( 600, 800 )
+      , viewport = Nothing
+      , virus = initVirus
+      , region = NoRegion
+      , cardSelected = NoCard
+      , todo = []
+      , roundTodoCleared = False
+      , av = initAntiVirus
+      , power = 10000
+      , economy = 10000
+      , basicEcoOutput = para.basicEcoOutput
+      , warehouseNum = 0
+      , ecoRatio = 1
+      , selectedHex = ( -233, -233 )
+      , mouseOver = ( -233, -233 )
+      , selHex = SelHexOff
+      , hands = []
+      , deck = allCards
+      , mouseOverCardToReplace = 0
+      , replaceChance = 3
+      }
+    , Task.perform GotViewport Browser.Dom.getViewport
+    )
+
+
+type Gamestatus
+    = Playing
+    | Drawing
+    | Playcard
+    | Stopped
 
 
 type Region
@@ -117,50 +171,17 @@ initBehavior =
     { populationFlow = True, virusEvolve = True }
 
 
-initModel : () -> ( Model, Cmd Msg )
-initModel _ =
-    ( { city =
-            initCity 10
-                [ ( 0, 0 )
-                , ( 0, 1 )
-                , ( 0, 2 )
-                , ( 1, -1 )
-                , ( 1, 0 )
-                , ( 1, 1 )
-                , ( 2, -1 )
-                , ( 2, 0 )
-                , ( 2, 1 )
-                , ( 3, -1 )
-                ]
-      , behavior = initBehavior
-      , state = Playing
-      , currentRound = 1
-      , screenSize = ( 600, 800 )
-      , viewport = Nothing
-      , virus = initVirus
-      , region = NoRegion
-      , cardSelected = NoCard
-      , todo = []
-      , roundTodoCleared = False
-      , av = initAntiVirus
-      , power = 10000
-      , economy = 10000
-      , basicEcoOutput = para.basicEcoOutput
-      , warehouseNum = 0
-      , ecoRatio = 1
-      , selectedHex = ( -233, -233 )
-      , mouseOver = ( -233, -233 )
-      , selHex = SelHexOff
-      }
-    , Task.perform GotViewport Browser.Dom.getViewport
-    )
-
-
 sickupdate : List Tile -> List ( Int, Int ) -> Int -> List Tile
 sickupdate t lstvir inf =
     List.map
         (\x ->
-            if (LE.count ((==) x.indice) lstvir > 0) && x.sick + inf * LE.count ((==) x.indice) lstvir <= x.population then
+            if
+                (LE.count ((==) x.indice) lstvir > 0)
+                    && x.sick
+                    + inf
+                    * LE.count ((==) x.indice) lstvir
+                    <= x.population
+            then
                 { x
                     | sick = x.sick + inf * LE.count ((==) x.indice) lstvir
                 }
@@ -203,7 +224,9 @@ virusKill vir city =
 
         deathlst =
             if death <= estimateDeath then
-                List.take (round (toFloat death / toFloat estimateDeath) * List.length lstInfectedn) lstInfectedn
+                List.take
+                    (round (toFloat death / toFloat estimateDeath) * List.length lstInfectedn)
+                    lstInfectedn
 
             else
                 lstInfectedn ++ List.take (death - estimateDeath) lstInfected1

@@ -1,10 +1,13 @@
 module Card exposing (..)
 
+import Random exposing (Generator, list, map)
+import Random.List exposing (choose)
+
 
 type alias Card =
     { selMode : Selection
     , cost : Int
-    , action : List Actio
+    , action : List Action
     , name : String
     }
 
@@ -37,8 +40,54 @@ type Action
     | FreezevirusI ( Int, Int )
 
 
+allCards =
+    [ powerOverload
+    , onStandby
+    , coldWave
+    , blizzard
+    , rain
+    , cut
+    , megaCut
+    , fubao
+    , organClone
+    , humanClone
+    , megaClone
+    , purification
+    , sacrifice
+    , resurgence
+    , defenseline
+    ]
 
--- cardToMusicUrl : Card -> String
+
+cardGenerator : Generator Card
+cardGenerator =
+    choose allCards
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+
+
+cardsGenerator : Int -> Generator (List Card)
+cardsGenerator n =
+    choose allCards
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+        |> Random.list n
+
+
+cardComparison : Card -> Card -> Order
+cardComparison c1 c2 =
+    if c1.cost < c2.cost then
+        LT
+
+    else if c1.cost > c2.cost then
+        GT
+
+    else if String.length c1.name > String.length c2.name then
+        GT
+
+    else if String.length c1.name < String.length c2.name then
+        LT
+
+    else
+        EQ
 
 
 powerOverload =

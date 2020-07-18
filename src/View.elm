@@ -38,50 +38,73 @@ view model =
                 _ ->
                     []
     in
-    div []
-        [ svg
-            [ SA.viewBox "0 0 1000 600"
-            , SA.height "600"
-            , SA.width "1000"
-            , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
-            , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
-            ]
-            ([ bkg ]
-                ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
-                ++ renderVirus model.virus
-                ++ renderantiVirus model.av
-                ++ [ renderLevelProgress model ]
-                ++ renderFlags [ 5, 10, 15 ]
-                ++ film
-                ++ [ caption 15 70 "green" "green: healthy population"
-                   , caption 15 90 "orange" "orange: infected population"
-                   , caption 15 110 "red" "red: dead population"
-                   , caption 15 130 "purple" "purple hex: Virus"
-                   , caption 15 150 "blue" "blue hex: AntiVirus"
-                   ]
-            )
-        , evolveButton
-        , nextRoundButton
-        , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-        , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
-        , powerEcoInfo model
-        , cardButton powerOverload
-        , cardButton onStandby
-        , cardButton coldWave
-        , cardButton blizzard
-        , cardButton rain
-        , cardButton cut
-        , cardButton fubao
-        , cardButton megaCut
-        , cardButton organClone
-        , cardButton humanClone
-        , cardButton megaClone
-        , cardButton purification
-        , cardButton sacrifice
-        , cardButton resurgence
-        , cardButton defenseline
-        , Html.text (Debug.toString model.todo)
-        ]
+    case model.state of
+        Playing ->
+            div []
+                [ svg
+                    [ SA.viewBox "0 0 1000 600"
+                    , SA.height "600"
+                    , SA.width "1000"
+                    , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
+                    , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+                    ]
+                    ([ bkg ]
+                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
+                        ++ renderVirus model.virus
+                        ++ renderantiVirus model.av
+                        ++ [ renderLevelProgress model ]
+                        ++ renderFlags [ 5, 10, 15 ]
+                        ++ film
+                        ++ [ caption 15 70 "green" "green: healthy population" 15
+                           , caption 15 90 "orange" "orange: infected population" 15
+                           , caption 15 110 "red" "red: dead population" 15
+                           , caption 15 130 "purple" "purple hex: Virus" 15
+                           , caption 15 150 "blue" "blue hex: AntiVirus" 15
+                           ]
+                    )
+                , evolveButton
+                , nextRoundButton
+                , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
+                , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
+                , powerEcoInfo model
+                , cardButton powerOverload
+                , cardButton onStandby
+                , cardButton coldWave
+                , cardButton blizzard
+                , cardButton rain
+                , cardButton cut
+                , cardButton fubao
+                , cardButton megaCut
+                , cardButton organClone
+                , cardButton humanClone
+                , cardButton megaClone
+                , cardButton purification
+                , cardButton sacrifice
+                , cardButton resurgence
+                , cardButton defenseline
+                , Html.text (Debug.toString model.todo)
+                , Html.button [ onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
+                ]
+
+        Drawing ->
+            div []
+                [ svg
+                    [ SA.viewBox "0 0 1000 600"
+                    , SA.height "600"
+                    , SA.width "1000"
+                    , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
+                    , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+                    ]
+                    ([ bkg ]
+                        ++ renderInitCards model
+                        ++ [ caption 20 200 "white" "click on card to replace" 20 ]
+                        ++ [ caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
+                    )
+                , Html.button [ onClick StartRound1 ] [ Html.text "Start round 1" ]
+                ]
+
+        _ ->
+            div [] []
 
 
 bkg : Svg Msg
@@ -96,10 +119,10 @@ bkg =
         []
 
 
-caption : Float -> Float -> String -> String -> Svg Msg
-caption x y cstr text =
+caption : Float -> Float -> String -> String -> Int -> Svg Msg
+caption x y cstr text fontSize =
     text_
-        [ SA.fontSize "15"
+        [ fontSize |> String.fromInt |> SA.fontSize
         , SA.fontFamily "sans-serif"
         , x |> String.fromFloat |> SA.x
         , y |> String.fromFloat |> SA.y
@@ -476,6 +499,74 @@ renderantiVirus av =
             av.pos
     in
     List.map (renderHex "blue" 0.5) pos
+
+
+renderCard : Int -> Float -> Float -> Card -> Html Msg
+renderCard n x y c =
+    svg []
+        [ rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "black" |> SA.fill
+            , 70.0 |> String.fromFloat |> SA.width
+            , 100.0 |> String.fromFloat |> SA.height
+            ]
+            []
+        , caption (x + 10.0) (y + 10.0) "white" c.name 10
+        ]
+
+
+renderCardFilm : Int -> Float -> Float -> Card -> Model -> Html Msg
+renderCardFilm n x y c model =
+    let
+        tint =
+            if n == model.mouseOverCardToReplace && model.replaceChance > 0 then
+                rect
+                    [ x |> String.fromFloat |> SA.x
+                    , y |> String.fromFloat |> SA.y
+                    , "yellow" |> SA.fill
+                    , SA.fillOpacity "0.3"
+                    , 70.0 |> String.fromFloat |> SA.width
+                    , 100.0 |> String.fromFloat |> SA.height
+                    ]
+                    []
+
+            else
+                rect [] []
+    in
+    svg [ onClick (SelectCardToReplace c), onOver (MouseOverCardToReplace n) ]
+        [ tint
+        , rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "white" |> SA.fill
+            , SA.fillOpacity "0.0"
+            , 70.0 |> String.fromFloat |> SA.width
+            , 100.0 |> String.fromFloat |> SA.height
+            ]
+            []
+        ]
+
+
+renderInitCards : Model -> List (Html Msg)
+renderInitCards model =
+    let
+        hands =
+            model.hands |> List.sortWith cardComparison
+
+        indexed =
+            List.indexedMap Tuple.pair hands
+                |> List.map
+                    (\( n, c ) ->
+                        ( n, ( toFloat (20 + 80 * n), 20.0 ), c )
+                    )
+    in
+    List.map
+        (\( n, ( x, y ), c ) -> renderCard n x y c)
+        indexed
+        ++ List.map
+            (\( n, ( x, y ), c ) -> renderCardFilm n x y c model)
+            indexed
 
 
 

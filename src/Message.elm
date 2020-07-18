@@ -17,13 +17,12 @@ type Msg
     | FreezeRet Float Float
     | SelectHex Int Int
     | MouseOver Int Int
-
-
-type Gamestatus
-    = Playing
-    | Drawing
-    | Playcard
-    | Stopped
+    | InitializeHands (List Card)
+    | LevelBegin Int
+    | SelectCardToReplace Card
+    | MouseOverCardToReplace Int
+    | ReplaceCard Card Card
+    | StartRound1
 
 
 type Keyin

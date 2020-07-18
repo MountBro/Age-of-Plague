@@ -4,7 +4,7 @@ module Card exposing (..)
 type alias Card =
     { selMode : Selection
     , cost : Int
-    , action : List Action
+    , action : List Actio
     , name : String
     }
 
@@ -35,6 +35,10 @@ type Action
     | SacrificeI ( Int, Int )
     | ResurgenceI ( Int, Int )
     | FreezevirusI ( Int, Int )
+
+
+
+-- cardToMusicUrl : Card -> String
 
 
 powerOverload =

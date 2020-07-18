@@ -40,10 +40,19 @@ update msg model =
 
         NextRound ->
             if model.behavior.virusEvolve then
-                ( { model | currentRound = model.currentRound + 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1 }
+                    |> clearCurrentRoundTodo
+                    |> virusEvolve
+                    |> ecoInc
+                , Cmd.none
+                )
 
             else
-                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior }
+                    |> clearCurrentRoundTodo
+                    |> ecoInc
+                , Cmd.none
+                )
 
         PlayCard card ->
             if card.cost <= model.power && para.ecoThreshold <= model.economy then

@@ -13,6 +13,10 @@ type alias Card =
     }
 
 
+type alias Sel =
+    ( Int, Int )
+
+
 type Selection
     = HexSel
     | TileSel
@@ -73,6 +77,16 @@ allCards =
     , sacrifice
     , resurgence
     , defenseline
+    , hospital
+    , quarantine
+    , enhanceHealing
+    , cellBroadcast
+    , drought
+    , warehouse
+    , warmwave
+    , goingViral
+    , judgement
+    , lowSoundWaves
     ]
 
 

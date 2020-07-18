@@ -1,8 +1,11 @@
 *.m~
 *.elm~
-
-elm-stuff
-
 *.elmi
 *.elmo
 *.dat
+
+# elm-package generate files 
+elm-stuff/
+
+# webstorm generate directory
+.idea/

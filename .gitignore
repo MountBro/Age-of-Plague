@@ -1,8 +1,8 @@
 *.m~
 *.elm~
-
-elm-stuff
-
 *.elmi
 *.elmo
 *.dat
+
+/elm-stuff/*
+/.idea/*

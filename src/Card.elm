@@ -2,7 +2,7 @@ module Card exposing (..)
 
 import Random exposing (Generator, list, map)
 import Random.List exposing (choose)
-
+import List.Extra as LE
 
 type alias Card =
     { selMode : Selection
@@ -11,6 +11,10 @@ type alias Card =
     , name : String
     , describe : String
     }
+
+
+type alias Sel =
+    ( Int, Int )
 
 
 type Selection
@@ -23,11 +27,7 @@ type Action
     = IncPowerI Int
     | FreezeI
     | Freeze Float
-    | EcoDoubleI
     | EcoDoubleI_Freeze Float
-    | DisableEvolveI
-    | DisableEvolve Float
-    | NoAction
     | CutHexI ( Int, Int )
     | CutTileI ( Int, Int )
     | Summon (List Card)
@@ -51,8 +51,10 @@ type Action
     | JudgeI_Kill ( ( Int, Int ), Float )
     | EvacuateI ( Int, Int )
     | StopEVAI ( Int, Int )
+    | NoAction
 
-
+actionDes =
+    List.map2 Tuple.pair [ FreezeI]
 
 -- Card -> String
 
@@ -73,6 +75,19 @@ allCards =
     , sacrifice
     , resurgence
     , defenseline
+    , hospital
+    , quarantine
+    , enhanceHealing
+    , cellBroadcast
+    , drought
+    , warehouse
+    , warmwave
+    , goingViral
+    , judgement
+    , lowSoundWaves
+    , compulsoryMR
+    , firstAid
+    , medMob
     ]
 
 
@@ -205,6 +220,18 @@ judgement =
 
 lowSoundWaves =
     Card TileSel 4 [ EvacuateI ( 0, 0 ), StopEVAI ( 0, 0 ) ] "LowSoundWaves" "Select a tile. Distribute all population to the neighboring tiles during the next population flow."
+
+
+compulsoryMR = --CompulsoryMedicalRecruitment
+    Card NoSel 6 [ Summon [ megaCut, megaCut ] ] "Compulsory Medical Recruitment" "Immediately summoned two MegaCut cards."
+
+
+firstAid =
+    Card NoSel 2 [ Summon [ hospital ] ] "FirstAid" "Summon one hospital card."
+
+
+medMob =
+    Card NoSel 6 [ Summon [ cut, cut, cut ] ] "MedicalMobilization" "Immediately summoned three Cut cards."
 
 
 targetCardlst =

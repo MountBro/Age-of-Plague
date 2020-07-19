@@ -20,6 +20,34 @@ type alias AntiVirus =
     }
 
 
+initVirus : Virus
+initVirus =
+    { rules = [ 2, 4 ]
+    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
+
+    --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
+    , number = 0
+    , infect = 1
+    , kill = 0.1
+    }
+
+
+initAntiVirus : AntiVirus
+initAntiVirus =
+    { rules = [ 0, 1, 2, 3 ]
+    , pos = []
+    , life = 0
+    }
+
+
+createAV : ( Int, Int ) -> AntiVirus
+createAV hlst =
+    { rules = [ 0, 1, 2, 3 ]
+    , pos = [ hlst ]
+    , life = 3
+    }
+
+
 countInfectedNeighbor : ( Int, Int ) -> List ( Int, Int ) -> Int
 countInfectedNeighbor pos lstv =
     let

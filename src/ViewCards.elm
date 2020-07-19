@@ -5,16 +5,19 @@ import Browser.Events exposing (..)
 import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events as HE exposing (..)
+import Message exposing (..)
 
 
-viewCard : List (Html msg)
+viewCard : List (Html Msg)
 viewCard =
-    [ h1 [] [ text "Cards Gallery" ]
+    [ p [ id "cardsTitle" ] [ text "Cards Gallery" ]
     , div [ class "wrapper" ]
-        [ div [ class "container", id "c1", attribute "data-info" "+3 power, next round -3 power" ]
-            [ div [ class "image" ]
-                []
-            , div [ class "story" ]
+        [ div
+            [ class "container"
+            , id "c1"
+            , attribute "data-info" "+3 power, next round -3 power"
+            ]
+            [ div [ class "story" ]
                 [ div [ class "info" ]
                     [ h3 []
                         [ text "Power Overload" ]
@@ -22,9 +25,7 @@ viewCard =
                 ]
             ]
         , div [ class "container", id "c2", attribute "data-info" "+2 power" ]
-            [ div [ class "image" ]
-                []
-            , div [ class "story" ]
+            [ div [ class "story" ]
                 [ div [ class "info" ]
                     [ h3 []
                         [ text "On Standby" ]
@@ -311,5 +312,10 @@ viewCard =
                     ]
                 ]
             ]
+        , H.a
+            [ HE.onClick (Message.Click "home")
+            , HA.id "cardsBack"
+            ]
+            [ H.text "Back" ]
         ]
     ]

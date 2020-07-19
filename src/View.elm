@@ -5,6 +5,7 @@ import Debug exposing (log, toString)
 import GameView exposing (..)
 import Geometry exposing (..)
 import Html exposing (..)
+import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as D
 import Message exposing (..)
@@ -28,10 +29,6 @@ type alias Document msg =
 
 viewAll : Model -> Document Msg
 viewAll model =
-    -- let
-    --     log1 =
-    --         Debug.toString model.state |> Debug.log
-    -- in
     case model.state of
         Model.Playing ->
             Document "game" [ view model ]
@@ -59,7 +56,7 @@ view model =
     in
     case model.state of
         Playing ->
-            div []
+            div [ HA.style "background-color" "#FFF" ]
                 [ svg
                     [ SA.viewBox "0 0 1000 600"
                     , SA.height "600"
@@ -84,10 +81,10 @@ view model =
                 , powerEcoInfo model
                 , div [] (List.map cardButton allCards)
                 , Html.text (Debug.toString model.todo ++ Debug.toString model.actionDescribe)
-                , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
                 , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw a card" ]
+                , Html.button [ HE.onClick (Message.Click "home") ] [ Html.text "BACK!" ]
                 ]
 
         Drawing ->

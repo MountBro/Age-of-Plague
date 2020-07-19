@@ -17,6 +17,7 @@ body {
 #ctnr {
     position: relative;
     top: 15%;
+    left: -3.5%;
 }
 
 a {
@@ -49,9 +50,3 @@ a:nth-child(1) {
 a:nth-child(2) {
     filter: hue-rotate(110deg);
 }
-
-
-/* a span {
-    position: absolute;
-    display: block;
-} */

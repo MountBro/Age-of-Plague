@@ -450,24 +450,16 @@ renderCard width n x y c =
 
 renderCardPng : Float -> Float -> Float -> Card -> Html Msg
 renderCardPng width x y c =
-    let
-        l =
-            String.length c.url
-    in
-    if l == 0 then
-        div [] []
-
-    else
-        svg []
-            [ Svg.image
-                [ c.url |> SA.xlinkHref
-                , x |> String.fromFloat |> SA.x
-                , y |> String.fromFloat |> SA.y
-                , width |> String.fromFloat |> SA.width
-                , 1.6 * width |> String.fromFloat |> SA.height
-                ]
-                []
+    svg []
+        [ Svg.image
+            [ c |> toPngUrl |> SA.xlinkHref
+            , x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , width |> String.fromFloat |> SA.width
+            , 1.6 * width |> String.fromFloat |> SA.height
             ]
+            []
+        ]
 
 
 renderInitCardFilm : Float -> Int -> Float -> Float -> Card -> Model -> Html Msg
@@ -580,3 +572,9 @@ renderHands model =
         ++ List.map
             (\( n, ( x, y ), c ) -> renderCardFilm para.hcw n x y c model)
             indexed
+
+
+
+--svgParagraph : String -> Html Msg
+--renderConsole : Model -> List (Html Msg)
+--renderConsole model =

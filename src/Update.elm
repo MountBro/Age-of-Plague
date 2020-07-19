@@ -71,10 +71,23 @@ update msg model =
 
         NextRound ->
             if model.behavior.virusEvolve then
-                ( { model | currentRound = model.currentRound + 1, drawChance = 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc |> initlog, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, drawChance = 1 }
+                    |> clearCurrentRoundTodo
+                    |> virusEvolve
+                    |> ecoInc
+                    |> powerInc
+                    |> initlog
+                , Cmd.none
+                )
 
             else
-                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior, drawChance = 1 } |> clearCurrentRoundTodo |> ecoInc |> initlog, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior, drawChance = 1 }
+                    |> clearCurrentRoundTodo
+                    |> ecoInc
+                    |> powerInc
+                    |> initlog
+                , Cmd.none
+                )
 
         DrawACard ->
             if para.ecoThreshold <= model.economy then
@@ -95,6 +108,7 @@ update msg model =
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
+                        , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]: Please select a hexagon" ]
                       }
                     , P.cardToMusic ""
                     )
@@ -256,6 +270,11 @@ ecoInc model =
                 * model.ecoRatio
         , ecoRatio = 1
     }
+
+
+powerInc : Model -> Model
+powerInc model =
+    { model | power = model.power + para.basicPowerInc }
 
 
 virusEvolve : Model -> Model

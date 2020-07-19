@@ -23,7 +23,7 @@ type alias AntiVirus =
 initVirus : Virus
 initVirus =
     { rules = [ 2, 4 ]
-    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
+    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ]
 
     --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
     , number = 0

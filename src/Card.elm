@@ -10,7 +10,6 @@ type alias Card =
     , action : List Action
     , name : String
     , describe : String
-    , url : String
     }
 
 
@@ -87,7 +86,7 @@ allCards =
     , warmwave
     , goingViral
     , judgement
-    , lowSoundWaves
+    , lowSoundWave
     ]
 
 
@@ -122,6 +121,11 @@ cardComparison c1 c2 =
         EQ
 
 
+toPngUrl : Card -> String
+toPngUrl c =
+    "./assets/cardPNG/" ++ String.replace " " "" c.name ++ ".png"
+
+
 powerOverload =
     Card
         NoSel
@@ -129,7 +133,10 @@ powerOverload =
         [ IncPowerI 3, IncPowerI (negate 3) ]
         "Power Overload"
         "+3 power, next round -3 power."
-        "https://wx1.sbimg.cn/2020/07/19/CyowU.png"
+
+
+
+-- "https://wx1.sbimg.cn/2020/07/19/CyowU.png"
 
 
 onStandby =
@@ -139,7 +146,6 @@ onStandby =
         [ IncPowerI 2 ]
         "On Standby"
         "+2 power"
-        ""
 
 
 coldWave =
@@ -149,7 +155,6 @@ coldWave =
         [ Freeze 0.5 ]
         "Cold Wave"
         "There is a probability of 50% to freeze the spread of viruses spread for 1 round."
-        ""
 
 
 blizzard =
@@ -159,7 +164,6 @@ blizzard =
         [ FreezeI, FreezeI, FreezeI ]
         "Blizzard"
         "Freeze the spread of viruses spread for 3 rounds."
-        "https://wx1.sbimg.cn/2020/07/19/CyMCw.png"
 
 
 rain =
@@ -169,7 +173,6 @@ rain =
         [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ]
         "Rain"
         "In two rounds, there is a probability of 50% to freeze the spread of viruses for 1 round. The economy output doubles for two rounds."
-        ""
 
 
 cut =
@@ -179,7 +182,6 @@ cut =
         [ CutHexI ( 0, 0 ) ]
         "Cut"
         "Eliminate the virus on the chosen hex."
-        "https://wx1.sbimg.cn/2020/07/18/ClofD.png"
 
 
 megaCut =
@@ -189,7 +191,6 @@ megaCut =
         [ CutTileI ( 0, 0 ) ]
         "Mega Cut"
         "Eliminate the virus on the chosen tile."
-        "https://wx2.sbimg.cn/2020/07/19/CykX1.png"
 
 
 fubao =
@@ -199,7 +200,6 @@ fubao =
         [ Activate996I, Activate996I ]
         "996"
         "The next 2 rounds, economy temporarily doubles, but the death rate permanently rises 5%."
-        "https://wx2.sbimg.cn/2020/07/19/Cy4lT.png"
 
 
 organClone =
@@ -209,7 +209,6 @@ organClone =
         [ OrganCloneI ( 0, 0 ) ]
         "Organ Clone"
         "Each one of the dead on the selected tile could save one infected."
-        ""
 
 
 humanClone =
@@ -219,7 +218,6 @@ humanClone =
         [ HumanCloneI ( 0, 0 ) ]
         "Human Clone"
         "Double the population of a certain tile."
-        "https://wx2.sbimg.cn/2020/07/19/CyCFJ.png"
 
 
 megaClone =
@@ -229,7 +227,6 @@ megaClone =
         [ MegaCloneI ]
         "Mega Clone"
         "The whole population x1.25."
-        ""
 
 
 purification =
@@ -239,7 +236,6 @@ purification =
         [ PurificationI ( 0, 0 ) ]
         "Purification"
         "Heal all patients in a certain tile."
-        "https://wx1.sbimg.cn/2020/07/19/CV97I.png"
 
 
 sacrifice =
@@ -249,7 +245,6 @@ sacrifice =
         [ SacrificeI ( 0, 0 ) ]
         "Sacrifice"
         "Select a tile. Kill both the viruses and the infected people."
-        "https://wx1.sbimg.cn/2020/07/19/CV6AR.png"
 
 
 resurgence =
@@ -259,7 +254,6 @@ resurgence =
         [ ResurgenceI ( 0, 0 ) ]
         "Resurgence"
         "For each tile, restore 20% of the dead."
-        "https://wx2.sbimg.cn/2020/07/19/CyGjY.png"
 
 
 defenseline =
@@ -267,9 +261,8 @@ defenseline =
         TileSel
         2
         [ FreezevirusI ( 0, 0 ), FreezevirusI ( 0, 0 ) ]
-        "Defenseline"
+        "Defensive Line"
         "Froze the spread of viruses for 2 rounds."
-        "https://wx2.sbimg.cn/2020/07/19/Cyauw.png"
 
 
 hospital =
@@ -279,7 +272,6 @@ hospital =
         [ HospitalI ( 0, 0 ) ]
         "Build Hospital"
         "Put a hospital on a tile."
-        ""
 
 
 quarantine =
@@ -289,7 +281,6 @@ quarantine =
         [ QuarantineI ( 0, 0 ) ]
         "Build Quarantine"
         "Put one tile in quarantine."
-        ""
 
 
 enhanceHealing =
@@ -299,7 +290,6 @@ enhanceHealing =
         [ EnhanceHealingI ]
         "Enhance healing"
         "Raise the efficiency of hospital healing by 1."
-        ""
 
 
 cellBroadcast =
@@ -309,7 +299,6 @@ cellBroadcast =
         [ AttractPeoI ( 0, 0 ), StopAttractI ( 0, 0 ) ]
         "Cell Broadcast"
         "In the selected tile, no one could go out during the next population flow."
-        "https://wx2.sbimg.cn/2020/07/19/Cyiml.png"
 
 
 drought =
@@ -319,7 +308,6 @@ drought =
         [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
         "Drought"
         "In two rounds in the selected tile, the viruses have a probability of 50% to die. The economy output halves for two rounds."
-        "https://wx2.sbimg.cn/2020/07/19/CyRd7.png"
 
 
 warehouse =
@@ -329,7 +317,6 @@ warehouse =
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
         "Put a warehouse on a tile, +5 economy per round."
-        "https://wx2.sbimg.cn/2020/07/19/CVGSK.png"
 
 
 warmwave =
@@ -339,7 +326,6 @@ warmwave =
         [ Warmwave_KIA ( ( 0, 0 ), 0.25 ) ]
         "Warmwave"
         "Choose a tile. There is a probability of 25% to kill the viruses."
-        "https://wx1.sbimg.cn/2020/07/19/Cyv8o.png"
 
 
 goingViral =
@@ -349,7 +335,6 @@ goingViral =
         [ AVI ( 0, 0 ) ]
         "Going Viral"
         "Release the nano-viruses, which move randomly for 3 rounds and have a cut effect."
-        "https://wx1.sbimg.cn/2020/07/19/Cymnl.png"
 
 
 judgement =
@@ -359,18 +344,33 @@ judgement =
         [ JudgeI_Kill ( ( 0, 0 ), 0.25 ) ]
         "Judgement"
         "On the selected tile, either the people or the viruses die. The probability is 50%."
-        "https://wx2.sbimg.cn/2020/07/19/Cy2Y8.png"
 
 
-lowSoundWaves =
+lowSoundWave =
     Card
         TileSel
         4
         [ EvacuateI ( 0, 0 ), StopEVAI ( 0, 0 ) ]
-        "LowSoundWaves"
+        "Low Sound Wave"
         "Select a tile. Distribute all population to the neighboring tiles during the next population flow."
-        "https://wx2.sbimg.cn/2020/07/19/CyWOG.png"
 
 
 targetCardlst =
-    [ cut, megaCut, organClone, humanClone, sacrifice, purification, resurgence, defenseline, hospital, quarantine, cellBroadcast, drought, warehouse, warmwave, goingViral, judgement, lowSoundWaves ]
+    [ cut
+    , megaCut
+    , organClone
+    , humanClone
+    , sacrifice
+    , purification
+    , resurgence
+    , defenseline
+    , hospital
+    , quarantine
+    , cellBroadcast
+    , drought
+    , warehouse
+    , warmwave
+    , goingViral
+    , judgement
+    , lowSoundWave
+    ]

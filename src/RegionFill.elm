@@ -83,7 +83,7 @@ fillRegion card sel =
     else if card == judgement then
         ( ( True, [ JudgeI_Kill ( sel, 0.5 ) ] ), Cmd.none )
 
-    else if card == lowSoundWaves then
+    else if card == lowSoundWave then
         ( ( True, [ EvacuateI sel, StopEVAI sel ] ), Cmd.none )
 
     else

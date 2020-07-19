@@ -70,12 +70,6 @@ view model =
                         ++ [ renderLevelProgress model ]
                         ++ renderFlags [ 5, 10, 15 ]
                         ++ film
-                        ++ [ GameView.caption 15 70 "green" "green: healthy population" 15
-                           , GameView.caption 15 90 "orange" "orange: infected population" 15
-                           , GameView.caption 15 110 "red" "red: dead population" 15
-                           , GameView.caption 15 130 "purple" "purple hex: Virus" 15
-                           , GameView.caption 15 150 "blue" "blue hex: AntiVirus" 15
-                           ]
                         ++ renderHands model
                     )
                 , evolveButton

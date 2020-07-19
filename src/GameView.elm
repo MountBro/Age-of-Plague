@@ -433,23 +433,37 @@ renderantiVirus av =
     List.map (renderHex "blue" 0.5) pos
 
 
-renderCard : Int -> Float -> Float -> Card -> Html Msg
-renderCard n x y c =
+renderCard : Float -> Int -> Float -> Float -> Card -> Html Msg
+renderCard width n x y c =
     svg []
         [ rect
             [ x |> String.fromFloat |> SA.x
             , y |> String.fromFloat |> SA.y
             , "black" |> SA.fill
-            , 70.0 |> String.fromFloat |> SA.width
-            , 100.0 |> String.fromFloat |> SA.height
+            , width |> String.fromFloat |> SA.width
+            , 1.6 * width |> String.fromFloat |> SA.height
             ]
             []
         , caption (x + 10.0) (y + 10.0) "white" c.name 10
         ]
 
 
-renderCardFilm : Int -> Float -> Float -> Card -> Model -> Html Msg
-renderCardFilm n x y c model =
+renderCardPng : Float -> Float -> Float -> Card -> Html Msg
+renderCardPng width x y c =
+    svg []
+        [ Svg.image
+            [ c |> toPngUrl |> SA.xlinkHref
+            , x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , width |> String.fromFloat |> SA.width
+            , 1.6 * width |> String.fromFloat |> SA.height
+            ]
+            []
+        ]
+
+
+renderInitCardFilm : Float -> Int -> Float -> Float -> Card -> Model -> Html Msg
+renderInitCardFilm width n x y c model =
     let
         tint =
             if n == model.mouseOverCardToReplace && model.replaceChance > 0 then
@@ -458,8 +472,8 @@ renderCardFilm n x y c model =
                     , y |> String.fromFloat |> SA.y
                     , "yellow" |> SA.fill
                     , SA.fillOpacity "0.3"
-                    , 70.0 |> String.fromFloat |> SA.width
-                    , 100.0 |> String.fromFloat |> SA.height
+                    , width |> String.fromFloat |> SA.width
+                    , 1.6 * width |> String.fromFloat |> SA.height
                     ]
                     []
 
@@ -473,8 +487,40 @@ renderCardFilm n x y c model =
             , y |> String.fromFloat |> SA.y
             , "white" |> SA.fill
             , SA.fillOpacity "0.0"
-            , 70.0 |> String.fromFloat |> SA.width
-            , 100.0 |> String.fromFloat |> SA.height
+            , width |> String.fromFloat |> SA.width
+            , 1.6 * width |> String.fromFloat |> SA.height
+            ]
+            []
+        ]
+
+
+renderCardFilm : Float -> Int -> Float -> Float -> Card -> Model -> Html Msg
+renderCardFilm width n x y c model =
+    let
+        tint =
+            if n == model.mouseOverCard then
+                rect
+                    [ x |> String.fromFloat |> SA.x
+                    , y |> String.fromFloat |> SA.y
+                    , "yellow" |> SA.fill
+                    , SA.fillOpacity "0.3"
+                    , width |> String.fromFloat |> SA.width
+                    , 1.6 * width |> String.fromFloat |> SA.height
+                    ]
+                    []
+
+            else
+                rect [] []
+    in
+    svg [ onClick (PlayCard c), onOver (MouseOverCard n) ]
+        [ tint
+        , rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "white" |> SA.fill
+            , SA.fillOpacity "0.0"
+            , width |> String.fromFloat |> SA.width
+            , 1.6 * width |> String.fromFloat |> SA.height
             ]
             []
         ]
@@ -490,12 +536,59 @@ renderInitCards model =
             List.indexedMap Tuple.pair hands
                 |> List.map
                     (\( n, c ) ->
-                        ( n, ( toFloat (20 + 80 * n), 20.0 ), c )
+                        ( n, ( para.iclm + (para.icw + para.icg) * toFloat (modBy 5 n), para.ictm + toFloat (n // 5) * (1.6 * para.icw + para.icg) ), c )
                     )
     in
     List.map
-        (\( n, ( x, y ), c ) -> renderCard n x y c)
+        (\( n, ( x, y ), c ) -> renderCard para.icw n x y c)
         indexed
         ++ List.map
-            (\( n, ( x, y ), c ) -> renderCardFilm n x y c model)
+            (\( n, ( x, y ), c ) -> renderCardPng para.icw x y c)
             indexed
+        ++ List.map
+            (\( n, ( x, y ), c ) -> renderInitCardFilm para.icw n x y c model)
+            indexed
+
+
+renderHands : Model -> List (Html Msg)
+renderHands model =
+    let
+        hands =
+            model.hands |> List.sortWith cardComparison
+
+        indexed =
+            List.indexedMap Tuple.pair hands
+                |> List.map
+                    (\( n, c ) ->
+                        ( n, ( para.xlp + para.wlp + 50.0 + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
+                    )
+    in
+    List.map
+        (\( n, ( x, y ), c ) -> renderCard para.hcw n x y c)
+        indexed
+        ++ List.map
+            (\( n, ( x, y ), c ) -> renderCardPng para.hcw x y c)
+            indexed
+        ++ List.map
+            (\( n, ( x, y ), c ) -> renderCardFilm para.hcw n x y c model)
+            indexed
+
+
+
+--caption x y cstr text fontSize =
+
+
+renderConsole : Model -> List (Html Msg)
+renderConsole model =
+    let
+        l =
+            List.length model.actionDescribe
+
+        lstr =
+            model.actionDescribe
+                |> List.map String.lines
+                |> List.foldl (\x -> \y -> x ++ y) []
+    in
+    List.indexedMap Tuple.pair lstr
+        |> List.map (\( n, str ) -> ( para.clp, para.conbot - para.clh * toFloat (l - 1 - n), str ))
+        |> List.map (\( x, y, str ) -> caption x y "white" str 15)

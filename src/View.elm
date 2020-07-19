@@ -74,12 +74,8 @@ view model =
                         ++ [ renderLevelProgress model ]
                         ++ renderFlags [ 5, 10, 15 ]
                         ++ film
-                        ++ [ GameView.caption 15 70 "green" "green: healthy population" 15
-                           , GameView.caption 15 90 "orange" "orange: infected population" 15
-                           , GameView.caption 15 110 "red" "red: dead population" 15
-                           , GameView.caption 15 130 "purple" "purple hex: Virus" 15
-                           , GameView.caption 15 150 "blue" "blue hex: AntiVirus" 15
-                           ]
+                        ++ renderHands model
+                        ++ renderConsole model
                     )
                 , evolveButton
                 , nextRoundButton
@@ -91,6 +87,7 @@ view model =
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
+                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw a card" ]
                 ]
 
         Drawing ->

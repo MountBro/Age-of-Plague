@@ -19,7 +19,7 @@ updatelog model =
             model
 
         SelectCard card ->
-            { model | actionDescribe = List.append model.actionDescribe [ "Used card : " ++ card.name ++ ". " ++ card.describe ] }
+            { model | actionDescribe = ("Used card [" ++ card.name ++ "]: \n " ++ card.describe) :: model.actionDescribe }
 
 
 pickAction : Model -> ( Model, Cmd Msg )

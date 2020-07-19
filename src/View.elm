@@ -20,8 +20,6 @@ import ViewHome as VH exposing (..)
 import Virus exposing (..)
 
 
-
-
 type alias Document msg =
     { title : String
     , body : List (Html msg)
@@ -30,6 +28,10 @@ type alias Document msg =
 
 viewAll : Model -> Document Msg
 viewAll model =
+    -- let
+    --     log1 =
+    --         Debug.toString model.state |> Debug.log
+    -- in
     case model.state of
         Model.Playing ->
             Document "game" [ view model ]

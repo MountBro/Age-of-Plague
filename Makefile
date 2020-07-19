@@ -1,5 +1,5 @@
 all:
-	elm make ./src/Main.elm --output elm.js
+	elm make src/Main.elm --output=elm.js
 	cp ./elm.js ./sites/elm.js
 	rm -rf ./build
 	mkdir ./build

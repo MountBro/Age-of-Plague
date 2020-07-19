@@ -38,7 +38,9 @@ type alias Model =
     , hands : List Card
     , deck : List Card
     , mouseOverCardToReplace : Int
+    , mouseOverCard : Int
     , replaceChance : Int
+    , drawChance : Int
     , actionDescribe : List String
     }
 
@@ -50,17 +52,22 @@ initModel _ =
                 [ ( 0, 0 )
                 , ( 0, 1 )
                 , ( 0, 2 )
+                , ( 0, 3 )
                 , ( 1, -1 )
                 , ( 1, 0 )
                 , ( 1, 1 )
+                , ( 1, 2 )
+                , ( 2, -2 )
                 , ( 2, -1 )
                 , ( 2, 0 )
                 , ( 2, 1 )
+                , ( 2, 2 )
                 , ( 3, -1 )
+                , ( 3, -2 )
                 ]
       , behavior = initBehavior
       , currentRound = 1
-      , state = HomePage
+      , state = Playing
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initVirus
@@ -69,18 +76,20 @@ initModel _ =
       , todo = []
       , roundTodoCleared = False
       , av = initAntiVirus
-      , power = 10000
-      , economy = 10000
+      , power = 300
+      , economy = 500
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
       , ecoRatio = 1
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
-      , hands = []
+      , hands = [ powerOverload ]
       , deck = allCards
-      , mouseOverCardToReplace = 0
+      , mouseOverCardToReplace = negate 1
+      , mouseOverCard = negate 1
       , replaceChance = 3
+      , drawChance = 0
       , actionDescribe = []
       }
     , Task.perform GotViewport Browser.Dom.getViewport

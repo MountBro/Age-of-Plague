@@ -71,10 +71,20 @@ update msg model =
 
         NextRound ->
             if model.behavior.virusEvolve then
-                ( { model | currentRound = model.currentRound + 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc |> initlog, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, drawChance = 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc |> initlog, Cmd.none )
 
             else
-                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc |> initlog, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior, drawChance = 1 } |> clearCurrentRoundTodo |> ecoInc |> initlog, Cmd.none )
+
+        DrawACard ->
+            if para.ecoThreshold <= model.economy then
+                ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
+
+            else
+                ( model, Cmd.none )
+
+        DrawCard c ->
+            ( { model | hands = c :: model.hands }, Cmd.none )
 
         PlayCard card ->
             if card.cost <= model.power && para.ecoThreshold <= model.economy then
@@ -84,6 +94,7 @@ update msg model =
                         , selHex = SelHexOn
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
+                        , hands = LE.remove card model.hands
                       }
                     , P.cardToMusic ""
                     )
@@ -94,6 +105,7 @@ update msg model =
                         , todo = model.todo ++ [ ( True, card.action ) ]
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
+                        , hands = LE.remove card model.hands
                       }
                     , Cmd.none
                     )
@@ -125,6 +137,13 @@ update msg model =
             in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
 
+        MouseOverCard n ->
+            if model.state == Playing then
+                ( { model | mouseOverCard = n }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
         MouseOverCardToReplace n ->
             if model.state == Drawing then
                 ( { model | mouseOverCardToReplace = n }, Cmd.none )
@@ -136,7 +155,7 @@ update msg model =
             model |> replaceCard c
 
         StartRound1 ->
-            ( { model | state = Playing }, Cmd.none )
+            ( { model | state = Playing, drawChance = 1 }, Cmd.none )
 
         HosInvalid ->
             ( { model

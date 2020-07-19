@@ -21,6 +21,7 @@ type Msg
     | LevelBegin Int
     | SelectCardToReplace Card
     | MouseOverCardToReplace Int
+    | MouseOverCard Int
     | ReplaceCard Card Card
     | StartRound1
     | Alert String
@@ -28,6 +29,8 @@ type Msg
     | KillTileVir ( ( Int, Int ), Float ) Float
     | JudgeVirPeo ( ( Int, Int ), Float ) Float
     | Click String
+    | DrawACard
+    | DrawCard Card
 
 
 type Keyin

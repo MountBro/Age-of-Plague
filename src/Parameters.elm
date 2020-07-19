@@ -14,4 +14,11 @@ para =
     , ecoThreshold = 1
     , warehouseOutput = 5
     , basicEcoOutput = 3
+    , icw = 160.0
+    , iclm = 60.0
+    , icg = 20.0
+    , ictm = 34.0
+    , hcw = 50.0
+    , hcg = 10.0
+    , hctm = 20.0
     }

@@ -20,8 +20,6 @@ import ViewHome as VH exposing (..)
 import Virus exposing (..)
 
 
-
-
 type alias Document msg =
     { title : String
     , body : List (Html msg)
@@ -78,6 +76,7 @@ view model =
                            , GameView.caption 15 130 "purple" "purple hex: Virus" 15
                            , GameView.caption 15 150 "blue" "blue hex: AntiVirus" 15
                            ]
+                        ++ renderHands model
                     )
                 , evolveButton
                 , nextRoundButton
@@ -89,6 +88,7 @@ view model =
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
+                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw a card" ]
                 ]
 
         Drawing ->

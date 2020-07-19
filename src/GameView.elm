@@ -575,6 +575,20 @@ renderHands model =
 
 
 
---svgParagraph : String -> Html Msg
---renderConsole : Model -> List (Html Msg)
---renderConsole model =
+--caption x y cstr text fontSize =
+
+
+renderConsole : Model -> List (Html Msg)
+renderConsole model =
+    let
+        l =
+            List.length model.actionDescribe
+
+        lstr =
+            model.actionDescribe
+                |> List.map String.lines
+                |> List.foldl (\x -> \y -> x ++ y) []
+    in
+    List.indexedMap Tuple.pair lstr
+        |> List.map (\( n, str ) -> ( para.clp, para.conbot - para.clh * toFloat (l - 1 - n), str ))
+        |> List.map (\( x, y, str ) -> caption x y "white" str 15)

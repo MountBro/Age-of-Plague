@@ -71,6 +71,7 @@ view model =
                         ++ renderFlags [ 5, 10, 15 ]
                         ++ film
                         ++ renderHands model
+                        ++ renderConsole model
                     )
                 , evolveButton
                 , nextRoundButton

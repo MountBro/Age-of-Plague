@@ -108,7 +108,7 @@ update msg model =
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
-                        , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]: Please select a hexagon" ]
+                        , actionDescribe = ("[" ++ card.name ++ "]: Please select a hexagon") :: model.actionDescribe
                       }
                     , P.cardToMusic ""
                     )

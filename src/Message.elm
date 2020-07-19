@@ -43,6 +43,13 @@ type KeyValue
     | Character Char
 
 
+type MyLog
+    = ActionPerformed Card String
+    | CardPlayed Card
+    | Instruction String
+    | Warning String
+
+
 keyDecoder : Decode.Decoder KeyValue
 keyDecoder =
     Decode.map toKeyValue (Decode.field "key" Decode.string)

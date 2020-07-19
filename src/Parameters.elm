@@ -22,4 +22,7 @@ para =
     , hcw = 50.0
     , hcg = 10.0
     , hctm = 20.0
+    , conbot = 200.0
+    , clh = 20.0
+    , clp = 15.0
     }

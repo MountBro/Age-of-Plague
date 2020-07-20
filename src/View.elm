@@ -15,7 +15,31 @@ import Svg.Attributes as SA
 import Svg.Events as SE
 import SvgSrc exposing (..)
 import Tile exposing (..)
+import ViewCards as VC exposing (..)
+import ViewHome as VH exposing (..)
 import Virus exposing (..)
+
+
+type alias Document msg =
+    { title : String
+    , body : List (Html msg)
+    }
+
+
+viewAll : Model -> Document Msg
+viewAll model =
+    case model.state of
+        Model.Playing ->
+            Document "game" [ view model ]
+
+        Model.HomePage ->
+            Document "main" VH.viewHome
+
+        Model.CardPage ->
+            Document "card" VC.viewCard
+
+        _ ->
+            Document "game" [ view model ]
 
 
 view : Model -> Html Msg
@@ -46,23 +70,19 @@ view model =
                         ++ [ renderLevelProgress model ]
                         ++ renderFlags [ 5, 10, 15 ]
                         ++ film
-                        ++ [ GameView.caption 15 70 "green" "green: healthy population" 15
-                           , GameView.caption 15 90 "orange" "orange: infected population" 15
-                           , GameView.caption 15 110 "red" "red: dead population" 15
-                           , GameView.caption 15 130 "purple" "purple hex: Virus" 15
-                           , GameView.caption 15 150 "blue" "blue hex: AntiVirus" 15
-                           ]
+                        ++ renderHands model
+                        ++ renderConsole model
                     )
                 , evolveButton
                 , nextRoundButton
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
                 , powerEcoInfo model
-                , Html.text (" , " ++ Debug.toString model.actionDescribe ++ ". ")
                 , div [] (List.map cardButton allCards)
-                , Html.text (Debug.toString model.todo ++ " , " ++ Debug.toString model.hands ++ ". ")
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
+                , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
+                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw a card" ]
                 ]
 
         Drawing ->

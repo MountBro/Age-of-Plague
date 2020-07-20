@@ -71,10 +71,33 @@ update msg model =
 
         NextRound ->
             if model.behavior.virusEvolve then
-                ( { model | currentRound = model.currentRound + 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc |> initlog, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, drawChance = 1 }
+                    |> clearCurrentRoundTodo
+                    |> virusEvolve
+                    |> ecoInc
+                    |> powerInc
+                    |> initlog
+                , Cmd.none
+                )
 
             else
-                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc |> initlog, Cmd.none )
+                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior, drawChance = 1 }
+                    |> clearCurrentRoundTodo
+                    |> ecoInc
+                    |> powerInc
+                    |> initlog
+                , Cmd.none
+                )
+
+        DrawACard ->
+            if para.ecoThreshold <= model.economy then
+                ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
+
+            else
+                ( model, Cmd.none )
+
+        DrawCard c ->
+            ( { model | hands = c :: model.hands }, Cmd.none )
 
         PlayCard card ->
             if card.cost <= model.power && para.ecoThreshold <= model.economy then
@@ -84,6 +107,8 @@ update msg model =
                         , selHex = SelHexOn
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
+                        , hands = LE.remove card model.hands
+                        , actionDescribe = model.actionDescribe ++ ["[" ++ card.name ++ "]:\nPlease select a hexagon"]
                       }
                     , P.cardToMusic ""
                     )
@@ -91,9 +116,10 @@ update msg model =
                 else
                     ( { model
                         | cardSelected = SelectCard card
-                        , todo = model.todo ++ [ ( True, card.action ) ]
+                        , todo = model.todo ++ [ ( ( True, card.action ), card) ]
                         , power = model.power - card.cost
                         , economy = model.economy - para.ecoThreshold
+                        , hands = LE.remove card model.hands
                       }
                     , Cmd.none
                     )
@@ -125,6 +151,13 @@ update msg model =
             in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
 
+        MouseOverCard n ->
+            if model.state == Playing then
+                ( { model | mouseOverCard = n }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
         MouseOverCardToReplace n ->
             if model.state == Drawing then
                 ( { model | mouseOverCardToReplace = n }, Cmd.none )
@@ -136,7 +169,7 @@ update msg model =
             model |> replaceCard c
 
         StartRound1 ->
-            ( { model | state = Playing }, Cmd.none )
+            ( { model | state = Playing, drawChance = 1 }, Cmd.none )
 
         HosInvalid ->
             ( { model
@@ -215,6 +248,18 @@ update msg model =
             in
             ( { model | city = city_, virus = virus_ }, Cmd.none )
 
+        Message.Click "home" ->
+            ( { model | state = Model.HomePage }, Cmd.none )
+
+        Message.Click "card" ->
+            ( { model | state = Model.CardPage }, Cmd.none )
+
+        Message.Click "startGame" ->
+            ( { model | state = Model.Playing }, Cmd.none )
+
+        Message.Click _ ->
+            ( model, Cmd.none )
+
 
 ecoInc : Model -> Model
 ecoInc model =
@@ -225,6 +270,11 @@ ecoInc model =
                 * model.ecoRatio
         , ecoRatio = 1
     }
+
+
+powerInc : Model -> Model
+powerInc model =
+    { model | power = model.power + para.basicPowerInc }
 
 
 virusEvolve : Model -> Model
@@ -243,9 +293,9 @@ clearCurrentRoundTodo model =
             model.todo
 
         todo =
-            List.map (\( x, y ) -> ( x, List.drop 1 y )) todo_
-                |> List.filter (\( x, y ) -> not (List.isEmpty y))
-                |> List.map (\( x, y ) -> ( True, y ))
+            List.map (\( ( x, y ), z) -> (( x, List.drop 1 y ),z) ) todo_
+                |> List.filter (\( ( x, y ), z ) -> not (List.isEmpty y))
+                |> List.map (\( ( x, y ), z) -> (( True, y ), z))
     in
     { model | todo = todo, roundTodoCleared = False }
 

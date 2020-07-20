@@ -12,21 +12,23 @@ import Todo exposing (..)
 import Virus exposing (..)
 
 
-updatelog : Model  -> Model
+updatelog : Model -> Model
 updatelog model =
-    case model.cardSelected of
-        NoCard ->
-            model
+    let
+        card =
+            List.map Tuple.second model.todo
 
-        SelectCard card ->
-            { model | actionDescribe = List.append model.actionDescribe [ "Used card : " ++ card.name ++ ". " ++ card.describe ] }
+        log =
+            List.map (\x -> "From card \n[" ++ x.name ++ "]:\n " ++ x.describe) card
+    in
+    { model | actionDescribe = log }
 
 
 pickAction : Model -> ( Model, Cmd Msg )
 pickAction model =
     let
         ( finished, unfinished_ ) =
-            List.partition (\( x, y ) -> not x) model.todo
+            List.partition (\(( x, y ),z) -> not x) model.todo
 
         headQueue_ =
             unfinished_
@@ -35,12 +37,13 @@ pickAction model =
 
         headAction =
             headQueue_
+                |> Tuple.first
                 |> Tuple.second
                 |> List.head
                 |> Maybe.withDefault NoAction
 
         headQueue =
-            ( False, Tuple.second headQueue_ )
+            ( ( False, headQueue_ |> Tuple.first |> Tuple.second ), Tuple.second headQueue_)
 
         todo =
             finished ++ [ headQueue ] ++ List.drop 1 unfinished_

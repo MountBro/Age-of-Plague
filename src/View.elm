@@ -49,6 +49,7 @@ view model =
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
                     ([ bkg ]
+                        ++ [ cutpng ]
                         ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
@@ -117,6 +118,17 @@ view model =
 
         _ ->
             div [] []
+
+
+cutpng =
+    Svg.image
+        [ SA.xlinkHref "https://wx1.sbimg.cn/2020/07/18/ClofD.png"
+        , SA.width "150"
+        , SA.height "240"
+        , SA.x "20"
+        , SA.y "20"
+        ]
+        []
 
 
 bkg : Svg Msg

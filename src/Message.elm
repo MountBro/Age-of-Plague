@@ -21,12 +21,16 @@ type Msg
     | LevelBegin Int
     | SelectCardToReplace Card
     | MouseOverCardToReplace Int
+    | MouseOverCard Int
     | ReplaceCard Card Card
     | StartRound1
     | Alert String
     | HosInvalid
     | KillTileVir ( ( Int, Int ), Float ) Float
     | JudgeVirPeo ( ( Int, Int ), Float ) Float
+    | Click String
+    | DrawACard
+    | DrawCard Card
 
 
 type Keyin
@@ -37,6 +41,13 @@ type Keyin
 type KeyValue
     = Control String
     | Character Char
+
+
+type MyLog
+    = ActionPerformed Card String
+    | CardPlayed Card
+    | Instruction String
+    | Warning String
 
 
 keyDecoder : Decode.Decoder KeyValue

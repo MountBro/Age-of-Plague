@@ -10,8 +10,11 @@ type alias Card =
     , action : List Action
     , name : String
     , describe : String
-    , pngUrl : String
     }
+
+
+type alias Sel =
+    ( Int, Int )
 
 
 type Selection
@@ -74,6 +77,16 @@ allCards =
     , sacrifice
     , resurgence
     , defenseline
+    , hospital
+    , quarantine
+    , enhanceHealing
+    , cellBroadcast
+    , drought
+    , warehouse
+    , warmwave
+    , goingViral
+    , judgement
+    , lowSoundWave
     ]
 
 
@@ -108,6 +121,11 @@ cardComparison c1 c2 =
         EQ
 
 
+toPngUrl : Card -> String
+toPngUrl c =
+    "./assets/cardPNG/" ++ String.replace " " "" c.name ++ ".png"
+
+
 powerOverload =
     Card
         NoSel
@@ -115,6 +133,10 @@ powerOverload =
         [ IncPowerI 3, IncPowerI (negate 3) ]
         "Power Overload"
         "+3 power, next round -3 power."
+
+
+
+-- "https://wx1.sbimg.cn/2020/07/19/CyowU.png"
 
 
 onStandby =
@@ -154,12 +176,12 @@ rain =
 
 
 cut =
-    Card HexSel
+    Card
+        HexSel
         1
         [ CutHexI ( 0, 0 ) ]
         "Cut"
         "Eliminate the virus on the chosen hex."
-        "https://wx1.sbimg.cn/2020/07/18/ClofD.png"
 
 
 megaCut =
@@ -239,7 +261,7 @@ defenseline =
         TileSel
         2
         [ FreezevirusI ( 0, 0 ), FreezevirusI ( 0, 0 ) ]
-        "Defenseline"
+        "Defensive Line"
         "Froze the spread of viruses for 2 rounds."
 
 
@@ -324,12 +346,12 @@ judgement =
         "On the selected tile, either the people or the viruses die. The probability is 50%."
 
 
-lowSoundWaves =
+lowSoundWave =
     Card
         TileSel
         4
         [ EvacuateI ( 0, 0 ), StopEVAI ( 0, 0 ) ]
-        "LowSoundWaves"
+        "Low Sound Wave"
         "Select a tile. Distribute all population to the neighboring tiles during the next population flow."
 
 
@@ -350,5 +372,5 @@ targetCardlst =
     , warmwave
     , goingViral
     , judgement
-    , lowSoundWaves
+    , lowSoundWave
     ]

@@ -281,11 +281,14 @@ evacuate t city =
 change : Virus -> AntiVirus -> City -> ( Virus, AntiVirus )
 change virus anti city =
     let
+        validlst =
+            List.map (\x -> x.indice) city.tilesindex
+
         lstvir =
-            searchNeighbor virus.pos
+            searchValidNeighbor virus.pos validlst
 
         lstanti =
-            searchNeighbor anti.pos
+            searchValidNeighbor anti.pos validlst
 
         lstquatile =
             quarantineTiles city.tilesindex

@@ -86,11 +86,12 @@ countavNeighbor pos lstv =
         |> List.sum
 
 
-searchNeighbor : List ( Int, Int ) -> List ( Int, Int )
-searchNeighbor virlst =
+searchValidNeighbor : List ( Int, Int ) -> List ( Int, Int ) -> List (Int, Int)
+searchValidNeighbor virlst lst=
     List.map (\x -> generateZone x) virlst
         |> List.concat
         |> LE.unique
+        |> List.filter (\x -> List.member (converHextoTile x) lst)
 
 
 judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )

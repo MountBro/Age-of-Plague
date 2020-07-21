@@ -70,7 +70,66 @@ update msg model =
             )
 
         NextRound ->
-            if model.behavior.virusEvolve then
+            if model.currentlevel == 1 then
+                if model.currentRound == 1 && model.hands == [] then
+                    ( { model
+                        | currentRound = model.currentRound + 1
+                        , hands = [ hospital, hospital, hospital, warehouse, quarantine ]
+                      }
+                        |> initlog
+                        |> clearCurrentRoundTodo
+                    , Cmd.none
+                    )
+
+                else if model.hands == [] && model.currentRound == 2 then
+                    ( { model | currentRound = model.currentRound + 1 }
+                        |> initlog
+                        |> clearCurrentRoundTodo
+                    , Cmd.none
+                    )
+
+                else
+                    ( model, Cmd.none )
+            else if model.currentlevel == 2 then
+                if model.currentRound == 1 then
+                    ( { model
+                        | currentRound = model.currentRound + 1
+                        , hands = [ goingViral ]
+                      }
+                        |> clearCurrentRoundTodo
+                        |> virusEvolve
+                        |> ecoInc
+                        |> powerInc
+                        |> initlog
+                    , Cmd.none
+                    )
+                else if model.currentRound == 2 && model.hands /= [] then
+                    ( model, Cmd.none )
+                else if model.currentRound == 4 then
+                    ( { model
+                        | currentRound = model.currentRound + 1
+                        , hands = [ cut, quarantine, megaCut, megaCut, cut, megaCut, hospital ]
+                      }
+                        |> clearCurrentRoundTodo
+                        |> virusEvolve
+                        |> ecoInc
+                        |> powerInc
+                        |> initlog
+                    , Cmd.none
+                    )
+                else if model.currentRound > 1 && model.virus.pos /= [] then
+                    ( { model | currentRound = model.currentRound + 1 }
+                        |> clearCurrentRoundTodo
+                        |> virusEvolve
+                        |> ecoInc
+                        |> powerInc
+                        |> initlog
+                    , Cmd.none
+                    )
+                else
+                    ( model, Cmd.none )
+
+            else if model.behavior.virusEvolve then
                 ( { model | currentRound = model.currentRound + 1, drawChance = 1 }
                     |> clearCurrentRoundTodo
                     |> virusEvolve
@@ -90,25 +149,36 @@ update msg model =
                 )
 
         DrawACard ->
-            if para.ecoThreshold <= model.economy then
+            if model.currentlevel == 1 && para.ecoThreshold <= model.economy then
+                if model.currentRound == 3 && model.todo == [] then
+                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
+
+                else
+                    ( model, Cmd.none )
+            else if model.currentlevel == 2 && model.currentRound <= 4 then
+                ( model, Cmd.none )
+
+            else if para.ecoThreshold <= model.economy then
                 ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
 
             else
                 ( model, Cmd.none )
 
         DrawCard c ->
-            ( { model | hands = c :: model.hands }, Cmd.none )
+                ( { model | hands = c :: model.hands }, Cmd.none )
 
         PlayCard card ->
-            if card.cost <= model.power && para.ecoThreshold <= model.economy then
+            if card.cost <= model.power then
+                --&& para.ecoThreshold <= model.economy
                 if List.member card targetCardlst then
                     ( { model
                         | cardSelected = SelectCard card
                         , selHex = SelHexOn
                         , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
+
+                        --, economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
-                        , actionDescribe = model.actionDescribe ++ ["[" ++ card.name ++ "]:\nPlease select a hexagon"]
+                        , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]:\nPlease select a hexagon" ]
                       }
                     , P.cardToMusic ""
                     )
@@ -116,9 +186,10 @@ update msg model =
                 else
                     ( { model
                         | cardSelected = SelectCard card
-                        , todo = model.todo ++ [ ( ( True, card.action ), card) ]
+                        , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
                         , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
+
+                        --, economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
                       }
                     , Cmd.none
@@ -293,16 +364,20 @@ clearCurrentRoundTodo model =
             model.todo
 
         todo =
-            List.map (\( ( x, y ), z) -> (( x, List.drop 1 y ),z) ) todo_
+            List.map (\( ( x, y ), z ) -> ( ( x, List.drop 1 y ), z )) todo_
                 |> List.filter (\( ( x, y ), z ) -> not (List.isEmpty y))
-                |> List.map (\( ( x, y ), z) -> (( True, y ), z))
+                |> List.map (\( ( x, y ), z ) -> ( ( True, y ), z ))
     in
     { model | todo = todo, roundTodoCleared = False }
 
 
 levelInit : Int -> Model -> Model
 levelInit n model =
-    { model | behavior = initBehavior, state = Drawing }
+    { model
+        | behavior = initBehavior
+        , state = Drawing
+        , currentlevel = n
+    }
 
 
 replaceCard : Card -> Model -> ( Model, Cmd Msg )

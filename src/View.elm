@@ -72,6 +72,13 @@ view model =
                         ++ film
                         ++ renderHands model
                         ++ renderConsole model
+                        ++ renderVirusinf model.virus
+                        ++ (if model.currentlevel <= 3 then
+                                renderGuide model
+
+                            else
+                                []
+                           )
                     )
                 , evolveButton
                 , nextRoundButton
@@ -82,7 +89,7 @@ view model =
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
-                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw a card" ]
+                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
                 ]
 
         Drawing ->

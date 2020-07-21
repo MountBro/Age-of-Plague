@@ -15,9 +15,7 @@ virusKill vir city =
             toFloat (sumSick city)
 
         death =
-            patients
-                * dr
-                |> round
+            round (patients * dr)
 
         ( lstInfectedn, lstInfected1 ) =
             city.tilesindex
@@ -40,7 +38,7 @@ virusKill vir city =
         | tilesindex =
             List.map
                 (\x ->
-                    if List.member x deathlst then
+                    if List.member x deathlst && dr > 0 then
                         { x
                             | sick = x.sick - max (round (toFloat x.sick * dr)) 1
                             , dead = x.dead + max (round (toFloat x.sick * dr)) 1

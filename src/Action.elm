@@ -10,6 +10,7 @@ import Random exposing (float, generate)
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
+import Parameters exposing (..)
 
 
 updatelog : Model -> Model
@@ -24,11 +25,60 @@ updatelog model =
     { model | actionDescribe = log }
 
 
+createGuide : Model -> List String
+createGuide model =
+    let
+        str =
+            List.take model.currentlevel tutorial
+                |> List.foldl (\x -> \y -> x ++ y) []
+
+        card =
+            List.map Tuple.second model.todo
+    in
+    case model.currentlevel of
+        1 ->
+            if model.hands == [ megaClone ] then
+                str |> getElement 1
+
+            else if card == [ megaClone ] && model.currentRound == 1 then
+                str |> getElement 2
+
+            else if List.length model.hands == 5 then
+                str |> getElement 3
+
+            else if model.hands /= [] && model.currentRound == 2 then
+                str |> getElement 4
+
+            else if model.hands == [] && model.currentRound == 2 then
+                str |> getElement 5
+
+            else if model.currentRound == 3 && para.ecoThreshold <= model.economy then
+                str |> getElement 6
+
+            else
+                str |> getElement 7
+        2 ->
+            if model.currentRound == 1 then
+                str |> getElement 1
+
+            else if model.currentRound == 2 then
+                str |> getElement 2
+            else if model.currentRound < 5 then
+                str |> getElement 3
+            else if model.currentRound >= 5 && not (List.isEmpty model.virus.pos) then
+                str |> getElement 4
+            else
+                getElement 5 str
+
+        _ ->
+            []
+
+
 pickAction : Model -> ( Model, Cmd Msg )
 pickAction model =
     let
         ( finished, unfinished_ ) =
-            List.partition (\(( x, y ),z) -> not x) model.todo
+            List.partition (\( ( x, y ), z ) -> not x) model.todo
 
         headQueue_ =
             unfinished_
@@ -43,7 +93,7 @@ pickAction model =
                 |> Maybe.withDefault NoAction
 
         headQueue =
-            ( ( False, headQueue_ |> Tuple.first |> Tuple.second ), Tuple.second headQueue_)
+            ( ( False, headQueue_ |> Tuple.first |> Tuple.second ), Tuple.second headQueue_ )
 
         todo =
             finished ++ [ headQueue ] ++ List.drop 1 unfinished_
@@ -469,7 +519,7 @@ performAction action model =
                 num =
                     model.warehouseNum + 1
             in
-            ( { model | city = city, warehouseNum = num }, Cmd.none )
+            ( { model | city = city, warehouseNum = num } |> updatelog, Cmd.none )
 
         Warmwave_KIA ( ( i, j ), prob ) ->
             ( model |> updatelog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )

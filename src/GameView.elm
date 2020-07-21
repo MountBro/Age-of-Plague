@@ -15,7 +15,12 @@ import Svg.Events as SE
 import SvgSrc exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)
+<<<<<<< HEAD
 
+=======
+import Action exposing (..)
+import List.Extra exposing (..)
+>>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
 caption : Float -> Float -> String -> String -> Int -> Svg Msg
 caption x y cstr text fontSize =
@@ -452,8 +457,13 @@ renderCardPng : Float -> Float -> Float -> Card -> Html Msg
 renderCardPng width x y c =
     svg []
         [ Svg.image
+<<<<<<< HEAD
             [ c |> toPngUrl |> SA.xlinkHref
             , x |> String.fromFloat |> SA.x
+=======
+            [ x |> String.fromFloat |> SA.x
+            , c |> toPngUrl |> SA.xlinkHref
+>>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
             , y |> String.fromFloat |> SA.y
             , width |> String.fromFloat |> SA.width
             , 1.6 * width |> String.fromFloat |> SA.height
@@ -592,3 +602,42 @@ renderConsole model =
     List.indexedMap Tuple.pair lstr
         |> List.map (\( n, str ) -> ( para.clp, para.conbot - para.clh * toFloat (l - 1 - n), str ))
         |> List.map (\( x, y, str ) -> caption x y "white" str 15)
+<<<<<<< HEAD
+=======
+
+
+renderGuide : Model -> List (Html Msg)
+renderGuide model =
+    let
+        lstr =
+            createGuide model
+                |> List.map String.lines
+                |> List.foldl (\x -> \y -> x ++ y) []
+    in
+    List.indexedMap Tuple.pair lstr
+        |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
+        |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "yellow" str 16)
+
+renderVirusinf : Virus -> List (Html Msg)
+renderVirusinf vir =
+    let
+        rule =
+            vir.rules
+                |> List.map (\x -> Debug.toString x)
+                |> String.join " or "
+        infect =
+            Debug.toString vir.infect
+        inf =
+            if vir.rules /= [] then
+                ["Infect: +" ++ infect ++ " per virus unit\n" ++ "Death rate: " ++ Debug.toString vir.kill ++ "\nSpread pattern:\nIf a hex is surrounded\nby " ++ rule ++ " virus units,\nthe virus would spread to\nthis hex next round."]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+            else
+                ["Spread rules:\nNo virus in Tutorial 1."]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+    in
+    List.indexedMap Tuple.pair inf
+        |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
+        |> List.map (\( x, y, str ) -> caption (x + 820.0) y "red" str 12)
+>>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8

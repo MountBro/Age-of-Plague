@@ -50,6 +50,27 @@ type MyLog
     | Warning String
 
 
+<<<<<<< HEAD
+=======
+tutorial =
+    [ [ "Notice: red number on tiles stands for local dead\nyellow for patients, green for healthy population\nClick a hand card to play it."
+      , "Notice: Each round between two neighboring tile(population > 0)\nat most 2 population (may include patients) would be exchanged\nNow, please click next round."
+      , "The live game log is displayed on the left\nSome cards require selecting tiles. Try these cards."
+      , "On a tile, different kinds of buildings could co-exist\nbut the same kind can't\nNow try the rest of the cards."
+      , "Hint: Playing cards costs your power\nPower and economy would accumulate over turns\nPlease click next round now."
+      , "For each formal level, two special cards will be added to the deck\nWhen economy reaches 6, click draw to draw a card\nPlease click draw."
+      , "Congratulation!\nClick Next round to finish this level."
+      ]
+    , [ "Information of virus (purple) are shown on the right\nThey can be exterminated by using card cut or Megacut\nGive them a try and click next turn."
+      , "In the future, players may encounter anti-virus card\nPlease try the card [ Going Viral ] and click next turn."
+      , "Anti-virus (Blue) can be released by player,\nit exterminate local virus units and could survive three rounds\nPlease click next turn to witness its spread."
+      , "Win or lose is decided by the remaining population after\ncertain rounds. Now, try to use these cards to defeat\nyour very first virus in the next few turns\nHint: remeber to draw new cards or click next turn to accumulate resource."
+      , "Great job!\nClick next turn to finish this level."]
+    , [ ""]
+    ]
+
+
+>>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 keyDecoder : Decode.Decoder KeyValue
 keyDecoder =
     Decode.map toKeyValue (Decode.field "key" Decode.string)

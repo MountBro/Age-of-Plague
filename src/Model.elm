@@ -51,26 +51,6 @@ initModel _ =
     ( { city =
             initCity 10
                 map1
-                {-[ ( 0, 0 )
-                , ( 0, 1 )
-                , ( 0, 2 )
-                , ( 0, 3 )
-                , ( 1, -1 )
-                , ( 1, 0 )
-                , ( 1, 1 )
-                , ( 1, 2 )
-                , ( 2, -2 )
-                , ( 2, -1 )
-                , ( 2, 0 )
-                , ( 2, 1 )
-                , ( 2, 2 )
-                , ( 3, -1 )
-                , ( 3, -2 )
-<<<<<<< HEAD
-                ]
-=======
-                ]-}
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
       , behavior = initBehavior
       , currentRound = 1
       , state = Playing
@@ -82,24 +62,15 @@ initModel _ =
       , todo = []
       , roundTodoCleared = False
       , av = initAntiVirus
-<<<<<<< HEAD
-      , power = 300
-      , economy = 500
-=======
       , power = 20 --50
       , economy = 10 --10
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
       , ecoRatio = 1
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
-<<<<<<< HEAD
-      , hands = [ powerOverload ]
-=======
       , hands = initHandsVirus 2 |> Tuple.first --megaClone
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
       , deck = allCards
       , mouseOverCardToReplace = negate 1
       , mouseOverCard = negate 1
@@ -177,10 +148,12 @@ judgeBuild model ( i, j ) =
 map1 =
     cartesianProduct [ 0, 1 ] [ 0, 1 ]
 
+
 initHands =
     [ [ megaClone ], [ cut, megaCut ] ]
 
-initHandsVirus : Int -> (List Card, Virus)
+
+initHandsVirus : Int -> ( List Card, Virus )
 initHandsVirus level =
     let
         hand =
@@ -192,4 +165,4 @@ initHandsVirus level =
                 |> List.head
                 |> Maybe.withDefault (Virus [] [] 0 0 0)
     in
-    (hand,vir)
+    ( hand, vir )

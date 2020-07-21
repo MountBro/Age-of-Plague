@@ -22,31 +22,17 @@ type alias AntiVirus =
 
 initVirus : Virus
 initVirus =
-<<<<<<< HEAD
-    { rules = [ 2, 4 ]
-    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ]
-
-    --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
-    , number = 0
-    , infect = 1
-    , kill = 0.1
-=======
     { rules = [2,3,4] -- [2, 4]
     , pos = [ (0,1),(0,2),(1,1),( 1, 2 ), ( 1, 3 )]--[ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ]
     , number = 0
     , infect = 1
     , kill = 0
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
     }
 
 
 initAntiVirus : AntiVirus
 initAntiVirus =
-<<<<<<< HEAD
-    { rules = [ 0, 1, 2, 3 ]
-=======
     { rules = [ 0, 1, 2, 3, 4,5,6]
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
     , pos = []
     , life = 0
     }
@@ -54,15 +40,9 @@ initAntiVirus =
 
 createAV : ( Int, Int ) -> AntiVirus
 createAV hlst =
-<<<<<<< HEAD
-    { rules = [ 0, 1, 2, 3 ]
-    , pos = [ hlst ]
-    , life = 3
-=======
     { rules = [ 0, 1, 2, 3, 4]
     , pos = [ hlst ]
     , life = 2
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
     }
 
 

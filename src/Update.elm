@@ -70,9 +70,6 @@ update msg model =
             )
 
         NextRound ->
-<<<<<<< HEAD
-            if model.behavior.virusEvolve then
-=======
             if model.currentlevel == 1 then
                 if model.currentRound == 1 && model.hands == [] then
                     ( { model
@@ -93,6 +90,7 @@ update msg model =
 
                 else
                     ( model, Cmd.none )
+
             else if model.currentlevel == 2 then
                 if model.currentRound == 1 then
                     ( { model
@@ -106,8 +104,10 @@ update msg model =
                         |> initlog
                     , Cmd.none
                     )
+
                 else if model.currentRound == 2 && model.hands /= [] then
                     ( model, Cmd.none )
+
                 else if model.currentRound == 4 then
                     ( { model
                         | currentRound = model.currentRound + 1
@@ -120,6 +120,7 @@ update msg model =
                         |> initlog
                     , Cmd.none
                     )
+
                 else if model.currentRound > 1 && model.virus.pos /= [] then
                     ( { model | currentRound = model.currentRound + 1 }
                         |> clearCurrentRoundTodo
@@ -129,11 +130,11 @@ update msg model =
                         |> initlog
                     , Cmd.none
                     )
+
                 else
                     ( model, Cmd.none )
 
             else if model.behavior.virusEvolve then
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
                 ( { model | currentRound = model.currentRound + 1, drawChance = 1 }
                     |> clearCurrentRoundTodo
                     |> virusEvolve
@@ -153,31 +154,24 @@ update msg model =
                 )
 
         DrawACard ->
-<<<<<<< HEAD
-            if para.ecoThreshold <= model.economy then
-=======
             if model.currentlevel == 1 && para.ecoThreshold <= model.economy then
                 if model.currentRound == 3 && model.todo == [] then
                     ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
 
                 else
                     ( model, Cmd.none )
+
             else if model.currentlevel == 2 && model.currentRound <= 4 then
                 ( model, Cmd.none )
 
             else if para.ecoThreshold <= model.economy then
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
                 ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
 
             else
                 ( model, Cmd.none )
 
         DrawCard c ->
-<<<<<<< HEAD
             ( { model | hands = c :: model.hands }, Cmd.none )
-=======
-                ( { model | hands = c :: model.hands }, Cmd.none )
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
         PlayCard card ->
             if card.cost <= model.power then
@@ -187,16 +181,9 @@ update msg model =
                         | cardSelected = SelectCard card
                         , selHex = SelHexOn
                         , power = model.power - card.cost
-<<<<<<< HEAD
                         , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
-                        , actionDescribe = ("[" ++ card.name ++ "]: Please select a hexagon") :: model.actionDescribe
-=======
-
-                        --, economy = model.economy - para.ecoThreshold
-                        , hands = LE.remove card model.hands
                         , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]:\nPlease select a hexagon" ]
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
                       }
                     , P.cardToMusic ""
                     )
@@ -206,12 +193,7 @@ update msg model =
                         | cardSelected = SelectCard card
                         , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
                         , power = model.power - card.cost
-<<<<<<< HEAD
                         , economy = model.economy - para.ecoThreshold
-=======
-
-                        --, economy = model.economy - para.ecoThreshold
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
                         , hands = LE.remove card model.hands
                       }
                     , Cmd.none

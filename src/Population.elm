@@ -15,13 +15,7 @@ virusKill vir city =
             toFloat (sumSick city)
 
         death =
-<<<<<<< HEAD
-            patients
-                * dr
-                |> round
-=======
             round (patients * dr)
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
         ( lstInfectedn, lstInfected1 ) =
             city.tilesindex
@@ -44,11 +38,7 @@ virusKill vir city =
         | tilesindex =
             List.map
                 (\x ->
-<<<<<<< HEAD
-                    if List.member x deathlst then
-=======
                     if List.member x deathlst && dr > 0 then
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
                         { x
                             | sick = x.sick - max (round (toFloat x.sick * dr)) 1
                             , dead = x.dead + max (round (toFloat x.sick * dr)) 1
@@ -289,13 +279,6 @@ evacuate t city =
 change : Virus -> AntiVirus -> City -> ( Virus, AntiVirus )
 change virus anti city =
     let
-<<<<<<< HEAD
-        lstvir =
-            searchNeighbor virus.pos
-
-        lstanti =
-            searchNeighbor anti.pos
-=======
         validlst =
             List.map (\x -> x.indice) city.tilesindex
 
@@ -304,7 +287,6 @@ change virus anti city =
 
         lstanti =
             searchValidNeighbor anti.pos validlst
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
         lstquatile =
             quarantineTiles city.tilesindex

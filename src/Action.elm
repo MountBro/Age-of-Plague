@@ -5,27 +5,16 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Message exposing (..)
 import Model exposing (..)
+import Parameters exposing (..)
 import Population exposing (..)
 import Random exposing (float, generate)
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-<<<<<<< HEAD
-=======
-import Parameters exposing (..)
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
 
 updatelog : Model -> Model
 updatelog model =
-<<<<<<< HEAD
-    case model.cardSelected of
-        NoCard ->
-            model
-
-        SelectCard card ->
-            { model | actionDescribe = ("Used card [" ++ card.name ++ "]: \n " ++ card.describe) :: model.actionDescribe }
-=======
     let
         card =
             List.map Tuple.second model.todo
@@ -68,33 +57,32 @@ createGuide model =
 
             else
                 str |> getElement 7
+
         2 ->
             if model.currentRound == 1 then
                 str |> getElement 1
 
             else if model.currentRound == 2 then
                 str |> getElement 2
+
             else if model.currentRound < 5 then
                 str |> getElement 3
+
             else if model.currentRound >= 5 && not (List.isEmpty model.virus.pos) then
                 str |> getElement 4
+
             else
                 getElement 5 str
 
         _ ->
             []
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
 
 pickAction : Model -> ( Model, Cmd Msg )
 pickAction model =
     let
         ( finished, unfinished_ ) =
-<<<<<<< HEAD
-            List.partition (\( x, y ) -> not x) model.todo
-=======
             List.partition (\( ( x, y ), z ) -> not x) model.todo
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
         headQueue_ =
             unfinished_
@@ -103,20 +91,13 @@ pickAction model =
 
         headAction =
             headQueue_
-<<<<<<< HEAD
-=======
                 |> Tuple.first
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
                 |> Tuple.second
                 |> List.head
                 |> Maybe.withDefault NoAction
 
         headQueue =
-<<<<<<< HEAD
-            ( False, Tuple.second headQueue_ )
-=======
             ( ( False, headQueue_ |> Tuple.first |> Tuple.second ), Tuple.second headQueue_ )
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
         todo =
             finished ++ [ headQueue ] ++ List.drop 1 unfinished_
@@ -542,11 +523,7 @@ performAction action model =
                 num =
                     model.warehouseNum + 1
             in
-<<<<<<< HEAD
-            ( { model | city = city, warehouseNum = num }, Cmd.none )
-=======
             ( { model | city = city, warehouseNum = num } |> updatelog, Cmd.none )
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
 
         Warmwave_KIA ( ( i, j ), prob ) ->
             ( model |> updatelog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
@@ -581,8 +558,6 @@ performAction action model =
             in
             ( { model | city = city_ } |> updatelog, Cmd.none )
 
-<<<<<<< HEAD
-=======
         Summon cardlst ->
             let
                 hands_ =
@@ -593,6 +568,5 @@ performAction action model =
             in
             ( { model | hands = hands } |> updatelog, Cmd.none )
 
->>>>>>> d0308d5a54b40a33687f760cef16b88a458c99f8
         _ ->
             ( model, Cmd.none )

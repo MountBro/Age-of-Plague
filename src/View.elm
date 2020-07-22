@@ -18,6 +18,7 @@ import SvgSrc exposing (..)
 import Tile exposing (..)
 import ViewCards as VC exposing (..)
 import ViewHome as VH exposing (..)
+import ViewMP as MP exposing (..)
 import Virus exposing (..)
 
 
@@ -34,7 +35,7 @@ viewAll model =
             Document "game" [ view model ]
 
         Model.HomePage ->
-            Document "main" VH.viewHome
+            Document "main" [ MP.viewAll ]
 
         Model.CardPage ->
             Document "card" VC.viewCard

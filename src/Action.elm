@@ -5,12 +5,12 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Message exposing (..)
 import Model exposing (..)
+import Parameters exposing (..)
 import Population exposing (..)
 import Random exposing (float, generate)
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-import Parameters exposing (..)
 
 
 updatelog : Model -> Model
@@ -57,16 +57,20 @@ createGuide model =
 
             else
                 str |> getElement 7
+
         2 ->
             if model.currentRound == 1 then
                 str |> getElement 1
 
             else if model.currentRound == 2 then
                 str |> getElement 2
+
             else if model.currentRound < 5 then
                 str |> getElement 3
+
             else if model.currentRound >= 5 && not (List.isEmpty model.virus.pos) then
                 str |> getElement 4
+
             else
                 getElement 5 str
 

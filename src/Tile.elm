@@ -31,6 +31,7 @@ initCity tilepeo l =
     City tiles
 
 
+
 sumPopulation : City -> Int
 sumPopulation city =
     city.tilesindex
@@ -129,3 +130,5 @@ warehouseTiles tlst =
     tlst
         |> List.filter (\x -> x.wareHouse == True)
         |> List.map (\x -> x.indice)
+
+

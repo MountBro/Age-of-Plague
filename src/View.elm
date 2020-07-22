@@ -74,18 +74,24 @@ view model =
                         ++ film
                         ++ renderHands model
                         ++ renderConsole model
+                        ++ renderVirusinf model.virus
+                        ++ (if model.currentlevel <= 3 then
+                                renderGuide model
+
+                            else
+                                []
+                           )
                     )
-                , evolveButton
-                , nextRoundButton
+                --, evolveButton
+                , nextRoundButton model
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
                 , powerEcoInfo model
-                , div [] (List.map cardButton allCards)
-                , Html.text (Debug.toString model.todo ++ Debug.toString model.actionDescribe)
+                --, div [] (List.map cardButton allCards)
+                , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
-                , Html.button [ HE.onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
-                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw a card" ]
-                , Html.button [ HE.onClick (Message.Click "home") ] [ Html.text "BACK!" ]
+                , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
+                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
                 ]
 
         Drawing ->

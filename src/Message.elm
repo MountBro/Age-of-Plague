@@ -43,11 +43,10 @@ type KeyValue
     | Character Char
 
 
-type MyLog
-    = ActionPerformed Card String
-    | CardPlayed Card
-    | Instruction String
-    | Warning String
+type Levelstatus
+    = Win
+    | Lost
+    | Gaming
 
 
 tutorial =
@@ -65,7 +64,6 @@ tutorial =
       , "Win or lose is decided by the remaining population after\ncertain rounds. Now, try to use these cards to defeat\nyour very first virus in the next few turns\nHint: remeber to draw new cards or click next turn to accumulate resource."
       , "Great job!\nClick next turn to finish this level."
       ]
-    , [ "" ]
     ]
 
 

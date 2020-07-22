@@ -47,6 +47,11 @@ cardButton card =
     Html.button [ onClick (PlayCard card) ] [ Html.text card.name ]
 
 
+newlevelButton : Model -> Html Msg
+newlevelButton model =
+    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Enter the next level" ]
+
+
 powerEcoInfo : Model -> Html Msg
 powerEcoInfo model =
     let
@@ -64,9 +69,16 @@ evolveButton =
     Html.button [ onClick VirusEvolve ] [ Html.text "EVOLVE" ]
 
 
-nextRoundButton : Html Msg
-nextRoundButton =
-    Html.button [ onClick NextRound ] [ Html.text "next round" ]
+nextRoundButton : Model -> Html Msg
+nextRoundButton model =
+    if judgeWin model == Win then
+        Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Next Level" ]
+
+    else if judgeWin model == Lost then
+        Html.button [ onClick (LevelBegin model.currentlevel) ] [ Html.text "Restart level" ]
+
+    else
+        Html.button [ onClick NextRound ] [ Html.text "Next round" ]
 
 
 renderFlag : Int -> Html Msg
@@ -211,12 +223,6 @@ renderFilm model ( i, j ) =
         )
 
 
-
--- k1, k2, K1, K2
--- K1 = k2 + 2k1; K2 = 3k2 - k1
--- aK1 + bK2 = (2a -b) k1 + (a + 3b) k2
-
-
 renderTile : Tile -> List (Html Msg)
 renderTile t =
     let
@@ -240,16 +246,6 @@ renderTile t =
 
         j =
             t1 + 3 * t2
-
-        lst =
-            [ ( i, j )
-            , ( i, j - 1 )
-            , ( i, j + 1 )
-            , ( i + 1, j )
-            , ( i + 1, j - 1 )
-            , ( i - 1, j )
-            , ( i - 1, j + 1 )
-            ]
 
         ( x0, y0 ) =
             para.tileOrigin

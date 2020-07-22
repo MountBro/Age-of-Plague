@@ -22,7 +22,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         LevelBegin n ->
-            ( levelInit n model, Random.generate InitializeHands (cardsGenerator 10) )
+            if n <= 2 then
+                ( levelInit n model, Cmd.none )
+
+            else
+                ( levelInit n model, Random.generate InitializeHands (cardsGenerator 10) )
 
         InitializeHands lc ->
             let
@@ -244,7 +248,7 @@ update msg model =
             model |> replaceCard c
 
         StartRound1 ->
-            ( { model | state = Playing, drawChance = 1 }, Cmd.none )
+            ( { model | state = Playing, drawChance = 0 }, Cmd.none )
 
         HosInvalid ->
             ( { model
@@ -377,11 +381,27 @@ clearCurrentRoundTodo model =
 
 levelInit : Int -> Model -> Model
 levelInit n model =
-    { model
-        | behavior = initBehavior
-        , state = Drawing
-        , currentlevel = n
-    }
+    if n <= 2 then
+        { model
+            | behavior = initBehavior
+            , state = Playing
+            , city = initlevelmap n
+            , currentlevel = n
+            , hands = Tuple.first (initHandsVirus n)
+            , virus = Tuple.second (initHandsVirus n)
+        }
+
+    else
+        { model
+            | behavior = initBehavior
+            , city = initlevelmap n
+            , state = Drawing
+            , currentlevel = n
+            , replaceChance = 3
+            , hands = []
+            , actionDescribe = []
+            , virus = Tuple.second (initHandsVirus n) -- virus for each level
+        }
 
 
 replaceCard : Card -> Model -> ( Model, Cmd Msg )

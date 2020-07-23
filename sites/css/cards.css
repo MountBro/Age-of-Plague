@@ -1,29 +1,58 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
-body {
-    font-family: "Raleway", sans-serif;
-    background: black;
-}
-
 
 /* the following root section is for parameters */
 
 :root {
     --initPosX: -215%;
     --dx: 35%;
-    --initPosY: 50%;
-    --secdPosY: 75%;
+    --initPosY: 45%;
+    --secdPosY: 70%;
 }
 
-.wrapper {
+
+/* These are for the buttons */
+
+#cardsBack {
+    position: relative;
+    display: inline-block;
+    padding: 25px 30px;
+    margin: auto 20px;
+    color: #03e9f4;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.5s;
+    letter-spacing: 4px;
+    overflow: hidden;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+#cardsBack:hover {
+    background: #03e9f4;
+    color: #050801;
+    box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 200px #03e9f4;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+#cardsBack:nth-child(1) {
+    filter: hue-rotate(270deg);
+}
+
+#cardsBack:nth-child(2) {
+    filter: hue-rotate(110deg);
+}
+
+.wrpr {
     position: absolute;
     top: -2%;
-    left: 40%;
+    left: 41%;
     width: 250px;
-    height: 320px;
+    height: 400px;
     perspective: 900px;
 }
 
-.container {
+.ctnr {
     position: absolute;
     top: 10%;
     width: 30%;
@@ -35,92 +64,71 @@ body {
     animation: entry 1s linear 1;
 }
 
-#c1 {
+#card1 {
     position: absolute;
     left: var(--initPosX);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #59476f 30%, #7b88d1 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-image: url(../assets/cardPNG/PowerOverload.png);
+    background-size: cover;
 }
 
-#c2 {
+#card2 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx));
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #59476f 30%, #7b88d1 100%);
-    /* z-index: 0; */
-    /* box-shadow: 0px 20px 100px #555; */
+    /* This is temp pic, flase one! */
+    background-image: url(../assets/cardPNG/Judgement.png);
+    background-size: cover;
 }
 
-#c3 {
+#card3 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 2);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 0; */
-    /* box-shadow: 0px 20px 100px #555; */
+    /* This is temp pic, flase one! */
+    background-image: url(../assets/cardPNG/Resurgence.png);
+    background-size: cover;
 }
 
 #c4 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 3);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-image: url(../assets/cardPNG/Blizzard.png);
+    background-size: cover;
 }
 
 #c5 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 4);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    /* This is temp pic, flase one! */
+    background-image: url(../assets/cardPNG/GoingViral.png);
+    background-size: cover;
 }
 
 #c6 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 5);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-image: url(../assets/cardPNG/Cut.png);
+    background-size: cover;
 }
 
 #c7 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 6);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-image: url(../assets/cardPNG/996.png);
+    background-size: cover;
 }
 
 #c8 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 7);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-image: url(../assets/cardPNG/MegaCut.png);
+    background-size: cover;
 }
 
 #c9 {
@@ -365,7 +373,7 @@ body {
     /* box-shadow: 0px 20px 100px #555; */
 }
 
-.container:hover {
+.ctnr:hover {
     cursor: pointer;
     width: 100%;
     height: 100%;
@@ -376,7 +384,7 @@ body {
     margin-left: -1cm;
 }
 
-.container::after {
+.ctnr::after {
     content: attr(data-info);
     /* display: inline; */
     position: absolute;
@@ -395,27 +403,19 @@ body {
     transition: opacity 250ms, top 250ms;
 }
 
-.container:hover::after {
+.ctnr:hover::after {
     opacity: 0.8;
 }
 
-.image {
-    position: absolute;
-    top: 0%;
-    left: 0%;
-    width: 100%;
-    height: 45%;
-    background: linear-gradient(to top, #eba65b 30%, #d99267 100%);
-}
 
-span {
+/* span {
     position: absolute;
     top: 0%;
     left: 55%;
     border-radius: 100%;
     background-color: #fff;
     z-index: 10;
-}
+} */
 
 .story {
     position: absolute;
@@ -423,7 +423,7 @@ span {
     left: 0%;
     height: 55%;
     width: 100%;
-    background: linear-gradient(to bottom, #eba65b 0%, #d99267 40%);
+    /* background: linear-gradient(to bottom, #eba65b 0%, #d99267 40%); */
     z-index: 30;
 }
 
@@ -435,7 +435,7 @@ span {
 h3 {
     text-align: center;
     text-shadow: 0px 0px 10px #eee;
-    color: #eee;
+    color: #000;
     letter-spacing: 2px;
 }
 
@@ -464,6 +464,25 @@ p {
     line-height: 150%;
     text-align: center;
     letter-spacing: 1px;
+}
+
+#cardsTitle {
+    top: 2%;
+    right: 2%;
+}
+
+#cardsBack {
+    position: fixed;
+    top: 150%;
+    left: 25%;
+}
+
+.image {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
 }
 
 

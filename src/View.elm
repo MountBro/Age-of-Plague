@@ -5,6 +5,7 @@ import Debug exposing (log, toString)
 import GameView exposing (..)
 import Geometry exposing (..)
 import Html exposing (..)
+import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as D
 import Message exposing (..)
@@ -17,6 +18,7 @@ import SvgSrc exposing (..)
 import Tile exposing (..)
 import ViewCards as VC exposing (..)
 import ViewHome as VH exposing (..)
+import ViewMP as MP exposing (..)
 import Virus exposing (..)
 
 
@@ -33,7 +35,7 @@ viewAll model =
             Document "game" [ view model ]
 
         Model.HomePage ->
-            Document "main" VH.viewHome
+            Document "main" [ MP.viewAll ]
 
         Model.CardPage ->
             Document "card" VC.viewCard
@@ -55,7 +57,7 @@ view model =
     in
     case model.state of
         Playing ->
-            div []
+            div [ HA.style "background-color" "#FFF" ]
                 [ svg
                     [ SA.viewBox "0 0 1000 600"
                     , SA.height "600"

@@ -74,6 +74,9 @@ view model =
                         ++ renderHands model
                         ++ renderConsole model
                         ++ renderVirusInf model.virus
+                        ++ [ renderNextRound ]
+                        ++ [ powerInfo model ]
+                        ++ [ renderEconomyProgress model ]
                         ++ (if model.currentlevel <= 3 then
                                 renderGuide model
 
@@ -87,13 +90,13 @@ view model =
                 , nextRoundButton model
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
-                , powerEcoInfo model
 
                 --, div [] (List.map cardButton allCards)
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
                 , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
+                , Html.text ("economy: " ++ String.fromInt model.economy)
                 ]
 
         Drawing ->
@@ -132,7 +135,7 @@ bkg t =
                     "#b0deb9"
 
                 _ ->
-                    "#1a535d"
+                    "#778388"
     in
     rect
         [ SA.x "0"

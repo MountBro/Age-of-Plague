@@ -45,7 +45,7 @@ type Action
     | FreezevirusI ( Int, Int )
     | HospitalI ( Int, Int )
     | QuarantineI ( Int, Int )
-    | EnhanceHealingI
+    | EnhancedHealingI
     | AttractPeoI ( Int, Int )
     | StopAttractI ( Int, Int )
     | DroughtI_Kill ( ( Int, Int ), Float )
@@ -79,7 +79,7 @@ allCards =
     , defenseline
     , hospital
     , quarantine
-    , enhanceHealing
+    , enhancedHealing
     , cellBroadcast
     , drought
     , warehouse
@@ -291,12 +291,12 @@ quarantine =
         "Build a quarantine tile."
 
 
-enhanceHealing =
+enhancedHealing =
     Card
         NoSel
         4
-        [ EnhanceHealingI ]
-        "Enhance healing"
+        [ EnhancedHealingI ]
+        "Enhanced Healing"
         "All hospital healing +1."
 
 
@@ -332,7 +332,7 @@ warmwave =
         TileSel
         1
         [ Warmwave_KIA ( ( 0, 0 ), 0.25 ) ]
-        "Warmwave"
+        "Warm Wave"
         "25% of chance to kill the local virus."
 
 

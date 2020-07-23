@@ -192,15 +192,12 @@ update msg model =
             if
                 card.cost
                     <= model.power
-                    && para.ecoThreshold
-                    <= model.economy
             then
                 if List.member card targetCardlst then
                     ( { model
                         | cardSelected = SelectCard card
                         , selHex = SelHexOn
                         , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
                         , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]:\nPlease select a hexagon" ]
                       }
@@ -212,7 +209,6 @@ update msg model =
                         | cardSelected = SelectCard card
                         , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
                         , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
                       }
                     , Cmd.none
@@ -420,6 +416,7 @@ levelInit n model =
             , hands = []
             , actionDescribe = []
             , virus = Tuple.second (initHandsVirus n) -- virus for each level
+            , economy = 3
             , currentRound = 1
         }
             |> loadTheme n

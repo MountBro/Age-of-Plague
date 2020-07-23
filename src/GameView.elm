@@ -14,6 +14,7 @@ import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
 import Svg.Events as SE
+import SvgDefs exposing (..)
 import SvgSrc exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)
@@ -30,6 +31,11 @@ caption x y cstr text fontSize =
         ]
         [ text |> Svg.text
         ]
+
+
+powerInfo : Model -> Svg Msg
+powerInfo model =
+    caption (para.xlp + para.wlp + 50.0) (para.ylp + 50.0) "orange" (String.fromInt model.power) 60
 
 
 onClick : msg -> Svg.Attribute msg
@@ -50,18 +56,6 @@ cardButton card =
 newlevelButton : Model -> Html Msg
 newlevelButton model =
     Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Enter the next level" ]
-
-
-powerEcoInfo : Model -> Html Msg
-powerEcoInfo model =
-    let
-        p =
-            String.fromInt model.power
-
-        ec =
-            String.fromInt model.economy
-    in
-    Html.text ("power: " ++ p ++ ". " ++ "economy: " ++ ec ++ ". ")
 
 
 evolveButton : Html Msg
@@ -137,6 +131,85 @@ renderLevelProgress model =
             , SA.fill "green"
             ]
             []
+        ]
+
+
+renderNextRound : Html Msg
+renderNextRound =
+    svg [ onClick NextRound ]
+        [ rect
+            [ para.repx - para.repr |> String.fromFloat |> SA.x
+            , para.repy - para.repr |> String.fromFloat |> SA.y
+            , para.repr |> String.fromFloat |> SA.rx
+            , para.nrbc |> SA.fill
+            , 6.0 * para.repr |> String.fromFloat |> SA.width
+            , 2.0 * para.repr |> String.fromFloat |> SA.height
+            ]
+            []
+        , caption (para.repx + 2.0 * para.repr - 33.0) (para.repy + 3.0) "white" "Next Round" 20
+        ]
+
+
+renderEconomyProgress : Model -> Html Msg
+renderEconomyProgress model =
+    let
+        eco =
+            model.economy
+
+        ratio =
+            (toFloat eco / toFloat para.ecoThreshold) |> Basics.min 1 |> Basics.max 0
+
+        offSet =
+            2.0 * pi * para.repr * ratio
+
+        offSetComp =
+            2.0 * pi * para.repr * (1.0 - ratio)
+
+        arr =
+            String.fromFloat offSet ++ " " ++ String.fromFloat offSetComp
+
+        rotArg =
+            "rotate(-90,"
+                ++ String.fromFloat para.repx
+                ++ ","
+                ++ String.fromFloat para.repy
+                ++ ")"
+
+        txt =
+            String.fromInt model.economy
+                ++ "/"
+                ++ String.fromInt para.ecoThreshold
+    in
+    svg []
+        [ circle
+            [ SA.stroke para.dcsc
+            , SA.strokeWidth "4"
+            , SA.fill "transparent"
+            , arr |> SA.strokeDasharray
+            , para.repr |> String.fromFloat |> SA.r
+            , para.repx |> String.fromFloat |> SA.cx
+            , para.repy |> String.fromFloat |> SA.cy
+            , rotArg |> SA.transform
+            ]
+            []
+        , svg [ onClick DrawACard ]
+            [ circle
+                [ SA.fill
+                    (if eco < para.ecoThreshold then
+                        "red"
+
+                     else
+                        "cyan"
+                    )
+                , SA.fillOpacity "0.5"
+                , para.repr |> String.fromFloat |> SA.r
+                , para.repx |> String.fromFloat |> SA.cx
+                , para.repy |> String.fromFloat |> SA.cy
+                ]
+                []
+            ]
+        , caption (para.repx - 22.0) (para.repy + 3.0) "white" "draw" 20
+        , caption (para.repx - 10.0) (para.repy + 15.0) "white" txt 10
         ]
 
 
@@ -569,7 +642,7 @@ renderHands model =
             List.indexedMap Tuple.pair hands
                 |> List.map
                     (\( n, c ) ->
-                        ( n, ( para.xlp + para.wlp + 50.0 + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
+                        ( n, ( para.xlp + para.wlp + 150.0 + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
                     )
     in
     List.map
@@ -625,36 +698,7 @@ renderGuide model =
         bkg =
             svg []
                 [ Svg.defs []
-                    [ Svg.filter
-                        [ SA.id "rectShadow" ]
-                        [ Svg.feOffset
-                            [ SA.result "offOut"
-                            , SA.in_ "SourceGraphic"
-                            , SA.dx "20"
-                            , SA.dy "20"
-                            ]
-                            []
-                        , Svg.feColorMatrix
-                            [ SA.result "matrixOut"
-                            , SA.in_ "offOut"
-                            , SA.type_ "matrix"
-                            , SA.values "0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"
-                            ]
-                            []
-                        , Svg.feGaussianBlur
-                            [ SA.result "blurOut"
-                            , SA.in_ "matrixOut"
-                            , SA.stdDeviation "10"
-                            ]
-                            []
-                        , Svg.feBlend
-                            [ SA.in_ "SourceGraphic"
-                            , SA.in2 "blurOut"
-                            , SA.mode "normal"
-                            ]
-                            []
-                        ]
-                    ]
+                    [ sh2 ]
                 , rect
                     [ width |> String.fromFloat |> SA.width
                     , height |> String.fromFloat |> SA.height
@@ -664,16 +708,20 @@ renderGuide model =
                     , "5" |> SA.rx
                     , "2" |> SA.strokeWidth
                     , para.gbsc |> SA.stroke
-                    , SA.filter "url(#rectShadow)"
+                    , SA.filter "url(#shadow-filter)"
                     ]
                     []
                 ]
     in
-    bkg
-        :: (List.indexedMap Tuple.pair lstr
-                |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-                |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "black" str 16)
-           )
+    if model.currentlevel == 1 || model.currentlevel == 2 then
+        bkg
+            :: (List.indexedMap Tuple.pair lstr
+                    |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
+                    |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "black" str 16)
+               )
+
+    else
+        []
 
 
 renderVirusInf : Virus -> List (Html Msg)

@@ -426,7 +426,7 @@ performAction action model =
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
-        EnhanceHealingI ->
+        EnhancedHealingI ->
             let
                 city_ =
                     model.city

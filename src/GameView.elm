@@ -222,8 +222,8 @@ renderFilm model ( i, j ) =
         )
 
 
-renderTile : Tile -> List (Html Msg)
-renderTile t =
+renderTile : Theme -> Tile -> List (Html Msg)
+renderTile theme t =
     let
         a =
             para.a
@@ -288,14 +288,27 @@ renderTile t =
                 ++ [ y6 - h, y6 - 2 * h, y6 - h ]
                 ++ [ y1 - 2 * h, y1 - h, y1 + h ]
 
+        borderStrokeColor =
+            case theme of
+                Polar ->
+                    "cyan"
+
+                Urban ->
+                    "gray"
+
+                Minimum ->
+                    "#2e85ca"
+
+                _ ->
+                    "orange "
+
         border =
             svg []
                 [ polyline
                     [ polyPoint borderX borderY |> SA.points
-                    , SA.strokeWidth "2"
-                    , SA.stroke "orange"
-                    , SA.fill "#99b898"
-                    , SA.fillOpacity "0"
+                    , SA.strokeWidth ".5"
+                    , SA.stroke borderStrokeColor
+                    , SA.fillOpacity "0.0"
                     ]
                     []
                 ]
@@ -365,8 +378,19 @@ renderTile t =
                     [ t.dead |> String.fromInt |> Svg.text ]
                 ]
 
+        hexCoordinates =
+            [ ( x, y ), ( x1, y1 ), ( x2, y2 ), ( x3, y3 ), ( x4, y4 ), ( x5, y5 ), ( x6, y6 ) ]
+
         tiles =
-            List.map (\( u, v ) -> myTile u v) [ ( x, y ), ( x1, y1 ), ( x2, y2 ), ( x3, y3 ), ( x4, y4 ), ( x5, y5 ), ( x6, y6 ) ]
+            case theme of
+                Minimum ->
+                    List.map (renderHex para.mtc 1.0) (( i, j ) :: generateZone ( i, j ))
+
+                Polar ->
+                    List.map (\( u, v ) -> st1 u v) hexCoordinates
+
+                _ ->
+                    List.map (\( u, v ) -> myTile u v) hexCoordinates
 
         -- list of positions of the seven hexs in a tile.
     in
@@ -396,20 +420,8 @@ renderTileFilm model t =
 
         j =
             t1 + 3 * t2
-
-        lst =
-            [ ( i, j )
-            , ( i, j - 1 )
-            , ( i, j + 1 )
-            , ( i + 1, j )
-            , ( i + 1, j - 1 )
-            , ( i - 1, j )
-            , ( i - 1, j + 1 )
-            ]
-
-        -- list of positions of the seven hexs in a tile.
     in
-    List.map (renderFilm model) lst
+    List.map (renderFilm model) (( i, j ) :: generateZone ( i, j ))
 
 
 renderVirus : Virus -> List (Html Msg)
@@ -598,14 +610,74 @@ renderGuide model =
             createGuide model
                 |> List.map String.lines
                 |> List.foldl (\x -> \y -> x ++ y) []
+
+        length =
+            lstr |> List.length
+
+        height =
+            (length * 20)
+                |> toFloat
+                |> (+) 10.0
+
+        width =
+            500.0
+
+        bkg =
+            svg []
+                [ Svg.defs []
+                    [ Svg.filter
+                        [ SA.id "rectShadow" ]
+                        [ Svg.feOffset
+                            [ SA.result "offOut"
+                            , SA.in_ "SourceGraphic"
+                            , SA.dx "20"
+                            , SA.dy "20"
+                            ]
+                            []
+                        , Svg.feColorMatrix
+                            [ SA.result "matrixOut"
+                            , SA.in_ "offOut"
+                            , SA.type_ "matrix"
+                            , SA.values "0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"
+                            ]
+                            []
+                        , Svg.feGaussianBlur
+                            [ SA.result "blurOut"
+                            , SA.in_ "matrixOut"
+                            , SA.stdDeviation "10"
+                            ]
+                            []
+                        , Svg.feBlend
+                            [ SA.in_ "SourceGraphic"
+                            , SA.in2 "blurOut"
+                            , SA.mode "normal"
+                            ]
+                            []
+                        ]
+                    ]
+                , rect
+                    [ width |> String.fromFloat |> SA.width
+                    , height |> String.fromFloat |> SA.height
+                    , para.gbc |> SA.fill
+                    , para.clp + 230.0 |> String.fromFloat |> SA.x
+                    , para.conbot - 40.0 |> String.fromFloat |> SA.y
+                    , "5" |> SA.rx
+                    , "2" |> SA.strokeWidth
+                    , para.gbsc |> SA.stroke
+                    , SA.filter "url(#rectShadow)"
+                    ]
+                    []
+                ]
     in
-    List.indexedMap Tuple.pair lstr
-        |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-        |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "yellow" str 16)
+    bkg
+        :: (List.indexedMap Tuple.pair lstr
+                |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
+                |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "black" str 16)
+           )
 
 
-renderVirusinf : Virus -> List (Html Msg)
-renderVirusinf vir =
+renderVirusInf : Virus -> List (Html Msg)
+renderVirusInf vir =
     let
         rule =
             vir.rules

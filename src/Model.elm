@@ -43,6 +43,7 @@ type alias Model =
     , drawChance : Int
     , actionDescribe : List String
     , currentlevel : Int
+    , theme : Theme
     }
 
 
@@ -96,6 +97,7 @@ initModel _ =
       , drawChance = 0
       , actionDescribe = []
       , currentlevel = 1 --1
+      , theme = Polar
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -136,6 +138,13 @@ type alias Behavior =
     { populationFlow : Bool
     , virusEvolve : Bool
     }
+
+
+type Theme
+    = Polar
+    | Urban
+    | Minimum
+    | Plane
 
 
 initBehavior =

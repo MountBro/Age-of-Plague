@@ -50,7 +50,7 @@ type Levelstatus
 
 
 tutorial =
-    [ [ "Notice: red number on tiles stands for local dead\nyellow for patients, green for healthy population\nClick a hand card to play it."
+    [ [ "Welcome to the tutorial!\nAs you can see, red number on tiles stands for local dead\nyellow for patients, green for healthy population\nClick a hand card to play it."
       , "Notice: Each round between two neighboring tile(population > 0)\nat most 2 population (may include patients) would be exchanged\nNow, please click next round."
       , "The live game log is displayed on the left\nSome cards require selecting tiles. Try these cards."
       , "On a tile, different kinds of buildings could co-exist\nbut the same kind can't\nNow try the rest of the cards."

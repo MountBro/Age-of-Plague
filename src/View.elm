@@ -65,16 +65,15 @@ view model =
                     , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
-                    ([ bkg ]
-                        ++ [ cutpng ]
-                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
+                    ([ bkg model.theme ]
+                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesindex)
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
                         ++ [ renderLevelProgress model ]
                         ++ renderFlags [ 5, 10, 15 ]
                         ++ renderHands model
                         ++ renderConsole model
-                        ++ renderVirusinf model.virus
+                        ++ renderVirusInf model.virus
                         ++ (if model.currentlevel <= 3 then
                                 renderGuide model
 
@@ -106,7 +105,7 @@ view model =
                     , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
-                    ([ bkg ]
+                    ([ bkg model.theme ]
                         ++ renderInitCards model
                         ++ [ GameView.caption 20 200 "white" "click on card to replace" 20 ]
                         ++ [ GameView.caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
@@ -124,24 +123,22 @@ view model =
             div [] []
 
 
-cutpng =
-    Svg.image
-        [ SA.xlinkHref "https://wx1.sbimg.cn/2020/07/18/ClofD.png"
-        , SA.width "150"
-        , SA.height "240"
-        , SA.x "20"
-        , SA.y "20"
-        ]
-        []
+bkg : Theme -> Svg Msg
+bkg t =
+    let
+        color =
+            case t of
+                Minimum ->
+                    "#b0deb9"
 
-
-bkg : Svg Msg
-bkg =
+                _ ->
+                    "#1a535d"
+    in
     rect
         [ SA.x "0"
         , SA.y "0"
         , SA.width "1000"
         , SA.height "600"
-        , SA.fill "#2A363b"
+        , SA.fill color
         ]
         []

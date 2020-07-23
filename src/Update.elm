@@ -408,6 +408,7 @@ levelInit n model =
             , economy = 50
             , power = 50
         }
+            |> loadTheme n
 
     else
         { model
@@ -421,6 +422,23 @@ levelInit n model =
             , virus = Tuple.second (initHandsVirus n) -- virus for each level
             , currentRound = 1
         }
+            |> loadTheme n
+
+
+loadTheme : Int -> Model -> Model
+loadTheme n model =
+    case n of
+        3 ->
+            { model | theme = Polar }
+
+        4 ->
+            { model | theme = Urban }
+
+        5 ->
+            { model | theme = Plane }
+
+        _ ->
+            { model | theme = Minimum }
 
 
 replaceCard : Card -> Model -> ( Model, Cmd Msg )

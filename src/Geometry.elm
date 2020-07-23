@@ -121,3 +121,10 @@ cartesianProduct l1 l2 =
     List.foldr (\li1 -> \li2 -> li1 ++ li2)
         []
         (List.map (\x -> List.map (\y -> ( x, y )) l2) l1)
+
+
+getElement : Int -> List a -> List a
+getElement n lst =
+    lst
+        |> List.take n
+        |> List.drop (n - 1)

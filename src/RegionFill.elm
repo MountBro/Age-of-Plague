@@ -36,55 +36,55 @@ mFillRegion ( model, cm ) =
 fillRegion : Card -> Sel -> ( Queue, Cmd Msg )
 fillRegion card sel =
     if card == cut then
-        ( ( True, [ CutHexI sel ] ), Cmd.none )
+        ( ( ( True, [ CutHexI sel ] ), card ), Cmd.none )
 
     else if card == megaCut then
-        ( ( True, [ CutTileI sel ] ), Cmd.none )
+        ( ( ( True, [ CutTileI sel ] ), card ), Cmd.none )
 
     else if card == organClone then
-        ( ( True, [ OrganCloneI sel ] ), Cmd.none )
+        ( ( ( True, [ OrganCloneI sel ] ), card ), Cmd.none )
 
     else if card == humanClone then
-        ( ( True, [ HumanCloneI sel ] ), Cmd.none )
+        ( ( ( True, [ HumanCloneI sel ] ), card ), Cmd.none )
 
     else if card == purification then
-        ( ( True, [ PurificationI sel ] ), Cmd.none )
+        ( ( ( True, [ PurificationI sel ] ), card ), Cmd.none )
 
     else if card == resurgence then
-        ( ( True, [ ResurgenceI sel ] ), Cmd.none )
+        ( ( ( True, [ ResurgenceI sel ] ), card ), Cmd.none )
 
     else if card == sacrifice then
-        ( ( True, [ SacrificeI sel ] ), Cmd.none )
+        ( ( ( True, [ SacrificeI sel ] ), card ), Cmd.none )
 
     else if card == defenseline then
-        ( ( True, [ FreezevirusI sel, FreezevirusI sel ] ), Cmd.none )
+        ( ( ( True, [ FreezevirusI sel, FreezevirusI sel ] ), card ), Cmd.none )
 
     else if card == hospital then
-        ( ( True, [ HospitalI sel ] ), Cmd.none )
+        ( ( ( True, [ HospitalI sel ] ), card ), Cmd.none )
 
     else if card == quarantine then
-        ( ( True, [ QuarantineI sel ] ), Cmd.none )
+        ( ( ( True, [ QuarantineI sel ] ), card ), Cmd.none )
 
     else if card == cellBroadcast then
-        ( ( True, [ AttractPeoI sel, StopAttractI sel ] ), Cmd.none )
+        ( ( ( True, [ AttractPeoI sel, StopAttractI sel ] ), card ), Cmd.none )
 
     else if card == drought then
-        ( ( True, [ DroughtI_Kill ( sel, 0.5 ), DroughtI_Kill ( sel, 0.5 ) ] ), Cmd.none )
+        ( ( ( True, [ DroughtI_Kill ( sel, 0.5 ), DroughtI_Kill ( sel, 0.5 ) ] ), card ), Cmd.none )
 
     else if card == warehouse then
-        ( ( True, [ WarehouseI sel ] ), Cmd.none )
+        ( ( ( True, [ WarehouseI sel ] ), card ), Cmd.none )
 
     else if card == warmwave then
-        ( ( True, [ Warmwave_KIA ( sel, 0.25 ) ] ), Cmd.none )
+        ( ( ( True, [ Warmwave_KIA ( sel, 0.25 ) ] ), card ), Cmd.none )
 
     else if card == goingViral then
-        ( ( True, [ AVI sel ] ), Cmd.none )
+        ( ( ( True, [ AVI sel ] ), card ), Cmd.none )
 
     else if card == judgement then
-        ( ( True, [ JudgeI_Kill ( sel, 0.5 ) ] ), Cmd.none )
+        ( ( ( True, [ JudgeI_Kill ( sel, 0.5 ) ] ), card ), Cmd.none )
 
     else if card == lowSoundWave then
-        ( ( True, [ EvacuateI sel, StopEVAI sel ] ), Cmd.none )
+        ( ( ( True, [ EvacuateI sel, StopEVAI sel ] ), card ), Cmd.none )
 
     else
         ( finishedEmptyQueue, Cmd.none )

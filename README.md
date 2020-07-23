@@ -1,13 +1,19 @@
-# Project 2 for team 3,
+# Project 2 for team 3
 
+## Begin
 
+Just open the **index.html** in the ./sites folder. Have fun!
 
-- simsrc:
-  This is for Matlab simulation.
+## File struture
+
 - sites:
-  This is the main sites for our projects.
-  We use HTML for main page and card gallery, while we use pure elm for the game core.
+
+  1. index.html & elm.js:
+     This is the main files for our projects.
+  2. css folder:
+     These are our css stylesheets.
+  3. assets:
+     These are the pics and musics embeded in the website.
+
 - cards
-  These markdown file is descriptions for our crad desgin.
-- pic
-  The pictures in this folder is backup files for our design.
+  These markdown files sre descriptions for our card desgin.

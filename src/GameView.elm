@@ -1,11 +1,13 @@
 module GameView exposing (..)
 
+import Action exposing (..)
 import Card exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as D
+import List.Extra exposing (..)
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
@@ -45,6 +47,11 @@ cardButton card =
     Html.button [ onClick (PlayCard card) ] [ Html.text card.name ]
 
 
+newlevelButton : Model -> Html Msg
+newlevelButton model =
+    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Enter the next level" ]
+
+
 powerEcoInfo : Model -> Html Msg
 powerEcoInfo model =
     let
@@ -62,9 +69,15 @@ evolveButton =
     Html.button [ onClick VirusEvolve ] [ Html.text "EVOLVE" ]
 
 
-nextRoundButton : Html Msg
-nextRoundButton =
-    Html.button [ onClick NextRound ] [ Html.text "next round" ]
+nextRoundButton : Model -> Html Msg
+nextRoundButton model =
+    --if judgeWin model == Win then
+    --    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Next Level" ]
+    --else if judgeWin model == Lost then
+    --    Html.button [ onClick (LevelBegin model.currentlevel) ] [ Html.text "Restart level" ]
+    --else
+    --
+    Html.button [ onClick NextRound ] [ Html.text "Next round" ]
 
 
 renderFlag : Int -> Html Msg
@@ -209,12 +222,6 @@ renderFilm model ( i, j ) =
         )
 
 
-
--- k1, k2, K1, K2
--- K1 = k2 + 2k1; K2 = 3k2 - k1
--- aK1 + bK2 = (2a -b) k1 + (a + 3b) k2
-
-
 renderTile : Tile -> List (Html Msg)
 renderTile t =
     let
@@ -238,16 +245,6 @@ renderTile t =
 
         j =
             t1 + 3 * t2
-
-        lst =
-            [ ( i, j )
-            , ( i, j - 1 )
-            , ( i, j + 1 )
-            , ( i + 1, j )
-            , ( i + 1, j - 1 )
-            , ( i - 1, j )
-            , ( i - 1, j + 1 )
-            ]
 
         ( x0, y0 ) =
             para.tileOrigin
@@ -452,8 +449,8 @@ renderCardPng : Float -> Float -> Float -> Card -> Html Msg
 renderCardPng width x y c =
     svg []
         [ Svg.image
-            [ c |> toPngUrl |> SA.xlinkHref
-            , x |> String.fromFloat |> SA.x
+            [ x |> String.fromFloat |> SA.x
+            , c |> toPngUrl |> SA.xlinkHref
             , y |> String.fromFloat |> SA.y
             , width |> String.fromFloat |> SA.width
             , 1.6 * width |> String.fromFloat |> SA.height
@@ -592,3 +589,43 @@ renderConsole model =
     List.indexedMap Tuple.pair lstr
         |> List.map (\( n, str ) -> ( para.clp, para.conbot - para.clh * toFloat (l - 1 - n), str ))
         |> List.map (\( x, y, str ) -> caption x y "white" str 15)
+
+
+renderGuide : Model -> List (Html Msg)
+renderGuide model =
+    let
+        lstr =
+            createGuide model
+                |> List.map String.lines
+                |> List.foldl (\x -> \y -> x ++ y) []
+    in
+    List.indexedMap Tuple.pair lstr
+        |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
+        |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "yellow" str 16)
+
+
+renderVirusinf : Virus -> List (Html Msg)
+renderVirusinf vir =
+    let
+        rule =
+            vir.rules
+                |> List.map (\x -> Debug.toString x)
+                |> String.join " or "
+
+        infect =
+            Debug.toString vir.infect
+
+        inf =
+            if vir.rules /= [] then
+                [ "Infect: +" ++ infect ++ " per virus unit\n" ++ "Death rate: " ++ Debug.toString vir.kill ++ "\nSpread pattern:\nIf a hex is surrounded\nby " ++ rule ++ " virus units,\nthe virus would spread to\nthis hex next round." ]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+
+            else
+                [ "Spread rules:\nNo virus in Tutorial 1." ]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+    in
+    List.indexedMap Tuple.pair inf
+        |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
+        |> List.map (\( x, y, str ) -> caption (x + 820.0) y "red" str 12)

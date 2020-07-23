@@ -104,11 +104,12 @@ initModel _ =
 type Gamestatus
     = Playing
     | Drawing
-    | Finished
     | Playcard
     | Stopped
     | HomePage
     | CardPage
+    | Finished
+    | Wasted
 
 
 initlog : Model -> Model
@@ -167,8 +168,9 @@ judgeBuild model ( i, j ) =
 map1 =
     cartesianProduct [ 0, 1 ] [ 0, 1 ]
 
+
 initlevelmap : Int -> City
-initlevelmap level=
+initlevelmap level =
     let
         citytile =
             getElement level map
@@ -221,24 +223,6 @@ initHandsVirus level =
                 |> Maybe.withDefault (Virus [] [] 0 0 0)
     in
     ( hand, vir )
-
-
-judgeWin : Model -> Levelstatus
-judgeWin model =
-    if model.currentlevel == 1 && model.currentRound == 3 then
-        Win
-
-    else if model.currentRound == 20 && model.currentlevel > 2 && sumDead model.city < 80 then
-        Win
-
-    else if model.virus.pos == [] && model.currentlevel > 1 then
-        Win
-
-    else if model.currentlevel < 20 then
-        Gaming
-
-    else
-        Lost
 
 
 levelModel : Int -> Model -> Model

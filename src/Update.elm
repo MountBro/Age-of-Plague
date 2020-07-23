@@ -51,6 +51,10 @@ update msg model =
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
         Tick newTime ->
+            let
+                log1 =
+                    log "selhex" model.selHex
+            in
             if not (finished model.todo) then
                 model |> pickAction |> mFillRegion
 
@@ -82,6 +86,7 @@ update msg model =
                       }
                         |> initlog
                         |> clearCurrentRoundTodo
+                        |> judgeWin
                     , Cmd.none
                     )
 
@@ -89,6 +94,7 @@ update msg model =
                     ( { model | currentRound = model.currentRound + 1 }
                         |> initlog
                         |> clearCurrentRoundTodo
+                        |> judgeWin
                     , Cmd.none
                     )
 
@@ -106,6 +112,7 @@ update msg model =
                         |> ecoInc
                         |> powerInc
                         |> initlog
+                        |> judgeWin
                     , Cmd.none
                     )
 
@@ -122,6 +129,7 @@ update msg model =
                         |> ecoInc
                         |> powerInc
                         |> initlog
+                        |> judgeWin
                     , Cmd.none
                     )
 
@@ -132,6 +140,7 @@ update msg model =
                         |> ecoInc
                         |> powerInc
                         |> initlog
+                        |> judgeWin
                     , Cmd.none
                     )
 
@@ -145,6 +154,7 @@ update msg model =
                     |> ecoInc
                     |> powerInc
                     |> initlog
+                    |> judgeWin
                 , Cmd.none
                 )
 
@@ -154,6 +164,7 @@ update msg model =
                     |> ecoInc
                     |> powerInc
                     |> initlog
+                    |> judgeWin
                 , Cmd.none
                 )
 
@@ -394,6 +405,8 @@ levelInit n model =
             , hands = Tuple.first (initHandsVirus n)
             , virus = Tuple.second (initHandsVirus n)
             , currentRound = 1
+            , economy = 50
+            , power = 50
         }
 
     else
@@ -421,3 +434,21 @@ replaceCard c model =
                 log "card to replace does not exist in hands!" ""
         in
         ( model, Cmd.none )
+
+
+judgeWin : Model -> Model
+judgeWin model =
+    if model.currentlevel == 1 && model.currentRound == 3 then
+        { model | state = Finished }
+
+    else if model.currentRound == 21 && model.currentlevel > 2 && sumDead model.city < 80 then
+        { model | state = Finished }
+
+    else if model.virus.pos == [] && model.currentlevel > 1 then
+        { model | state = Finished }
+
+    else if model.currentRound < 21 then
+        model
+
+    else
+        { model | state = Wasted }

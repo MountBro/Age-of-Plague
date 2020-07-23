@@ -71,7 +71,6 @@ view model =
                         ++ renderantiVirus model.av
                         ++ [ renderLevelProgress model ]
                         ++ renderFlags [ 5, 10, 15 ]
-                        ++ film
                         ++ renderHands model
                         ++ renderConsole model
                         ++ renderVirusinf model.virus
@@ -81,12 +80,15 @@ view model =
                             else
                                 []
                            )
+                        ++ film
                     )
+
                 --, evolveButton
                 , nextRoundButton model
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
                 , powerEcoInfo model
+
                 --, div [] (List.map cardButton allCards)
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
@@ -110,6 +112,12 @@ view model =
                     )
                 , Html.button [ onClick StartRound1 ] [ Html.text "Start round 1" ]
                 ]
+
+        Finished ->
+            div [] [ Html.text "finished" ]
+
+        Wasted ->
+            div [] [ Html.text "wasted" ]
 
         _ ->
             div [] []

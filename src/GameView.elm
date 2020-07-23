@@ -71,14 +71,13 @@ evolveButton =
 
 nextRoundButton : Model -> Html Msg
 nextRoundButton model =
-    if judgeWin model == Win then
-        Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Next Level" ]
-
-    else if judgeWin model == Lost then
-        Html.button [ onClick (LevelBegin model.currentlevel) ] [ Html.text "Restart level" ]
-
-    else
-        Html.button [ onClick NextRound ] [ Html.text "Next round" ]
+    --if judgeWin model == Win then
+    --    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Next Level" ]
+    --else if judgeWin model == Lost then
+    --    Html.button [ onClick (LevelBegin model.currentlevel) ] [ Html.text "Restart level" ]
+    --else
+    --
+    Html.button [ onClick NextRound ] [ Html.text "Next round" ]
 
 
 renderFlag : Int -> Html Msg

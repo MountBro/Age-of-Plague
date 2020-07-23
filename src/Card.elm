@@ -129,6 +129,11 @@ toPngUrl c =
     "./assets/cardPNG/" ++ String.replace " " "" c.name ++ ".png"
 
 
+toSoundUrl : Card -> String
+toSoundUrl c =
+    "./assets/sound/" ++ String.replace " " "" c.name ++ ".wav"
+
+
 powerOverload =
     Card
         NoSel

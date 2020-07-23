@@ -178,8 +178,12 @@ update msg model =
             ( { model | hands = c :: model.hands }, Cmd.none )
 
         PlayCard card ->
-            if card.cost <= model.power then
-                --&& para.ecoThreshold <= model.economy
+            if
+                card.cost
+                    <= model.power
+                    && para.ecoThreshold
+                    <= model.economy
+            then
                 if List.member card targetCardlst then
                     ( { model
                         | cardSelected = SelectCard card
@@ -389,6 +393,7 @@ levelInit n model =
             , currentlevel = n
             , hands = Tuple.first (initHandsVirus n)
             , virus = Tuple.second (initHandsVirus n)
+            , currentRound = 1
         }
 
     else
@@ -401,6 +406,7 @@ levelInit n model =
             , hands = []
             , actionDescribe = []
             , virus = Tuple.second (initHandsVirus n) -- virus for each level
+            , currentRound = 1
         }
 
 

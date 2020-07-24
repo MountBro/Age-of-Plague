@@ -1,25 +1,18 @@
 module View exposing (..)
 
-import Card exposing (..)
 import Debug exposing (log, toString)
 import GameView exposing (..)
-import Geometry exposing (..)
 import Html exposing (..)
 import Html.Attributes as HA
 import Html.Events as HE
-import Json.Decode as D
 import Message exposing (..)
 import Model exposing (..)
-import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
-import Svg.Events as SE
 import SvgSrc exposing (..)
 import Tile exposing (..)
 import ViewCards as VC exposing (..)
-import ViewHome as VH exposing (..)
 import ViewMP as MP exposing (..)
-import Virus exposing (..)
 
 
 type alias Document msg =
@@ -50,7 +43,7 @@ view model =
         film =
             case model.selHex of
                 SelHexOn ->
-                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesindex)
+                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesIndex)
 
                 _ ->
                     []
@@ -66,7 +59,7 @@ view model =
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
                     ([ bkg model.theme ]
-                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesindex)
+                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesIndex)
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
                         ++ [ renderLevelProgress model ]
@@ -77,7 +70,19 @@ view model =
                         ++ [ renderNextRound ]
                         ++ [ powerInfo model ]
                         ++ [ renderEconomyProgress model ]
-                        ++ (if model.currentlevel <= 3 then
+                        ++ (if (lr model == ( 1, 1 ) || lr model == ( 1, 2 )) && not (List.isEmpty model.hands) then
+                                [ hand2FirstCard ]
+
+                            else
+                                []
+                           )
+                        ++ (if List.member (lr model) [ ( 1, 2 ), ( 2, 1 ), ( 2, 2 ), ( 2, 3 ), ( 2, 4 ) ] && List.isEmpty model.hands then
+                                [ hand2NextRound ]
+
+                            else
+                                []
+                           )
+                        ++ (if model.currentLevel <= 3 then
                                 renderGuide model
 
                             else

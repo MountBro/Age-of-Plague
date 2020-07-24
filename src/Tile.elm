@@ -18,7 +18,7 @@ type alias Tile =
 
 
 type alias City =
-    { tilesindex : List Tile
+    { tilesIndex : List Tile
     }
 
 
@@ -31,24 +31,23 @@ initCity tilepeo l =
     City tiles
 
 
-
 sumPopulation : City -> Int
 sumPopulation city =
-    city.tilesindex
+    city.tilesIndex
         |> List.map (\x -> x.population)
         |> List.sum
 
 
 sumSick : City -> Int
 sumSick city =
-    city.tilesindex
+    city.tilesIndex
         |> List.map (\x -> x.sick)
         |> List.sum
 
 
 sumDead : City -> Int
 sumDead city =
-    city.tilesindex
+    city.tilesIndex
         |> List.map (\x -> x.dead)
         |> List.sum
 
@@ -111,6 +110,17 @@ validNeighborTile tlst t =
         []
 
 
+neighborSick : List Tile -> Tile -> Int
+neighborSick tlst t =
+    let
+        lstn =
+            generateZone t.indice
+    in
+    List.filter (\x -> List.member x.indice lstn && x.population > 0 && not x.qua) tlst
+        |> List.map (\x -> x.sick)
+        |> List.sum
+
+
 quarantineTiles : List Tile -> List ( Int, Int )
 quarantineTiles tlst =
     tlst
@@ -130,5 +140,3 @@ warehouseTiles tlst =
     tlst
         |> List.filter (\x -> x.wareHouse == True)
         |> List.map (\x -> x.indice)
-
-

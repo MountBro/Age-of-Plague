@@ -7,13 +7,11 @@ import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as D
-import List.Extra exposing (..)
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
-import Svg.Events as SE
 import SvgDefs exposing (..)
 import SvgSrc exposing (..)
 import Tile exposing (..)
@@ -55,7 +53,7 @@ cardButton card =
 
 newlevelButton : Model -> Html Msg
 newlevelButton model =
-    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Enter the next level" ]
+    Html.button [ onClick (LevelBegin (model.currentLevel + 1)) ] [ Html.text "Enter the next level" ]
 
 
 evolveButton : Html Msg
@@ -66,9 +64,9 @@ evolveButton =
 nextRoundButton : Model -> Html Msg
 nextRoundButton model =
     --if judgeWin model == Win then
-    --    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Next Level" ]
+    --    Html.button [ onClick (LevelBegin (model.currentLevel + 1)) ] [ Html.text "Next Level" ]
     --else if judgeWin model == Lost then
-    --    Html.button [ onClick (LevelBegin model.currentlevel) ] [ Html.text "Restart level" ]
+    --    Html.button [ onClick (LevelBegin model.currentLevel) ] [ Html.text "Restart level" ]
     --else
     --
     Html.button [ onClick NextRound ] [ Html.text "Next round" ]
@@ -713,7 +711,7 @@ renderGuide model =
                     []
                 ]
     in
-    if model.currentlevel == 1 || model.currentlevel == 2 then
+    if model.currentLevel == 1 || model.currentLevel == 2 then
         bkg
             :: (List.indexedMap Tuple.pair lstr
                     |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))

@@ -1,4 +1,4 @@
-module SvgSrc exposing (myTile, st1)
+module SvgSrc exposing (..)
 
 import Html
 import Message exposing (..)
@@ -162,3 +162,57 @@ st1 x1 x2 =
                 []
             ]
         ]
+
+
+skeletonHand : Float -> Float -> Float -> Html.Html Msg
+skeletonHand x y width =
+    svg []
+        [ Svg.image
+            [ x |> String.fromFloat |> Svg.Attributes.x
+            , "./assets/guide/SkeletonHand.png" |> xlinkHref
+            , y |> String.fromFloat |> Svg.Attributes.y
+            , width |> String.fromFloat |> Svg.Attributes.width
+            ]
+            [ Svg.animateTransform
+                [ attributeName "transform"
+                , attributeType "XML"
+                , type_ "translate"
+                , from "0 0 "
+                , to "20 0"
+                , dur "1s"
+                , repeatCount "indefinite"
+                ]
+                []
+            ]
+        ]
+
+
+revSkeletonHand : Float -> Float -> Float -> Html.Html Msg
+revSkeletonHand x y width =
+    svg []
+        [ Svg.image
+            [ x |> String.fromFloat |> Svg.Attributes.x
+            , "./assets/guide/RevSkeletonHand.png" |> xlinkHref
+            , y |> String.fromFloat |> Svg.Attributes.y
+            , width |> String.fromFloat |> Svg.Attributes.width
+            ]
+            [ Svg.animateTransform
+                [ attributeName "transform"
+                , attributeType "XML"
+                , type_ "translate"
+                , from "0 0 "
+                , to "-20 0"
+                , dur "1s"
+                , repeatCount "indefinite"
+                ]
+                []
+            ]
+        ]
+
+
+hand2FirstCard =
+    skeletonHand 260.0 15.0 100.0
+
+
+hand2NextRound =
+    revSkeletonHand 250.0 480.0 100.0

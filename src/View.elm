@@ -77,7 +77,19 @@ view model =
                         ++ [ renderNextRound ]
                         ++ [ powerInfo model ]
                         ++ [ renderEconomyProgress model ]
-                        ++ (if model.currentlevel <= 3 then
+                        ++ (if (lr model == ( 1, 1 ) || lr model == ( 1, 2 )) && not (List.isEmpty model.hands) then
+                                [ hand2FirstCard ]
+
+                            else
+                                []
+                           )
+                        ++ (if List.member (lr model) [ ( 1, 2 ), ( 2, 1 ), ( 2, 2 ), ( 2, 3 ), ( 2, 4 ) ] && List.isEmpty model.hands then
+                                [ hand2NextRound ]
+
+                            else
+                                []
+                           )
+                        ++ (if model.currentLevel <= 3 then
                                 renderGuide model
 
                             else

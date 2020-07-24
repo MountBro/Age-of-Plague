@@ -78,7 +78,7 @@ update msg model =
             )
 
         NextRound ->
-            if model.currentlevel == 1 then
+            if model.currentLevel == 1 then
                 if model.currentRound == 1 && model.hands == [] then
                     ( { model
                         | currentRound = model.currentRound + 1
@@ -101,7 +101,7 @@ update msg model =
                 else
                     ( model, Cmd.none )
 
-            else if model.currentlevel == 2 then
+            else if model.currentLevel == 2 then
                 if model.currentRound == 1 then
                     ( { model
                         | currentRound = model.currentRound + 1
@@ -169,14 +169,14 @@ update msg model =
                 )
 
         DrawACard ->
-            if model.currentlevel == 1 && para.ecoThreshold <= model.economy then
+            if model.currentLevel == 1 && para.ecoThreshold <= model.economy then
                 if model.currentRound == 3 && model.todo == [] then
                     ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
 
                 else
                     ( model, Cmd.none )
 
-            else if model.currentlevel == 2 && model.currentRound <= 4 then
+            else if model.currentLevel == 2 && model.currentRound <= 4 then
                 ( model, Cmd.none )
 
             else if para.ecoThreshold <= model.economy then
@@ -397,7 +397,7 @@ levelInit n model =
             | behavior = initBehavior
             , state = Playing
             , city = initlevelmap n
-            , currentlevel = n
+            , currentLevel = n
             , hands = Tuple.first (initHandsVirus n)
             , virus = Tuple.second (initHandsVirus n)
             , currentRound = 1
@@ -411,7 +411,7 @@ levelInit n model =
             | behavior = initBehavior
             , city = initlevelmap n
             , state = Drawing
-            , currentlevel = n
+            , currentLevel = n
             , replaceChance = 3
             , hands = []
             , actionDescribe = []
@@ -453,13 +453,13 @@ replaceCard c model =
 
 judgeWin : Model -> Model
 judgeWin model =
-    if model.currentlevel == 1 && model.currentRound == 3 then
+    if model.currentLevel == 1 && model.currentRound == 3 then
         { model | state = Finished }
 
-    else if model.currentRound == 21 && model.currentlevel > 2 && sumDead model.city < 80 then
+    else if model.currentRound == 21 && model.currentLevel > 2 && sumDead model.city < 80 then
         { model | state = Finished }
 
-    else if model.virus.pos == [] && model.currentlevel > 1 then
+    else if model.virus.pos == [] && model.currentLevel > 1 then
         { model | state = Finished }
 
     else if model.currentRound < 21 then

@@ -29,13 +29,13 @@ createGuide : Model -> List String
 createGuide model =
     let
         str =
-            List.take model.currentlevel tutorial
+            List.take model.currentLevel tutorial
                 |> List.foldl (\x -> \y -> x ++ y) []
 
         card =
             List.map Tuple.second model.todo
     in
-    case model.currentlevel of
+    case model.currentLevel of
         1 ->
             if model.hands == [ megaClone ] then
                 str |> getElement 1

@@ -42,7 +42,7 @@ type alias Model =
     , replaceChance : Int
     , drawChance : Int
     , actionDescribe : List String
-    , currentlevel : Int
+    , currentLevel : Int
     , theme : Theme
     }
 
@@ -96,7 +96,7 @@ initModel _ =
       , replaceChance = 3
       , drawChance = 0
       , actionDescribe = []
-      , currentlevel = 1 --1
+      , currentLevel = 1 --1
       , theme = Polar
       }
     , Task.perform GotViewport Browser.Dom.getViewport
@@ -240,7 +240,7 @@ levelModel n model =
         { model
             | behavior = initBehavior
             , state = Playing
-            , currentlevel = n
+            , currentLevel = n
             , hands = Tuple.first (initHandsVirus n)
             , virus = Tuple.second (initHandsVirus n)
         }
@@ -249,9 +249,14 @@ levelModel n model =
         { model
             | behavior = initBehavior
             , state = Drawing
-            , currentlevel = n
+            , currentLevel = n
             , replaceChance = 3
             , hands = []
             , actionDescribe = []
             , virus = Tuple.second (initHandsVirus n) -- virus for each level
         }
+
+
+lr : Model -> ( Int, Int )
+lr model =
+    ( model.currentLevel, model.currentRound )

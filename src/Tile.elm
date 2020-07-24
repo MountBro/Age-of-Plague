@@ -111,6 +111,17 @@ validNeighborTile tlst t =
         []
 
 
+neighborSick : List Tile -> Tile -> Int
+neighborSick tlst t =
+    let
+        lstn =
+            generateZone t.indice
+    in
+    List.filter (\x -> List.member x.indice lstn && x.population > 0 && not x.qua) tlst
+        |> List.map (\x -> x.sick)
+        |> List.sum
+
+
 quarantineTiles : List Tile -> List ( Int, Int )
 quarantineTiles tlst =
     tlst

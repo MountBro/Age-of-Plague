@@ -617,7 +617,7 @@ renderVirusinf vir =
 
         inf =
             if vir.rules /= [] then
-                [ "Infect: +" ++ infect ++ " per virus unit\n" ++ "Death rate: " ++ Debug.toString vir.kill ++ "\nSpread pattern:\nIf a hex is surrounded\nby " ++ rule ++ " virus units,\nthe virus would spread to\nthis hex next round." ]
+                [ "Infect: +" ++ infect ++ " per virus unit\n" ++ "Death rate: " ++ Debug.toString (toFloat (round ( vir.kill * 100)) /100) ++ "\nSpread pattern:\nIf a hex is surrounded\nby " ++ rule ++ " virus units,\nthe virus would spread to\nthis hex next round." ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
 

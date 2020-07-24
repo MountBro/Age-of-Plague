@@ -12,8 +12,8 @@ import Todo exposing (..)
 import Virus exposing (..)
 
 
-updatelog : Model -> Model
-updatelog model =
+updateLog : Model -> Model
+updateLog model =
     let
         card =
             List.map Tuple.second model.todo
@@ -111,10 +111,10 @@ performAction : Action -> Model -> ( Model, Cmd Msg )
 performAction action model =
     case action of
         IncPowerI inc ->
-            ( { model | power = model.power + inc } |> updatelog, Cmd.none )
+            ( { model | power = model.power + inc } |> updateLog, Cmd.none )
 
         Freeze prob ->
-            ( model |> updatelog, Random.generate (FreezeRet prob) (Random.float 0 1) )
+            ( model |> updateLog, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         FreezeI ->
             let
@@ -124,10 +124,10 @@ performAction action model =
                 behavior =
                     { behavior_ | virusEvolve = False }
             in
-            ( { model | behavior = behavior } |> updatelog, Cmd.none )
+            ( { model | behavior = behavior } |> updateLog, Cmd.none )
 
         EcoDoubleI_Freeze prob ->
-            ( { model | ecoRatio = 2 * model.ecoRatio } |> updatelog, Random.generate (FreezeRet prob) (Random.float 0 1) )
+            ( { model | ecoRatio = 2 * model.ecoRatio } |> updateLog, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         CutHexI ( i, j ) ->
             let
@@ -143,7 +143,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = pos }
             in
-            ( { model | virus = virus } |> updatelog, Cmd.none )
+            ( { model | virus = virus } |> updateLog, Cmd.none )
 
         CutTileI ( i, j ) ->
             let
@@ -172,7 +172,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = pos }
             in
-            ( { model | virus = virus } |> updatelog, Cmd.none )
+            ( { model | virus = virus } |> updateLog, Cmd.none )
 
         Activate996I ->
             let
@@ -185,7 +185,7 @@ performAction action model =
                 virus =
                     { virus_ | kill = dr }
             in
-            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus } |> updatelog, Cmd.none )
+            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus } |> updateLog, Cmd.none )
 
         OrganCloneI ( i, j ) ->
             let
@@ -216,7 +216,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         HumanCloneI ( i, j ) ->
             let
@@ -243,7 +243,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         MegaCloneI ->
             let
@@ -259,7 +259,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         PurificationI ( i, j ) ->
             let
@@ -286,7 +286,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         SacrificeI ( i, j ) ->
             let
@@ -329,7 +329,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = virpos }
             in
-            ( { model | city = city, virus = virus } |> updatelog, Cmd.none )
+            ( { model | city = city, virus = virus } |> updateLog, Cmd.none )
 
         ResurgenceI ( i, j ) ->
             let
@@ -359,7 +359,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         FreezevirusI ( i, j ) ->
             let
@@ -375,7 +375,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = virpos }
             in
-            ( { model | virus = virus } |> updatelog, Cmd.none )
+            ( { model | virus = virus } |> updateLog, Cmd.none )
 
         HospitalI ( i, j ) ->
             let
@@ -402,7 +402,7 @@ performAction action model =
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         QuarantineI ( i, j ) ->
             let
@@ -426,7 +426,7 @@ performAction action model =
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         EnhancedHealingI ->
             let
@@ -447,7 +447,7 @@ performAction action model =
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         AttractPeoI ( i, j ) ->
             let
@@ -471,7 +471,7 @@ performAction action model =
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updatelog, Cmd.none )
+            ( { model | city = city } |> updateLog, Cmd.none )
 
         StopAttractI ( i, j ) ->
             let
@@ -498,7 +498,7 @@ performAction action model =
             ( { model | city = city }, Cmd.none )
 
         DroughtI_Kill ( ( i, j ), prob ) ->
-            ( { model | ecoRatio = round (0.5 * toFloat model.ecoRatio) } |> updatelog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
+            ( { model | ecoRatio = round (0.5 * toFloat model.ecoRatio) } |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
 
         WarehouseI ( i, j ) ->
             let
@@ -525,16 +525,16 @@ performAction action model =
                 num =
                     model.warehouseNum + 1
             in
-            ( { model | city = city, warehouseNum = num } |> updatelog, Cmd.none )
+            ( { model | city = city, warehouseNum = num } |> updateLog, Cmd.none )
 
         Warmwave_KIA ( ( i, j ), prob ) ->
-            ( model |> updatelog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
+            ( model |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
 
         AVI ( i, j ) ->
-            ( { model | av = createAV ( i, j ) } |> updatelog, Cmd.none )
+            ( { model | av = createAV ( i, j ) } |> updateLog, Cmd.none )
 
         JudgeI_Kill ( ( i, j ), prob ) ->
-            ( model |> updatelog, Random.generate (JudgeVirPeo ( ( i, j ), prob )) (Random.float 0 1) )
+            ( model |> updateLog, Random.generate (JudgeVirPeo ( ( i, j ), prob )) (Random.float 0 1) )
 
         EvacuateI ( i, j ) ->
             let
@@ -558,7 +558,7 @@ performAction action model =
                             evacuate t city
                     }
             in
-            ( { model | city = city_ } |> updatelog, Cmd.none )
+            ( { model | city = city_ } |> updateLog, Cmd.none )
 
         Summon cardlst ->
             let
@@ -568,7 +568,7 @@ performAction action model =
                 hands =
                     List.append hands_ cardlst
             in
-            ( { model | hands = hands } |> updatelog, Cmd.none )
+            ( { model | hands = hands } |> updateLog, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

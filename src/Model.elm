@@ -42,7 +42,7 @@ type alias Model =
     , currentLevel : Int
     , theme : Theme
     , counter : Int -- deadly up
-    , flowrate : Int -- population flow rate
+    , flowRate : Int -- population flow rate
     }
 
 
@@ -80,7 +80,7 @@ initModel _ =
       , currentLevel = 1 --1
       , theme = Polar
       , counter = 3
-      , flowrate = 1
+      , flowRate = 1
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -97,8 +97,8 @@ type Gamestatus
     | Wasted
 
 
-initlog : Model -> Model
-initlog model =
+initLog : Model -> Model
+initLog model =
     { model | actionDescribe = [] }
 
 

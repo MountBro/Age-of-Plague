@@ -209,7 +209,7 @@ updateCity model =
             model.virus
 
         num =
-            model.flowrate
+            model.flowRate
     in
     infect city vir
         |> virusKill vir

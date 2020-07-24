@@ -19,7 +19,7 @@ toNextRound model =
                 | currentRound = 2
                 , hands = [ hospital, hospital, hospital, warehouse, quarantine ]
               }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
             , Cmd.none
             )
@@ -30,14 +30,14 @@ toNextRound model =
                 , power = 1
                 , economy = 6
               }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
             , Cmd.none
             )
 
         else if model.currentRound == 3 && model.hands /= [] then
             ( { model | currentRound = 4 }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
                 |> judgeWin
             , Cmd.none
@@ -56,7 +56,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -68,7 +68,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -84,7 +84,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -94,7 +94,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
                 |> judgeWin
             , Cmd.none
             )
@@ -108,7 +108,7 @@ toNextRound model =
             |> virusEvolve
             |> ecoInc
             |> powerInc
-            |> initlog
+            |> initLog
             |> judgeWin
         , Cmd.none
         )
@@ -118,7 +118,7 @@ toNextRound model =
             |> clearCurrentRoundTodo
             |> ecoInc
             |> powerInc
-            |> initlog
+            |> initLog
             |> judgeWin
         , Cmd.none
         )
@@ -321,7 +321,7 @@ horrify model =
             model.city
     in
     if sumSick city + sumDead city >= sumPopulation city then
-        { model | flowrate = 2 }
+        { model | flowRate = 2 }
 
     else
-        { model | flowrate = 1 }
+        { model | flowRate = 1 }

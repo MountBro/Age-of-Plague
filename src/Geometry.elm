@@ -111,6 +111,11 @@ converHextoTile ( i, j ) =
         |> (\( x, y ) -> ( round x, round y ))
 
 
+converTiletoHex : ( Int, Int ) -> List ( Int, Int )
+converTiletoHex ( i, j ) =
+    ( 2 * i - j, i + 3 * j ) :: generateZone ( 2 * i - j, i + 3 * j )
+
+
 isInt : Float -> Bool
 isInt x =
     abs (x - toFloat (round x)) < 0.00001
@@ -121,6 +126,7 @@ cartesianProduct l1 l2 =
     List.foldr (\li1 -> \li2 -> li1 ++ li2)
         []
         (List.map (\x -> List.map (\y -> ( x, y )) l2) l1)
+
 
 getElement : Int -> List a -> List a
 getElement n lst =

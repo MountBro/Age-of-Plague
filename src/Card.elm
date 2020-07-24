@@ -129,6 +129,11 @@ toPngUrl c =
     "./assets/cardPNG/" ++ String.replace " " "" c.name ++ ".png"
 
 
+toSoundUrl : Card -> String
+toSoundUrl c =
+    "./assets/sound/" ++ String.replace " " "" c.name ++ ".wav"
+
+
 powerOverload =
     Card
         NoSel
@@ -358,7 +363,8 @@ lowSoundWave =
         "Evacuate the tile."
 
 
-compulsoryMR = --CompulsoryMedicalRecruitment
+compulsoryMR =
+    --CompulsoryMedicalRecruitment
     Card
         NoSel
         6
@@ -378,11 +384,11 @@ firstAid =
 
 medMob =
     Card
-    NoSel
-    6
-    [ Summon [ cut, cut, cut ] ]
-    "Medical Mobilization"
-    "Summon three [ Cut ]."
+        NoSel
+        6
+        [ Summon [ cut, cut, cut ] ]
+        "Medical Mobilization"
+        "Summon three [ Cut ]."
 
 
 targetCardlst =

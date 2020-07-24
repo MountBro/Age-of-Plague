@@ -7,7 +7,6 @@ import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
-import Population exposing (..)
 import Task
 import Tile exposing (..)
 import Todo exposing (..)
@@ -43,13 +42,15 @@ type alias Model =
     , drawChance : Int
     , actionDescribe : List String
     , currentlevel : Int
+    , counter : Int -- deadly up
+    , flowrate : Int -- population flow rate
     }
 
 
 initModel : () -> ( Model, Cmd Msg )
 initModel _ =
     ( { city =
-            initCity 10
+            initCity 20
                 map1
 
       {- [ ( 0, 0 )
@@ -71,7 +72,7 @@ initModel _ =
       -}
       , behavior = initBehavior
       , currentRound = 1
-      , state = Playing
+      , state = HomePage
       , screenSize = ( 600, 800 )
       , viewport = Nothing
       , virus = initHandsVirus 1 |> Tuple.second
@@ -96,6 +97,8 @@ initModel _ =
       , drawChance = 0
       , actionDescribe = []
       , currentlevel = 1 --1
+      , counter = 3
+      , flowrate = 1
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -104,11 +107,12 @@ initModel _ =
 type Gamestatus
     = Playing
     | Drawing
-    | Finished
     | Playcard
     | Stopped
     | HomePage
     | CardPage
+    | Finished
+    | Wasted
 
 
 initlog : Model -> Model
@@ -167,15 +171,16 @@ judgeBuild model ( i, j ) =
 map1 =
     cartesianProduct [ 0, 1 ] [ 0, 1 ]
 
+
 initlevelmap : Int -> City
-initlevelmap level=
+initlevelmap level =
     let
         citytile =
             getElement level map
                 |> List.head
                 |> Maybe.withDefault map1
     in
-    initCity 10 citytile
+    initCity 20 citytile
 
 
 map =
@@ -222,43 +227,3 @@ initHandsVirus level =
     in
     ( hand, vir )
 
-
-judgeWin : Model -> Levelstatus
-judgeWin model =
-    if model.currentlevel == 1 && model.currentRound == 3 then
-        Win
-
-    else if model.currentRound == 20 && model.currentlevel > 2 && sumDead model.city < 80 then
-        Win
-
-    else if model.virus.pos == [] && model.currentlevel > 1 then
-        Win
-
-    else if model.currentlevel < 20 then
-        Gaming
-
-    else
-        Lost
-
-
-levelModel : Int -> Model -> Model
-levelModel n model =
-    if n <= 2 then
-        { model
-            | behavior = initBehavior
-            , state = Playing
-            , currentlevel = n
-            , hands = Tuple.first (initHandsVirus n)
-            , virus = Tuple.second (initHandsVirus n)
-        }
-
-    else
-        { model
-            | behavior = initBehavior
-            , state = Drawing
-            , currentlevel = n
-            , replaceChance = 3
-            , hands = []
-            , actionDescribe = []
-            , virus = Tuple.second (initHandsVirus n) -- virus for each level
-        }

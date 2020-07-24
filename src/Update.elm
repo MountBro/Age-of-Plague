@@ -51,6 +51,10 @@ update msg model =
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
         Tick newTime ->
+            let
+                log1 =
+                    log "selhex" model.selHex
+            in
             if not (finished model.todo) then
                 model |> pickAction |> mFillRegion
 
@@ -77,7 +81,7 @@ update msg model =
             if model.currentlevel == 1 then
                 if model.currentRound == 1 && model.hands == [] then
                     ( { model
-                        | currentRound = model.currentRound + 1
+                        | currentRound = 2
                         , hands = [ hospital, hospital, hospital, warehouse, quarantine ]
                       }
                         |> initlog
@@ -86,9 +90,21 @@ update msg model =
                     )
 
                 else if model.hands == [] && model.currentRound == 2 then
-                    ( { model | currentRound = model.currentRound + 1 }
+                    ( { model
+                        | currentRound = 3
+                        , power = 1
+                        , economy = 6
+                      }
                         |> initlog
                         |> clearCurrentRoundTodo
+                    , Cmd.none
+                    )
+
+                else if model.currentRound == 3 && model.hands /= [] then
+                    ( { model | currentRound = 4 }
+                        |> initlog
+                        |> clearCurrentRoundTodo
+                        |> judgeWin
                     , Cmd.none
                     )
 
@@ -109,12 +125,24 @@ update msg model =
                     , Cmd.none
                     )
 
-                else if model.currentRound == 2 && model.hands /= [] then
-                    ( model, Cmd.none )
+                else if model.currentRound < 4 && model.hands == [] then
+                    ( { model
+                        | currentRound = model.currentRound + 1
+                      }
+                        |> clearCurrentRoundTodo
+                        |> virusEvolve
+                        |> ecoInc
+                        |> powerInc
+                        |> initlog
+                    , Cmd.none
+                    )
 
                 else if model.currentRound == 4 then
                     ( { model
                         | currentRound = model.currentRound + 1
+                        , economy = 6
+                        , power = 6
+                        , virus = virus2
                         , hands = [ cut, quarantine, megaCut, megaCut, cut, megaCut, hospital ]
                       }
                         |> clearCurrentRoundTodo
@@ -125,13 +153,14 @@ update msg model =
                     , Cmd.none
                     )
 
-                else if model.currentRound > 1 && model.virus.pos /= [] then
+                else if model.currentRound > 4 then
                     ( { model | currentRound = model.currentRound + 1 }
                         |> clearCurrentRoundTodo
                         |> virusEvolve
                         |> ecoInc
                         |> powerInc
                         |> initlog
+                        |> judgeWin
                     , Cmd.none
                     )
 
@@ -145,6 +174,7 @@ update msg model =
                     |> ecoInc
                     |> powerInc
                     |> initlog
+                    |> judgeWin
                 , Cmd.none
                 )
 
@@ -154,6 +184,7 @@ update msg model =
                     |> ecoInc
                     |> powerInc
                     |> initlog
+                    |> judgeWin
                 , Cmd.none
                 )
 
@@ -178,15 +209,18 @@ update msg model =
             ( { model | hands = c :: model.hands }, Cmd.none )
 
         PlayCard card ->
-            if card.cost <= model.power then
-                --&& para.ecoThreshold <= model.economy
+            if
+                card.cost
+                    <= model.power
+                    && para.ecoThreshold
+                    <= model.economy
+            then
                 if List.member card targetCardlst then
                     ( { model
                         | cardSelected = SelectCard card
                         , selHex = SelHexOn
                         , power = model.power - card.cost
-
-                        --, economy = model.economy - para.ecoThreshold
+                        , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
                         , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]:\nPlease select a hexagon" ]
                       }
@@ -198,8 +232,7 @@ update msg model =
                         | cardSelected = SelectCard card
                         , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
                         , power = model.power - card.cost
-
-                        --, economy = model.economy - para.ecoThreshold
+                        , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
                       }
                     , Cmd.none
@@ -360,11 +393,29 @@ powerInc model =
 
 virusEvolve : Model -> Model
 virusEvolve model =
+    let
+        size =
+            List.length model.virus.pos
+
+        rules =
+            model.virus.rules
+
+        newrules =
+            List.filter (\x -> not (List.member x rules)) (List.range 1 6)
+                |> List.take 1
+                |> List.append rules
+                |> List.sort
+    in
     { model
-        | city = updateCity model.city model.virus
+        | city = updateCity model
         , virus = change model.virus model.av model.city |> Tuple.first
         , av = change model.virus model.av model.city |> Tuple.second
     }
+        |> takeOver
+        |> revenge size
+        |> horrify
+        |> unBlockable
+        |> mutate newrules
 
 
 clearCurrentRoundTodo : Model -> Model
@@ -383,7 +434,7 @@ clearCurrentRoundTodo model =
 
 levelInit : Int -> Model -> Model
 levelInit n model =
-    if n <= 2 then
+    if n < 3 then
         { model
             | behavior = initBehavior
             , state = Playing
@@ -391,6 +442,12 @@ levelInit n model =
             , currentlevel = n
             , hands = Tuple.first (initHandsVirus n)
             , virus = Tuple.second (initHandsVirus n)
+            , currentRound = 1
+            , economy = 50
+            , power = 50
+            , actionDescribe = []
+            , counter = 3
+            , flowrate = 1
         }
 
     else
@@ -403,6 +460,11 @@ levelInit n model =
             , hands = []
             , actionDescribe = []
             , virus = Tuple.second (initHandsVirus n) -- virus for each level
+            , currentRound = 1
+            , counter = 3
+            , flowrate = 1
+            , economy = 5
+            , power = 5
         }
 
 
@@ -417,3 +479,149 @@ replaceCard c model =
                 log "card to replace does not exist in hands!" ""
         in
         ( model, Cmd.none )
+
+
+judgeWin : Model -> Model
+judgeWin model =
+    if model.currentlevel == 1 && model.currentRound == 4 then
+        { model | state = Finished }
+
+    else if model.currentlevel == 2 && model.currentRound >= 4 && List.isEmpty model.virus.pos then
+        { model | state = Finished }
+
+    else if model.currentRound == 21 && model.currentlevel > 2 && sumDead model.city < 80 then
+        { model | state = Finished }
+
+    else if model.currentRound < 21 then
+        model
+
+    else
+        { model | state = Wasted }
+
+
+takeOver : Model -> Model
+takeOver model =
+    let
+        city =
+            model.city
+
+        vir =
+            model.virus
+
+        tilelst =
+            List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && model.currentRound == 16) city.tilesindex
+                |> List.map (\x -> x.indice)
+
+        extraVir =
+            List.map (\x -> converTiletoHex x) tilelst
+                |> List.concat
+
+        pos =
+            vir.pos
+                ++ extraVir
+                |> LE.unique
+
+        vir_ =
+            { vir | pos = pos }
+    in
+    { model | virus = vir_ }
+
+
+unBlockable : Model -> Model
+unBlockable model =
+    let
+        city =
+            model.city
+
+        tlst =
+            city.tilesindex
+
+        tilelst =
+            List.map
+                (\x ->
+                    if x.qua && neighborSick tlst x > ((x.population - x.sick) * 3) then
+                        ( { x | qua = False }, 1 )
+
+                    else
+                        ( x, 0 )
+                )
+                tlst
+
+        citytile =
+            List.unzip tilelst
+                |> Tuple.first
+
+        num =
+            List.unzip tilelst
+                |> Tuple.second
+                |> List.sum
+
+        city_ =
+            { city | tilesindex = citytile }
+
+        actionDescribe =
+            if num == 0 then
+                model.actionDescribe ++ []
+
+            else if num == 1 then
+                [ "\n*Emergency!!!\nOne Quarantine down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n" ] ++ model.actionDescribe
+
+            else
+                [] ++ model.actionDescribe
+    in
+    { model
+        | city = city_
+        , actionDescribe = actionDescribe
+    }
+
+
+mutate : List Int -> Model -> Model
+mutate rule model =
+    let
+        vir_ =
+            model.virus
+
+        vir =
+            if model.currentRound == 10 then
+                --special round of the virus skill
+                { vir_ | rules = rule }
+
+            else
+                vir_
+    in
+    { model | virus = vir }
+
+
+revenge : Int -> Model -> Model
+revenge size model =
+    if size < List.length model.virus.pos && model.counter == 0 then
+        let
+            virus_ =
+                model.virus
+
+            virus =
+                { virus_
+                    | kill = min (virus_.kill * 1.1) 0.6
+                    , infect = min (virus_.infect + 1) 2
+                }
+        in
+        { model | virus = virus, counter = 3 }
+
+    else if size < List.length model.virus.pos then
+        { model | counter = model.counter - 1 }
+
+    else
+        model
+
+
+horrify : Model -> Model
+horrify model =
+    let
+        city =
+            model.city
+    in
+    if sumSick city + sumDead city >= sumPopulation city then
+        { model | flowrate = 2 }
+
+    else
+        { model | flowrate = 1 }

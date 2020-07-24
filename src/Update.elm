@@ -300,7 +300,7 @@ update msg model =
                     model.virus
 
                 tilelst =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 city =
                     model.city
@@ -317,7 +317,7 @@ update msg model =
                 city_ =
                     if prob > rand then
                         { city
-                            | tilesindex =
+                            | tilesIndex =
                                 List.map
                                     (\x ->
                                         if x.indice == ( ti, tj ) then

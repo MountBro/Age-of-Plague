@@ -50,7 +50,7 @@ view model =
         film =
             case model.selHex of
                 SelHexOn ->
-                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesindex)
+                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesIndex)
 
                 _ ->
                     []
@@ -66,7 +66,7 @@ view model =
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
                     ([ bkg model.theme ]
-                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesindex)
+                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesIndex)
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
                         ++ [ renderLevelProgress model ]

@@ -155,13 +155,13 @@ judgeBuild : Model -> ( Int, Int ) -> Bool
 judgeBuild model ( i, j ) =
     let
         hostilelst =
-            hospitalTiles model.city.tilesindex
+            hospitalTiles model.city.tilesIndex
 
         quatilelst =
-            quarantineTiles model.city.tilesindex
+            quarantineTiles model.city.tilesIndex
 
         waretilelst =
-            warehouseTiles model.city.tilesindex
+            warehouseTiles model.city.tilesIndex
     in
     model.cardSelected
         == SelectCard hospital

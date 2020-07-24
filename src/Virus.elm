@@ -22,19 +22,17 @@ type alias AntiVirus =
 
 initVirus : Virus
 initVirus =
-    { rules = [ 2, 4 ]
-    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ]
-
-    --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
+    { rules = [2,3,4] -- [2, 4]
+    , pos = [ (0,1),(0,2),(1,1),( 1, 2 ), ( 1, 3 )] -- [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ]
     , number = 0
     , infect = 1
-    , kill = 0.1
+    , kill = 0
     }
 
 
 initAntiVirus : AntiVirus
 initAntiVirus =
-    { rules = [ 0, 1, 2, 3 ]
+    { rules = [ 0, 1, 2, 3, 4,5,6]
     , pos = []
     , life = 0
     }
@@ -42,9 +40,9 @@ initAntiVirus =
 
 createAV : ( Int, Int ) -> AntiVirus
 createAV hlst =
-    { rules = [ 0, 1, 2, 3 ]
+    { rules = [ 0, 1, 2, 3, 4]
     , pos = [ hlst ]
-    , life = 3
+    , life = 2
     }
 
 
@@ -86,11 +84,12 @@ countavNeighbor pos lstv =
         |> List.sum
 
 
-searchNeighbor : List ( Int, Int ) -> List ( Int, Int )
-searchNeighbor virlst =
+searchValidNeighbor : List ( Int, Int ) -> List ( Int, Int ) -> List (Int, Int)
+searchValidNeighbor virlst lst=
     List.map (\x -> generateZone x) virlst
         |> List.concat
         |> LE.unique
+        |> List.filter (\x -> List.member (converHextoTile x) lst)
 
 
 judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )
@@ -101,9 +100,24 @@ judgeAlive lstvir vir lstanti anti lstquatile =
 
         lsta =
             if anti.life > 0 then
-                List.filter (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member x vir.pos) && not (List.member (converHextoTile x) lstquatile)) lstanti
+                List.filter (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member (converHextoTile x) lstquatile)) lstanti
 
             else
                 []
     in
     ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )
+
+
+virus =
+    [ virus1, virus2, virus3]
+
+virus1 =
+    -- virus + rules + position + number of virus + infect + deathrate (0~1)
+    Virus [ ] [] 1 1 0
+
+virus2 =
+    Virus [2,3,4] [(1,3),(1,4),(1,5),(2,4),(2,3),(0,4),(0,5),(0,1),(0,2),(0,3),(0,-1),(0,0),(1,-1),(1,0)] 2 1 0
+
+virus3 =
+    Virus [2, 4] [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ] 3 1 0.2
+

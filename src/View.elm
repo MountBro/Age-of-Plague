@@ -18,6 +18,7 @@ import SvgSrc exposing (..)
 import Tile exposing (..)
 import ViewCards as VC exposing (..)
 import ViewHome as VH exposing (..)
+import ViewMP as MP exposing (..)
 import Virus exposing (..)
 
 
@@ -34,7 +35,7 @@ viewAll model =
             Document "game" [ view model ]
 
         Model.HomePage ->
-            Document "main" VH.viewHome
+            Document "main" [ MP.viewAll ]
 
         Model.CardPage ->
             Document "card" VC.viewCard
@@ -64,27 +65,38 @@ view model =
                     , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
-                    ([ bkg ]
-                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesindex)
+                    ([ bkg model.theme ]
+                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesindex)
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
                         ++ [ renderLevelProgress model ]
                         ++ renderFlags [ 5, 10, 15 ]
-                        ++ film
                         ++ renderHands model
                         ++ renderConsole model
+                        ++ renderVirusInf model.virus
+                        ++ [ renderNextRound ]
+                        ++ [ powerInfo model ]
+                        ++ [ renderEconomyProgress model ]
+                        ++ (if model.currentlevel <= 3 then
+                                renderGuide model
+
+                            else
+                                []
+                           )
+                        ++ film
                     )
-                , evolveButton
-                , nextRoundButton
+
+                --, evolveButton
+                , nextRoundButton model
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
-                , powerEcoInfo model
-                , div [] (List.map cardButton allCards)
-                , Html.text (Debug.toString model.todo ++ Debug.toString model.actionDescribe)
+
+                --, div [] (List.map cardButton allCards)
+                , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
-                , Html.button [ HE.onClick (LevelBegin 0) ] [ Html.text "begin level0" ]
-                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw a card" ]
-                , Html.button [ HE.onClick (Message.Click "home") ] [ Html.text "BACK!" ]
+                , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
+                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
+                , Html.text ("economy: " ++ String.fromInt model.economy)
                 ]
 
         Drawing ->
@@ -96,7 +108,7 @@ view model =
                     , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
-                    ([ bkg ]
+                    ([ bkg model.theme ]
                         ++ renderInitCards model
                         ++ [ GameView.caption 20 200 "white" "click on card to replace" 20 ]
                         ++ [ GameView.caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
@@ -104,17 +116,32 @@ view model =
                 , Html.button [ onClick StartRound1 ] [ Html.text "Start round 1" ]
                 ]
 
+        Finished ->
+            div [] [ Html.text "finished" ]
+
+        Wasted ->
+            div [] [ Html.text "wasted" ]
+
         _ ->
             div [] []
 
 
-bkg : Svg Msg
-bkg =
+bkg : Theme -> Svg Msg
+bkg t =
+    let
+        color =
+            case t of
+                Minimum ->
+                    "#b0deb9"
+
+                _ ->
+                    "#778388"
+    in
     rect
         [ SA.x "0"
         , SA.y "0"
         , SA.width "1000"
         , SA.height "600"
-        , SA.fill "#2A363b"
+        , SA.fill color
         ]
         []

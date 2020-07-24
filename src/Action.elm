@@ -11,7 +11,6 @@ import Random exposing (float, generate)
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-import List.Extra as LE
 
 
 updatelog : Model -> Model
@@ -33,13 +32,13 @@ createGuide : Model -> List String
 createGuide model =
     let
         str =
-            List.take model.currentlevel tutorial
+            List.take model.currentLevel tutorial
                 |> List.foldl (\x -> \y -> x ++ y) []
 
         card =
             List.map Tuple.second model.todo
     in
-    case model.currentlevel of
+    case model.currentLevel of
         1 ->
             if model.hands == [ megaClone ] && model.currentRound == 1 then
                 str |> getElement 1
@@ -195,7 +194,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -216,7 +215,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -226,7 +225,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -243,7 +242,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -253,13 +252,13 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 tilelst =
                     List.map (\x -> { x | population = round (toFloat x.population * 1.5) }) tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -269,7 +268,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -286,7 +285,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -305,7 +304,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 tilepos =
                     converHextoTile ( i, j )
@@ -326,7 +325,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
 
                 virus =
                     { virus_ | pos = virpos }
@@ -339,7 +338,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -359,7 +358,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -389,7 +388,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -401,7 +400,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -416,7 +415,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -425,7 +424,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -437,7 +436,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.hos then
@@ -446,7 +445,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -461,7 +460,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -470,7 +469,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -485,7 +484,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -494,7 +493,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city }, Cmd.none )
@@ -512,7 +511,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -521,7 +520,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
 
                 num =
@@ -544,7 +543,7 @@ performAction action model =
                     converHextoTile ( i, j )
 
                 tlst =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 t =
                     List.filter (\x -> x.indice == ( ti, tj )) tlst
@@ -556,7 +555,7 @@ performAction action model =
 
                 city_ =
                     { city
-                        | tilesindex =
+                        | tilesIndex =
                             evacuate t city
                     }
             in

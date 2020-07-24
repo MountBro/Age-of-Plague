@@ -41,7 +41,7 @@ type alias Model =
     , replaceChance : Int
     , drawChance : Int
     , actionDescribe : List String
-    , currentlevel : Int
+    , currentLevel : Int
     , counter : Int -- deadly up
     , flowrate : Int -- population flow rate
     }
@@ -52,24 +52,6 @@ initModel _ =
     ( { city =
             initCity 20
                 map1
-
-      {- [ ( 0, 0 )
-         , ( 0, 1 )
-         , ( 0, 2 )
-         , ( 0, 3 )
-         , ( 1, -1 )
-         , ( 1, 0 )
-         , ( 1, 1 )
-         , ( 1, 2 )
-         , ( 2, -2 )
-         , ( 2, -1 )
-         , ( 2, 0 )
-         , ( 2, 1 )
-         , ( 2, 2 )
-         , ( 3, -1 )
-         , ( 3, -2 )
-         ]
-      -}
       , behavior = initBehavior
       , currentRound = 1
       , state = HomePage
@@ -89,14 +71,14 @@ initModel _ =
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
-      , hands = initHandsVirus 1 |> Tuple.first --megaClone
+      , hands = initHandsVirus 1 |> Tuple.first
       , deck = allCards
       , mouseOverCardToReplace = negate 1
       , mouseOverCard = negate 1
       , replaceChance = 3
       , drawChance = 0
       , actionDescribe = []
-      , currentlevel = 1 --1
+      , currentLevel = 1 --1
       , counter = 3
       , flowrate = 1
       }
@@ -149,13 +131,13 @@ judgeBuild : Model -> ( Int, Int ) -> Bool
 judgeBuild model ( i, j ) =
     let
         hostilelst =
-            hospitalTiles model.city.tilesindex
+            hospitalTiles model.city.tilesIndex
 
         quatilelst =
-            quarantineTiles model.city.tilesindex
+            quarantineTiles model.city.tilesIndex
 
         waretilelst =
-            warehouseTiles model.city.tilesindex
+            warehouseTiles model.city.tilesIndex
     in
     model.cardSelected
         == SelectCard hospital
@@ -226,4 +208,6 @@ initHandsVirus level =
                 |> Maybe.withDefault (Virus [] [] 0 0 0)
     in
     ( hand, vir )
+
+
 

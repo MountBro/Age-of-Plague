@@ -7,13 +7,11 @@ import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as D
-import List.Extra exposing (..)
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
-import Svg.Events as SE
 import SvgDefs exposing (..)
 import SvgSrc exposing (..)
 import Tile exposing (..)

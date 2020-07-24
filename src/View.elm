@@ -1,25 +1,18 @@
 module View exposing (..)
 
-import Card exposing (..)
 import Debug exposing (log, toString)
 import GameView exposing (..)
-import Geometry exposing (..)
 import Html exposing (..)
 import Html.Attributes as HA
 import Html.Events as HE
-import Json.Decode as D
 import Message exposing (..)
 import Model exposing (..)
-import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
-import Svg.Events as SE
 import SvgSrc exposing (..)
 import Tile exposing (..)
 import ViewCards as VC exposing (..)
-import ViewHome as VH exposing (..)
 import ViewMP as MP exposing (..)
-import Virus exposing (..)
 
 
 type alias Document msg =

@@ -5,7 +5,6 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Message exposing (..)
 import Model exposing (..)
-import Parameters exposing (..)
 import Population exposing (..)
 import Random exposing (float, generate)
 import Tile exposing (..)
@@ -21,8 +20,11 @@ updatelog model =
 
         log =
             List.map (\x -> "From card \n[" ++ x.name ++ "]:\n " ++ x.describe) card
+
+        warning =
+            List.filter (\x -> String.startsWith "\n*" x) model.actionDescribe
     in
-    { model | actionDescribe = log }
+    { model | actionDescribe = log ++ warning }
 
 
 createGuide : Model -> List String
@@ -37,26 +39,23 @@ createGuide model =
     in
     case model.currentLevel of
         1 ->
-            if model.hands == [ megaClone ] then
+            if model.hands == [ megaClone ] && model.currentRound == 1 then
                 str |> getElement 1
 
             else if card == [ megaClone ] && model.currentRound == 1 then
                 str |> getElement 2
 
-            else if List.length model.hands == 5 then
+            else if List.length model.hands > 0 && model.currentRound == 2 then
                 str |> getElement 3
 
-            else if model.hands /= [] && model.currentRound == 2 then
+            else if model.hands == [] && model.currentRound == 2 then
                 str |> getElement 4
 
-            else if model.hands == [] && model.currentRound == 2 then
+            else if model.hands == [] && model.currentRound == 3 then
                 str |> getElement 5
 
-            else if model.currentRound == 3 && para.ecoThreshold <= model.economy then
-                str |> getElement 6
-
             else
-                str |> getElement 7
+                str |> getElement 6
 
         2 ->
             if model.currentRound == 1 then
@@ -68,11 +67,14 @@ createGuide model =
             else if model.currentRound < 5 then
                 str |> getElement 3
 
-            else if model.currentRound >= 5 && not (List.isEmpty model.virus.pos) then
+            else if model.currentRound /= 6 && not (List.isEmpty model.virus.pos) then
                 str |> getElement 4
 
+            else if model.currentRound == 6 then
+                str |> getElement 5
+
             else
-                getElement 5 str
+                getElement 6 str
 
         _ ->
             []

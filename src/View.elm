@@ -2,6 +2,8 @@ module View exposing (..)
 
 import Debug exposing (log, toString)
 import GameView exposing (..)
+import GameViewBasic exposing (..)
+import GameViewButtons exposing (..)
 import Html exposing (..)
 import Html.Attributes as HA
 import Html.Events as HE
@@ -63,13 +65,14 @@ view model =
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
                         ++ [ renderLevelProgress model ]
-                        ++ renderFlags [ 5, 10, 15 ]
+                        --++ renderFlags [ 5, 10, 15 ]
                         ++ renderHands model
                         ++ renderConsole model
                         ++ renderVirusInf model.virus
-                        ++ [ renderNextRound ]
+                        --++ [ renderNextRound ]
+                        ++ [ nextButton_ ]
+                        ++ [ drawButton_ model ]
                         ++ [ powerInfo model ]
-                        ++ [ renderEconomyProgress model ]
                         ++ (if (lr model == ( 1, 1 ) || lr model == ( 1, 2 )) && not (List.isEmpty model.hands) then
                                 [ hand2FirstCard ]
 
@@ -115,10 +118,10 @@ view model =
                     ]
                     ([ background model.theme ]
                         ++ renderInitCards model
-                        ++ [ GameView.caption 20 200 "white" "click on card to replace" 20 ]
-                        ++ [ GameView.caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
+                        ++ [ GameViewBasic.caption 20 200 "white" "click on card to replace" 20 ]
+                        ++ [ GameViewBasic.caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
                     )
-                , Html.button [ onClick StartRound1 ] [ Html.text "Start round 1" ]
+                , Html.button [ HE.onClick StartRound1 ] [ Html.text "Start round 1" ]
                 ]
 
         Finished ->

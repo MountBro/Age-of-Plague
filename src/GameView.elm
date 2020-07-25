@@ -4,6 +4,8 @@ import Action exposing (..)
 import Card exposing (..)
 import ColorScheme exposing (..)
 import Debug exposing (log, toString)
+import GameViewBasic exposing (..)
+import GameViewButtons exposing (..)
 import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
@@ -35,22 +37,9 @@ background t =
         []
 
 
-caption : Float -> Float -> String -> String -> Int -> Svg Msg
-caption x y cstr text fontSize =
-    text_
-        [ fontSize |> String.fromInt |> SA.fontSize
-        , SA.fontFamily "sans-serif"
-        , x |> String.fromFloat |> SA.x
-        , y |> String.fromFloat |> SA.y
-        , cstr |> SA.fill
-        ]
-        [ text |> Svg.text
-        ]
-
-
 powerInfo : Model -> Svg Msg
 powerInfo model =
-    caption
+    GameViewBasic.caption
         (para.xlp + para.wlp + 50.0)
         (para.ylp + 50.0)
         (model.theme
@@ -59,42 +48,6 @@ powerInfo model =
         )
         (String.fromInt model.power)
         60
-
-
-onClick : msg -> Svg.Attribute msg
-onClick message =
-    on "click" (D.succeed message)
-
-
-onOver : msg -> Svg.Attribute msg
-onOver message =
-    on "mouseover" (D.succeed message)
-
-
-cardButton : Card -> Html Msg
-cardButton card =
-    Html.button [ onClick (PlayCard card) ] [ Html.text card.name ]
-
-
-newlevelButton : Model -> Html Msg
-newlevelButton model =
-    Html.button [ onClick (LevelBegin (model.currentLevel + 1)) ] [ Html.text "Enter the next level" ]
-
-
-evolveButton : Html Msg
-evolveButton =
-    Html.button [ onClick VirusEvolve ] [ Html.text "EVOLVE" ]
-
-
-nextRoundButton : Model -> Html Msg
-nextRoundButton model =
-    --if judgeWin model == Win then
-    --    Html.button [ onClick (LevelBegin (model.currentLevel + 1)) ] [ Html.text "Next Level" ]
-    --else if judgeWin model == Lost then
-    --    Html.button [ onClick (LevelBegin model.currentLevel) ] [ Html.text "Restart level" ]
-    --else
-    --
-    Html.button [ onClick NextRound ] [ Html.text "Next round" ]
 
 
 renderFlag : Int -> Html Msg
@@ -149,6 +102,8 @@ renderLevelProgress model =
             , para.ylp |> String.fromFloat |> SA.y
             , para.wlp |> String.fromFloat |> SA.width
             , para.hlp |> String.fromFloat |> SA.height
+            , "1" |> SA.strokeWidth
+            , cs.levelProgressStroke |> SA.stroke
             , SA.fill cs.levelProgressBkg
             ]
             []
@@ -160,91 +115,6 @@ renderLevelProgress model =
             , SA.fill cs.levelProgressFill
             ]
             []
-        ]
-
-
-renderNextRound : Html Msg
-renderNextRound =
-    svg [ onClick NextRound ]
-        [ rect
-            [ para.repx - para.repr |> String.fromFloat |> SA.x
-            , para.repy - para.repr |> String.fromFloat |> SA.y
-            , para.repr |> String.fromFloat |> SA.rx
-            , para.nrbc |> SA.fill
-            , 6.0 * para.repr |> String.fromFloat |> SA.width
-            , 2.0 * para.repr |> String.fromFloat |> SA.height
-            ]
-            []
-        , caption (para.repx + 2.0 * para.repr - 33.0) (para.repy + 3.0) "white" "Next Round" 20
-        ]
-
-
-renderEconomyProgress : Model -> Html Msg
-renderEconomyProgress model =
-    let
-        t =
-            model.theme
-
-        cs =
-            colorScheme t
-
-        eco =
-            model.economy
-
-        ratio =
-            (toFloat eco / toFloat para.ecoThreshold) |> Basics.min 1 |> Basics.max 0
-
-        offSet =
-            2.0 * pi * para.repr * ratio
-
-        offSetComp =
-            2.0 * pi * para.repr * (1.0 - ratio)
-
-        arr =
-            String.fromFloat offSet ++ " " ++ String.fromFloat offSetComp
-
-        rotArg =
-            "rotate(-90,"
-                ++ String.fromFloat para.repx
-                ++ ","
-                ++ String.fromFloat para.repy
-                ++ ")"
-
-        txt =
-            String.fromInt model.economy
-                ++ "/"
-                ++ String.fromInt para.ecoThreshold
-    in
-    svg []
-        [ circle
-            [ SA.stroke cs.drawStroke
-            , SA.strokeWidth "4"
-            , SA.fill "transparent"
-            , arr |> SA.strokeDasharray
-            , para.repr |> String.fromFloat |> SA.r
-            , para.repx |> String.fromFloat |> SA.cx
-            , para.repy |> String.fromFloat |> SA.cy
-            , rotArg |> SA.transform
-            ]
-            []
-        , svg [ onClick DrawACard ]
-            [ circle
-                [ SA.fill
-                    (if eco < para.ecoThreshold then
-                        cs.drawBkg
-
-                     else
-                        "cyan"
-                    )
-                , SA.fillOpacity "0.5"
-                , para.repr |> String.fromFloat |> SA.r
-                , para.repx |> String.fromFloat |> SA.cx
-                , para.repy |> String.fromFloat |> SA.cy
-                ]
-                []
-            ]
-        , caption (para.repx - 22.0) (para.repy + 3.0) "white" "draw" 20
-        , caption (para.repx - 10.0) (para.repy + 15.0) "white" txt 10
         ]
 
 
@@ -310,7 +180,7 @@ renderFilm model ( i, j ) =
                     []
 
                 else
-                    [ onClick (SelectHex i j) ]
+                    [ GameViewBasic.onClick (SelectHex i j) ]
                )
         )
         (if judgeBuild model ( i, j ) then
@@ -564,7 +434,7 @@ renderCard width n x y c =
             , 1.6 * width |> String.fromFloat |> SA.height
             ]
             []
-        , caption (x + 10.0) (y + 10.0) "white" c.name 10
+        , GameViewBasic.caption (x + 10.0) (y + 10.0) "white" c.name 10
         ]
 
 
@@ -600,7 +470,7 @@ renderInitCardFilm width n x y c model =
             else
                 rect [] []
     in
-    svg [ onClick (SelectCardToReplace c), onOver (MouseOverCardToReplace n) ]
+    svg [ GameViewBasic.onClick (SelectCardToReplace c), onOver (MouseOverCardToReplace n) ]
         [ tint
         , rect
             [ x |> String.fromFloat |> SA.x
@@ -632,7 +502,7 @@ renderCardFilm width n x y c model =
             else
                 rect [] []
     in
-    svg [ onClick (PlayCard c), onOver (MouseOverCard n) ]
+    svg [ GameViewBasic.onClick (PlayCard c), onOver (MouseOverCard n) ]
         [ tint
         , rect
             [ x |> String.fromFloat |> SA.x
@@ -695,7 +565,7 @@ renderHands model =
 
 
 
---caption x y cstr text fontSize =
+--GameViewBasic.caption x y cstr text fontSize =
 
 
 renderConsole : Model -> List (Html Msg)
@@ -711,7 +581,7 @@ renderConsole model =
     in
     List.indexedMap Tuple.pair lstr
         |> List.map (\( n, str ) -> ( para.clp, para.conbot - para.clh * toFloat (l - 1 - n), str ))
-        |> List.map (\( x, y, str ) -> caption x y "white" str 15)
+        |> List.map (\( x, y, str ) -> GameViewBasic.caption x y "white" str 15)
 
 
 renderGuide : Model -> List (Html Msg)
@@ -761,7 +631,7 @@ renderGuide model =
         bkg
             :: (List.indexedMap Tuple.pair lstr
                     |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-                    |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 50.0) cs.guideTextColor str 16)
+                    |> List.map (\( x, y, str ) -> GameViewBasic.caption (x + 250.0) (y - 50.0) cs.guideTextColor str 16)
                )
 
     else
@@ -792,4 +662,4 @@ renderVirusInf vir =
     in
     List.indexedMap Tuple.pair inf
         |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-        |> List.map (\( x, y, str ) -> caption (x + 820.0) y "red" str 12)
+        |> List.map (\( x, y, str ) -> GameViewBasic.caption (x + 820.0) y "red" str 12)

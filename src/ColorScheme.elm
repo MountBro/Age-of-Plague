@@ -19,6 +19,7 @@ type alias ColorScheme =
     , drawStroke : String
     , nextRoundBkg : String
     , levelProgressBkg : String
+    , levelProgressStroke : String
     , levelProgressFill : String
     , powerColor : String
     }
@@ -38,6 +39,7 @@ colorScheme t =
             , drawStroke = "white"
             , nextRoundBkg = "#6a8ee2"
             , levelProgressBkg = "#1e1e1f"
+            , levelProgressStroke = "#f6f6f6"
             , levelProgressFill = "#e4fad2"
             , powerColor = "#e4fad2"
             }

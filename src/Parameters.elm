@@ -33,4 +33,10 @@ para =
     , repy = 500.0
     , dcsc = "#5bcab4"
     , nrbc = "#6796de"
+    , nextButtonX = 20.0
+    , nextButtonY = 510.0
+    , nextButtonW = 50.0
+    , drawButtonX = 20.0
+    , drawButtonY = 450.0
+    , drawButtonW = 50.0
     }

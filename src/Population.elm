@@ -87,7 +87,7 @@ infect virus city =
 pFlow : Model -> City -> City
 pFlow model city =
     let
-        validtileslst=
+        validtileslst =
             city.tilesIndex
                 |> List.filter (\x -> x.population > 0)
 
@@ -108,7 +108,7 @@ flowStructure model t =
             model.city.tilesIndex
 
         flow =
-            model.flowrate
+            model.flowRate
 
         nindex =
             validNeighborTile citytileslst t

@@ -1,9 +1,5 @@
 module Card exposing (..)
 
-import Random exposing (Generator, list, map)
-import Random.List exposing (choose)
-import Geometry exposing (..)
-
 
 type alias Card =
     { selMode : Selection
@@ -60,7 +56,6 @@ type Action
 
 
 -- Card -> String
-
 cardPiles =
     [ cardPilestutorial, allCards, cardPile3 ]
 
@@ -141,19 +136,6 @@ allCards =
     , firstAid
     , medMob
     ]
-
-
-cardGenerator : Generator Card
-cardGenerator =
-    choose allCards
-        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
-
-
-cardsGenerator : Int -> Generator (List Card)
-cardsGenerator n =
-    choose allCards
-        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
-        |> Random.list n
 
 
 cardComparison : Card -> Card -> Order

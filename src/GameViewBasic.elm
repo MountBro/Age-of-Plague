@@ -1,6 +1,6 @@
 module GameViewBasic exposing (..)
 
-import Html exposing (..)
+
 import Html.Events exposing (..)
 import Json.Decode as D
 import Message exposing (..)

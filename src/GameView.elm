@@ -132,14 +132,14 @@ background t =
 powerInfo : Model -> Svg Msg
 powerInfo model =
     GameViewBasic.caption
-        (para.xlp + para.wlp + 50.0)
-        (para.ylp + 50.0)
+        para.pix
+        para.piy
         (model.theme
             |> colorScheme
             |> .powerColor
         )
         (String.fromInt model.power)
-        60
+        para.pifs
 
 
 renderFlag : Int -> Html Msg

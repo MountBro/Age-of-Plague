@@ -21,7 +21,8 @@ renderCard width n x y c =
             , 1.6 * width |> String.fromFloat |> SA.height
             ]
             []
-        , GameViewBasic.caption (x + 10.0) (y + 10.0) "white" c.name 10
+
+        --, GameViewBasic.caption (x + 10.0) (y + 10.0) "white" c.name 10
         ]
 
 
@@ -130,6 +131,9 @@ renderInitCards model =
 renderHands : Model -> List (Html Msg)
 renderHands model =
     let
+        digitNum =
+            model.economy |> toFloat |> logBase 10.0 |> ceiling |> toFloat
+
         hands =
             model.hands |> List.sortWith cardComparison
 
@@ -137,7 +141,7 @@ renderHands model =
             List.indexedMap Tuple.pair hands
                 |> List.map
                     (\( n, c ) ->
-                        ( n, ( para.xlp + para.wlp + 150.0 + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
+                        ( n, ( para.hclm + (digitNum - 1.0) * para.hcdi + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
                     )
     in
     List.map

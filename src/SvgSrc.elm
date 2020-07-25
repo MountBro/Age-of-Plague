@@ -2,6 +2,8 @@ module SvgSrc exposing (..)
 
 import Html
 import Message exposing (..)
+import Model exposing (..)
+import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
@@ -169,7 +171,7 @@ skeletonHand x y width =
     svg []
         [ Svg.image
             [ x |> String.fromFloat |> Svg.Attributes.x
-            , "./assets/guide/SkeletonHand.png" |> xlinkHref
+            , "./assets/guide/SkeletonHand.png_" |> xlinkHref
             , y |> String.fromFloat |> Svg.Attributes.y
             , width |> String.fromFloat |> Svg.Attributes.width
             ]
@@ -192,7 +194,7 @@ revSkeletonHand x y width =
     svg []
         [ Svg.image
             [ x |> String.fromFloat |> Svg.Attributes.x
-            , "./assets/guide/RevSkeletonHand.png" |> xlinkHref
+            , "./assets/guide/RevSkeletonHand_.png" |> xlinkHref
             , y |> String.fromFloat |> Svg.Attributes.y
             , width |> String.fromFloat |> Svg.Attributes.width
             ]
@@ -210,9 +212,34 @@ revSkeletonHand x y width =
         ]
 
 
-hand2FirstCard =
-    skeletonHand 260.0 15.0 100.0
+hand2FirstCard : Model -> Html.Html Msg
+hand2FirstCard model =
+    let
+        digitNum =
+            if model.economy < 10 then
+                1.0
+
+            else if model.economy < 100 then
+                2.0
+
+            else
+                3.0
+
+        x =
+            para.hclm + (digitNum - 1.0) * para.hcdi + (para.hcw + para.hcg) + 30.0
+    in
+    revSkeletonHand x 45.0 100.0
 
 
 hand2NextRound =
-    revSkeletonHand 250.0 480.0 100.0
+    revSkeletonHand
+        (para.nextButtonX + para.nextButtonW + 30.0)
+        (para.nextButtonY + 10.0)
+        100.0
+
+
+hand2Draw =
+    revSkeletonHand
+        (para.drawButtonX + para.drawButtonW + 30.0)
+        (para.drawButtonY + 10.0)
+        100.0

@@ -27,7 +27,6 @@ toNextRound model =
         else if model.hands == [] && model.currentRound == 2 then
             ( { model
                 | currentRound = 3
-                , power = 1
                 , economy = 6
               }
                 |> initLog
@@ -184,13 +183,13 @@ clearCurrentRoundTodo model =
 judgeWin : Model -> Model
 judgeWin model =
     if model.currentLevel == 1 && model.currentRound == 4 then
-        { model | state = Finished }
+        { model | state = Finished 1 }
 
     else if model.currentLevel == 2 && model.currentRound >= 4 && List.isEmpty model.virus.pos then
-        { model | state = Finished }
+        { model | state = Finished 2 }
 
     else if model.currentRound == 21 && model.currentLevel > 2 && sumDead model.city < 80 then
-        { model | state = Finished }
+        { model | state = Finished model.currentLevel }
 
     else if model.currentRound < 21 then
         model

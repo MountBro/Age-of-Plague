@@ -196,3 +196,34 @@ houseButton x y w =
 houseButton_ : Html Msg
 houseButton_ =
     houseButton para.houseButtonX para.houseButtonY para.houseButtonW
+
+
+houseButtonCentral : Html Msg
+houseButtonCentral =
+    houseButton para.houseButtonCX para.houseButtonCY para.houseButtonCW
+
+
+doorButton : Msg -> Float -> Float -> Float -> Html Msg
+doorButton m x y w =
+    svg [ onClick m ]
+        [ Svg.image
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "./assets/icons/open-gate.png" |> SA.xlinkHref
+            , w |> String.fromFloat |> SA.width
+            ]
+            []
+        , Svg.rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , w |> String.fromFloat |> SA.width
+            , w |> String.fromFloat |> SA.height
+            , "transparent" |> SA.fill
+            ]
+            []
+        ]
+
+
+finishGateButton : Msg -> Html Msg
+finishGateButton m =
+    doorButton m para.fgX para.fgY para.fgW

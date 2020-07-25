@@ -56,18 +56,7 @@ viewGame model =
                         ++ [ drawButton_ model ]
                         ++ [ powerInfo model ]
                         ++ [ houseButton_ ]
-                        ++ (if (lr model == ( 1, 1 ) || lr model == ( 1, 2 )) && not (List.isEmpty model.hands) then
-                                [ hand2FirstCard ]
-
-                            else
-                                []
-                           )
-                        ++ (if List.member (lr model) [ ( 1, 2 ), ( 2, 1 ), ( 2, 2 ), ( 2, 3 ), ( 2, 4 ) ] && List.isEmpty model.hands then
-                                [ hand2NextRound ]
-
-                            else
-                                []
-                           )
+                        ++ renderHand model
                         ++ (if model.currentLevel <= 3 then
                                 renderGuide model
 
@@ -104,14 +93,39 @@ viewGame model =
                 , Html.button [ HE.onClick StartRound1 ] [ Html.text "Start round 1" ]
                 ]
 
-        Finished ->
-            div [] [ Html.text "finished" ]
+        Finished n ->
+            renderFinished n model
 
         Wasted ->
             div [] [ Html.text "wasted" ]
 
         _ ->
             div [] []
+
+
+renderFinished : Int -> Model -> Html Msg
+renderFinished n model =
+    let
+        home =
+            houseButtonCentral
+
+        next =
+            if n < 6 then
+                [ finishGateButton (LevelBegin (model.currentLevel + 1)) ]
+
+            else
+                []
+    in
+    div []
+        [ svg
+            [ SA.viewBox "0 0 1000 600"
+            , SA.height "600"
+            , SA.width "1000"
+            , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
+            , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+            ]
+            ([ home ] ++ next)
+        ]
 
 
 background : Theme -> Svg Msg
@@ -170,6 +184,33 @@ renderFlag i =
             ]
             []
         ]
+
+
+renderHand : Model -> List (Html Msg)
+renderHand model =
+    let
+        toCard =
+            if (lr model == ( 1, 1 ) || lr model == ( 1, 2 )) && not (List.isEmpty model.hands) then
+                [ hand2FirstCard model ]
+
+            else
+                []
+
+        toNext =
+            if List.member (lr model) [ ( 1, 1 ), ( 1, 2 ), ( 2, 1 ), ( 2, 2 ), ( 2, 3 ), ( 2, 4 ) ] && List.isEmpty model.hands then
+                [ hand2NextRound ]
+
+            else
+                []
+
+        toDraw =
+            if List.member (lr model) [ ( 1, 3 ) ] && List.isEmpty model.hands then
+                [ hand2Draw ]
+
+            else
+                []
+    in
+    toCard ++ toNext ++ toDraw
 
 
 renderFlags : List Int -> List (Html Msg)

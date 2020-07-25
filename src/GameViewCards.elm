@@ -132,7 +132,14 @@ renderHands : Model -> List (Html Msg)
 renderHands model =
     let
         digitNum =
-            model.economy |> toFloat |> logBase 10.0 |> ceiling |> toFloat
+            if model.economy < 10 then
+                1.0
+
+            else if model.economy < 100 then
+                2.0
+
+            else
+                3.0
 
         hands =
             model.hands |> List.sortWith cardComparison

@@ -94,7 +94,7 @@ type Gamestatus
     | Stopped
     | HomePage
     | CardPage
-    | Finished
+    | Finished Int
     | Wasted
 
 

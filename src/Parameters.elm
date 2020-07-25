@@ -47,4 +47,10 @@ para =
     , houseButtonX = 930.0
     , houseButtonY = 500.0
     , houseButtonW = 50.0
+    , houseButtonCX = 380.0
+    , houseButtonCY = 280.0
+    , houseButtonCW = 50.0
+    , fgX = 500.0
+    , fgY = 280.0
+    , fgW = 50.0
     }

@@ -3,6 +3,7 @@ module Update exposing (..)
 import Action exposing (..)
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
+import ColorScheme exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
 import InitLevel exposing (..)
@@ -102,7 +103,10 @@ update msg model =
             ( { model | hands = c :: model.hands }, Cmd.none )
 
         PlayCard card ->
-            if card.cost <= model.power then
+            if
+                card.cost
+                    <= model.power
+            then
                 if List.member card targetCardlst then
                     ( { model
                         | cardSelected = SelectCard card
@@ -259,6 +263,22 @@ update msg model =
 
         Message.Click _ ->
             ( model, Cmd.none )
+
+
+loadTheme : Int -> Model -> Model
+loadTheme n model =
+    case n of
+        3 ->
+            { model | theme = Polar }
+
+        4 ->
+            { model | theme = Urban }
+
+        5 ->
+            { model | theme = Plane }
+
+        _ ->
+            { model | theme = Minimum }
 
 
 replaceCard : Card -> Model -> ( Model, Cmd Msg )

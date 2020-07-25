@@ -153,11 +153,17 @@ virusEvolve model =
                 |> List.take 1
                 |> List.append rules
                 |> List.sort
+
+        ( virus, av ) =
+            change model.virus model.av model.city
+
+        city =
+            updateCity model
     in
     { model
-        | city = updateCity model
-        , virus = change model.virus model.av model.city |> Tuple.first
-        , av = change model.virus model.av model.city |> Tuple.second
+        | city = city
+        , virus = virus
+        , av = av
     }
         |> takeOver
         |> revenge size
@@ -293,7 +299,7 @@ mutate rule model =
 
 revenge : Int -> Model -> Model
 revenge size model =
-    if size < List.length model.virus.pos && model.counter == 0 then
+    if size > List.length model.virus.pos && model.counter == 0 then
         let
             virus_ =
                 model.virus
@@ -319,7 +325,7 @@ horrify model =
         city =
             model.city
     in
-    if sumSick city + sumDead city >= sumPopulation city then
+    if sumSick city >= sumPopulation city then
         { model | flowRate = 2 }
 
     else

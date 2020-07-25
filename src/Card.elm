@@ -61,6 +61,39 @@ type Action
 -- Card -> String
 
 
+cardPiles =
+    []
+
+cardPile3 =
+    [ blizzard
+    , drought
+    , powerOverload
+    , onStandby
+    , coldWave
+    , rain
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , fubao
+    , humanClone
+    , hospital
+    , quarantine
+    , quarantine
+    , enhancedHealing
+    , enhancedHealing
+    , cellBroadcast
+    , warehouse
+    , warehouse
+    , warmwave
+    , lowSoundWave
+    , compulsoryMR
+    , firstAid
+    , medMob
+    ]
+
+
 allCards =
     [ powerOverload
     , onStandby

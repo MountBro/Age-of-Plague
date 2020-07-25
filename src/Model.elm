@@ -52,6 +52,24 @@ initModel _ =
     ( { city =
             initCity 20
                 map1
+
+      {- [ ( 0, 0 )
+         , ( 0, 1 )
+         , ( 0, 2 )
+         , ( 0, 3 )
+         , ( 1, -1 )
+         , ( 1, 0 )
+         , ( 1, 1 )
+         , ( 1, 2 )
+         , ( 2, -2 )
+         , ( 2, -1 )
+         , ( 2, 0 )
+         , ( 2, 1 )
+         , ( 2, 2 )
+         , ( 3, -1 )
+         , ( 3, -2 )
+         ]
+      -}
       , behavior = initBehavior
       , currentRound = 1
       , state = HomePage
@@ -71,7 +89,7 @@ initModel _ =
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
-      , hands = initHandsVirus 1 |> Tuple.first
+      , hands = initHandsVirus 1 |> Tuple.first --megaClone
       , deck = allCards
       , mouseOverCardToReplace = negate 1
       , mouseOverCard = negate 1

@@ -103,8 +103,8 @@ validNeighborTile tlst t =
         lstn =
             generateZone t.indice
     in
-    if not t.qua && t.peoFlow then
-        List.filter (\x -> List.member x.indice lstn && x.population > 0 && not x.qua) tlst
+    if (not t.qua) && t.peoFlow then
+        List.filter (\x -> List.member x.indice lstn && x.population > 0 && not x.qua && t.peoFlow) tlst
 
     else
         []

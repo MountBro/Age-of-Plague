@@ -166,10 +166,10 @@ virusEvolve model =
         , av = av
     }
         |> takeOver
+        |> mutate newrules
         |> revenge size
         |> horrify
         |> unBlockable
-        |> mutate newrules
 
 
 clearCurrentRoundTodo : Model -> Model
@@ -325,7 +325,7 @@ horrify model =
         city =
             model.city
     in
-    if sumSick city >= sumPopulation city then
+    if sumSick city + sumDead city >= sumPopulation city then
         { model | flowrate = 2 }
 
     else

@@ -238,3 +238,8 @@ initHandsVirus level =
 lr : Model -> ( Int, Int )
 lr model =
     ( model.currentLevel, model.currentRound )
+
+updateDeck : Int -> List Card
+updateDeck n =
+    getElement n cardPiles
+        |> List.foldr (++) []

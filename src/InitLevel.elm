@@ -19,6 +19,7 @@ levelInit n model =
             , actionDescribe = []
             , counter = 3
             , flowrate = 1
+            , deck = updateDeck n
         }
 
     else
@@ -36,4 +37,5 @@ levelInit n model =
             , flowrate = 1
             , economy = 3
             , power = 6
+            , deck = updateDeck n
         }

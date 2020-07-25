@@ -2,6 +2,7 @@ module Card exposing (..)
 
 import Random exposing (Generator, list, map)
 import Random.List exposing (choose)
+import Geometry exposing (..)
 
 
 type alias Card =
@@ -60,24 +61,39 @@ type Action
 
 -- Card -> String
 
-
 cardPiles =
-    []
+    [ cardPilestutorial, allCards, cardPile3 ]
+
+cardPilestutorial =
+    [ blizzard ]
+
 
 cardPile3 =
     [ blizzard
+    , blizzard
+    , blizzard
+    , drought
+    , drought
     , drought
     , powerOverload
+    , powerOverload
     , onStandby
+    , coldWave
     , coldWave
     , rain
     , cut
     , cut
     , cut
     , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
     , megaCut
     , fubao
     , humanClone
+    , hospital
     , hospital
     , quarantine
     , quarantine
@@ -85,11 +101,12 @@ cardPile3 =
     , enhancedHealing
     , cellBroadcast
     , warehouse
-    , warehouse
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
+    , firstAid
+    , medMob
     , medMob
     ]
 
@@ -354,10 +371,10 @@ drought =
 warehouse =
     Card
         TileSel
-        2
+        4
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
-        "+5 economy per round."
+        "+2 economy per round."
 
 
 warmwave =

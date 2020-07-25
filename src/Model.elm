@@ -2,6 +2,7 @@ module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
+import ColorScheme exposing (..)
 import Geometry exposing (..)
 import Message exposing (..)
 import Parameters exposing (..)
@@ -9,6 +10,8 @@ import Task
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
+import Random exposing (Generator, list, map)
+import Random.List exposing (choose)
 
 
 type alias Model =
@@ -38,11 +41,11 @@ type alias Model =
     , mouseOverCard : Int
     , replaceChance : Int
     , drawChance : Int
-    , actionDescribe : List String
-    , counter : Int -- deadly up
-    , flowrate : Int -- population flow rate
+    , actionDescribe : List MyLog
     , currentLevel : Int
     , theme : Theme
+    , counter : Int -- deadly up
+    , flowRate : Int -- population flow rate
     }
 
 
@@ -96,12 +99,27 @@ initModel _ =
       , drawChance = 0
       , actionDescribe = []
       , counter = 3
-      , flowrate = 1
       , currentLevel = 1 --1
       , theme = Polar
+      , flowRate = 1
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
+
+
+type MyLog
+    = CardPlayed Card
+    | Warning String
+
+
+isWarning : MyLog -> Bool
+isWarning l =
+    case l of
+        Warning str ->
+            True
+
+        _ ->
+            False
 
 
 type Gamestatus
@@ -111,12 +129,12 @@ type Gamestatus
     | Stopped
     | HomePage
     | CardPage
-    | Finished
+    | Finished Int
     | Wasted
 
 
-initlog : Model -> Model
-initlog model =
+initLog : Model -> Model
+initLog model =
     { model | actionDescribe = [] }
 
 
@@ -139,13 +157,6 @@ type alias Behavior =
     { populationFlow : Bool
     , virusEvolve : Bool
     }
-
-
-type Theme
-    = Polar
-    | Urban
-    | Minimum
-    | Plane
 
 
 initBehavior =
@@ -238,3 +249,21 @@ initHandsVirus level =
 lr : Model -> ( Int, Int )
 lr model =
     ( model.currentLevel, model.currentRound )
+
+
+updateDeck : Int -> List Card
+updateDeck n =
+    getElement n cardPiles
+        |> List.foldr (++) []
+
+cardGenerator : Model -> Generator Card
+cardGenerator model =
+    choose model.deck
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+
+
+cardsGenerator : Model -> Int -> Generator (List Card)
+cardsGenerator model n =
+    choose model.deck
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+        |> Random.list n

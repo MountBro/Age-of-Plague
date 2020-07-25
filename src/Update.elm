@@ -3,11 +3,14 @@ module Update exposing (..)
 import Action exposing (..)
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
+import ColorScheme exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
+import InitLevel exposing (..)
 import List.Extra as LE
 import Message exposing (Msg(..))
 import Model exposing (..)
+import NextRound exposing (..)
 import Parameters exposing (..)
 import Ports as P exposing (..)
 import Random exposing (..)
@@ -26,15 +29,23 @@ update msg model =
             if n <= 2 then
                 ( levelInit n model, Cmd.none )
 
+            else if n == 3 then
+                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 8) )
+
             else
-                ( levelInit n model, Random.generate InitializeHands (cardsGenerator 10) )
+                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 6) )
 
         InitializeHands lc ->
             let
                 loglc =
                     log "lc" lc
+                specialCards =
+                    if model.currentLevel == 3 then
+                        [ blizzard, drought]
+                    else
+                        []
             in
-            ( { model | hands = lc }, Cmd.none )
+            ( { model | hands = lc ++ specialCards }, Cmd.none )
 
         ReplaceCard c replacement ->
             let
@@ -84,7 +95,7 @@ update msg model =
         DrawACard ->
             if model.currentLevel == 1 && para.ecoThreshold <= model.economy then
                 if model.currentRound == 3 && model.todo == [] then
-                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
+                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model))
 
                 else
                     ( model, Cmd.none )
@@ -92,8 +103,11 @@ update msg model =
             else if model.currentLevel == 2 && model.currentRound <= 4 then
                 ( model, Cmd.none )
 
-            else if para.ecoThreshold <= model.economy then
-                ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard cardGenerator )
+            else if para.ecoThreshold <= model.economy && List.length model.hands <= 10 then
+                ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
+
+            else if para.ecoThreshold <= model.economy && List.length model.hands > 10 then
+                ( { model | actionDescribe = [ Warning "Can't Draw, too many hand cards ( > 10 )!!!\n"] ++ model.actionDescribe }, Cmd.none)
 
             else
                 ( model, Cmd.none )
@@ -112,7 +126,7 @@ update msg model =
                         , selHex = SelHexOn
                         , power = model.power - card.cost
                         , hands = LE.remove card model.hands
-                        , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]:\nPlease select a hexagon" ]
+                        , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
                       }
                     , P.cardToMusic ""
                     )
@@ -264,7 +278,6 @@ update msg model =
             ( model, Cmd.none )
 
 
-
 loadTheme : Int -> Model -> Model
 loadTheme n model =
     case n of
@@ -284,7 +297,7 @@ loadTheme n model =
 replaceCard : Card -> Model -> ( Model, Cmd Msg )
 replaceCard c model =
     if List.member c model.hands && model.replaceChance > 0 then
-        ( { model | replaceChance = model.replaceChance - 1 }, Random.generate (ReplaceCard c) cardGenerator )
+        ( { model | replaceChance = model.replaceChance - 1 }, Random.generate (ReplaceCard c) (cardGenerator model) )
 
     else
         let

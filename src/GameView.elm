@@ -7,13 +7,12 @@ import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as D
-import List.Extra exposing (..)
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SA
-import Svg.Events as SE
+import SvgDefs exposing (..)
 import SvgSrc exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)
@@ -30,6 +29,11 @@ caption x y cstr text fontSize =
         ]
         [ text |> Svg.text
         ]
+
+
+powerInfo : Model -> Svg Msg
+powerInfo model =
+    caption (para.xlp + para.wlp + 50.0) (para.ylp + 50.0) "orange" (String.fromInt model.power) 60
 
 
 onClick : msg -> Svg.Attribute msg
@@ -49,19 +53,7 @@ cardButton card =
 
 newlevelButton : Model -> Html Msg
 newlevelButton model =
-    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Enter the next level" ]
-
-
-powerEcoInfo : Model -> Html Msg
-powerEcoInfo model =
-    let
-        p =
-            String.fromInt model.power
-
-        ec =
-            String.fromInt model.economy
-    in
-    Html.text ("power: " ++ p ++ ". " ++ "economy: " ++ ec ++ ". ")
+    Html.button [ onClick (LevelBegin (model.currentLevel + 1)) ] [ Html.text "Enter the next level" ]
 
 
 evolveButton : Html Msg
@@ -72,9 +64,9 @@ evolveButton =
 nextRoundButton : Model -> Html Msg
 nextRoundButton model =
     --if judgeWin model == Win then
-    --    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Next Level" ]
+    --    Html.button [ onClick (LevelBegin (model.currentLevel + 1)) ] [ Html.text "Next Level" ]
     --else if judgeWin model == Lost then
-    --    Html.button [ onClick (LevelBegin model.currentlevel) ] [ Html.text "Restart level" ]
+    --    Html.button [ onClick (LevelBegin model.currentLevel) ] [ Html.text "Restart level" ]
     --else
     --
     Html.button [ onClick NextRound ] [ Html.text "Next round" ]
@@ -137,6 +129,85 @@ renderLevelProgress model =
             , SA.fill "green"
             ]
             []
+        ]
+
+
+renderNextRound : Html Msg
+renderNextRound =
+    svg [ onClick NextRound ]
+        [ rect
+            [ para.repx - para.repr |> String.fromFloat |> SA.x
+            , para.repy - para.repr |> String.fromFloat |> SA.y
+            , para.repr |> String.fromFloat |> SA.rx
+            , para.nrbc |> SA.fill
+            , 6.0 * para.repr |> String.fromFloat |> SA.width
+            , 2.0 * para.repr |> String.fromFloat |> SA.height
+            ]
+            []
+        , caption (para.repx + 2.0 * para.repr - 33.0) (para.repy + 3.0) "white" "Next Round" 20
+        ]
+
+
+renderEconomyProgress : Model -> Html Msg
+renderEconomyProgress model =
+    let
+        eco =
+            model.economy
+
+        ratio =
+            (toFloat eco / toFloat para.ecoThreshold) |> Basics.min 1 |> Basics.max 0
+
+        offSet =
+            2.0 * pi * para.repr * ratio
+
+        offSetComp =
+            2.0 * pi * para.repr * (1.0 - ratio)
+
+        arr =
+            String.fromFloat offSet ++ " " ++ String.fromFloat offSetComp
+
+        rotArg =
+            "rotate(-90,"
+                ++ String.fromFloat para.repx
+                ++ ","
+                ++ String.fromFloat para.repy
+                ++ ")"
+
+        txt =
+            String.fromInt model.economy
+                ++ "/"
+                ++ String.fromInt para.ecoThreshold
+    in
+    svg []
+        [ circle
+            [ SA.stroke para.dcsc
+            , SA.strokeWidth "4"
+            , SA.fill "transparent"
+            , arr |> SA.strokeDasharray
+            , para.repr |> String.fromFloat |> SA.r
+            , para.repx |> String.fromFloat |> SA.cx
+            , para.repy |> String.fromFloat |> SA.cy
+            , rotArg |> SA.transform
+            ]
+            []
+        , svg [ onClick DrawACard ]
+            [ circle
+                [ SA.fill
+                    (if eco < para.ecoThreshold then
+                        "red"
+
+                     else
+                        "cyan"
+                    )
+                , SA.fillOpacity "0.5"
+                , para.repr |> String.fromFloat |> SA.r
+                , para.repx |> String.fromFloat |> SA.cx
+                , para.repy |> String.fromFloat |> SA.cy
+                ]
+                []
+            ]
+        , caption (para.repx - 22.0) (para.repy + 3.0) "white" "draw" 20
+        , caption (para.repx - 10.0) (para.repy + 15.0) "white" txt 10
         ]
 
 
@@ -222,8 +293,8 @@ renderFilm model ( i, j ) =
         )
 
 
-renderTile : Tile -> List (Html Msg)
-renderTile t =
+renderTile : Theme -> Tile -> List (Html Msg)
+renderTile theme t =
     let
         a =
             para.a
@@ -288,14 +359,27 @@ renderTile t =
                 ++ [ y6 - h, y6 - 2 * h, y6 - h ]
                 ++ [ y1 - 2 * h, y1 - h, y1 + h ]
 
+        borderStrokeColor =
+            case theme of
+                Polar ->
+                    "cyan"
+
+                Urban ->
+                    "gray"
+
+                Minimum ->
+                    "#2e85ca"
+
+                _ ->
+                    "orange "
+
         border =
             svg []
                 [ polyline
                     [ polyPoint borderX borderY |> SA.points
-                    , SA.strokeWidth "2"
-                    , SA.stroke "orange"
-                    , SA.fill "#99b898"
-                    , SA.fillOpacity "0"
+                    , SA.strokeWidth ".5"
+                    , SA.stroke borderStrokeColor
+                    , SA.fillOpacity "0.0"
                     ]
                     []
                 ]
@@ -365,8 +449,19 @@ renderTile t =
                     [ t.dead |> String.fromInt |> Svg.text ]
                 ]
 
+        hexCoordinates =
+            [ ( x, y ), ( x1, y1 ), ( x2, y2 ), ( x3, y3 ), ( x4, y4 ), ( x5, y5 ), ( x6, y6 ) ]
+
         tiles =
-            List.map (\( u, v ) -> myTile u v) [ ( x, y ), ( x1, y1 ), ( x2, y2 ), ( x3, y3 ), ( x4, y4 ), ( x5, y5 ), ( x6, y6 ) ]
+            case theme of
+                Minimum ->
+                    List.map (renderHex para.mtc 1.0) (( i, j ) :: generateZone ( i, j ))
+
+                Polar ->
+                    List.map (\( u, v ) -> st1 u v) hexCoordinates
+
+                _ ->
+                    List.map (\( u, v ) -> myTile u v) hexCoordinates
 
         -- list of positions of the seven hexs in a tile.
     in
@@ -396,20 +491,8 @@ renderTileFilm model t =
 
         j =
             t1 + 3 * t2
-
-        lst =
-            [ ( i, j )
-            , ( i, j - 1 )
-            , ( i, j + 1 )
-            , ( i + 1, j )
-            , ( i + 1, j - 1 )
-            , ( i - 1, j )
-            , ( i - 1, j + 1 )
-            ]
-
-        -- list of positions of the seven hexs in a tile.
     in
-    List.map (renderFilm model) lst
+    List.map (renderFilm model) (( i, j ) :: generateZone ( i, j ))
 
 
 renderVirus : Virus -> List (Html Msg)
@@ -557,7 +640,7 @@ renderHands model =
             List.indexedMap Tuple.pair hands
                 |> List.map
                     (\( n, c ) ->
-                        ( n, ( para.xlp + para.wlp + 50.0 + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
+                        ( n, ( para.xlp + para.wlp + 150.0 + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
                     )
     in
     List.map
@@ -598,14 +681,49 @@ renderGuide model =
             createGuide model
                 |> List.map String.lines
                 |> List.foldl (\x -> \y -> x ++ y) []
+
+        length =
+            lstr |> List.length
+
+        height =
+            (length * 20)
+                |> toFloat
+                |> (+) 10.0
+
+        width =
+            500.0
+
+        bkg =
+            svg []
+                [ Svg.defs []
+                    [ sh2 ]
+                , rect
+                    [ width |> String.fromFloat |> SA.width
+                    , height |> String.fromFloat |> SA.height
+                    , para.gbc |> SA.fill
+                    , para.clp + 230.0 |> String.fromFloat |> SA.x
+                    , para.conbot - 40.0 |> String.fromFloat |> SA.y
+                    , "5" |> SA.rx
+                    , "2" |> SA.strokeWidth
+                    , para.gbsc |> SA.stroke
+                    , SA.filter "url(#shadow-filter)"
+                    ]
+                    []
+                ]
     in
-    List.indexedMap Tuple.pair lstr
-        |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-        |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "yellow" str 16)
+    if model.currentLevel == 1 || model.currentLevel == 2 then
+        bkg
+            :: (List.indexedMap Tuple.pair lstr
+                    |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
+                    |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "black" str 16)
+               )
+
+    else
+        []
 
 
-renderVirusinf : Virus -> List (Html Msg)
-renderVirusinf vir =
+renderVirusInf : Virus -> List (Html Msg)
+renderVirusInf vir =
     let
         rule =
             vir.rules

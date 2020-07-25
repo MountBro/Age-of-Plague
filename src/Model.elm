@@ -2,9 +2,7 @@ module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug
 import Geometry exposing (..)
-import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
 import Task
@@ -41,9 +39,10 @@ type alias Model =
     , replaceChance : Int
     , drawChance : Int
     , actionDescribe : List String
-    , currentlevel : Int
     , counter : Int -- deadly up
     , flowrate : Int -- population flow rate
+    , currentLevel : Int
+    , theme : Theme
     }
 
 
@@ -96,9 +95,10 @@ initModel _ =
       , replaceChance = 3
       , drawChance = 0
       , actionDescribe = []
-      , currentlevel = 1 --1
       , counter = 3
       , flowrate = 1
+      , currentLevel = 1 --1
+      , theme = Polar
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -141,6 +141,13 @@ type alias Behavior =
     }
 
 
+type Theme
+    = Polar
+    | Urban
+    | Minimum
+    | Plane
+
+
 initBehavior =
     { populationFlow = True, virusEvolve = True }
 
@@ -149,13 +156,13 @@ judgeBuild : Model -> ( Int, Int ) -> Bool
 judgeBuild model ( i, j ) =
     let
         hostilelst =
-            hospitalTiles model.city.tilesindex
+            hospitalTiles model.city.tilesIndex
 
         quatilelst =
-            quarantineTiles model.city.tilesindex
+            quarantineTiles model.city.tilesIndex
 
         waretilelst =
-            warehouseTiles model.city.tilesindex
+            warehouseTiles model.city.tilesIndex
     in
     model.cardSelected
         == SelectCard hospital
@@ -227,3 +234,7 @@ initHandsVirus level =
     in
     ( hand, vir )
 
+
+lr : Model -> ( Int, Int )
+lr model =
+    ( model.currentLevel, model.currentRound )

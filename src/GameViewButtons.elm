@@ -60,7 +60,7 @@ nextButton x y w =
         [ Svg.image
             [ x |> String.fromFloat |> SA.x
             , y |> String.fromFloat |> SA.y
-            , "./assets/guide/next-button.png" |> SA.xlinkHref
+            , "./assets/icons/next-button.png" |> SA.xlinkHref
             , w |> String.fromFloat |> SA.width
             ]
             []
@@ -151,7 +151,7 @@ drawButton x y w model =
         [ Svg.image
             [ x |> String.fromFloat |> SA.x
             , y |> String.fromFloat |> SA.y
-            , "./assets/guide/card-draw.png" |> SA.xlinkHref
+            , "./assets/icons/card-draw.png" |> SA.xlinkHref
             , w |> String.fromFloat |> SA.width
             ]
             []
@@ -170,3 +170,29 @@ drawButton x y w model =
 drawButton_ : Model -> Html Msg
 drawButton_ =
     drawButton para.drawButtonX para.drawButtonY para.drawButtonW
+
+
+houseButton : Float -> Float -> Float -> Html Msg
+houseButton x y w =
+    svg [ onClick (Message.Click "home") ]
+        [ Svg.image
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "./assets/icons/house.png" |> SA.xlinkHref
+            , w |> String.fromFloat |> SA.width
+            ]
+            []
+        , Svg.rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , w |> String.fromFloat |> SA.width
+            , w |> String.fromFloat |> SA.height
+            , "transparent" |> SA.fill
+            ]
+            []
+        ]
+
+
+houseButton_ : Html Msg
+houseButton_ =
+    houseButton para.houseButtonX para.houseButtonY para.houseButtonW

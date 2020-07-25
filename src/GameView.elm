@@ -55,6 +55,7 @@ viewGame model =
                         ++ [ nextButton_ ]
                         ++ [ drawButton_ model ]
                         ++ [ powerInfo model ]
+                        ++ [ houseButton_ ]
                         ++ (if (lr model == ( 1, 1 ) || lr model == ( 1, 2 )) && not (List.isEmpty model.hands) then
                                 [ hand2FirstCard ]
 

@@ -1,20 +1,13 @@
 module NextRound exposing (..)
 
-import Action exposing (..)
-import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug exposing (log, toString)
 import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
 import Population exposing (..)
-import Ports as P exposing (..)
-import Random exposing (..)
-import RegionFill exposing (..)
 import Tile exposing (..)
-import Todo exposing (..)
 import Virus exposing (..)
 
 
@@ -161,11 +154,16 @@ virusEvolve model =
                 |> List.take 1
                 |> List.append rules
                 |> List.sort
+
+        ( virus, av ) =
+            change model.virus model.av model.city
+
+        city = updateCity model
     in
     { model
-        | city = updateCity model
-        , virus = change model.virus model.av model.city |> Tuple.first
-        , av = change model.virus model.av model.city |> Tuple.second
+        | city = city
+        , virus = virus
+        , av = av
     }
         |> takeOver
         |> revenge size
@@ -301,7 +299,7 @@ mutate rule model =
 
 revenge : Int -> Model -> Model
 revenge size model =
-    if size < List.length model.virus.pos && model.counter == 0 then
+    if size > List.length model.virus.pos && model.counter == 0 then
         let
             virus_ =
                 model.virus
@@ -327,7 +325,7 @@ horrify model =
         city =
             model.city
     in
-    if sumSick city + sumDead city >= sumPopulation city then
+    if sumSick city >= sumPopulation city then
         { model | flowrate = 2 }
 
     else

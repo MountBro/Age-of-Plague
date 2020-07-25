@@ -5,7 +5,6 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Message exposing (..)
 import Model exposing (..)
-import Parameters exposing (..)
 import Population exposing (..)
 import Random exposing (float, generate)
 import Tile exposing (..)
@@ -429,7 +428,7 @@ performAction action model =
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
-        EnhanceHealingI ->
+        EnhancedHealingI ->
             let
                 city_ =
                     model.city

@@ -34,6 +34,6 @@ levelInit n model =
             , currentRound = 1
             , counter = 3
             , flowrate = 1
-            , economy = 5
-            , power = 5
+            , economy = 3
+            , power = 6
         }

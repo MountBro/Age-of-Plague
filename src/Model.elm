@@ -2,9 +2,7 @@ module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug
 import Geometry exposing (..)
-import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
 import Task
@@ -41,9 +39,10 @@ type alias Model =
     , replaceChance : Int
     , drawChance : Int
     , actionDescribe : List String
-    , currentLevel : Int
     , counter : Int -- deadly up
     , flowrate : Int -- population flow rate
+    , currentLevel : Int
+    , theme : Theme
     }
 
 
@@ -52,6 +51,24 @@ initModel _ =
     ( { city =
             initCity 20
                 map1
+
+      {- [ ( 0, 0 )
+         , ( 0, 1 )
+         , ( 0, 2 )
+         , ( 0, 3 )
+         , ( 1, -1 )
+         , ( 1, 0 )
+         , ( 1, 1 )
+         , ( 1, 2 )
+         , ( 2, -2 )
+         , ( 2, -1 )
+         , ( 2, 0 )
+         , ( 2, 1 )
+         , ( 2, 2 )
+         , ( 3, -1 )
+         , ( 3, -2 )
+         ]
+      -}
       , behavior = initBehavior
       , currentRound = 1
       , state = HomePage
@@ -71,16 +88,17 @@ initModel _ =
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
-      , hands = initHandsVirus 1 |> Tuple.first
+      , hands = initHandsVirus 1 |> Tuple.first --megaClone
       , deck = allCards
       , mouseOverCardToReplace = negate 1
       , mouseOverCard = negate 1
       , replaceChance = 3
       , drawChance = 0
       , actionDescribe = []
-      , currentLevel = 1 --1
       , counter = 3
       , flowrate = 1
+      , currentLevel = 1 --1
+      , theme = Polar
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -121,6 +139,13 @@ type alias Behavior =
     { populationFlow : Bool
     , virusEvolve : Bool
     }
+
+
+type Theme
+    = Polar
+    | Urban
+    | Minimum
+    | Plane
 
 
 initBehavior =
@@ -210,4 +235,6 @@ initHandsVirus level =
     ( hand, vir )
 
 
-
+lr : Model -> ( Int, Int )
+lr model =
+    ( model.currentLevel, model.currentRound )

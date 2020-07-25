@@ -25,4 +25,12 @@ para =
     , conbot = 200.0
     , clh = 20.0
     , clp = 15.0
+    , gbc = "#a5bcc0"
+    , gbsc = "#6f787e"
+    , mtc = "#5b9fa6"
+    , repr = 40.0
+    , repx = 50.0
+    , repy = 500.0
+    , dcsc = "#5bcab4"
+    , nrbc = "#6796de"
     }

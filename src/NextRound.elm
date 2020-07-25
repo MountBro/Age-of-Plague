@@ -269,7 +269,8 @@ unBlockable model =
                 model.actionDescribe ++ []
 
             else if num == 1 then
-                [ "\n*Emergency!!!\nOne Quarantine down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n" ] ++ model.actionDescribe
+                [ Warning "Emergency!!!\nOne Quarantine down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n" ]
+                    ++ model.actionDescribe
 
             else
                 [] ++ model.actionDescribe

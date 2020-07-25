@@ -19,10 +19,10 @@ updateLog model =
             List.map Tuple.second model.todo
 
         log =
-            List.map (\x -> "From card \n[" ++ x.name ++ "]:\n " ++ x.describe) card
+            List.map CardPlayed card
 
         warning =
-            List.filter (\x -> String.startsWith "\n*" x) model.actionDescribe
+            List.filter isWarning model.actionDescribe
     in
     { model | actionDescribe = log ++ warning }
 

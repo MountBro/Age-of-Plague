@@ -277,17 +277,22 @@ renderantiVirus av =
 renderConsole : Model -> List (Html Msg)
 renderConsole model =
     let
-        l =
-            List.length model.actionDescribe
-
-        lstr =
+        myLog =
             model.actionDescribe
-                |> List.map String.lines
-                |> List.foldl (\x -> \y -> x ++ y) []
+
+        l =
+            List.length myLog
+
+        ( w, a ) =
+            List.partition isWarning myLog
     in
-    List.indexedMap Tuple.pair lstr
-        |> List.map (\( n, str ) -> ( para.clp, para.conbot - para.clh * toFloat (l - 1 - n), str ))
-        |> List.map (\( x, y, str ) -> GameViewBasic.caption x y "white" str 15)
+    []
+
+
+
+-- List.indexedMap Tuple.pair lstr
+--   |> List.map (\( n, str ) -> ( para.clp, para.conbot - para.clh * toFloat (l - 1 - n), str ))
+-- |> List.map (\( x, y, str ) -> GameViewBasic.caption x y "white" str 15)
 
 
 renderGuide : Model -> List (Html Msg)

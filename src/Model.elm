@@ -39,7 +39,7 @@ type alias Model =
     , mouseOverCard : Int
     , replaceChance : Int
     , drawChance : Int
-    , actionDescribe : List String
+    , actionDescribe : List MyLog
     , currentLevel : Int
     , theme : Theme
     , counter : Int -- deadly up
@@ -103,6 +103,21 @@ initModel _ =
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
+
+
+type MyLog
+    = CardPlayed Card
+    | Warning String
+
+
+isWarning : MyLog -> Bool
+isWarning l =
+    case l of
+        Warning str ->
+            True
+
+        _ ->
+            False
 
 
 type Gamestatus

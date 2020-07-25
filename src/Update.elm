@@ -113,7 +113,7 @@ update msg model =
                         , selHex = SelHexOn
                         , power = model.power - card.cost
                         , hands = LE.remove card model.hands
-                        , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]:\nPlease select a hexagon" ]
+                        , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
                       }
                     , P.cardToMusic ""
                     )

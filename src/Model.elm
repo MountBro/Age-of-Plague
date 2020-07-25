@@ -2,6 +2,7 @@ module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
+import ColorScheme exposing (..)
 import Geometry exposing (..)
 import Message exposing (..)
 import Parameters exposing (..)
@@ -121,13 +122,6 @@ type alias Behavior =
     { populationFlow : Bool
     , virusEvolve : Bool
     }
-
-
-type Theme
-    = Polar
-    | Urban
-    | Minimum
-    | Plane
 
 
 initBehavior =

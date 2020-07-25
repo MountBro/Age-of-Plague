@@ -50,7 +50,7 @@ view model =
     in
     case model.state of
         Playing ->
-            div [ HA.style "background-color" "#FFF" ]
+            div []
                 [ svg
                     [ SA.viewBox "0 0 1000 600"
                     , SA.height "600"
@@ -58,7 +58,7 @@ view model =
                     , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
-                    ([ bkg model.theme ]
+                    ([ background model.theme ]
                         ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesIndex)
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
@@ -113,7 +113,7 @@ view model =
                     , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
-                    ([ bkg model.theme ]
+                    ([ background model.theme ]
                         ++ renderInitCards model
                         ++ [ GameView.caption 20 200 "white" "click on card to replace" 20 ]
                         ++ [ GameView.caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
@@ -129,24 +129,3 @@ view model =
 
         _ ->
             div [] []
-
-
-bkg : Theme -> Svg Msg
-bkg t =
-    let
-        color =
-            case t of
-                Minimum ->
-                    "#b0deb9"
-
-                _ ->
-                    "#778388"
-    in
-    rect
-        [ SA.x "0"
-        , SA.y "0"
-        , SA.width "1000"
-        , SA.height "600"
-        , SA.fill color
-        ]
-        []

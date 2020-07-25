@@ -1,5 +1,6 @@
 module InitLevel exposing (..)
 
+import ColorScheme exposing (..)
 import Model exposing (..)
 
 

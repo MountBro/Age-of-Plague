@@ -2,6 +2,7 @@ module GameView exposing (..)
 
 import Action exposing (..)
 import Card exposing (..)
+import ColorScheme exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
@@ -16,6 +17,22 @@ import SvgDefs exposing (..)
 import SvgSrc exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)
+
+
+background : Theme -> Svg Msg
+background t =
+    let
+        cs =
+            colorScheme t
+    in
+    rect
+        [ SA.x "0"
+        , SA.y "0"
+        , SA.width "1000"
+        , SA.height "600"
+        , SA.fill cs.bkg
+        ]
+        []
 
 
 caption : Float -> Float -> String -> String -> Int -> Svg Msg
@@ -33,7 +50,15 @@ caption x y cstr text fontSize =
 
 powerInfo : Model -> Svg Msg
 powerInfo model =
-    caption (para.xlp + para.wlp + 50.0) (para.ylp + 50.0) "orange" (String.fromInt model.power) 60
+    caption
+        (para.xlp + para.wlp + 50.0)
+        (para.ylp + 50.0)
+        (model.theme
+            |> colorScheme
+            |> .powerColor
+        )
+        (String.fromInt model.power)
+        60
 
 
 onClick : msg -> Svg.Attribute msg
@@ -109,6 +134,12 @@ renderFlags li =
 renderLevelProgress : Model -> Html Msg
 renderLevelProgress model =
     let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
         wg =
             toFloat (min model.currentRound 20) / 20.0 * para.wlp
     in
@@ -118,7 +149,7 @@ renderLevelProgress model =
             , para.ylp |> String.fromFloat |> SA.y
             , para.wlp |> String.fromFloat |> SA.width
             , para.hlp |> String.fromFloat |> SA.height
-            , SA.fill "#666666"
+            , SA.fill cs.levelProgressBkg
             ]
             []
         , rect
@@ -126,7 +157,7 @@ renderLevelProgress model =
             , para.ylp |> String.fromFloat |> SA.y
             , wg |> String.fromFloat |> SA.width
             , para.hlp |> String.fromFloat |> SA.height
-            , SA.fill "green"
+            , SA.fill cs.levelProgressFill
             ]
             []
         ]
@@ -151,6 +182,12 @@ renderNextRound =
 renderEconomyProgress : Model -> Html Msg
 renderEconomyProgress model =
     let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
         eco =
             model.economy
 
@@ -180,7 +217,7 @@ renderEconomyProgress model =
     in
     svg []
         [ circle
-            [ SA.stroke para.dcsc
+            [ SA.stroke cs.drawStroke
             , SA.strokeWidth "4"
             , SA.fill "transparent"
             , arr |> SA.strokeDasharray
@@ -194,7 +231,7 @@ renderEconomyProgress model =
             [ circle
                 [ SA.fill
                     (if eco < para.ecoThreshold then
-                        "red"
+                        cs.drawBkg
 
                      else
                         "cyan"
@@ -296,6 +333,9 @@ renderFilm model ( i, j ) =
 renderTile : Theme -> Tile -> List (Html Msg)
 renderTile theme t =
     let
+        cs =
+            colorScheme theme
+
         a =
             para.a
 
@@ -378,7 +418,7 @@ renderTile theme t =
                 [ polyline
                     [ polyPoint borderX borderY |> SA.points
                     , SA.strokeWidth ".5"
-                    , SA.stroke borderStrokeColor
+                    , SA.stroke cs.tileStroke
                     , SA.fillOpacity "0.0"
                     ]
                     []
@@ -455,7 +495,7 @@ renderTile theme t =
         tiles =
             case theme of
                 Minimum ->
-                    List.map (renderHex para.mtc 1.0) (( i, j ) :: generateZone ( i, j ))
+                    List.map (renderHex cs.tile 1.0) (( i, j ) :: generateZone ( i, j ))
 
                 Polar ->
                     List.map (\( u, v ) -> st1 u v) hexCoordinates
@@ -677,6 +717,12 @@ renderConsole model =
 renderGuide : Model -> List (Html Msg)
 renderGuide model =
     let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
         lstr =
             createGuide model
                 |> List.map String.lines
@@ -700,12 +746,12 @@ renderGuide model =
                 , rect
                     [ width |> String.fromFloat |> SA.width
                     , height |> String.fromFloat |> SA.height
-                    , para.gbc |> SA.fill
+                    , cs.guideBkg |> SA.fill
                     , para.clp + 230.0 |> String.fromFloat |> SA.x
-                    , para.conbot - 40.0 |> String.fromFloat |> SA.y
+                    , para.conbot - 70.0 |> String.fromFloat |> SA.y
                     , "5" |> SA.rx
                     , "2" |> SA.strokeWidth
-                    , para.gbsc |> SA.stroke
+                    , cs.guideStroke |> SA.stroke
                     , SA.filter "url(#shadow-filter)"
                     ]
                     []
@@ -715,7 +761,7 @@ renderGuide model =
         bkg
             :: (List.indexedMap Tuple.pair lstr
                     |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-                    |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 20) "black" str 16)
+                    |> List.map (\( x, y, str ) -> caption (x + 250.0) (y - 50.0) cs.guideTextColor str 16)
                )
 
     else

@@ -55,7 +55,7 @@ cardButton card =
 
 newlevelButton : Model -> Html Msg
 newlevelButton model =
-    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Enter the next level" ]
+    Html.button [ onClick (LevelBegin (model.currenLevel + 1)) ] [ Html.text "Enter the next level" ]
 
 
 evolveButton : Html Msg
@@ -66,9 +66,9 @@ evolveButton =
 nextRoundButton : Model -> Html Msg
 nextRoundButton model =
     --if judgeWin model == Win then
-    --    Html.button [ onClick (LevelBegin (model.currentlevel + 1)) ] [ Html.text "Next Level" ]
+    --    Html.button [ onClick (LevelBegin (model.currentLevel + 1)) ] [ Html.text "Next Level" ]
     --else if judgeWin model == Lost then
-    --    Html.button [ onClick (LevelBegin model.currentlevel) ] [ Html.text "Restart level" ]
+    --    Html.button [ onClick (LevelBegin model.currentLevel) ] [ Html.text "Restart level" ]
     --else
     --
     Html.button [ onClick NextRound ] [ Html.text "Next round" ]
@@ -737,7 +737,7 @@ renderVirusInf vir =
 
         inf =
             if vir.rules /= [] then
-                [ "Infect: +" ++ infect ++ " per virus unit\n" ++ "Death rate: " ++ Debug.toString vir.kill ++ "\nSpread pattern:\nIf a hex is surrounded\nby " ++ rule ++ " virus units,\nthe virus would spread to\nthis hex next round." ]
+                [ "Infect: +" ++ infect ++ " per virus unit\n" ++ "Death rate: " ++ Debug.toString (toFloat (round ( vir.kill * 100)) /100) ++ "\nSpread pattern:\nIf a hex is surrounded\nby " ++ rule ++ " virus units,\nthe virus would spread to\nthis hex next round." ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
 

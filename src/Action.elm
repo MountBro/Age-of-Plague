@@ -21,42 +21,42 @@ updatelog model =
 
         log =
             List.map (\x -> "From card \n[" ++ x.name ++ "]:\n " ++ x.describe) card
+
+        warning =
+            List.filter (\x -> String.startsWith "\n*" x) model.actionDescribe
     in
-    { model | actionDescribe = log }
+    { model | actionDescribe = log ++ warning }
 
 
 createGuide : Model -> List String
 createGuide model =
     let
         str =
-            List.take model.currentlevel tutorial
+            List.take model.currentLevel tutorial
                 |> List.foldl (\x -> \y -> x ++ y) []
 
         card =
             List.map Tuple.second model.todo
     in
-    case model.currentlevel of
+    case model.currentLevel of
         1 ->
-            if model.hands == [ megaClone ] then
+            if model.hands == [ megaClone ] && model.currentRound == 1 then
                 str |> getElement 1
 
             else if card == [ megaClone ] && model.currentRound == 1 then
                 str |> getElement 2
 
-            else if List.length model.hands == 5 then
+            else if List.length model.hands > 0 && model.currentRound == 2 then
                 str |> getElement 3
 
-            else if model.hands /= [] && model.currentRound == 2 then
+            else if model.hands == [] && model.currentRound == 2 then
                 str |> getElement 4
 
-            else if model.hands == [] && model.currentRound == 2 then
+            else if model.hands == [] && model.currentRound == 3 then
                 str |> getElement 5
 
-            else if model.currentRound == 3 && para.ecoThreshold <= model.economy then
-                str |> getElement 6
-
             else
-                str |> getElement 7
+                str |> getElement 6
 
         2 ->
             if model.currentRound == 1 then
@@ -68,11 +68,14 @@ createGuide model =
             else if model.currentRound < 5 then
                 str |> getElement 3
 
-            else if model.currentRound >= 5 && not (List.isEmpty model.virus.pos) then
+            else if model.currentRound /= 6 && not (List.isEmpty model.virus.pos) then
                 str |> getElement 4
 
+            else if model.currentRound == 6 then
+                str |> getElement 5
+
             else
-                getElement 5 str
+                getElement 6 str
 
         _ ->
             []
@@ -191,7 +194,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -212,7 +215,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -222,7 +225,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -239,7 +242,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -249,13 +252,13 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 tilelst =
                     List.map (\x -> { x | population = round (toFloat x.population * 1.5) }) tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -265,7 +268,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -282,7 +285,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -301,7 +304,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 tilepos =
                     converHextoTile ( i, j )
@@ -322,7 +325,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
 
                 virus =
                     { virus_ | pos = virpos }
@@ -335,7 +338,7 @@ performAction action model =
                     model.city
 
                 tilelst_ =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 pos =
                     converHextoTile ( i, j )
@@ -355,7 +358,7 @@ performAction action model =
                         tilelst_
 
                 city =
-                    { city_ | tilesindex = tilelst }
+                    { city_ | tilesIndex = tilelst }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
 
@@ -385,7 +388,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -397,7 +400,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -412,7 +415,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -421,7 +424,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -433,7 +436,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.hos then
@@ -442,7 +445,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -457,7 +460,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -466,7 +469,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city } |> updatelog, Cmd.none )
@@ -481,7 +484,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -490,7 +493,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
             in
             ( { model | city = city }, Cmd.none )
@@ -508,7 +511,7 @@ performAction action model =
 
                 city =
                     { city_
-                        | tilesindex =
+                        | tilesIndex =
                             List.map
                                 (\x ->
                                     if x.indice == ( ti, tj ) then
@@ -517,7 +520,7 @@ performAction action model =
                                     else
                                         x
                                 )
-                                city_.tilesindex
+                                city_.tilesIndex
                     }
 
                 num =
@@ -540,7 +543,7 @@ performAction action model =
                     converHextoTile ( i, j )
 
                 tlst =
-                    model.city.tilesindex
+                    model.city.tilesIndex
 
                 t =
                     List.filter (\x -> x.indice == ( ti, tj )) tlst
@@ -552,7 +555,7 @@ performAction action model =
 
                 city_ =
                     { city
-                        | tilesindex =
+                        | tilesIndex =
                             evacuate t city
                     }
             in

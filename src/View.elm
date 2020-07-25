@@ -50,7 +50,7 @@ view model =
         film =
             case model.selHex of
                 SelHexOn ->
-                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesindex)
+                    List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTileFilm model) model.city.tilesIndex)
 
                 _ ->
                     []
@@ -65,19 +65,16 @@ view model =
                     , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
-                    ([ bkg model.theme ]
-                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesindex)
+                    ([ bkg ]
+                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map renderTile model.city.tilesIndex)
                         ++ renderVirus model.virus
                         ++ renderantiVirus model.av
                         ++ [ renderLevelProgress model ]
                         ++ renderFlags [ 5, 10, 15 ]
                         ++ renderHands model
                         ++ renderConsole model
-                        ++ renderVirusInf model.virus
-                        ++ [ renderNextRound ]
-                        ++ [ powerInfo model ]
-                        ++ [ renderEconomyProgress model ]
-                        ++ (if model.currentlevel <= 3 then
+                        ++ renderVirusinf model.virus
+                        ++ (if model.currentLevel <= 3 then
                                 renderGuide model
 
                             else
@@ -90,6 +87,7 @@ view model =
                 , nextRoundButton model
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
+                , powerEcoInfo model
 
                 --, div [] (List.map cardButton allCards)
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]

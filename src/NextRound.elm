@@ -1,20 +1,13 @@
 module NextRound exposing (..)
 
-import Action exposing (..)
-import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug exposing (log, toString)
 import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
 import Population exposing (..)
-import Ports as P exposing (..)
-import Random exposing (..)
-import RegionFill exposing (..)
 import Tile exposing (..)
-import Todo exposing (..)
 import Virus exposing (..)
 
 
@@ -26,7 +19,7 @@ toNextRound model =
                 | currentRound = 2
                 , hands = [ hospital, hospital, hospital, warehouse, quarantine ]
               }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
             , Cmd.none
             )
@@ -34,17 +27,16 @@ toNextRound model =
         else if model.hands == [] && model.currentRound == 2 then
             ( { model
                 | currentRound = 3
-                , power = 1
                 , economy = 6
               }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
             , Cmd.none
             )
 
         else if model.currentRound == 3 && model.hands /= [] then
             ( { model | currentRound = 4 }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
                 |> judgeWin
             , Cmd.none
@@ -63,7 +55,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -75,7 +67,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -91,7 +83,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -101,7 +93,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
                 |> judgeWin
             , Cmd.none
             )
@@ -115,7 +107,7 @@ toNextRound model =
             |> virusEvolve
             |> ecoInc
             |> powerInc
-            |> initlog
+            |> initLog
             |> judgeWin
         , Cmd.none
         )
@@ -125,7 +117,7 @@ toNextRound model =
             |> clearCurrentRoundTodo
             |> ecoInc
             |> powerInc
-            |> initlog
+            |> initLog
             |> judgeWin
         , Cmd.none
         )
@@ -135,10 +127,14 @@ ecoInc : Model -> Model
 ecoInc model =
     { model
         | economy =
-            model.economy
-                + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
-                * model.ecoRatio
-        , ecoRatio = 1
+            round
+                (toFloat
+                    (model.economy
+                        + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
+                    )
+                    * model.ecoRatio
+                )
+        , ecoRatio = 1.0
     }
 
 
@@ -157,21 +153,30 @@ virusEvolve model =
             model.virus.rules
 
         newrules =
-            List.filter (\x -> not (List.member x rules)) (List.range 1 6)
+            List.filter (\x -> not (List.member x rules)) (List.range 2 6)
                 |> List.take 1
                 |> List.append rules
                 |> List.sort
+
+        ( virus, av ) =
+            change model.virus model.av model.city
+
+        city =
+            updateCity model
     in
-    { model
-        | city = updateCity model
-        , virus = change model.virus model.av model.city |> Tuple.first
-        , av = change model.virus model.av model.city |> Tuple.second
-    }
-        |> takeOver
-        |> revenge size
-        |> horrify
-        |> unBlockable
-        |> mutate newrules
+   -- if model.currentLevel /= 6 then
+        { model
+            | city = city
+            , virus = virus
+            , av = av
+        }
+            |> mutate newrules
+            |> takeOver
+            |> unBlockable
+            |> revenge size
+            |> horrify
+   -- else
+
 
 
 clearCurrentRoundTodo : Model -> Model
@@ -191,13 +196,16 @@ clearCurrentRoundTodo model =
 judgeWin : Model -> Model
 judgeWin model =
     if model.currentLevel == 1 && model.currentRound == 4 then
-        { model | state = Finished }
+        { model | state = Finished 1 }
 
     else if model.currentLevel == 2 && model.currentRound >= 4 && List.isEmpty model.virus.pos then
-        { model | state = Finished }
+        { model | state = Finished 2 }
 
-    else if model.currentRound == 21 && model.currentLevel > 2 && sumDead model.city < 80 then
-        { model | state = Finished }
+    else if model.currentRound == 21 && model.currentLevel > 2 && model.currentLevel < 6 && sumPopulation model.city >= List.sum (getElement (model.currentLevel - 2) winCondition) then
+        { model | state = Finished model.currentLevel }
+
+    else if model.currentLevel == 6 && sumPopulation model.city > 0 then
+        model
 
     else if model.currentRound < 21 then
         model
@@ -216,8 +224,15 @@ takeOver model =
             model.virus
 
         tilelst =
-            List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && model.currentRound == 16) city.tilesIndex
-                |> List.map (\x -> x.indice)
+            if model.currentLevel /= 6 && model.currentRound == para.tor then
+                List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && model.currentRound == 16) city.tilesIndex
+                    |> List.map (\x -> x.indice)
+
+            else if model.currentLevel == 6 then
+                List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && model.currentRound == 16) city.tilesIndex
+                    |> List.map (\x -> x.indice)
+            else
+                []
 
         extraVir =
             List.map (\x -> converTiletoHex x) tilelst
@@ -236,50 +251,56 @@ takeOver model =
 
 unBlockable : Model -> Model
 unBlockable model =
-    let
-        city =
-            model.city
+    if List.member model.currentLevel [ 5, 6 ] then
+        let
+            city =
+                model.city
 
-        tlst =
-            city.tilesIndex
+            tlst =
+                city.tilesIndex
 
-        tilelst =
-            List.map
-                (\x ->
-                    if x.qua && neighborSick tlst x > ((x.population - x.sick) * 3) then
-                        ( { x | qua = False }, 1 )
+            tilelst =
+                List.map
+                    (\x ->
+                        if x.qua && neighborSick tlst x > ((x.population - x.sick) * 3) then
+                            ( { x | qua = False }, 1 )
 
-                    else
-                        ( x, 0 )
-                )
-                tlst
+                        else
+                            ( x, 0 )
+                    )
+                    tlst
 
-        citytile =
-            List.unzip tilelst
-                |> Tuple.first
+            citytile =
+                List.unzip tilelst
+                    |> Tuple.first
 
-        num =
-            List.unzip tilelst
-                |> Tuple.second
-                |> List.sum
+            num =
+                List.unzip tilelst
+                    |> Tuple.second
+                    |> List.sum
 
-        city_ =
-            { city | tilesIndex = citytile }
+            city_ =
+                { city | tilesIndex = citytile }
 
-        actionDescribe =
-            if num == 0 then
-                model.actionDescribe ++ []
+            actionDescribe =
+                if num == 0 then
+                    model.actionDescribe ++ []
 
-            else if num == 1 then
-                [ "\n*Emergency!!!\nOne Quarantine down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n" ] ++ model.actionDescribe
+                else if num == 1 then
+                    [ Warning "Emergency!!!\nOne Quarantine down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n" ]
+                        ++ model.actionDescribe
 
-            else
-                [] ++ model.actionDescribe
-    in
-    { model
-        | city = city_
-        , actionDescribe = actionDescribe
-    }
+                else
+                    [ Warning ("Emergency!!!\n" ++ Debug.toString num ++ " Quarantines down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n") ]
+                        ++ model.actionDescribe
+        in
+        { model
+            | city = city_
+            , actionDescribe = actionDescribe
+        }
+
+    else
+        model
 
 
 mutate : List Int -> Model -> Model
@@ -289,8 +310,11 @@ mutate rule model =
             model.virus
 
         vir =
-            if model.currentRound == 10 then
+            if model.currentRound == para.mr && model.currentLevel < 6 then
                 --special round of the virus skill
+                { vir_ | rules = rule }
+
+            else if model.currentLevel == 6 && modBy 10 model.currentRound == 0 then
                 { vir_ | rules = rule }
 
             else
@@ -301,21 +325,25 @@ mutate rule model =
 
 revenge : Int -> Model -> Model
 revenge size model =
-    if size < List.length model.virus.pos && model.counter == 0 then
-        let
-            virus_ =
-                model.virus
+    if model.currentLevel == 3 then
+        if size > List.length model.virus.pos && model.counter == 0 then
+            let
+                virus_ =
+                    model.virus
 
-            virus =
-                { virus_
-                    | kill = min (virus_.kill * 1.1) 0.6
-                    , infect = min (virus_.infect + 1) 2
-                }
-        in
-        { model | virus = virus, counter = 3 }
+                virus =
+                    { virus_
+                        | kill = min (virus_.kill * 1.1) 0.6
+                        , infect = min (virus_.infect + 1) 2
+                    }
+            in
+            { model | virus = virus, counter = 3 }
 
-    else if size < List.length model.virus.pos then
-        { model | counter = model.counter - 1 }
+        else if size < List.length model.virus.pos then
+            { model | counter = model.counter - 1 }
+
+        else
+            model
 
     else
         model
@@ -323,12 +351,16 @@ revenge size model =
 
 horrify : Model -> Model
 horrify model =
-    let
-        city =
-            model.city
-    in
-    if sumSick city + sumDead city >= sumPopulation city then
-        { model | flowrate = 2 }
+    if List.member model.currentLevel [ 4, 6 ] then
+        let
+            city =
+                model.city
+        in
+        if sumSick city + sumDead city >= sumPopulation city then
+            { model | flowRate = 2 }
+
+        else
+            { model | flowRate = 1 }
 
     else
-        { model | flowrate = 1 }
+        model

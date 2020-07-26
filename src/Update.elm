@@ -39,14 +39,16 @@ update msg model =
                     log "lc" lc
 
                 specialCards =
-                    if model.currentLevel == 5 then --St.P
+                    if model.currentLevel == 5 then
+                        --St.P
                         [ blizzard
                         , drought
                         , hospital
                         , quarantine
                         ]
 
-                    else if model.currentLevel == 4 then --Amber
+                    else if model.currentLevel == 4 then
+                        --Amber
                         [ megaClone
                         , organClone
                         , resurgence
@@ -55,7 +57,8 @@ update msg model =
                         , hospital
                         ]
 
-                    else if model.currentLevel == 3 then -- Atlanta
+                    else if model.currentLevel == 3 then
+                        -- Atlanta
                         [ defenseline
                         , sacrifice
                         , goingViral
@@ -131,10 +134,10 @@ update msg model =
             else if model.currentLevel == 2 && model.currentRound <= 4 then
                 ( model, Cmd.none )
 
-            else if para.ecoThreshold <= model.economy && List.length model.hands <= 10 then
+            else if para.ecoThreshold <= model.economy && List.length model.hands < 10 then
                 ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
 
-            else if para.ecoThreshold <= model.economy && List.length model.hands > 10 then
+            else if para.ecoThreshold <= model.economy && List.length model.hands >= 10 then
                 ( { model | actionDescribe = [ Warning "Can't Draw, too many hand cards ( > 10 )!!!\n" ] ++ model.actionDescribe }, Cmd.none )
 
             else
@@ -158,9 +161,21 @@ update msg model =
                       }
                     , P.cardToMusic ""
                     )
-                {-else if List.member card summonLst then
-                    if card-}
 
+                else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then
+                    ( { model
+                        | cardSelected = SelectCard card
+                        , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
+                        , power = model.power - card.cost
+                        , hands = LE.remove card model.hands
+                      }
+                    , Cmd.none
+                    )
+
+                else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum)  then
+                    ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
+                    , Cmd.none
+                    )
 
                 else
                     ( { model
@@ -335,3 +350,20 @@ replaceCard c model =
                 log "card to replace does not exist in hands!" ""
         in
         ( model, Cmd.none )
+
+
+judgeSummon : Card -> Int -> Int
+judgeSummon card n =
+    let
+        num_ =
+            LE.elemIndex card (Tuple.first summonNum)
+                |> Maybe.withDefault 0
+
+        num =
+            num_ + 1
+
+        add =
+            getElement num (Tuple.second summonNum)
+                |> List.foldr (+) 0
+    in
+    add + n

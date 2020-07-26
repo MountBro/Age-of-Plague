@@ -56,14 +56,18 @@ type Action
 
 
 -- Card -> String
+
+
 cardPiles =
     [ cardPilestutorial, allCards, cardPile3, cardPile4, cardPile5 ]
+
 
 cardPilestutorial =
     [ blizzard ]
 
 
-cardPile5 = -- St.P
+cardPile5 =
+    -- St.P
     [ blizzard
     , blizzard
     , blizzard
@@ -115,7 +119,8 @@ cardPile5 = -- St.P
     ]
 
 
-cardPile4 = --Amber
+cardPile4 =
+    --Amber
     [ megaClone
     , megaClone
     , organClone
@@ -168,7 +173,8 @@ cardPile4 = --Amber
     ]
 
 
-cardPile3 = -- Atlanta
+cardPile3 =
+    -- Atlanta
     [ defenseline
     , defenseline
     , sacrifice
@@ -197,6 +203,7 @@ cardPile3 = -- Atlanta
     , megaCut
     , megaCut
     , megaCut
+
     --, fubao
     --, humanClone
     , hospital
@@ -579,8 +586,5 @@ targetCardlst =
     ]
 
 
-summonLst =
-    [ medMob
-    , firstAid
-    , compulsoryMR
-    ]
+summonNum =
+    ([medMob, firstAid, compulsoryMR], [3, 1, 2])

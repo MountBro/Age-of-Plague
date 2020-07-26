@@ -113,7 +113,6 @@ virus =
 
 
 virus1 =
-    -- virus + rules + position + number of virus + infect + deathrate (0~1)
     Virus [] [] 1 1 0
 
 
@@ -121,12 +120,13 @@ virus2 =
     Virus [ 2, 3, 4 ] ([ ( 0, 1 ), ( 0, 2 ), ( 0, 3 ), ( 0, -1 ), ( 0, 0 ), ( 1, -1 ), ( 1, 0 ) ] ++ converTiletoHex (1,0) ++ converTiletoHex (1,1)) 2 1 0
 
 
-virus5 =
-    Virus [ 2, 5, 6 ] ( cartesianProduct [-1] [0,1,2] ++ cartesianProduct [-2] [3,4,5] ++ cartesianProduct [-3] [6,7] ++ cartesianProduct [-1,0] [8] ++ generateZone (converTiletoHex_ (0, 3)) ++ generateZone (converTiletoHex_ (2, 2))) 3 1 0.48
+virus3 =
+    Virus [ 2, 3 ] ( cartesianProduct [-1] [0,1,2] ++ cartesianProduct [-3,-2] [0] ++ [ (-2, 3), (-3, 4)]) 5 1 0.12
 
 
 virus4 =
-    Virus [ 2, 4 ] ([(1,-4),(2,-4),(2,-3),(-2,-2),(-3,-1),(-3,0),(3,0),(3,1)] ++ converTiletoHex (1,-1) ++ converTiletoHex (-1,-1) ++ converTiletoHex (-1,1) ++ generateZone (converTiletoHex_ (0, 3)) ) 4 1 0.1
+    Virus [ 2, 4 ] ([(1,-4),(2,-4),(2,-3),(-2,-2),(-3,-1),(-3,0),(3,0),(3,1)] ++ converTiletoHex (1,-1) ++ converTiletoHex (-1,-1) ++ converTiletoHex (-1,1) ++ generateZone (converTiletoHex_ (0, 3)) ) 4 1 0.2
 
-virus3 =
-    Virus [ 2, 3 ] ( converTiletoHex (1,-1) ++ converTiletoHex (1,0)) 5 1 0.24
+
+virus5 =
+    Virus [ 2, 5, 6 ] ( cartesianProduct [-1] [0,1,2] ++ cartesianProduct [-2] [3,4,5] ++ cartesianProduct [-3] [6,7] ++ cartesianProduct [-1,0] [8] ++ generateZone (converTiletoHex_ (0, 3)) ++ generateZone (converTiletoHex_ (2, 2))) 3 1 0.48

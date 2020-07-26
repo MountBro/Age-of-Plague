@@ -273,7 +273,7 @@ cardsGenerator model n =
 
 
 winCondition =
-    [ 120 -- Atlanta
+    [ 140 -- Atlanta
     , 160 -- amber
     , 80 -- St.P
     ]

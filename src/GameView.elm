@@ -68,7 +68,7 @@ viewGame model =
                         ++ film
                     )
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-                , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". " ++ "sumDead: " ++ Debug.toString (sumDead model.city) ++ ". " ++ "sumSick: " ++ Debug.toString (sumSick model.city) ++ ". ")
+                , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". " ++ "sumDead: " ++ Debug.toString (sumDead model.city) ++ ". " ++ "sumSick: " ++ Debug.toString (sumSick model.city) ++ ". " ++ Debug.toString (model.currentLevel))
 
                 --, div [] (List.map cardButton allCards)
                 , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]

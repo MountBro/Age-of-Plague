@@ -64,6 +64,7 @@ type Action
 cardPiles =
     []
 
+
 cardPile3 =
     [ blizzard
     , drought
@@ -213,7 +214,7 @@ rain =
         3
         [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ]
         "Rain"
-        "50% of virus freezing chance.\nThe economy output doubles."
+        "‧ 50% of virus freezing chance;\n‧ The economy output doubles."
 
 
 cut =
@@ -240,7 +241,7 @@ fubao =
         1
         [ Activate996I, Activate996I ]
         "996"
-        "Economy doubles\ndeath rate increases 5%."
+        "‧ Economy doubles;\n‧ Death rate increases 5%."
 
 
 organClone =
@@ -348,7 +349,7 @@ drought =
         2
         [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
         "Drought"
-        "50% to kill local virus,\neconomy output halves."
+        "‧ 50% to kill local virus; \n‧ Economy output halves."
 
 
 warehouse =
@@ -403,7 +404,7 @@ compulsoryMR =
         6
         [ Summon [ megaCut, megaCut ] ]
         "Compulsory Medical Recruitment"
-        "Summon two [ MegaCut ]."
+        "Summon two [MegaCut]."
 
 
 firstAid =
@@ -412,7 +413,7 @@ firstAid =
         2
         [ Summon [ hospital ] ]
         "FirstAid"
-        "Summon one [ Hospital ]."
+        "Summon one [Hospital]."
 
 
 medMob =
@@ -421,7 +422,7 @@ medMob =
         6
         [ Summon [ cut, cut, cut ] ]
         "Medical Mobilization"
-        "Summon three [ Cut ]."
+        "Summon three [Cut]."
 
 
 targetCardlst =

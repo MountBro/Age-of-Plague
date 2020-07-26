@@ -53,4 +53,8 @@ para =
     , fgX = 500.0
     , fgY = 280.0
     , fgW = 50.0
+    , consoleWidth = 200.0
+    , consolelm = 20.0
+    , consolelp = 16.0
+    , consolefs = 12
     }

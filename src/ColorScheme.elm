@@ -22,6 +22,9 @@ type alias ColorScheme =
     , levelProgressStroke : String
     , levelProgressFill : String
     , powerColor : String
+    , consoleBkg : String
+    , consoleText : String
+    , consoleStroke : String
     }
 
 
@@ -42,4 +45,7 @@ colorScheme t =
             , levelProgressStroke = "#f6f6f6"
             , levelProgressFill = "#e4fad2"
             , powerColor = "#e4fad2"
+            , consoleBkg = "#191620"
+            , consoleText = "#86868d"
+            , consoleStroke = "#4d454a"
             }

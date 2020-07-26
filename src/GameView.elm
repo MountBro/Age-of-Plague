@@ -49,7 +49,7 @@ viewGame model =
                         ++ [ renderLevelProgress model ]
                         --++ renderFlags [ 5, 10, 15 ]
                         ++ renderHands model
-                        ++ renderConsole model
+                        ++ [ renderConsole model ]
                         ++ renderVirusInf model.virus
                         --++ [ renderNextRound ]
                         ++ [ nextButton_ ]
@@ -274,19 +274,105 @@ renderantiVirus av =
 --GameViewBasic.caption x y cstr text fontSize =
 
 
-renderConsole : Model -> List (Html Msg)
-renderConsole model =
+ml2s : MyLog -> List String
+ml2s m =
+    case m of
+        Warning str ->
+            ("⚠" ++ " " ++ str) |> String.lines |> List.reverse
+
+        CardPlayed c ->
+            ("💬" ++ "[" ++ c.name ++ "]: \n" ++ c.describe)
+                |> String.lines
+                |> List.reverse
+
+
+consoleText : Model -> List (Html Msg)
+consoleText model =
     let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        tm =
+            para.hctm + 1.6 * para.hcw + 10.0
+
+        lm =
+            para.consolelm
+
         myLog =
             model.actionDescribe
 
-        l =
-            List.length myLog
-
         ( w, a ) =
             List.partition isWarning myLog
+
+        indexed =
+            w
+                ++ a
+                |> List.map ml2s
+                |> List.foldl (\x -> \y -> x ++ y) []
+                |> List.indexedMap Tuple.pair
+
+        indexedLength =
+            List.length indexed
+
+        lt =
+            indexed
+                |> List.map
+                    (\( n, str ) ->
+                        ( toFloat (indexedLength - n) * para.consolelp, str )
+                    )
+                |> List.map
+                    (\( y, str ) ->
+                        GameViewBasic.caption (lm * 0.3) y cs.consoleText str para.consolefs
+                    )
     in
-    []
+    lt
+
+
+renderConsole : Model -> Html Msg
+renderConsole model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        tm =
+            para.hctm + 1.6 * para.hcw + 20.0
+
+        lm =
+            para.consolelm
+
+        h =
+            para.drawButtonY - 20.0 - tm
+
+        w =
+            para.consoleWidth
+
+        vbArg =
+            "0 0 " ++ String.fromFloat w ++ " " ++ String.fromFloat h
+
+        consoleBkg =
+            rect
+                [ w |> String.fromFloat |> SA.width
+                , h |> String.fromFloat |> SA.height
+                , SA.stroke cs.consoleStroke
+                , SA.strokeWidth "4"
+                , SA.fill cs.consoleBkg
+                ]
+                []
+    in
+    svg
+        [ lm |> String.fromFloat |> SA.x
+        , tm |> String.fromFloat |> SA.y
+        , SA.viewBox vbArg
+        , w |> String.fromFloat |> SA.width
+        , h |> String.fromFloat |> SA.height
+        ]
+        ([ consoleBkg ] ++ consoleText model)
 
 
 

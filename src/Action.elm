@@ -393,7 +393,7 @@ performAction action model =
                                     if x.indice == ( ti, tj ) then
                                         { x
                                             | hos = True
-                                            , cureEff = 2
+                                            , cureEff = 5
                                         }
 
                                     else
@@ -498,7 +498,7 @@ performAction action model =
             ( { model | city = city }, Cmd.none )
 
         DroughtI_Kill ( ( i, j ), prob ) ->
-            ( { model | ecoRatio = round (0.5 * toFloat model.ecoRatio) } |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
+            ( { model | ecoRatio = 0.5 * model.ecoRatio } |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
 
         WarehouseI ( i, j ) ->
             let

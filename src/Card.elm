@@ -1,8 +1,5 @@
 module Card exposing (..)
 
-import Random exposing (Generator, list, map)
-import Random.List exposing (choose)
-
 
 type alias Card =
     { selMode : Selection
@@ -63,12 +60,78 @@ type Action
 
 
 cardPiles =
-    []
+    [ cardPilestutorial, allCards, cardPile3, cardPile4, cardPile5 ]
 
 
-cardPile3 =
+cardPilestutorial =
+    [ blizzard ]
+
+
+cardPile5 =
     [ blizzard
+    , blizzard
+    , blizzard
     , drought
+    , drought
+    , powerOverload
+    , onStandby
+    , coldWave
+    , coldWave
+    , coldWave
+    , rain
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    , fubao
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , quarantine
+    , quarantine
+    , quarantine
+    , enhancedHealing
+    , cellBroadcast
+    , warehouse
+    , warehouse
+    , warmwave
+    , warmwave
+    , lowSoundWave
+    , compulsoryMR
+    , firstAid
+    , medMob
+    , medMob
+    ]
+
+
+cardPile4 =
+    --Amber
+    [ megaClone
+    , megaClone
+    , organClone
+    , organClone
+    , organClone
+    , resurgence
+    , resurgence
+    , purification
+    , purification
+    , purification
+    , purification
     , powerOverload
     , onStandby
     , coldWave
@@ -77,12 +140,78 @@ cardPile3 =
     , cut
     , cut
     , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
     , megaCut
     , fubao
     , humanClone
+    , humanClone
+    , humanClone
+    , hospital
+    , hospital
     , hospital
     , quarantine
     , quarantine
+    , quarantine
+    , enhancedHealing
+    , cellBroadcast
+    , warehouse
+    , warehouse
+    , warmwave
+    , lowSoundWave
+    , compulsoryMR
+    , firstAid
+    , medMob
+    , medMob
+    ]
+
+
+cardPile3 =
+    -- Atlanta
+    [ defenseline
+    , defenseline
+    , sacrifice
+    , sacrifice
+    , goingViral
+    , goingViral
+    , goingViral
+    , judgement
+    , judgement
+    , powerOverload
+    , onStandby
+    , coldWave
+    , rain
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , quarantine
+    , enhancedHealing
     , enhancedHealing
     , enhancedHealing
     , cellBroadcast
@@ -92,6 +221,7 @@ cardPile3 =
     , lowSoundWave
     , compulsoryMR
     , firstAid
+    , medMob
     , medMob
     ]
 
@@ -103,9 +233,21 @@ allCards =
     , blizzard
     , rain
     , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
+    , megaCut
     , megaCut
     , fubao
     , organClone
+    , humanClone
     , humanClone
     , megaClone
     , purification
@@ -113,10 +255,17 @@ allCards =
     , resurgence
     , defenseline
     , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , quarantine
+    , quarantine
     , quarantine
     , enhancedHealing
     , cellBroadcast
     , drought
+    , warehouse
     , warehouse
     , warmwave
     , goingViral
@@ -126,19 +275,6 @@ allCards =
     , firstAid
     , medMob
     ]
-
-
-cardGenerator : Generator Card
-cardGenerator =
-    choose allCards
-        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
-
-
-cardsGenerator : Int -> Generator (List Card)
-cardsGenerator n =
-    choose allCards
-        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
-        |> Random.list n
 
 
 cardComparison : Card -> Card -> Order
@@ -376,7 +512,7 @@ drought =
 warehouse =
     Card
         TileSel
-        2
+        4
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
         "+2 economy per round."
@@ -475,3 +611,7 @@ targetCardlst =
     , judgement
     , lowSoundWave
     ]
+
+
+summonNum =
+    ( [ medMob, firstAid, compulsoryMR ], [ 3, 1, 2 ] )

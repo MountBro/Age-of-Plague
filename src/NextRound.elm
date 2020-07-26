@@ -127,10 +127,14 @@ ecoInc : Model -> Model
 ecoInc model =
     { model
         | economy =
-            model.economy
-                + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
-                * model.ecoRatio
-        , ecoRatio = 1
+            round
+                (toFloat
+                    (model.economy
+                        + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
+                    )
+                    * model.ecoRatio
+                )
+        , ecoRatio = 1.0
     }
 
 

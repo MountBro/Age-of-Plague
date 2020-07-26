@@ -2,12 +2,12 @@ module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug
+import ColorScheme exposing (..)
 import Geometry exposing (..)
-import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
-import Population exposing (..)
+import Random exposing (Generator, list, map)
+import Random.List exposing (choose)
 import Task
 import Tile exposing (..)
 import Todo exposing (..)
@@ -31,7 +31,7 @@ type alias Model =
     , economy : Int
     , basicEcoOutput : Int
     , warehouseNum : Int
-    , ecoRatio : Int
+    , ecoRatio : Float
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
@@ -41,16 +41,18 @@ type alias Model =
     , mouseOverCard : Int
     , replaceChance : Int
     , drawChance : Int
-    , actionDescribe : List String
-    , currentlevel : Int
+    , actionDescribe : List MyLog
+    , currentLevel : Int
     , theme : Theme
+    , counter : Int -- deadly up
+    , flowRate : Int -- population flow rate
     }
 
 
 initModel : () -> ( Model, Cmd Msg )
 initModel _ =
     ( { city =
-            initCity 10
+            initCity 20
                 map1
 
       {- [ ( 0, 0 )
@@ -85,7 +87,7 @@ initModel _ =
       , economy = 10 --10
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
-      , ecoRatio = 1
+      , ecoRatio = 1.0
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
@@ -96,11 +98,28 @@ initModel _ =
       , replaceChance = 3
       , drawChance = 0
       , actionDescribe = []
-      , currentlevel = 1 --1
+      , counter = 3
+      , currentLevel = 1 --1
       , theme = Polar
+      , flowRate = 1
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
+
+
+type MyLog
+    = CardPlayed Card
+    | Warning String
+
+
+isWarning : MyLog -> Bool
+isWarning l =
+    case l of
+        Warning str ->
+            True
+
+        _ ->
+            False
 
 
 type Gamestatus
@@ -110,12 +129,12 @@ type Gamestatus
     | Stopped
     | HomePage
     | CardPage
-    | Finished
+    | Finished Int
     | Wasted
 
 
-initlog : Model -> Model
-initlog model =
+initLog : Model -> Model
+initLog model =
     { model | actionDescribe = [] }
 
 
@@ -140,13 +159,6 @@ type alias Behavior =
     }
 
 
-type Theme
-    = Polar
-    | Urban
-    | Minimum
-    | Plane
-
-
 initBehavior =
     { populationFlow = True, virusEvolve = True }
 
@@ -155,13 +167,13 @@ judgeBuild : Model -> ( Int, Int ) -> Bool
 judgeBuild model ( i, j ) =
     let
         hostilelst =
-            hospitalTiles model.city.tilesindex
+            hospitalTiles model.city.tilesIndex
 
         quatilelst =
-            quarantineTiles model.city.tilesindex
+            quarantineTiles model.city.tilesIndex
 
         waretilelst =
-            warehouseTiles model.city.tilesindex
+            warehouseTiles model.city.tilesIndex
     in
     model.cardSelected
         == SelectCard hospital
@@ -186,12 +198,14 @@ initlevelmap level =
                 |> List.head
                 |> Maybe.withDefault map1
     in
-    initCity 10 citytile
+    initCity 20 citytile
 
 
 map =
     [ cartesianProduct [ 0, 1 ] [ 0, 1 ]
     , cartesianProduct [ 0, 1 ] [ 0, 1 ]
+    , cartesianProduct [ 1 ] [ -3, -2, -1, 0, 1, 2 ] ++ cartesianProduct [ 0 ] [ -2, -1, 0, 1, 2 ] ++ cartesianProduct [ -1 ] [ -1, 0, 2, 3 ] ++ cartesianProduct [ 2 ] [ 0, 1 ] ++ [ ( 3, 0 ) ]
+    , cartesianProduct [ -1, 0, 1 ] [ -1, 0, 1 ] ++ cartesianProduct [ 0, 1, 2 ] [ 2, 3 ] ++ [ ( 2, 1 ) ]
     , [ ( 0, 0 )
       , ( 0, 1 )
       , ( 0, 2 )
@@ -234,24 +248,32 @@ initHandsVirus level =
     ( hand, vir )
 
 
-levelModel : Int -> Model -> Model
-levelModel n model =
-    if n <= 2 then
-        { model
-            | behavior = initBehavior
-            , state = Playing
-            , currentlevel = n
-            , hands = Tuple.first (initHandsVirus n)
-            , virus = Tuple.second (initHandsVirus n)
-        }
+lr : Model -> ( Int, Int )
+lr model =
+    ( model.currentLevel, model.currentRound )
 
-    else
-        { model
-            | behavior = initBehavior
-            , state = Drawing
-            , currentlevel = n
-            , replaceChance = 3
-            , hands = []
-            , actionDescribe = []
-            , virus = Tuple.second (initHandsVirus n) -- virus for each level
-        }
+
+updateDeck : Int -> List Card
+updateDeck n =
+    getElement n cardPiles
+        |> List.foldr (++) []
+
+
+cardGenerator : Model -> Generator Card
+cardGenerator model =
+    choose model.deck
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+
+
+cardsGenerator : Model -> Int -> Generator (List Card)
+cardsGenerator model n =
+    choose model.deck
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+        |> Random.list n
+
+
+winCondition =
+    [ 140 -- Atlanta
+    , 160 -- amber
+    , 80 -- St.P
+    ]

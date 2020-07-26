@@ -50,19 +50,19 @@ type Levelstatus
 
 
 tutorial =
-    [ [ "Welcome to the tutorial!\nAs you can see, red number on tiles stands for local dead\nyellow for patients, green for healthy population\nClick a hand card to play it."
-      , "Notice: Each round between two neighboring tile(population > 0)\nat most 2 population (may include patients) would be exchanged\nNow, please click next round."
-      , "The live game log is displayed on the left\nSome cards require selecting tiles. Try these cards."
+    [ [ "Welcome to the tutorial! In this tutorial,\nyou will learn the basics about this game.\nPlease click on the card [MegaClone] now."
+      , "After you had played the card, the card's action was\nlogged in the console. To know about the population distribution,\nplease notice the numbers on the map.\nNow, please click next round."
       , "On a tile, different kinds of buildings could co-exist\nbut the same kind can't\nNow try the rest of the cards."
       , "Hint: Playing cards costs your power\nPower and economy would accumulate over turns\nPlease click next round now."
-      , "For each formal level, two special cards will be added to the deck\nWhen economy reaches 6, click draw to draw a card\nPlease click draw."
-      , "Congratulation!\nClick Next round to finish this level."
+      , "When economy reaches 6, click draw to draw a card\nPlease click draw."
+      , "Congrats! You've finished tutorial1.\nNow please click next level to proceed to next level."
       ]
-    , [ "Information of virus (purple) are shown on the right\nThey can be exterminated by using card cut or Megacut\nGive them a try and click next turn."
-      , "In the future, players may encounter anti-virus card\nPlease try the card [ Going Viral ] and click next turn."
-      , "Anti-virus (Blue) can be released by player,\nit exterminate local virus units and could survive three rounds\nPlease click next turn to witness its spread."
-      , "Win or lose is decided by the remaining population after\ncertain rounds. Now, try to use these cards to defeat\nyour very first virus in the next few turns\nHint: remeber to draw new cards or click next turn to accumulate resource."
-      , "Great job!\nClick next turn to finish this level."
+    , [ "In the previous tutorial, you've learned about cards and\nentering next rounds. The purple stuff on the map is\nthe [virus]. You can find information about it on the\nright side of the screen. Now please use [Cut] and [MegaCut]\nand click next round"
+      , "As you might have noticed, [MegaCut] clears virus on one tile\nwhile [cut] clears virus on one hexagon.\nNow please use [Going Viral]"
+      , "Anti-virus (Blue) can be released by player,\nit exterminate local virus units and could survive three rounds\nPlease proceed to next turn to witness its spread."
+      , "Win or lose is decided by the remaining population after\ncertain rounds. In this tutorial, however,\nyou have to eliminate all the virus on the map.\nHint: remember to draw new cards or click next round\nto accumulate resource."
+      , "Please be aware of populationFlow between tiles.\nIn each round, exchange of at most 2 population\n(could include patients) occurs between neighboring tiles.\nPlease keep on fighting!"
+      , "Great job!\nClick next turn to finish the tutorial."
       ]
     ]
 

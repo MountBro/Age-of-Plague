@@ -1,6 +1,8 @@
 module Population exposing (..)
 
 import Geometry exposing (..)
+import List.Extra as LE
+import Model exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)
 
@@ -12,54 +14,64 @@ virusKill vir city =
             vir.kill
 
         patients =
-            toFloat (sumSick city)
+            sumSick city
 
-        death =
-            round (patients * dr)
+        estimateddeath =
+            ceiling (toFloat patients * dr)
 
-        ( lstInfectedn, lstInfected1 ) =
-            city.tilesindex
-                |> List.partition (\x -> x.sick > 0)
-                |> Tuple.first
+        ( lstInfected1, lstInfectedn ) =
+            city.tilesIndex
+                |> List.filter (\x -> x.sick > 0)
                 |> List.sortBy .sick
-                |> List.partition (\x -> x.sick > 7)
+                |> List.partition (\x -> x.sick < 2)
 
-        estimateDeath =
-            round (List.sum (List.map (\x -> toFloat x.sick) lstInfectedn) * dr)
+        deathn =
+            lstInfectedn
+                |> List.map (\x -> round (dr * toFloat x.sick))
+                |> List.sum
 
-        deathlst =
-            if death < estimateDeath then
-                List.take (max (round (0.2 * toFloat death / toFloat estimateDeath) * List.length lstInfectedn) 1) lstInfectedn
+        ( dn, d1 ) =
+            if deathn >= estimateddeath then
+                ( List.take (round ((toFloat deathn / toFloat estimateddeath) * toFloat (List.length lstInfectedn))) lstInfectedn, [] )
 
             else
-                lstInfectedn ++ List.take (max (round (toFloat (death - estimateDeath) * 0.2)) 1) lstInfected1
-    in
-    { city
-        | tilesindex =
+                ( lstInfectedn, List.take (estimateddeath - deathn) lstInfected1 )
+
+        tilesIndex =
             List.map
                 (\x ->
-                    if List.member x deathlst && dr > 0 then
-                        { x
-                            | sick = x.sick - max (round (toFloat x.sick * dr)) 1
-                            , dead = x.dead + max (round (toFloat x.sick * dr)) 1
-                            , population = x.population - max 1 (round (toFloat x.sick * dr))
-                        }
+                    if List.member x (dn ++ d1) then
+                        deathTile x dr
 
                     else
                         x
                 )
-                city.tilesindex
+                city.tilesIndex
+    in
+    { city | tilesIndex = tilesIndex }
+
+
+deathTile : Tile -> Float -> Tile
+deathTile x dr =
+    let
+        dead =
+            max (round (toFloat x.sick * dr)) 1
+    in
+    { x
+        | sick = x.sick - dead
+        , population = x.population - dead
+        , dead = x.dead + dead
     }
 
 
-infect : City -> Virus -> City
-infect city virus =
+infect : Virus -> City -> City
+infect virus city =
     let
         inf =
             virus.infect
 
         lstTile =
-            city.tilesindex
+            city.tilesIndex
 
         lstvirHexIndice =
             virus.pos
@@ -68,128 +80,135 @@ infect city virus =
             List.map (\x -> converHextoTile x) lstvirHexIndice
     in
     { city
-        | tilesindex = sickupdate lstTile lstvirTilesIndice inf
+        | tilesIndex = sickupdate lstTile lstvirTilesIndice inf
     }
 
 
-populationFlow : Int -> City -> City
-populationFlow n city =
+pFlow : Model -> City -> City
+pFlow model city =
+    let
+        validtileslst =
+            city.tilesIndex
+                |> List.filter (\x -> x.population > 0)
+
+        flowstructure =
+            List.map (\x -> flowStructure model x) validtileslst
+                |> List.foldr (++) []
+
+        newcitytiles =
+            List.map (\x -> uPlow flowstructure x) city.tilesIndex
+    in
+    { city | tilesIndex = newcitytiles }
+
+
+flowStructure : Model -> Tile -> List ( ( Int, Int ), ( Int, Int ) )
+flowStructure model t =
     let
         citytileslst =
-            city.tilesindex
+            model.city.tilesIndex
 
-        t =
-            List.take n citytileslst
-                |> List.drop (n - 1)
-                |> List.head
-                |> Maybe.withDefault (Tile ( -100, -100 ) 0 0 0 0 True False False False)
+        flow =
+            model.flowRate
 
-        lstnTile =
-            --not include tile t itself
+        nindex =
             validNeighborTile citytileslst t
+                |> List.sortBy
+                    (\x ->
+                        if x.hos then
+                            x.sick
 
-        numNeig =
-            --number of valid neighbor tiles around tile t (not including tile t)
-            List.length lstnTile
+                        else
+                            x.sick + x.dead * 2
+                    )
+                |> List.map (\x -> x.indice)
 
-        sickleave =
-            --the number of leaving patients
-            if t.population > numNeig then
-                round (toFloat (t.sick * numNeig) / toFloat t.population)
+        numLeave =
+            min (flow * List.length nindex) t.population
 
-            else
-                t.sick
+        leaveLstn =
+            List.take (floor (toFloat numLeave / toFloat flow)) nindex
 
-        leaveLst =
-            -- make a ordered list of tiles people would go. Compatible for population < numNeig
-            if t.peoFlow then
-                List.sortBy (\x -> x.sick + x.dead * 2) lstnTile
-                    |> List.map (\x -> x.indice)
-                    |> List.take t.population
-                    |> List.take numNeig
+        leaveLst1 =
+            nindex
+                |> List.drop (floor (toFloat numLeave / toFloat flow))
+                |> List.take (modBy flow numLeave)
 
-            else
+        numsickLeave =
+            round (toFloat numLeave * (toFloat t.sick / toFloat t.population))
+
+        sick1 =
+            if modBy 2 numsickLeave == 0 then
                 []
 
-        sickLst =
-            leaveLst
-                |> List.take sickleave
+            else
+                leaveLst1
+
+        sickn =
+            List.take (floor (toFloat numsickLeave / toFloat flow)) leaveLstn
     in
-    if n <= List.length citytileslst then
-        let
-            newcitytileslst =
-                if t.population >= numNeig && t.peoFlow then
-                    List.map
-                        (\x ->
-                            if x == t then
-                                { x
-                                    | population = x.population - numNeig
-                                    , sick = x.sick - sickleave
-                                }
+    ( t.indice, ( 0 - numLeave, 0 - numsickLeave ) )
+        :: List.map
+            (\x ->
+                if List.member x sickn then
+                    ( x, ( flow, flow ) )
 
-                            else if List.member x.indice sickLst then
-                                { x
-                                    | population = x.population + 1
-                                    , sick = x.sick + 1
-                                }
+                else if List.member x sick1 then
+                    ( x, ( 1, 1 ) )
 
-                            else if List.member x.indice leaveLst then
-                                { x | population = x.population + 1 }
+                else if List.member x leaveLst1 then
+                    ( x, ( 1, 0 ) )
 
-                            else
-                                x
-                        )
-                        citytileslst
-
-                else if t.peoFlow then
-                    List.map
-                        (\x ->
-                            if x == t then
-                                { x
-                                    | population = 0
-                                    , sick = 0
-                                }
-
-                            else if List.member x.indice sickLst then
-                                { x
-                                    | population = x.population + 1
-                                    , sick = x.sick + 1
-                                }
-
-                            else if List.member x.indice leaveLst then
-                                { x | population = x.population + 1 }
-
-                            else
-                                x
-                        )
-                        citytileslst
+                else if List.member x leaveLstn then
+                    ( x, ( flow, 0 ) )
 
                 else
-                    citytileslst
-
-            newcity =
-                { city
-                    | tilesindex = newcitytileslst
-                }
-        in
-        populationFlow (n + 1) newcity
-
-    else
-        city
+                    ( x, ( 0, 0 ) )
+            )
+            nindex
 
 
-updateCity : City -> Virus -> City
-updateCity city vir =
-    infect city vir
-        |> virusKill vir
-        |> populationFlow 1
+uPlow : List ( ( Int, Int ), ( Int, Int ) ) -> Tile -> Tile
+uPlow lst t =
+    let
+        lstindice =
+            List.filter (\x -> Tuple.first x == t.indice) lst
+
+        ( leavelst, sicklst ) =
+            List.unzip lstindice
+                |> Tuple.second
+                |> List.unzip
+
+        leave =
+            List.sum leavelst
+
+        sick =
+            List.sum sicklst
+    in
+    { t | population = t.population + leave, sick = t.sick + sick }
+
+
+updateCity : Model -> City
+updateCity model =
+    let
+        city =
+            model.city
+
+        vir =
+            model.virus
+
+        city_ =
+            virusKill vir city
+                |> infect vir
+                |> pFlow model
+    in
+    city_
 
 
 evacuate : Tile -> City -> List Tile
 evacuate t city =
     let
         lstnTile =
-            validNeighborTile city.tilesindex t
+            validNeighborTile city.tilesIndex t
                 |> List.sortBy .sick
 
         l =
@@ -273,14 +292,14 @@ evacuate t city =
             else
                 x
         )
-        city.tilesindex
+        city.tilesIndex
 
 
 change : Virus -> AntiVirus -> City -> ( Virus, AntiVirus )
 change virus anti city =
     let
         validlst =
-            List.map (\x -> x.indice) city.tilesindex
+            List.map (\x -> x.indice) city.tilesIndex
 
         lstvir =
             searchValidNeighbor virus.pos validlst
@@ -289,6 +308,6 @@ change virus anti city =
             searchValidNeighbor anti.pos validlst
 
         lstquatile =
-            quarantineTiles city.tilesindex
+            quarantineTiles city.tilesIndex
     in
     judgeAlive lstvir virus lstanti anti lstquatile

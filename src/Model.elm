@@ -2,9 +2,8 @@ module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug
+import ColorScheme exposing (..)
 import Geometry exposing (..)
-import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
 import Task
@@ -40,10 +39,11 @@ type alias Model =
     , mouseOverCard : Int
     , replaceChance : Int
     , drawChance : Int
-    , actionDescribe : List String
+    , actionDescribe : List MyLog
     , currentLevel : Int
+    , theme : Theme
     , counter : Int -- deadly up
-    , flowrate : Int -- population flow rate
+    , flowRate : Int -- population flow rate
     }
 
 
@@ -52,6 +52,24 @@ initModel _ =
     ( { city =
             initCity 20
                 map1
+
+      {- [ ( 0, 0 )
+         , ( 0, 1 )
+         , ( 0, 2 )
+         , ( 0, 3 )
+         , ( 1, -1 )
+         , ( 1, 0 )
+         , ( 1, 1 )
+         , ( 1, 2 )
+         , ( 2, -2 )
+         , ( 2, -1 )
+         , ( 2, 0 )
+         , ( 2, 1 )
+         , ( 2, 2 )
+         , ( 3, -1 )
+         , ( 3, -2 )
+         ]
+      -}
       , behavior = initBehavior
       , currentRound = 1
       , state = HomePage
@@ -71,7 +89,7 @@ initModel _ =
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
-      , hands = initHandsVirus 1 |> Tuple.first
+      , hands = initHandsVirus 1 |> Tuple.first --megaClone
       , deck = allCards
       , mouseOverCardToReplace = negate 1
       , mouseOverCard = negate 1
@@ -79,11 +97,27 @@ initModel _ =
       , drawChance = 0
       , actionDescribe = []
       , currentLevel = 1 --1
+      , theme = Polar
       , counter = 3
-      , flowrate = 1
+      , flowRate = 1
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
+
+
+type MyLog
+    = CardPlayed Card
+    | Warning String
+
+
+isWarning : MyLog -> Bool
+isWarning l =
+    case l of
+        Warning str ->
+            True
+
+        _ ->
+            False
 
 
 type Gamestatus
@@ -93,12 +127,12 @@ type Gamestatus
     | Stopped
     | HomePage
     | CardPage
-    | Finished
+    | Finished Int
     | Wasted
 
 
-initlog : Model -> Model
-initlog model =
+initLog : Model -> Model
+initLog model =
     { model | actionDescribe = [] }
 
 
@@ -121,13 +155,6 @@ type alias Behavior =
     { populationFlow : Bool
     , virusEvolve : Bool
     }
-
-
-type Theme
-    = Polar
-    | Urban
-    | Minimum
-    | Plane
 
 
 initBehavior =
@@ -217,4 +244,6 @@ initHandsVirus level =
     ( hand, vir )
 
 
-
+lr : Model -> ( Int, Int )
+lr model =
+    ( model.currentLevel, model.currentRound )

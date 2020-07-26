@@ -1,20 +1,13 @@
 module NextRound exposing (..)
 
-import Action exposing (..)
-import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug exposing (log, toString)
 import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (Msg(..))
 import Model exposing (..)
 import Parameters exposing (..)
 import Population exposing (..)
-import Ports as P exposing (..)
-import Random exposing (..)
-import RegionFill exposing (..)
 import Tile exposing (..)
-import Todo exposing (..)
 import Virus exposing (..)
 
 
@@ -26,7 +19,7 @@ toNextRound model =
                 | currentRound = 2
                 , hands = [ hospital, hospital, hospital, warehouse, quarantine ]
               }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
             , Cmd.none
             )
@@ -34,17 +27,16 @@ toNextRound model =
         else if model.hands == [] && model.currentRound == 2 then
             ( { model
                 | currentRound = 3
-                , power = 1
                 , economy = 6
               }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
             , Cmd.none
             )
 
         else if model.currentRound == 3 && model.hands /= [] then
             ( { model | currentRound = 4 }
-                |> initlog
+                |> initLog
                 |> clearCurrentRoundTodo
                 |> judgeWin
             , Cmd.none
@@ -63,7 +55,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -75,7 +67,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -91,7 +83,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
             , Cmd.none
             )
 
@@ -101,7 +93,7 @@ toNextRound model =
                 |> virusEvolve
                 |> ecoInc
                 |> powerInc
-                |> initlog
+                |> initLog
                 |> judgeWin
             , Cmd.none
             )
@@ -115,7 +107,7 @@ toNextRound model =
             |> virusEvolve
             |> ecoInc
             |> powerInc
-            |> initlog
+            |> initLog
             |> judgeWin
         , Cmd.none
         )
@@ -125,7 +117,7 @@ toNextRound model =
             |> clearCurrentRoundTodo
             |> ecoInc
             |> powerInc
-            |> initlog
+            |> initLog
             |> judgeWin
         , Cmd.none
         )
@@ -161,11 +153,17 @@ virusEvolve model =
                 |> List.take 1
                 |> List.append rules
                 |> List.sort
+
+        ( virus, av ) =
+            change model.virus model.av model.city
+
+        city =
+            updateCity model
     in
     { model
-        | city = updateCity model
-        , virus = change model.virus model.av model.city |> Tuple.first
-        , av = change model.virus model.av model.city |> Tuple.second
+        | city = city
+        , virus = virus
+        , av = av
     }
         |> takeOver
         |> revenge size
@@ -191,13 +189,13 @@ clearCurrentRoundTodo model =
 judgeWin : Model -> Model
 judgeWin model =
     if model.currentLevel == 1 && model.currentRound == 4 then
-        { model | state = Finished }
+        { model | state = Finished 1 }
 
     else if model.currentLevel == 2 && model.currentRound >= 4 && List.isEmpty model.virus.pos then
-        { model | state = Finished }
+        { model | state = Finished 2 }
 
     else if model.currentRound == 21 && model.currentLevel > 2 && sumDead model.city < 80 then
-        { model | state = Finished }
+        { model | state = Finished model.currentLevel }
 
     else if model.currentRound < 21 then
         model
@@ -271,7 +269,8 @@ unBlockable model =
                 model.actionDescribe ++ []
 
             else if num == 1 then
-                [ "\n*Emergency!!!\nOne Quarantine down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n" ] ++ model.actionDescribe
+                [ Warning "Emergency!!!\nOne Quarantine down!!!\nPatients nearby > 3 * (quarantine population)\nPatients broke into a quarantine.\n" ]
+                    ++ model.actionDescribe
 
             else
                 [] ++ model.actionDescribe
@@ -301,7 +300,7 @@ mutate rule model =
 
 revenge : Int -> Model -> Model
 revenge size model =
-    if size < List.length model.virus.pos && model.counter == 0 then
+    if size > List.length model.virus.pos && model.counter == 0 then
         let
             virus_ =
                 model.virus
@@ -327,8 +326,8 @@ horrify model =
         city =
             model.city
     in
-    if sumSick city + sumDead city >= sumPopulation city then
-        { model | flowrate = 2 }
+    if sumSick city >= sumPopulation city then
+        { model | flowRate = 2 }
 
     else
-        { model | flowrate = 1 }
+        { model | flowRate = 1 }

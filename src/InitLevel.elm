@@ -1,5 +1,6 @@
 module InitLevel exposing (..)
 
+import ColorScheme exposing (..)
 import Model exposing (..)
 
 
@@ -18,7 +19,8 @@ levelInit n model =
             , power = 50
             , actionDescribe = []
             , counter = 3
-            , flowrate = 1
+            , flowRate = 1
+            , theme = Minimum
         }
 
     else
@@ -33,7 +35,7 @@ levelInit n model =
             , virus = Tuple.second (initHandsVirus n) -- virus for each level
             , currentRound = 1
             , counter = 3
-            , flowrate = 1
+            , flowRate = 1
             , economy = 5
             , power = 5
         }

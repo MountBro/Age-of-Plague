@@ -3,6 +3,7 @@ module Update exposing (..)
 import Action exposing (..)
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
+import ColorScheme exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
 import InitLevel exposing (..)
@@ -11,7 +12,6 @@ import Message exposing (Msg(..))
 import Model exposing (..)
 import NextRound exposing (..)
 import Parameters exposing (..)
-import Population exposing (..)
 import Ports as P exposing (..)
 import Random exposing (..)
 import RegionFill exposing (..)
@@ -106,17 +106,14 @@ update msg model =
             if
                 card.cost
                     <= model.power
-                    && para.ecoThreshold
-                    <= model.economy
             then
                 if List.member card targetCardlst then
                     ( { model
                         | cardSelected = SelectCard card
                         , selHex = SelHexOn
                         , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
-                        , actionDescribe = model.actionDescribe ++ [ "[" ++ card.name ++ "]:\nPlease select a hexagon" ]
+                        , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
                       }
                     , P.cardToMusic ""
                     )
@@ -126,7 +123,6 @@ update msg model =
                         | cardSelected = SelectCard card
                         , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
                         , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
                         , hands = LE.remove card model.hands
                       }
                     , Cmd.none
@@ -269,6 +265,22 @@ update msg model =
             ( model, Cmd.none )
 
 
+loadTheme : Int -> Model -> Model
+loadTheme n model =
+    case n of
+        3 ->
+            { model | theme = Polar }
+
+        4 ->
+            { model | theme = Urban }
+
+        5 ->
+            { model | theme = Plane }
+
+        _ ->
+            { model | theme = Minimum }
+
+
 replaceCard : Card -> Model -> ( Model, Cmd Msg )
 replaceCard c model =
     if List.member c model.hands && model.replaceChance > 0 then
@@ -280,21 +292,3 @@ replaceCard c model =
                 log "card to replace does not exist in hands!" ""
         in
         ( model, Cmd.none )
-
-
-judgeWin : Model -> Model
-judgeWin model =
-    if model.currentlevel == 1 && model.currentRound == 3 then
-        { model | state = Finished }
-
-    else if model.currentRound == 21 && model.currentlevel > 2 && sumDead model.city < 80 then
-        { model | state = Finished }
-
-    else if model.virus.pos == [] && model.currentlevel > 1 then
-        { model | state = Finished }
-
-    else if model.currentRound < 21 then
-        model
-
-    else
-        { model | state = Wasted }

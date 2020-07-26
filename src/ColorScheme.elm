@@ -25,6 +25,9 @@ type alias ColorScheme =
     , consoleBkg : String
     , consoleText : String
     , consoleStroke : String
+    , cdBkg : String
+    , cdStroke : String
+    , cdText : String
     }
 
 
@@ -48,4 +51,7 @@ colorScheme t =
             , consoleBkg = "#191620"
             , consoleText = "#86868d"
             , consoleStroke = "#4d454a"
+            , cdBkg = "#f2f2f0"
+            , cdStroke = ""
+            , cdText = "black"
             }

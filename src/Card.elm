@@ -200,7 +200,7 @@ coldWave =
         [ Freeze 0.5 ]
         "Cold Wave"
         "50% of virus freezing chance."
-        "There's a probability of 50% to freeze the spread of virus for 1 round."
+        "There's a probability of 50% to freeze the spread \nof virus for 1 round."
 
 
 blizzard =
@@ -220,7 +220,7 @@ rain =
         [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ]
         "Rain"
         "‧ 50% of virus freezing chance;\n‧ The economy output doubles."
-        "In two rounds, there is a probability of 50% to freeze the spread of viruses for 1 round. The economy output doubles for two rounds."
+        "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The economy output doubles for two rounds."
 
 
 cut =
@@ -250,7 +250,7 @@ fubao =
         [ Activate996I, Activate996I ]
         "996"
         "‧ Economy doubles;\n‧ Death rate increases 5%."
-        "In the next 2 rounds, economy temporarily doubles, but the death rate permanently rises 5%."
+        "In the next 2 rounds, economy temporarily doubles, \nbut the death rate permanently rises 5%."
 
 
 organClone =
@@ -260,7 +260,7 @@ organClone =
         [ OrganCloneI ( 0, 0 ) ]
         "Organ Clone"
         "One local dead saves one patient."
-        "Inside the chosen tile, each one of the dead could save one infected."
+        "Inside the chosen tile, each one of the dead could \nsave one infected."
 
 
 humanClone =
@@ -360,7 +360,7 @@ cellBroadcast =
         [ AttractPeoI ( 0, 0 ), StopAttractI ( 0, 0 ) ]
         "Cell Broadcast"
         "Ban local population flow."
-        "For a tile, attract 1 population from each neighboring tile."
+        "For a tile, attract 1 population from each \n neighboring tile."
 
 
 drought =
@@ -370,7 +370,7 @@ drought =
         [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
         "Drought"
         "‧ 50% to kill local virus; \n‧ Economy output halves."
-        "Choose a tile, in two rounds, the viruses have a probability of 50% to die. The economy output halves for two rounds."
+        "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe economy output halves for two rounds."
 
 
 warehouse =
@@ -390,7 +390,7 @@ warmwave =
         [ Warmwave_KIA ( ( 0, 0 ), 0.25 ) ]
         "Warm Wave"
         "25% of chance to kill the local virus."
-        "Choose a tile. There is a probability of 25% to kill the viruses."
+        "Choose a tile. There is a probability of 25% \nto kill the viruses."
 
 
 goingViral =
@@ -400,7 +400,9 @@ goingViral =
         [ AVI ( 0, 0 ) ]
         "Going Viral"
         "Release the anti-virus."
-        """Select a tile. Release the nano-viruses, which move randomly for 3 rounds and have a "cut" effect."""
+        """Select a tile. Release the nano-viruses, 
+which move randomly for 3 rounds and 
+have a "cut" effect."""
 
 
 judgement =
@@ -410,7 +412,7 @@ judgement =
         [ JudgeI_Kill ( ( 0, 0 ), 0.25 ) ]
         "Judgement"
         "Purify or destroy tile."
-        "Select a tile. For each hex on and around the tile, either the people or the viruses die. The probability is 50%."
+        "Select a tile. For each hex on and around \nthe tile, either the people or the viruses die. \nThe probability is 50%."
 
 
 lowSoundWave =
@@ -420,7 +422,7 @@ lowSoundWave =
         [ EvacuateI ( 0, 0 ), StopEVAI ( 0, 0 ) ]
         "Low Sound Wave"
         "Evacuate the tile."
-        "Select a tile. Distribute all population to neighboring tiles."
+        "Select a tile. Distribute all population to\n neighboring tiles."
 
 
 compulsoryMR =

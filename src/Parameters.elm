@@ -15,7 +15,7 @@ para =
     , warehouseOutput = 5
     , basicEcoOutput = 3 -- default economic input per round
     , basicPowerInc = 2
-    , icw = 160.0
+    , icw = 120.0
     , iclm = 60.0
     , icg = 20.0
     , ictm = 34.0
@@ -57,4 +57,8 @@ para =
     , consolelm = 20.0
     , consolelp = 16.0
     , consolefs = 12
+    , cdlp = 16.0
+    , cdfs = 12
+    , cdm = 10.0
+    , cdw = 300.0
     }

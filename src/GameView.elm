@@ -87,8 +87,8 @@ viewGame model =
                     ]
                     ([ background model.theme ]
                         ++ renderInitCards model
-                        ++ [ GameViewBasic.caption 20 200 "white" "click on card to replace" 20 ]
-                        ++ [ GameViewBasic.caption 20 250 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
+                        ++ [ GameViewBasic.caption 20 500 "white" "click on card to replace" 20 ]
+                        ++ [ GameViewBasic.caption 20 550 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
                     )
                 , Html.button [ HE.onClick StartRound1 ] [ Html.text "Start round 1" ]
                 ]

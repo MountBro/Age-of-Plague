@@ -57,22 +57,21 @@ type Action
 
 -- Card -> String
 cardPiles =
-    [ cardPilestutorial, allCards, cardPile3 ]
+    [ cardPilestutorial, allCards, cardPile3, cardPile4, cardPile5 ]
 
 cardPilestutorial =
     [ blizzard ]
 
 
-cardPile3 =
+cardPile5 = -- St.P
     [ blizzard
     , blizzard
     , blizzard
     , drought
     , drought
-    , drought
-    , powerOverload
     , powerOverload
     , onStandby
+    , coldWave
     , coldWave
     , coldWave
     , rain
@@ -83,23 +82,140 @@ cardPile3 =
     , cut
     , cut
     , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    , fubao
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , quarantine
+    , quarantine
+    , quarantine
+    , enhancedHealing
+    , cellBroadcast
+    , warehouse
+    , warehouse
+    , warmwave
+    , warmwave
+    , lowSoundWave
+    , compulsoryMR
+    , firstAid
+    , medMob
+    , medMob
+    ]
+
+
+cardPile4 = --Amber
+    [ megaClone
+    , megaClone
+    , organClone
+    , organClone
+    , organClone
+    , resurgence
+    , resurgence
+    , purification
+    , purification
+    , purification
+    , purification
+    , powerOverload
+    , onStandby
+    , coldWave
+    , rain
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
     , megaCut
     , megaCut
     , megaCut
     , fubao
     , humanClone
+    , humanClone
+    , humanClone
+    , hospital
     , hospital
     , hospital
     , quarantine
     , quarantine
-    , enhancedHealing
+    , quarantine
     , enhancedHealing
     , cellBroadcast
+    , warehouse
     , warehouse
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
+    , medMob
+    , medMob
+    ]
+
+
+cardPile3 = -- Atlanta
+    [ defenseline
+    , defenseline
+    , sacrifice
+    , sacrifice
+    , goingViral
+    , goingViral
+    , goingViral
+    , judgement
+    , judgement
+    , powerOverload
+    , onStandby
+    , coldWave
+    , rain
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    , megaCut
+    --, fubao
+    --, humanClone
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , quarantine
+    , enhancedHealing
+    , enhancedHealing
+    , enhancedHealing
+    , cellBroadcast
+    , warehouse
+    , warehouse
+    , warmwave
+    , lowSoundWave
+    , compulsoryMR
     , firstAid
     , medMob
     , medMob
@@ -113,9 +229,21 @@ allCards =
     , blizzard
     , rain
     , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
+    , megaCut
     , megaCut
     , fubao
     , organClone
+    , humanClone
     , humanClone
     , megaClone
     , purification
@@ -123,10 +251,17 @@ allCards =
     , resurgence
     , defenseline
     , hospital
+    , hospital
+    , hospital
+    , hospital
+    , hospital
+    , quarantine
+    , quarantine
     , quarantine
     , enhancedHealing
     , cellBroadcast
     , drought
+    , warehouse
     , warehouse
     , warmwave
     , goingViral
@@ -329,7 +464,7 @@ enhancedHealing =
         4
         [ EnhancedHealingI ]
         "Enhanced Healing"
-        "All hospital healing +1."
+        "All existing hospital healing +1."
 
 
 cellBroadcast =
@@ -441,4 +576,11 @@ targetCardlst =
     , goingViral
     , judgement
     , lowSoundWave
+    ]
+
+
+summonLst =
+    [ medMob
+    , firstAid
+    , compulsoryMR
     ]

@@ -127,10 +127,14 @@ ecoInc : Model -> Model
 ecoInc model =
     { model
         | economy =
-            model.economy
-                + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
-                * model.ecoRatio
-        , ecoRatio = 1
+            round
+                (toFloat
+                    (model.economy
+                        + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
+                    )
+                    * model.ecoRatio
+                )
+        , ecoRatio = 1.0
     }
 
 
@@ -149,7 +153,7 @@ virusEvolve model =
             model.virus.rules
 
         newrules =
-            List.filter (\x -> not (List.member x rules)) (List.range 1 6)
+            List.filter (\x -> not (List.member x rules)) (List.range 2 6)
                 |> List.take 1
                 |> List.append rules
                 |> List.sort
@@ -160,16 +164,19 @@ virusEvolve model =
         city =
             updateCity model
     in
-    { model
-        | city = city
-        , virus = virus
-        , av = av
-    }
-        |> mutate newrules
-        |> takeOver
-        |> unBlockable
-        |> revenge size
-        |> horrify
+   -- if model.currentLevel /= 6 then
+        { model
+            | city = city
+            , virus = virus
+            , av = av
+        }
+            |> mutate newrules
+            |> takeOver
+            |> unBlockable
+            |> revenge size
+            |> horrify
+   -- else
+
 
 
 clearCurrentRoundTodo : Model -> Model
@@ -194,8 +201,11 @@ judgeWin model =
     else if model.currentLevel == 2 && model.currentRound >= 4 && List.isEmpty model.virus.pos then
         { model | state = Finished 2 }
 
-    else if model.currentRound == 21 && model.currentLevel > 2 && sumDead model.city < 80 then
+    else if model.currentRound == 21 && model.currentLevel > 2 && model.currentLevel < 6 && sumPopulation model.city >= List.sum (getElement (model.currentLevel - 2) winCondition) then
         { model | state = Finished model.currentLevel }
+
+    else if model.currentLevel == 6 && sumPopulation model.city > 0 then
+        model
 
     else if model.currentRound < 21 then
         model
@@ -214,8 +224,15 @@ takeOver model =
             model.virus
 
         tilelst =
-            List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && model.currentRound == 16) city.tilesIndex
-                |> List.map (\x -> x.indice)
+            if model.currentLevel /= 6 && model.currentRound == para.tor then
+                List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && model.currentRound == 16) city.tilesIndex
+                    |> List.map (\x -> x.indice)
+
+            else if model.currentLevel == 6 then
+                List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && model.currentRound == 16) city.tilesIndex
+                    |> List.map (\x -> x.indice)
+            else
+                []
 
         extraVir =
             List.map (\x -> converTiletoHex x) tilelst
@@ -234,7 +251,7 @@ takeOver model =
 
 unBlockable : Model -> Model
 unBlockable model =
-    if model.currentLevel == 3 then
+    if List.member model.currentLevel [ 5, 6 ] then
         let
             city =
                 model.city
@@ -293,8 +310,11 @@ mutate rule model =
             model.virus
 
         vir =
-            if model.currentRound == 10 then
+            if model.currentRound == para.mr && model.currentLevel < 6 then
                 --special round of the virus skill
+                { vir_ | rules = rule }
+
+            else if model.currentLevel == 6 && modBy 10 model.currentRound == 0 then
                 { vir_ | rules = rule }
 
             else
@@ -305,7 +325,7 @@ mutate rule model =
 
 revenge : Int -> Model -> Model
 revenge size model =
-    if model.currentLevel == 5 then
+    if model.currentLevel == 3 then
         if size > List.length model.virus.pos && model.counter == 0 then
             let
                 virus_ =
@@ -331,7 +351,7 @@ revenge size model =
 
 horrify : Model -> Model
 horrify model =
-    if model.currentLevel == 4 then
+    if List.member model.currentLevel [ 4, 6 ] then
         let
             city =
                 model.city

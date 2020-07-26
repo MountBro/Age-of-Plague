@@ -6,12 +6,12 @@ import ColorScheme exposing (..)
 import Geometry exposing (..)
 import Message exposing (..)
 import Parameters exposing (..)
+import Random exposing (Generator, list, map)
+import Random.List exposing (choose)
 import Task
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-import Random exposing (Generator, list, map)
-import Random.List exposing (choose)
 
 
 type alias Model =
@@ -31,7 +31,7 @@ type alias Model =
     , economy : Int
     , basicEcoOutput : Int
     , warehouseNum : Int
-    , ecoRatio : Int
+    , ecoRatio : Float
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
@@ -87,7 +87,7 @@ initModel _ =
       , economy = 10 --10
       , basicEcoOutput = para.basicEcoOutput
       , warehouseNum = 0
-      , ecoRatio = 1
+      , ecoRatio = 1.0
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
@@ -204,6 +204,8 @@ initlevelmap level =
 map =
     [ cartesianProduct [ 0, 1 ] [ 0, 1 ]
     , cartesianProduct [ 0, 1 ] [ 0, 1 ]
+    , cartesianProduct [ 1 ] [ -3, -2, -1, 0, 1, 2 ] ++ cartesianProduct [ 0 ] [ -2, -1, 0, 1, 2 ] ++ cartesianProduct [ -1 ] [ -1, 0, 2, 3 ] ++ cartesianProduct [ 2 ] [ 0, 1 ] ++ [ ( 3, 0 ) ]
+    , cartesianProduct [ -1, 0, 1 ] [ -1, 0, 1 ] ++ cartesianProduct [ 0, 1, 2 ] [ 2, 3 ] ++ [ ( 2, 1 ) ]
     , [ ( 0, 0 )
       , ( 0, 1 )
       , ( 0, 2 )
@@ -256,6 +258,7 @@ updateDeck n =
     getElement n cardPiles
         |> List.foldr (++) []
 
+
 cardGenerator : Model -> Generator Card
 cardGenerator model =
     choose model.deck
@@ -267,3 +270,10 @@ cardsGenerator model n =
     choose model.deck
         |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
         |> Random.list n
+
+
+winCondition =
+    [ 120 -- Atlanta
+    , 160 -- amber
+    , 80 -- St.P
+    ]

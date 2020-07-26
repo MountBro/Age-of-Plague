@@ -18,8 +18,6 @@ import RegionFill exposing (..)
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-import NextRound exposing (..)
-import InitLevel exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -29,21 +27,51 @@ update msg model =
             if n <= 2 then
                 ( levelInit n model, Cmd.none )
 
-            else if n == 3 then
-                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 8) )
+            else if n == 5 then
+                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 6) )
 
             else
-                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 6) )
+                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 4) )
 
         InitializeHands lc ->
             let
                 loglc =
                     log "lc" lc
+
                 specialCards =
-                    if model.currentLevel == 3 then
-                        [ blizzard, drought]
+                    if model.currentLevel == 5 then --St.P
+                        [ blizzard
+                        , drought
+                        , hospital
+                        , quarantine
+                        ]
+
+                    else if model.currentLevel == 4 then --Amber
+                        [ megaClone
+                        , organClone
+                        , resurgence
+                        , purification
+                        , cut
+                        , hospital
+                        ]
+
+                    else if model.currentLevel == 3 then -- Atlanta
+                        [ defenseline
+                        , sacrifice
+                        , goingViral
+                        , judgement
+                        , hospital
+                        , hospital
+                        ]
+
                     else
-                        []
+                        [ quarantine
+                        , hospital
+                        , cut
+                        , cut
+                        , megaCut
+                        , coldWave
+                        ]
             in
             ( { model | hands = lc ++ specialCards }, Cmd.none )
 
@@ -95,7 +123,7 @@ update msg model =
         DrawACard ->
             if model.currentLevel == 1 && para.ecoThreshold <= model.economy then
                 if model.currentRound == 3 && model.todo == [] then
-                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model))
+                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
 
                 else
                     ( model, Cmd.none )
@@ -107,7 +135,7 @@ update msg model =
                 ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
 
             else if para.ecoThreshold <= model.economy && List.length model.hands > 10 then
-                ( { model | actionDescribe = [ Warning "Can't Draw, too many hand cards ( > 10 )!!!\n"] ++ model.actionDescribe }, Cmd.none)
+                ( { model | actionDescribe = [ Warning "Can't Draw, too many hand cards ( > 10 )!!!\n" ] ++ model.actionDescribe }, Cmd.none )
 
             else
                 ( model, Cmd.none )
@@ -130,6 +158,9 @@ update msg model =
                       }
                     , P.cardToMusic ""
                     )
+                {-else if List.member card summonLst then
+                    if card-}
+
 
                 else
                     ( { model
@@ -142,7 +173,7 @@ update msg model =
                     )
 
             else
-                ( model, Cmd.none )
+                ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Insufficient power, can't play this card!!!" ] }, Cmd.none )
 
         FreezeRet prob rand ->
             let
@@ -191,7 +222,6 @@ update msg model =
         HosInvalid ->
             ( { model
                 | power = model.power + 4
-                , economy = model.economy + para.ecoThreshold
               }
             , Cmd.none
             )

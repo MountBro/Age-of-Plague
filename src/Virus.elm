@@ -109,7 +109,7 @@ judgeAlive lstvir vir lstanti anti lstquatile =
 
 
 virus =
-    [ virus1, virus2, virus3 ]
+    [ virus1, virus2, virus3, virus4, virus5 ]
 
 
 virus1 =
@@ -121,5 +121,12 @@ virus2 =
     Virus [ 2, 3, 4 ] ([ ( 0, 1 ), ( 0, 2 ), ( 0, 3 ), ( 0, -1 ), ( 0, 0 ), ( 1, -1 ), ( 1, 0 ) ] ++ converTiletoHex (1,0) ++ converTiletoHex (1,1)) 2 1 0
 
 
+virus5 =
+    Virus [ 2, 5, 6 ] ( cartesianProduct [-1] [0,1,2] ++ cartesianProduct [-2] [3,4,5] ++ cartesianProduct [-3] [6,7] ++ cartesianProduct [-1,0] [8] ++ generateZone (converTiletoHex_ (0, 3)) ++ generateZone (converTiletoHex_ (2, 2))) 3 1 0.48
+
+
+virus4 =
+    Virus [ 2, 4 ] ([(1,-4),(2,-4),(2,-3),(-2,-2),(-3,-1),(-3,0),(3,0),(3,1)] ++ converTiletoHex (1,-1) ++ converTiletoHex (-1,-1) ++ converTiletoHex (-1,1) ++ generateZone (converTiletoHex_ (0, 3)) ) 4 1 0.1
+
 virus3 =
-    Virus [ 1, 2, 4 ] [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ] 3 1 0.2
+    Virus [ 2, 3 ] ( converTiletoHex (1,-1) ++ converTiletoHex (1,0)) 5 1 0.24

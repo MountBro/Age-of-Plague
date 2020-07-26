@@ -116,6 +116,11 @@ converTiletoHex ( i, j ) =
     ( 2 * i - j, i + 3 * j ) :: generateZone ( 2 * i - j, i + 3 * j )
 
 
+converTiletoHex_ : ( Int, Int ) -> ( Int, Int )
+converTiletoHex_ ( i, j ) =
+    ( 2 * i - j, i + 3 * j )
+
+
 isInt : Float -> Bool
 isInt x =
     abs (x - toFloat (round x)) < 0.00001

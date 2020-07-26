@@ -15,12 +15,13 @@ levelInit n model =
             , hands = Tuple.first (initHandsVirus n)
             , virus = Tuple.second (initHandsVirus n)
             , currentRound = 1
-            , economy = 50
-            , power = 50
+            , economy = 6
+            , power = 28
             , actionDescribe = []
             , counter = 3
             , flowRate = 1
             , theme = Minimum
+            , deck = updateDeck n
         }
 
     else
@@ -35,7 +36,8 @@ levelInit n model =
             , virus = Tuple.second (initHandsVirus n) -- virus for each level
             , currentRound = 1
             , counter = 3
+            , economy = 3
+            , power = 6
             , flowRate = 1
-            , economy = 5
-            , power = 5
+            , deck = updateDeck n
         }

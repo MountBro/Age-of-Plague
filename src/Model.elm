@@ -12,6 +12,8 @@ import Task
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
+import Random exposing (Generator, list, map)
+import Random.List exposing (choose)
 
 
 type alias Model =
@@ -257,7 +259,6 @@ updateDeck : Int -> List Card
 updateDeck n =
     getElement n cardPiles
         |> List.foldr (++) []
-
 
 cardGenerator : Model -> Generator Card
 cardGenerator model =

@@ -1,4 +1,6 @@
 all:
-	mkdir build
-	cp -r sites/. build
-	elm make src/Main.elm --output build/elm.js
+	elm make src/Main.elm --output=elm.js
+	cp ./elm.js ./sites/elm.js
+	rm elm.js
+cls:
+	rm ./elm.js

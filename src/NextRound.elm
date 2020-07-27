@@ -178,7 +178,6 @@ virusEvolve model =
    -- else
 
 
-
 clearCurrentRoundTodo : Model -> Model
 clearCurrentRoundTodo model =
     let

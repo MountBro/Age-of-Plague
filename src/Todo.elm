@@ -12,7 +12,7 @@ type alias Queue =
 
 
 finishedEmptyQueue =
-    (( False, [] ), Card NoSel 0 [ NoAction ] " " " ")
+    (( False, [] ), Card NoSel 0 [ NoAction ] " " " " " ")
 
 
 type alias Todo =

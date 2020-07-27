@@ -48,6 +48,7 @@ type alias Model =
     , counter : Int -- deadly up
     , flowRate : Int -- population flow rate
     , virusInfo : Bool
+    , waveNum : Int
     }
 
 
@@ -87,6 +88,7 @@ initModel _ =
       , theme = Polar
       , flowRate = 1
       , virusInfo = False
+      , waveNum = 0
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

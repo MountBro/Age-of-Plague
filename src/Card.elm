@@ -60,7 +60,7 @@ type Action
 
 
 cardPiles =
-    [ cardPilestutorial, allCards, cardPile3, cardPile4, cardPile5 ]
+    [ cardPilestutorial, allCards, cardPile3, cardPile4, cardPile5, allCards ]
 
 
 cardPilestutorial =

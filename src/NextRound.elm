@@ -104,7 +104,12 @@ toNextRound model =
 
     else
         ( { model | currentRound = model.currentRound + 1, behavior = initBehavior, drawChance = 1 }
-            |> renewStatus
+            |> clearCurrentRoundTodo
+            |> ecoInc
+            |> powerInc
+            |> initLog
+            |> judgeWin
+            |> endlessVirCreator
         , Cmd.none
         )
 
@@ -162,25 +167,16 @@ virusEvolve model =
         city =
             updateCity model
     in
-    if model.behavior.virusEvolve then
-        { model
-            | city = city
-            , virus = virus
-            , av = av
-        }
-            |> mutate newrules
-            |> takeOver
-            |> unBlockable
-            |> revenge size
-            |> horrify
-
-    else
-        model
-            |> mutate newrules
-            |> takeOver
-            |> unBlockable
-            |> revenge size
-            |> horrify
+    { model
+        | city = city
+        , virus = virus
+        , av = av
+    }
+        |> mutate newrules
+        |> takeOver
+        |> unBlockable
+        |> revenge size
+        |> horrify
 
 
 clearCurrentRoundTodo : Model -> Model
@@ -194,8 +190,11 @@ clearCurrentRoundTodo model =
                 |> List.filter (\( ( x, y ), z ) -> not (List.isEmpty y))
                 |> List.map (\( ( x, y ), z ) -> ( ( True, y ), z ))
     in
-    { model | todo = todo, roundTodoCleared = False
-            , selHex = SelHexOff}
+    { model
+        | todo = todo
+        , roundTodoCleared = False
+        , selHex = SelHexOff
+    }
 
 
 judgeWin : Model -> Model
@@ -270,6 +269,7 @@ endlessVirCreator model =
             | actionDescribe = [ Warning "Congrats!\nYou defeat one wave!\nEmergency is temporarily gone.\nAll quaratines reset." ]
             , city = city1
             , virus = virus
+            , waveNum = model.waveNum + 1
         }
 
     else if model.currentLevel == 6 && model.virus.number > 2 && List.isEmpty virus.pos then

@@ -4,6 +4,7 @@ import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
 import ColorScheme exposing (..)
 import Geometry exposing (..)
+import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
 import Random exposing (Generator, list, map)
@@ -12,9 +13,6 @@ import Task
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
-import Random exposing (Generator, list, map)
-import Random.List exposing (choose)
-import List.Extra as LE
 
 
 type alias Model =
@@ -49,6 +47,7 @@ type alias Model =
     , theme : Theme
     , counter : Int -- deadly up
     , flowRate : Int -- population flow rate
+    , virusInfo : Bool
     , waveNum : Int
     }
 
@@ -88,6 +87,7 @@ initModel _ =
       , currentLevel = 1 --1
       , theme = Polar
       , flowRate = 1
+      , virusInfo = False
       , waveNum = 0
       }
     , Task.perform GotViewport Browser.Dom.getViewport
@@ -207,6 +207,7 @@ mapLevel =
       ]
     ]
 
+
 map =
     let
         map_ =
@@ -249,6 +250,7 @@ updateDeck : Int -> List Card
 updateDeck n =
     getElement n cardPiles
         |> List.foldr (++) []
+
 
 cardGenerator : Model -> Generator Card
 cardGenerator model =

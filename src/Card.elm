@@ -68,7 +68,6 @@ cardPilestutorial =
 
 
 cardPile5 =
-    -- St.P
     [ blizzard
     , blizzard
     , blizzard
@@ -559,7 +558,7 @@ lowSoundWave =
         TileSel
         4
         [ EvacuateI ( 0, 0 ), StopEVAI ( 0, 0 ) ]
-        "Low Sound Wave"
+        "Infrasound"
         "Evacuate the tile."
         "Select a tile. Distribute all population to\n neighboring tiles."
 

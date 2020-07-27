@@ -68,4 +68,7 @@ para =
     , icgsa = 50.0
     , icgssw = 3.0
     , l2shift = ( 0.0, 30.0 )
+    , dhx = 320.0
+    , dhy = 200.0
+    , dhw = 300.0
     }

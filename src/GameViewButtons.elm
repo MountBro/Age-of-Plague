@@ -230,6 +230,32 @@ finishGateButton m =
     doorButton m para.fgX para.fgY para.fgW
 
 
+retryButton : Msg -> Float -> Float -> Float -> Html Msg
+retryButton m x y w =
+    svg [ onClick m ]
+        [ Svg.image
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "./assets/icons/retry.png" |> SA.xlinkHref
+            , w |> String.fromFloat |> SA.width
+            ]
+            []
+        , Svg.rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , w |> String.fromFloat |> SA.width
+            , w |> String.fromFloat |> SA.height
+            , "transparent" |> SA.fill
+            ]
+            []
+        ]
+
+
+retryButton_ : Msg -> Html Msg
+retryButton_ m =
+    retryButton m para.fgX para.fgY para.fgW
+
+
 icGameStart : Model -> Html Msg
 icGameStart model =
     let
@@ -252,3 +278,128 @@ icGameStart model =
             ]
             []
         ]
+
+
+virusSkillIcon : String -> Float -> Float -> Float -> Html Msg
+virusSkillIcon skill x y w =
+    case skill of
+        "mutate" ->
+            Svg.image
+                [ x |> String.fromFloat |> SA.x
+                , "./assets/icons/dna1.png" |> SA.xlinkHref
+                , y |> String.fromFloat |> SA.y
+                , w |> String.fromFloat |> SA.width
+                ]
+                []
+
+        "revenge" ->
+            Svg.image
+                [ x |> String.fromFloat |> SA.x
+                , "./assets/icons/scythe.png" |> SA.xlinkHref
+                , y |> String.fromFloat |> SA.y
+                , w |> String.fromFloat |> SA.width
+                ]
+                []
+
+        "horrify" ->
+            Svg.image
+                [ x |> String.fromFloat |> SA.x
+                , "./assets/icons/terror.png" |> SA.xlinkHref
+                , y |> String.fromFloat |> SA.y
+                , w |> String.fromFloat |> SA.width
+                ]
+                []
+
+        "unblockable" ->
+            Svg.image
+                [ x |> String.fromFloat |> SA.x
+                , "./assets/icons/demolish.png" |> SA.xlinkHref
+                , y |> String.fromFloat |> SA.y
+                , w |> String.fromFloat |> SA.width
+                ]
+                []
+
+        "takeover" ->
+            Svg.image
+                [ x |> String.fromFloat |> SA.x
+                , "./assets/icons/evil-hand.png" |> SA.xlinkHref
+                , y |> String.fromFloat |> SA.y
+                , w |> String.fromFloat |> SA.width
+                ]
+                []
+
+        _ ->
+            svg [] []
+
+
+renderVirusSkills : Model -> Html Msg
+renderVirusSkills model =
+    let
+        y =
+            para.houseButtonY - 70.0
+
+        mutate =
+            virusSkillIcon "mutate" 870.0 y 50.0
+
+        takeover =
+            virusSkillIcon "takeover" 930.0 y 50.0
+
+        str =
+            case model.currentLevel of
+                3 ->
+                    "revenge"
+
+                4 ->
+                    "unblockable"
+
+                5 ->
+                    "horrify"
+
+                _ ->
+                    ""
+
+        special =
+            virusSkillIcon str 810.0 y 50.0
+    in
+    svg [] [ mutate, takeover, special ]
+
+
+virusInfoButton : Float -> Float -> Float -> Html Msg
+virusInfoButton x y w =
+    svg [ onClick ViewVirusInfo ]
+        [ Svg.image
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , "./assets/icons/virus-info.png" |> SA.xlinkHref
+            , w |> String.fromFloat |> SA.width
+            ]
+            []
+        , Svg.rect
+            [ x |> String.fromFloat |> SA.x
+            , y |> String.fromFloat |> SA.y
+            , w |> String.fromFloat |> SA.width
+            , w |> String.fromFloat |> SA.height
+            , "transparent" |> SA.fill
+            ]
+            []
+        ]
+
+
+virusInfoButton_ =
+    virusInfoButton 750 (para.houseButtonY - 70.0) 50.0
+
+
+deadHead : Float -> Float -> Float -> Html Msg
+deadHead x y w =
+    Svg.image
+        [ x |> String.fromFloat |> SA.x
+        , "./assets/icons/dead-head.png" |> SA.xlinkHref
+        , y |> String.fromFloat |> SA.y
+        , w |> String.fromFloat |> SA.width
+        ]
+        []
+
+
+deadHead_ : Html Msg
+deadHead_ =
+    deadHead para.dhx para.dhy para.dhw

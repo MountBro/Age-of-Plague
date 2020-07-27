@@ -31,6 +31,8 @@ type Msg
     | Click String
     | DrawACard
     | DrawCard Card
+    | ViewVirusInfo
+    | CloseVirusInfo
 
 
 type Keyin

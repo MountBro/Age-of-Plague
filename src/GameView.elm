@@ -49,11 +49,17 @@ viewGame model =
                         ++ [ renderLevelProgress model ]
                         --++ renderFlags [ 5, 10, 15 ]
                         ++ [ renderConsole model ]
-                        ++ renderVirusInf model.virus
+                        ++ (if model.virusInfo then
+                                renderVirusInf model.virus
+
+                            else
+                                []
+                           )
                         --++ [ renderNextRound ]
                         ++ [ nextButton_ ]
                         ++ [ drawButton_ model ]
                         ++ [ powerInfo model ]
+                        ++ [ powerIncInfo model ]
                         ++ [ houseButton_ ]
                         ++ (if model.currentLevel <= 3 then
                                 renderGuide model
@@ -61,6 +67,8 @@ viewGame model =
                             else
                                 []
                            )
+                        ++ [ renderVirusSkills model ]
+                        ++ [ virusInfoButton_ ]
                         ++ renderHands model
                         ++ renderHand model
                         ++ film
@@ -117,7 +125,7 @@ viewGame model =
             renderFinished n model
 
         Wasted ->
-            div [] [ Html.text "wasted" ]
+            renderWasted model
 
         _ ->
             div [] []
@@ -148,6 +156,27 @@ renderFinished n model =
         ]
 
 
+renderWasted : Model -> Html Msg
+renderWasted model =
+    let
+        home =
+            houseButtonCentral
+
+        retry =
+            retryButton_ (LevelBegin model.currentLevel)
+    in
+    div []
+        [ svg
+            [ SA.viewBox "0 0 1000 600"
+            , SA.height "600"
+            , SA.width "1000"
+            , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
+            , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
+            ]
+            [ deadHead_, home, retry ]
+        ]
+
+
 background : Theme -> Svg Msg
 background t =
     let
@@ -175,6 +204,19 @@ powerInfo model =
         )
         (String.fromInt model.power)
         para.pifs
+
+
+powerIncInfo : Model -> Svg Msg
+powerIncInfo model =
+    GameViewBasic.caption
+        (para.pix + 40.0)
+        (para.piy + 15.0)
+        (model.theme
+            |> colorScheme
+            |> .powerColor
+        )
+        "(+2)"
+        15
 
 
 renderFlag : Int -> Html Msg

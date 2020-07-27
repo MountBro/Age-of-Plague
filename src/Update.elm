@@ -328,6 +328,12 @@ update msg model =
         Message.Click _ ->
             ( model, Cmd.none )
 
+        ViewVirusInfo ->
+            ( { model | virusInfo = True }, Cmd.none )
+
+        CloseVirusInfo ->
+            ( { model | virusInfo = False }, Cmd.none )
+
 
 loadTheme : Int -> Model -> Model
 loadTheme n model =

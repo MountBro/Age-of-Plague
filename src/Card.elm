@@ -203,9 +203,6 @@ cardPile3 =
     , megaCut
     , megaCut
     , megaCut
-
-    --, fubao
-    --, humanClone
     , hospital
     , hospital
     , hospital

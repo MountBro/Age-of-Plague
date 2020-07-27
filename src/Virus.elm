@@ -129,4 +129,4 @@ virus4 =
 
 
 virus5 =
-    Virus [ 2, 5, 6 ] ( cartesianProduct [-1] [0,1,2] ++ cartesianProduct [-2] [3,4,5] ++ cartesianProduct [-3] [6,7] ++ cartesianProduct [-1,0] [8] ++ generateZone (converTiletoHex_ (0, 3)) ++ generateZone (converTiletoHex_ (2, 2))) 3 1 0.48
+    Virus [ 2, 3, 6 ] ( cartesianProduct [-1] [0,1,2] ++ cartesianProduct [-2] [3,4,5] ++ cartesianProduct [-3] [6,7] ++ cartesianProduct [-1,0] [8] ++ generateZone (converTiletoHex_ (0, 3)) ++ generateZone (converTiletoHex_ (2, 2))) 3 1 0.48

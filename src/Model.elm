@@ -4,6 +4,7 @@ import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
 import ColorScheme exposing (..)
 import Geometry exposing (..)
+import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
 import Random exposing (Generator, list, map)
@@ -54,7 +55,7 @@ initModel : () -> ( Model, Cmd Msg )
 initModel _ =
     ( { city =
             initCity 20
-                map1
+                []
       , behavior = initBehavior
       , currentRound = 1
       , state = HomePage
@@ -170,25 +171,21 @@ judgeBuild model ( i, j ) =
         && List.member (converHextoTile ( i, j )) waretilelst
 
 
-map1 =
-    cartesianProduct [ 0, 1 ] [ 0, 1 ]
-
-
 initlevelmap : Int -> City
 initlevelmap level =
     let
         citytile =
             getElement level map
                 |> List.head
-                |> Maybe.withDefault map1
+                |> Maybe.withDefault []
     in
     initCity 20 citytile
 
 
-map =
+mapLevel =
     [ cartesianProduct [ 0, 1 ] [ 0, 1 ]
     , cartesianProduct [ 0, 1 ] [ 0, 1 ]
-    , cartesianProduct [ 1 ] [ -3, -2, -1, 0, 1, 2 ] ++ cartesianProduct [ 0 ] [ -2, -1, 0, 1, 2 ] ++ cartesianProduct [ -1 ] [ -1, 0, 2, 3 ] ++ cartesianProduct [ 2 ] [ 0, 1 ] ++ [ ( 3, 0 ) ]
+    , cartesianProduct [ 2 ] [ -3, -2, -1, 0, 1, 2 ] ++ cartesianProduct [ 1 ] [ -2, -1, 0, 1, 2 ] ++ cartesianProduct [ 0 ] [ -1, 0, 2, 3 ] ++ cartesianProduct [ 3 ] [ 0, 1 ] ++ [ ( 4, 0 ) ]
     , cartesianProduct [ -1, 0, 1 ] [ -1, 0, 1 ] ++ cartesianProduct [ 0, 1, 2 ] [ 2, 3 ] ++ [ ( 2, 1 ) ]
     , [ ( 0, 0 )
       , ( 0, 1 )
@@ -207,6 +204,16 @@ map =
       , ( 3, -2 )
       ]
     ]
+
+
+map =
+    let
+        map_ =
+            List.drop 2 mapLevel
+                |> List.foldr (++) []
+                |> LE.unique
+    in
+    mapLevel ++ [ map_ ]
 
 
 tutorialHands =

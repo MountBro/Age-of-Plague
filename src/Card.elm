@@ -73,9 +73,10 @@ cardPile5 =
     , blizzard
     , drought
     , drought
+    , drought
+    , powerOverload
     , powerOverload
     , onStandby
-    , coldWave
     , coldWave
     , coldWave
     , rain
@@ -216,11 +217,12 @@ cardPile3 =
     , enhancedHealing
     , cellBroadcast
     , warehouse
-    , warehouse
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
+    , firstAid
+    , medMob
     , medMob
     , medMob
     ]
@@ -512,7 +514,7 @@ drought =
 warehouse =
     Card
         TileSel
-        4
+        2
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
         "+2 economy per round."

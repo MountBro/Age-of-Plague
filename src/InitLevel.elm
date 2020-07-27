@@ -44,4 +44,5 @@ levelInit n model =
             , deck = updateDeck n
             , todo = []
             , selHex = SelHexOff
+            , waveNum = 0
         }

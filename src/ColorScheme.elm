@@ -28,6 +28,10 @@ type alias ColorScheme =
     , cdBkg : String
     , cdStroke : String
     , cdText : String
+    , infBkg : String
+    , infStroke : String
+    , infText : String
+    , infOpacity : Float
     }
 
 
@@ -54,4 +58,8 @@ colorScheme t =
             , cdBkg = "#f2f2f0"
             , cdStroke = ""
             , cdText = "black"
+            , infBkg = "purple"
+            , infStroke = "#2e3f48"
+            , infText = "white"
+            , infOpacity = 0.8
             }

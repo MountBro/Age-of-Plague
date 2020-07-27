@@ -126,7 +126,7 @@ update msg model =
         DrawACard ->
             if model.currentLevel == 1 && para.ecoThreshold <= model.economy then
                 if model.currentRound == 3 && model.todo == [] then
-                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model))
+                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
 
                 else
                     ( model, Cmd.none )
@@ -329,10 +329,7 @@ update msg model =
             ( model, Cmd.none )
 
         ViewVirusInfo ->
-            ( { model | virusInfo = True }, Cmd.none )
-
-        CloseVirusInfo ->
-            ( { model | virusInfo = False }, Cmd.none )
+            ( { model | virusInfo = not model.virusInfo }, Cmd.none )
 
 
 loadTheme : Int -> Model -> Model

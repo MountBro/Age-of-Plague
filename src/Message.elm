@@ -32,7 +32,6 @@ type Msg
     | DrawACard
     | DrawCard Card
     | ViewVirusInfo
-    | CloseVirusInfo
 
 
 type Keyin

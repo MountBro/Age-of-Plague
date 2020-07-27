@@ -71,4 +71,10 @@ para =
     , dhx = 320.0
     , dhy = 200.0
     , dhw = 300.0
+    , infx = 650.0
+    , infy = 10.0
+    , infw = 330.0
+    , infh = 400.0
+    , inflm = 10.0
+    , inftm = 20.0
     }

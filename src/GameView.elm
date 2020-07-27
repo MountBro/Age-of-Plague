@@ -49,12 +49,6 @@ viewGame model =
                         ++ [ renderLevelProgress model ]
                         --++ renderFlags [ 5, 10, 15 ]
                         ++ [ renderConsole model ]
-                        ++ (if model.virusInfo then
-                                renderVirusInf model.virus
-
-                            else
-                                []
-                           )
                         --++ [ renderNextRound ]
                         ++ [ nextButton_ ]
                         ++ [ drawButton_ model ]
@@ -72,6 +66,12 @@ viewGame model =
                         ++ renderHands model
                         ++ renderHand model
                         ++ film
+                        ++ (if model.virusInfo then
+                                [ renderVirusInf model ]
+
+                            else
+                                []
+                           )
                     )
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
@@ -504,28 +504,147 @@ renderGuide model =
         []
 
 
-renderVirusInf : Virus -> List (Html Msg)
-renderVirusInf vir =
+renderVirusInf : Model -> Html Msg
+renderVirusInf model =
     let
+        vir =
+            model.virus
+
         rule =
             vir.rules
                 |> List.map (\x -> Debug.toString x)
                 |> String.join " or "
 
         infect =
-            Debug.toString vir.infect
+            String.fromInt vir.infect
+
+        unfold =
+            "===========================================\nClick ℹ again to fold."
+
+        inf_ =
+            if vir.rules /= [] && model.currentLevel /= 6 then
+                [ "\u{1FA78} Infect rate:\nEach virus cell would infect "
+                    ++ infect
+                    ++ " local citizens per turn.\n"
+                    ++ "Theoretical death rate: "
+                    ++ String.fromInt (round (vir.kill * 100))
+                    ++ "%.\n"
+                    ++ "\u{1F9EC} Virus spread pattern:\nIf a hex is surrounded by "
+                    ++ rule
+                    ++ " virus units,\nthe virus would spread to this hex next round."
+                ]
+                    ++ [ "☣ Mutate: \nat round 10, change the virus spread pattern.\n"
+                            ++ "☣ TakeOver: \nat round 16, for tiles where\nlocal dead >= 3 x local healthy population\nvirus would occupy all their hexes.\n"
+                       ]
+
+            else if model.currentLevel == 6 then
+                [ "\u{1FA78} Infect rate:\nEach virus cell would infect "
+                    ++ infect
+                    ++ " local citizens per turn.\n"
+                    ++ "Theoretical death rate: "
+                    ++ String.fromInt (round (vir.kill * 100))
+                    ++ "%.\n"
+                    ++ "\u{1F9EC} Virus spread pattern:\nIf a hex is surrounded by "
+                    ++ rule
+                    ++ " virus units,\nthe virus would spread to this hex next round."
+                    ++ "Virus special skills:\n"
+                    ++ "☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
+                    ++ "☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
+                    ++ "☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n"
+                    ++ "☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population"
+                ]
+
+            else
+                [ "No virus in Tutorial 1." ]
 
         inf =
-            if vir.rules /= [] then
-                [ "Infect: +" ++ infect ++ " per virus unit\n" ++ "Death rate: " ++ Debug.toString vir.kill ++ "\nSpread pattern:\nIf a hex is surrounded\nby " ++ rule ++ " virus units,\nthe virus would spread to\nthis hex next round." ]
+            if model.currentLevel == 3 then
+                inf_
+                    ++ [ "☣ Revenge: \nincrease infect and death rate when size of virus \nkeeps shrinking for 3 rounds." ]
+                    ++ [ unfold ]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+
+            else if model.currentLevel == 4 then
+                inf_
+                    ++ [ "☣  Horrify: \npopulation flow rate x2, if\ntotal dead + total sick > total healthy." ]
+                    ++ [ unfold ]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+
+            else if model.currentLevel == 5 then
+                inf_
+                    ++ [ "☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population" ]
+                    ++ [ unfold ]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+
+            else if model.currentLevel == 6 then
+                inf_
+                    ++ [ unfold ]
+                    |> List.map String.lines
+                    |> List.foldl (\x -> \y -> x ++ y) []
+
+            else if model.currentLevel == 2 then
+                [ "\u{1FA78} Infect rate:\neach virus cell would infect"
+                    ++ infect
+                    ++ " local citizens per turn.\n"
+                    ++ "Theoretical death rate: "
+                    ++ Debug.toString (round (vir.kill * 100))
+                    ++ " percent."
+                    ++ "\n\u{1F9EC} Virus spread pattern:\nIf a hex is surrounded by "
+                    ++ rule
+                    ++ " virus units,\nthe virus would spread to this hex next round."
+                ]
+                    ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
 
             else
-                [ "Spread rules:\nNo virus in Tutorial 1." ]
+                inf_
+                    ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
+
+        indexed =
+            List.indexedMap Tuple.pair inf
+
+        height =
+            List.length inf |> toFloat |> (*) para.clh |> (+) 10.0
+
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        w =
+            200.0
+
+        vbArg =
+            "0 0 " ++ String.fromFloat para.infw ++ " " ++ String.fromFloat para.infh
+
+        bkg =
+            rect
+                [ para.infw |> String.fromFloat |> SA.width
+                , para.infh |> String.fromFloat |> SA.height
+                , SA.stroke cs.infStroke
+                , SA.strokeWidth "2"
+                , SA.fill cs.infBkg
+                , cs.infOpacity |> String.fromFloat |> SA.fillOpacity
+                ]
+                []
+
+        txt =
+            indexed
+                |> List.map (\( n, str ) -> ( para.inflm, para.inftm + para.clh * toFloat n, str ))
+                |> List.map (\( x, y, str ) -> GameViewBasic.caption x y cs.infText str 12)
     in
-    List.indexedMap Tuple.pair inf
-        |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-        |> List.map (\( x, y, str ) -> GameViewBasic.caption (x + 820.0) y "red" str 12)
+    svg
+        [ para.infx |> String.fromFloat |> SA.x
+        , para.infy |> String.fromFloat |> SA.y
+        , SA.viewBox vbArg
+        , para.infw |> String.fromFloat |> SA.width
+        , para.infh |> String.fromFloat |> SA.height
+        ]
+        (bkg :: txt)

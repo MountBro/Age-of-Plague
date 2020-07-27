@@ -173,8 +173,8 @@ body {
 .hexagon {
   display: block;
   position: absolute;
-  width: 36px;
-  height: 62px;
+  width: 72px;
+  height: 124px;
   background-color: #ffffff;
 }
 /* line 119, ../sass/view.scss */
@@ -182,18 +182,18 @@ body {
   content: "";
   position: relative;
   float: left;
-  border-top: 31px solid transparent;
-  border-bottom: 31px solid transparent;
+  border-top: 62px solid transparent;
+  border-bottom: 62px solid transparent;
 }
 /* line 127, ../sass/view.scss */
 .hexagon:before {
-  border-right: 18px solid #ffffff;
-  left: -18px;
+  border-right: 36px solid #ffffff;
+  left: -36px;
 }
 /* line 131, ../sass/view.scss */
 .hexagon:after {
-  border-left: 18px solid #ffffff;
-  right: -18px;
+  border-left: 36px solid #ffffff;
+  right: -36px;
 }
 
 /* line 137, ../sass/view.scss */

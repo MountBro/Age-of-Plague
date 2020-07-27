@@ -1,1 +1,49 @@
-#level {}
+:root {
+    --x1: 250px;
+    --y1: 0px;
+    --deltaY: 136px;
+    --DeltaY: 68px;
+    --deltaX: 115px;
+}
+
+#tut1 {
+    position: absolute;
+    left: var(--x1);
+    top: var(--y1);
+}
+
+#tut2 {
+    position: absolute;
+    left: var(--x1);
+    top: calc(var(--y1) + var(--deltaY));
+}
+
+#city1 {
+    position: absolute;
+    left: calc(var(--x1) + var(--deltaX));
+    top: calc(var(--y1) + var(--DeltaY));
+}
+
+#city2 {
+    position: absolute;
+    left: calc(var(--x1) + var(--deltaX));
+    top: calc(var(--y1) + var(--DeltaY) + var(--deltaY));
+}
+
+#city3 {
+    position: absolute;
+    left: calc(var(--x1) + var(--deltaX));
+    top: calc(var(--y1) + var(--DeltaY) + 2 * var(--deltaY));
+}
+
+#endless {
+    position: absolute;
+    left: calc(var(--x1) + 2 * var(--deltaX));
+    top: calc(var(--y1) + 2 * var(--DeltaY));
+}
+
+#gallery {
+    position: absolute;
+    left: calc(var(--x1) + 2 * var(--deltaX));
+    top: calc(var(--y1) + 2 * var(--DeltaY) + var(--deltaY));
+}

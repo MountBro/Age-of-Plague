@@ -421,6 +421,7 @@ performAction action model =
                                         { x | qua = True }
 
                                     else
+
                                         x
                                 )
                                 city_.tilesIndex

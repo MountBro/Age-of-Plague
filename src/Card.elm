@@ -7,6 +7,7 @@ type alias Card =
     , action : List Action
     , name : String
     , describe : String
+    , fd : String
     }
 
 
@@ -57,7 +58,6 @@ type Action
 
 -- Card -> String
 
-
 cardPiles =
     [ cardPilestutorial, allCards, cardPile3, cardPile4, cardPile5 ]
 
@@ -73,9 +73,10 @@ cardPile5 =
     , blizzard
     , drought
     , drought
+    , drought
+    , powerOverload
     , powerOverload
     , onStandby
-    , coldWave
     , coldWave
     , coldWave
     , rain
@@ -203,9 +204,6 @@ cardPile3 =
     , megaCut
     , megaCut
     , megaCut
-
-    --, fubao
-    --, humanClone
     , hospital
     , hospital
     , hospital
@@ -219,11 +217,12 @@ cardPile3 =
     , enhancedHealing
     , cellBroadcast
     , warehouse
-    , warehouse
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
+    , firstAid
+    , medMob
     , medMob
     , medMob
     ]
@@ -315,12 +314,11 @@ powerOverload =
         [ IncPowerI 3, IncPowerI (negate 3) ]
         "Power Overload"
         "+3 power, next round -3 power."
+        "+3 power, next round -3 power."
 
 
 
 -- "https://wx1.sbimg.cn/2020/07/19/CyowU.png"
-
-
 onStandby =
     Card
         NoSel
@@ -328,7 +326,7 @@ onStandby =
         [ IncPowerI 2 ]
         "On Standby"
         "+2 power"
-
+        "Immediately + 2 power."
 
 coldWave =
     Card
@@ -337,7 +335,7 @@ coldWave =
         [ Freeze 0.5 ]
         "Cold Wave"
         "50% of virus freezing chance."
-
+        "There's a probability of 50% to freeze the spread \nof virus for 1 round."
 
 blizzard =
     Card
@@ -346,7 +344,7 @@ blizzard =
         [ FreezeI, FreezeI, FreezeI ]
         "Blizzard"
         "Freeze the viruses."
-
+        "Freeze the spread of virus for 3 rounds."
 
 rain =
     Card
@@ -354,8 +352,8 @@ rain =
         3
         [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ]
         "Rain"
-        "50% of virus freezing chance.\nThe economy output doubles."
-
+        "‧ 50% of virus freezing chance;\n‧ The economy output doubles."
+        "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The economy output doubles for two rounds."
 
 cut =
     Card
@@ -363,8 +361,8 @@ cut =
         1
         [ CutHexI ( 0, 0 ) ]
         "Cut"
-        "Eliminate virus on the chosen hex."
-
+        "Eliminated virus on the chosen hex."
+        "Eliminates virus on one hex."
 
 megaCut =
     Card
@@ -372,8 +370,8 @@ megaCut =
         5
         [ CutTileI ( 0, 0 ) ]
         "Mega Cut"
-        "Eliminate virus on the chosen tile."
-
+        "Eliminated virus on the chosen tile."
+        "Eliminates virus on one tile."
 
 fubao =
     Card
@@ -381,8 +379,8 @@ fubao =
         1
         [ Activate996I, Activate996I ]
         "996"
-        "Economy doubles\ndeath rate increases 5%."
-
+        "‧ Economy doubles;\n‧ Death rate increases 5%."
+        "In the next 2 rounds, economy temporarily doubles, \nbut the death rate permanently rises 5%."
 
 organClone =
     Card
@@ -391,7 +389,7 @@ organClone =
         [ OrganCloneI ( 0, 0 ) ]
         "Organ Clone"
         "One local dead saves one patient."
-
+        "Inside the chosen tile, each one of the dead could \nsave one infected."
 
 humanClone =
     Card
@@ -400,7 +398,7 @@ humanClone =
         [ HumanCloneI ( 0, 0 ) ]
         "Human Clone"
         "Double the local population."
-
+        "Doubles the population of a certain tile."
 
 megaClone =
     Card
@@ -408,8 +406,8 @@ megaClone =
         8
         [ MegaCloneI ]
         "Mega Clone"
-        "The whole population x1.25."
-
+        "Healthy population x1.25."
+        "Healthy population x1.25."
 
 purification =
     Card
@@ -417,8 +415,8 @@ purification =
         3
         [ PurificationI ( 0, 0 ) ]
         "Purification"
-        "Heal all local patients."
-
+        "Healed all local patients."
+        "Heals all patients in a tile."
 
 sacrifice =
     Card
@@ -426,8 +424,8 @@ sacrifice =
         4
         [ SacrificeI ( 0, 0 ) ]
         "Sacrifice"
-        "Kill local virus and patients."
-
+        "Cleared local virus and patients."
+        "Kill both the viruses and infected people in a tile."
 
 resurgence =
     Card
@@ -436,7 +434,7 @@ resurgence =
         [ ResurgenceI ( 0, 0 ) ]
         "Resurgence"
         "Restore 20% of the dead."
-
+        "For each tile, restore 20% of the dead."
 
 defenseline =
     Card
@@ -445,7 +443,7 @@ defenseline =
         [ FreezevirusI ( 0, 0 ), FreezevirusI ( 0, 0 ) ]
         "Defensive Line"
         "Froze virus."
-
+        "Freezes the spread of viruses for 2 rounds in a tile"
 
 hospital =
     Card
@@ -453,8 +451,8 @@ hospital =
         4
         [ HospitalI ( 0, 0 ) ]
         "Hospital"
-        "Build hospital."
-
+        "Hospital built."
+        "Puts a hospital on a tile."
 
 quarantine =
     Card
@@ -463,7 +461,7 @@ quarantine =
         [ QuarantineI ( 0, 0 ) ]
         "Quarantine"
         "Build a quarantine tile."
-
+        "Puts one tile in quarantine"
 
 enhancedHealing =
     Card
@@ -471,8 +469,8 @@ enhancedHealing =
         4
         [ EnhancedHealingI ]
         "Enhanced Healing"
-        "All existing hospital healing +1."
-
+        "All hospital healing +1."
+        "Slightly raises the efficiency of hospital healing."
 
 cellBroadcast =
     Card
@@ -481,7 +479,7 @@ cellBroadcast =
         [ AttractPeoI ( 0, 0 ), StopAttractI ( 0, 0 ) ]
         "Cell Broadcast"
         "Ban local population flow."
-
+        "For a tile, attract 1 population from each \n neighboring tile."
 
 drought =
     Card
@@ -489,17 +487,17 @@ drought =
         2
         [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
         "Drought"
-        "50% to kill local virus,\neconomy output halves."
-
+        "‧ 50% to kill local virus; \n‧ Economy output halves."
+        "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe economy output halves for two rounds."
 
 warehouse =
     Card
         TileSel
-        4
+        2
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
         "+2 economy per round."
-
+        "+2 economy per round."
 
 warmwave =
     Card
@@ -508,7 +506,7 @@ warmwave =
         [ Warmwave_KIA ( ( 0, 0 ), 0.25 ) ]
         "Warm Wave"
         "25% of chance to kill the local virus."
-
+        "Choose a tile. There is a probability of 25% \nto kill the viruses."
 
 goingViral =
     Card
@@ -517,7 +515,9 @@ goingViral =
         [ AVI ( 0, 0 ) ]
         "Going Viral"
         "Release the anti-virus."
-
+        """Select a tile. Release the nano-viruses, 
+which move randomly for 3 rounds and 
+have a "cut" effect."""
 
 judgement =
     Card
@@ -525,8 +525,8 @@ judgement =
         6
         [ JudgeI_Kill ( ( 0, 0 ), 0.25 ) ]
         "Judgement"
-        "Purify or destory tile."
-
+        "Purify or destroy tile."
+        "Select a tile. For each hex on and around \nthe tile, either the people or the viruses die. \nThe probability is 50%."
 
 lowSoundWave =
     Card
@@ -535,7 +535,7 @@ lowSoundWave =
         [ EvacuateI ( 0, 0 ), StopEVAI ( 0, 0 ) ]
         "Low Sound Wave"
         "Evacuate the tile."
-
+        "Select a tile. Distribute all population to\n neighboring tiles."
 
 compulsoryMR =
     --CompulsoryMedicalRecruitment
@@ -544,8 +544,8 @@ compulsoryMR =
         6
         [ Summon [ megaCut, megaCut ] ]
         "Compulsory Medical Recruitment"
-        "Summon two [ MegaCut ]."
-
+        "Summoned two [MegaCut]."
+        "Immediately summons [MegaCut] x2"
 
 firstAid =
     Card
@@ -553,8 +553,8 @@ firstAid =
         2
         [ Summon [ hospital ] ]
         "FirstAid"
-        "Summon one [ Hospital ]."
-
+        "Summoned one [Hospital]."
+        "Immediately sommons one [Hospital]"
 
 medMob =
     Card
@@ -562,7 +562,8 @@ medMob =
         6
         [ Summon [ cut, cut, cut ] ]
         "Medical Mobilization"
-        "Summon three [ Cut ]."
+        "Summoned three [Cut]."
+        "Immediately summons [Cut] x3"
 
 
 targetCardlst =

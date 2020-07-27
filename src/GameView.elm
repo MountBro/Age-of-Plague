@@ -70,7 +70,6 @@ viewGame model =
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". " ++ "sumDead: " ++ Debug.toString (sumDead model.city) ++ ". " ++ "sumSick: " ++ Debug.toString (sumSick model.city) ++ ". " ++ Debug.toString model.currentLevel)
 
                 --, div [] (List.map cardButton allCards)
-                , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
                 , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
@@ -453,65 +452,82 @@ renderVirusInf model =
         inf_ =
             if vir.rules /= [] && model.currentLevel /= 6 then
                 [ "Infect rate:\neach virus cell would infect"
-                ++ infect ++" local citizens per turn."
-                ++ "Theoretical death rate: "
-                ++ Debug.toString (round (vir.kill * 100))
-                ++ " percent." ++ "\nVirus spread pattern:\nIf a hex is surrounded by "
-                ++ rule ++ " virus units,\nthe virus would spread to this hex next round."]
-                ++ ["Virus special skills:\n"
-                ++ "TakeOver: at round 16, for tiles where\nlocal dead >= 3 x local healthy population\nvirus would occupy all their hexes.\n"
-                ++ "Mutate: at round 10, change the virus spread pattern.\n"]
+                    ++ infect
+                    ++ " local citizens per turn."
+                    ++ "Theoretical death rate: "
+                    ++ Debug.toString (round (vir.kill * 100))
+                    ++ " percent."
+                    ++ "\nVirus spread pattern:\nIf a hex is surrounded by "
+                    ++ rule
+                    ++ " virus units,\nthe virus would spread to this hex next round."
+                ]
+                    ++ [ "Virus special skills:\n"
+                            ++ "TakeOver: at round 16, for tiles where\nlocal dead >= 3 x local healthy population\nvirus would occupy all their hexes.\n"
+                            ++ "Mutate: at round 10, change the virus spread pattern.\n"
+                       ]
 
             else if model.currentLevel == 6 then
                 [ "Infect rate:\neach virus cell would infect"
-                ++ infect ++" local citizens per turn.\n"
-                ++ "Theoretical death rate: "
-                ++ Debug.toString (round (vir.kill * 100))
-                ++ " percent." ++ "\nVirus spread pattern:\nIf a hex is surrounded by "
-                ++ rule ++ " virus units,\nthe virus would spread to this hex next round."
-                ++ "Virus special skills:\n"
-                ++ "TakeOver: if virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
-                ++ "Mutate: if virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
-                ++ "Horrify : population flow rate x2, if\ntotal dead + total sick > total healthy.\n"
-                ++ "Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population"
+                    ++ infect
+                    ++ " local citizens per turn.\n"
+                    ++ "Theoretical death rate: "
+                    ++ Debug.toString (round (vir.kill * 100))
+                    ++ " percent."
+                    ++ "\nVirus spread pattern:\nIf a hex is surrounded by "
+                    ++ rule
+                    ++ " virus units,\nthe virus would spread to this hex next round."
+                    ++ "Virus special skills:\n"
+                    ++ "TakeOver: if virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
+                    ++ "Mutate: if virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
+                    ++ "Horrify : population flow rate x2, if\ntotal dead + total sick > total healthy.\n"
+                    ++ "Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population"
                 ]
+
             else
                 [ "Spread rules:\nNo virus in Tutorial 1." ]
 
         inf =
             if model.currentLevel == 3 then
-                inf_ ++ [ "Revenge: increase infect and death rate when\nsize of virus keeps shrinking for 3 rounds." ]
+                inf_
+                    ++ [ "Revenge: increase infect and death rate when\nsize of virus keeps shrinking for 3 rounds." ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
 
             else if model.currentLevel == 4 then
-                inf_ ++ [ "Horrify : population flow rate x2, if\ntotal dead + total sick > total healthy." ]
+                inf_
+                    ++ [ "Horrify : population flow rate x2, if\ntotal dead + total sick > total healthy." ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
 
             else if model.currentLevel == 5 then
-                inf_ ++ [ "Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population" ]
+                inf_
+                    ++ [ "Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population" ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
+
             else if model.currentLevel == 6 then
                 inf_
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
+
             else if model.currentLevel == 2 then
                 [ "Infect rate:\neach virus cell would infect"
-                ++ infect ++" local citizens per turn."
-                ++ "Theoretical death rate: "
-                ++ Debug.toString (round (vir.kill * 100))
-                ++ " percent." ++ "\nVirus spread pattern:\nIf a hex is surrounded by "
-                ++ rule ++ " virus units,\nthe virus would spread to this hex next round."]
+                    ++ infect
+                    ++ " local citizens per turn."
+                    ++ "Theoretical death rate: "
+                    ++ Debug.toString (round (vir.kill * 100))
+                    ++ " percent."
+                    ++ "\nVirus spread pattern:\nIf a hex is surrounded by "
+                    ++ rule
+                    ++ " virus units,\nthe virus would spread to this hex next round."
+                ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
+
             else
                 inf_
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
-
-
     in
     List.indexedMap Tuple.pair inf
         |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))

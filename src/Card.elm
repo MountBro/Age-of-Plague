@@ -327,6 +327,7 @@ onStandby =
         "On Standby"
         "+2 power"
         "Immediately + 2 power."
+
 coldWave =
     Card
         NoSel
@@ -335,6 +336,7 @@ coldWave =
         "Cold Wave"
         "50% of virus freezing chance."
         "There's a probability of 50% to freeze the spread \nof virus for 1 round."
+
 blizzard =
     Card
         NoSel
@@ -343,6 +345,7 @@ blizzard =
         "Blizzard"
         "Freeze the viruses."
         "Freeze the spread of virus for 3 rounds."
+
 rain =
     Card
         NoSel
@@ -351,6 +354,7 @@ rain =
         "Rain"
         "‧ 50% of virus freezing chance;\n‧ The economy output doubles."
         "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The economy output doubles for two rounds."
+
 cut =
     Card
         HexSel
@@ -359,6 +363,7 @@ cut =
         "Cut"
         "Eliminated virus on the chosen hex."
         "Eliminates virus on one hex."
+
 megaCut =
     Card
         TileSel
@@ -367,6 +372,7 @@ megaCut =
         "Mega Cut"
         "Eliminated virus on the chosen tile."
         "Eliminates virus on one tile."
+
 fubao =
     Card
         NoSel
@@ -375,6 +381,7 @@ fubao =
         "996"
         "‧ Economy doubles;\n‧ Death rate increases 5%."
         "In the next 2 rounds, economy temporarily doubles, \nbut the death rate permanently rises 5%."
+
 organClone =
     Card
         TileSel
@@ -383,6 +390,7 @@ organClone =
         "Organ Clone"
         "One local dead saves one patient."
         "Inside the chosen tile, each one of the dead could \nsave one infected."
+
 humanClone =
     Card
         TileSel
@@ -391,6 +399,7 @@ humanClone =
         "Human Clone"
         "Double the local population."
         "Doubles the population of a certain tile."
+
 megaClone =
     Card
         NoSel
@@ -399,6 +408,7 @@ megaClone =
         "Mega Clone"
         "Healthy population x1.25."
         "Healthy population x1.25."
+
 purification =
     Card
         TileSel
@@ -407,6 +417,7 @@ purification =
         "Purification"
         "Healed all local patients."
         "Heals all patients in a tile."
+
 sacrifice =
     Card
         TileSel
@@ -415,6 +426,7 @@ sacrifice =
         "Sacrifice"
         "Cleared local virus and patients."
         "Kill both the viruses and infected people in a tile."
+
 resurgence =
     Card
         TileSel
@@ -423,6 +435,7 @@ resurgence =
         "Resurgence"
         "Restore 20% of the dead."
         "For each tile, restore 20% of the dead."
+
 defenseline =
     Card
         TileSel
@@ -431,6 +444,7 @@ defenseline =
         "Defensive Line"
         "Froze virus."
         "Freezes the spread of viruses for 2 rounds in a tile"
+
 hospital =
     Card
         TileSel
@@ -439,6 +453,7 @@ hospital =
         "Hospital"
         "Hospital built."
         "Puts a hospital on a tile."
+
 quarantine =
     Card
         TileSel
@@ -447,6 +462,7 @@ quarantine =
         "Quarantine"
         "Build a quarantine tile."
         "Puts one tile in quarantine"
+
 enhancedHealing =
     Card
         NoSel
@@ -455,6 +471,7 @@ enhancedHealing =
         "Enhanced Healing"
         "All hospital healing +1."
         "Slightly raises the efficiency of hospital healing."
+
 cellBroadcast =
     Card
         TileSel
@@ -463,6 +480,7 @@ cellBroadcast =
         "Cell Broadcast"
         "Ban local population flow."
         "For a tile, attract 1 population from each \n neighboring tile."
+
 drought =
     Card
         TileSel
@@ -471,6 +489,7 @@ drought =
         "Drought"
         "‧ 50% to kill local virus; \n‧ Economy output halves."
         "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe economy output halves for two rounds."
+
 warehouse =
     Card
         TileSel
@@ -479,6 +498,7 @@ warehouse =
         "Warehouse"
         "+2 economy per round."
         "+2 economy per round."
+
 warmwave =
     Card
         TileSel
@@ -487,6 +507,7 @@ warmwave =
         "Warm Wave"
         "25% of chance to kill the local virus."
         "Choose a tile. There is a probability of 25% \nto kill the viruses."
+
 goingViral =
     Card
         TileSel
@@ -494,9 +515,10 @@ goingViral =
         [ AVI ( 0, 0 ) ]
         "Going Viral"
         "Release the anti-virus."
-        """Select a tile. Release the nano-viruses,
-which move randomly for 3 rounds and
+        """Select a tile. Release the nano-viruses, 
+which move randomly for 3 rounds and 
 have a "cut" effect."""
+
 judgement =
     Card
         TileSel
@@ -505,6 +527,7 @@ judgement =
         "Judgement"
         "Purify or destroy tile."
         "Select a tile. For each hex on and around \nthe tile, either the people or the viruses die. \nThe probability is 50%."
+
 lowSoundWave =
     Card
         TileSel
@@ -513,6 +536,7 @@ lowSoundWave =
         "Low Sound Wave"
         "Evacuate the tile."
         "Select a tile. Distribute all population to\n neighboring tiles."
+
 compulsoryMR =
     --CompulsoryMedicalRecruitment
     Card
@@ -522,6 +546,7 @@ compulsoryMR =
         "Compulsory Medical Recruitment"
         "Summoned two [MegaCut]."
         "Immediately summons [MegaCut] x2"
+
 firstAid =
     Card
         NoSel
@@ -530,6 +555,7 @@ firstAid =
         "FirstAid"
         "Summoned one [Hospital]."
         "Immediately sommons one [Hospital]"
+
 medMob =
     Card
         NoSel

@@ -4,7 +4,7 @@ import Card exposing (..)
 
 
 type alias Queue =
-    (( Bool, List Action ), Card)
+    ( ( Bool, List Action ), Card )
 
 
 
@@ -12,7 +12,7 @@ type alias Queue =
 
 
 finishedEmptyQueue =
-    (( False, [] ), Card NoSel 0 [ NoAction ] " " " " " ")
+    ( ( False, [] ), Card NoSel 0 [ NoAction ] " " " " " " )
 
 
 type alias Todo =
@@ -21,4 +21,4 @@ type alias Todo =
 
 finished : Todo -> Bool
 finished todo =
-    List.isEmpty (List.filter (\((x,y),z) -> x) todo)
+    List.isEmpty (List.filter (\( ( x, y ), z ) -> x) todo)

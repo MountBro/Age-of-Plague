@@ -17,7 +17,7 @@ virusKill vir city =
             sumSick city
 
         estimateddeath =
-            ceiling (toFloat patients * dr)
+            max (floor (toFloat patients * dr)) 1
 
         ( lstInfected1, lstInfectedn ) =
             city.tilesIndex
@@ -32,7 +32,7 @@ virusKill vir city =
 
         ( dn, d1 ) =
             if deathn >= estimateddeath then
-                ( List.take (round ((toFloat deathn / toFloat estimateddeath) * toFloat (List.length lstInfectedn))) lstInfectedn, [] )
+                ( List.take (floor ((toFloat deathn / toFloat estimateddeath) * toFloat (List.length lstInfectedn))) lstInfectedn, [] )
 
             else
                 ( lstInfectedn, List.take (estimateddeath - deathn) lstInfected1 )

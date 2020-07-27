@@ -16,12 +16,14 @@ levelInit n model =
             , virus = Tuple.second (initHandsVirus n)
             , currentRound = 1
             , economy = 6
-            , power = 28
+            , power = 26
             , actionDescribe = []
             , counter = 3
             , flowRate = 1
             , theme = Minimum
             , deck = updateDeck n
+            , todo = []
+            , selHex = SelHexOff
         }
 
     else
@@ -40,4 +42,6 @@ levelInit n model =
             , power = 6
             , flowRate = 1
             , deck = updateDeck n
+            , todo = []
+            , selHex = SelHexOff
         }

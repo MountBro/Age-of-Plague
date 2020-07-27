@@ -43,12 +43,11 @@ viewGame model =
                     , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
                     ]
                     ([ background model.theme ]
-                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model.theme) model.city.tilesIndex)
-                        ++ renderVirus model.virus
-                        ++ renderantiVirus model.av
+                        ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model) model.city.tilesIndex)
+                        ++ renderVirus model model.virus
+                        ++ renderantiVirus model model.av
                         ++ [ renderLevelProgress model ]
                         --++ renderFlags [ 5, 10, 15 ]
-                        ++ renderHands model
                         ++ [ renderConsole model ]
                         ++ renderVirusInf model.virus
                         --++ [ renderNextRound ]
@@ -56,13 +55,14 @@ viewGame model =
                         ++ [ drawButton_ model ]
                         ++ [ powerInfo model ]
                         ++ [ houseButton_ ]
-                        ++ renderHand model
                         ++ (if model.currentLevel <= 3 then
                                 renderGuide model
 
                             else
                                 []
                            )
+                        ++ renderHands model
+                        ++ renderHand model
                         ++ film
                     )
                 , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
@@ -87,10 +87,30 @@ viewGame model =
                     ]
                     ([ background model.theme ]
                         ++ renderInitCards model
-                        ++ [ GameViewBasic.caption 20 500 "white" "click on card to replace" 20 ]
-                        ++ [ GameViewBasic.caption 20 550 "white" ("you still have " ++ String.fromInt model.replaceChance ++ " chances.") 20 ]
+                        ++ [ GameViewBasic.caption
+                                20
+                                500
+                                "white"
+                                (if model.replaceChance > 0 then
+                                    "Start the level directly or click on card to replace, "
+                                        ++ "you still have "
+                                        ++ String.fromInt model.replaceChance
+                                        ++ " chances."
+
+                                 else
+                                    ""
+                                )
+                                20
+                           ]
+                        ++ (if model.replaceChance == 0 then
+                                [ hand2IcStart ]
+
+                            else
+                                []
+                           )
+                        ++ [ icGameStart model ]
+                        ++ [ houseButton_ ]
                     )
-                , Html.button [ HE.onClick StartRound1 ] [ Html.text "Start round 1" ]
                 ]
 
         Finished n ->
@@ -252,22 +272,22 @@ renderLevelProgress model =
         ]
 
 
-renderVirus : Virus -> List (Html Msg)
-renderVirus v =
+renderVirus : Model -> Virus -> List (Html Msg)
+renderVirus model v =
     let
         pos =
             v.pos
     in
-    List.map (renderHex "purple" 0.5) pos
+    List.map (renderHex model "purple" 0.5) pos
 
 
-renderantiVirus : AntiVirus -> List (Html Msg)
-renderantiVirus av =
+renderantiVirus : Model -> AntiVirus -> List (Html Msg)
+renderantiVirus model av =
     let
         pos =
             av.pos
     in
-    List.map (renderHex "blue" 0.5) pos
+    List.map (renderHex model "blue" 0.5) pos
 
 
 
@@ -406,6 +426,13 @@ renderGuide model =
         width =
             500.0
 
+        y_ =
+            if List.member (lr model) [ ( 1, 1 ), ( 1, 2 ), ( 1, 3 ) ] then
+                para.conbot - 40.0
+
+            else
+                para.conbot - 40.0
+
         bkg =
             svg []
                 [ Svg.defs []
@@ -415,7 +442,7 @@ renderGuide model =
                     , height |> String.fromFloat |> SA.height
                     , cs.guideBkg |> SA.fill
                     , para.clp + 230.0 |> String.fromFloat |> SA.x
-                    , para.conbot - 70.0 |> String.fromFloat |> SA.y
+                    , y_ |> String.fromFloat |> SA.y
                     , "5" |> SA.rx
                     , "2" |> SA.strokeWidth
                     , cs.guideStroke |> SA.stroke
@@ -427,8 +454,8 @@ renderGuide model =
     if model.currentLevel == 1 || model.currentLevel == 2 then
         bkg
             :: (List.indexedMap Tuple.pair lstr
-                    |> List.map (\( n, str ) -> ( para.clp, para.conbot + para.clh * toFloat n, str ))
-                    |> List.map (\( x, y, str ) -> GameViewBasic.caption (x + 250.0) (y - 50.0) cs.guideTextColor str 16)
+                    |> List.map (\( n, str ) -> ( para.clp, y_ + para.clh * toFloat n, str ))
+                    |> List.map (\( x, y, str ) -> GameViewBasic.caption (x + 250.0) (y + 20.0) cs.guideTextColor str 16)
                )
 
     else

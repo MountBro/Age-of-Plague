@@ -190,7 +190,7 @@ renderCardFilm width n x y c model =
                     , "0" |> SA.x
                     , "0" |> SA.y
                     , cs.cdBkg |> SA.fill
-                    , "0.5" |> SA.fillOpacity
+                    , "0.8" |> SA.fillOpacity
                     ]
                     []
                  ]

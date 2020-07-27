@@ -172,7 +172,7 @@ update msg model =
                     , Cmd.none
                     )
 
-                else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum)  then
+                else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
                     ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
                     , Cmd.none
                     )
@@ -188,7 +188,13 @@ update msg model =
                     )
 
             else
-                ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Insufficient power, can't play this card!!!" ] }, Cmd.none )
+                ( { model
+                    | actionDescribe =
+                        model.actionDescribe
+                            ++ [ Warning ("[" ++ card.name ++ "]:\n" ++ "Insufficient power!") ]
+                  }
+                , Cmd.none
+                )
 
         FreezeRet prob rand ->
             let

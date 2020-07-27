@@ -3,6 +3,7 @@ module GameViewButtons exposing (..)
 import Card exposing (..)
 import ColorScheme exposing (..)
 import GameViewBasic exposing (..)
+import Geometry exposing (..)
 import Html exposing (..)
 import Message exposing (..)
 import Model exposing (..)
@@ -227,3 +228,27 @@ doorButton m x y w =
 finishGateButton : Msg -> Html Msg
 finishGateButton m =
     doorButton m para.fgX para.fgY para.fgW
+
+
+icGameStart : Model -> Html Msg
+icGameStart model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+    in
+    svg
+        [ onClick StartRound1 ]
+        [ polyline
+            [ polyPoint [ para.icgsx, para.icgsx, para.icgsx + sqrt 3 / 2.0 * para.icgsa, para.icgsx ]
+                [ para.icgsy, para.icgsy + para.icgsa, para.icgsy + 0.5 * para.icgsa, para.icgsy ]
+                |> SA.points
+            , "4" |> SA.rx
+            , "white" |> SA.stroke
+            , para.icgssw |> String.fromFloat |> SA.strokeWidth
+            , "transparent" |> SA.fill
+            ]
+            []
+        ]

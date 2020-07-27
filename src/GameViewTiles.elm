@@ -13,11 +13,15 @@ import SvgSrc exposing (..)
 import Tile exposing (..)
 
 
-renderHex : String -> Float -> ( Int, Int ) -> Html Msg
-renderHex cstr opa ( i, j ) =
+renderHex : Model -> String -> Float -> ( Int, Int ) -> Html Msg
+renderHex model cstr opa ( i, j ) =
     let
         ( x0, y0 ) =
-            para.tileOrigin
+            if model.currentLevel /= 2 then
+                para.tileOrigin
+
+            else
+                posAdd para.l2shift para.tileOrigin
 
         a =
             para.a
@@ -44,7 +48,11 @@ renderFilm : Model -> ( Int, Int ) -> Html Msg
 renderFilm model ( i, j ) =
     let
         ( x0, y0 ) =
-            para.tileOrigin
+            if model.currentLevel /= 2 then
+                para.tileOrigin
+
+            else
+                posAdd para.l2shift para.tileOrigin
 
         a =
             para.a
@@ -95,9 +103,12 @@ renderFilm model ( i, j ) =
         )
 
 
-renderTile : Theme -> Tile -> List (Html Msg)
-renderTile theme t =
+renderTile : Model -> Tile -> List (Html Msg)
+renderTile model t =
     let
+        theme =
+            model.theme
+
         cs =
             colorScheme theme
 
@@ -123,7 +134,11 @@ renderTile theme t =
             t1 + 3 * t2
 
         ( x0, y0 ) =
-            para.tileOrigin
+            if model.currentLevel /= 2 then
+                para.tileOrigin
+
+            else
+                posAdd para.l2shift para.tileOrigin
 
         ( x, y ) =
             posAdd (rc ( i, j )) ( x0, y0 )
@@ -260,7 +275,7 @@ renderTile theme t =
         tiles =
             case theme of
                 Minimum ->
-                    List.map (renderHex cs.tile 1.0) (( i, j ) :: generateZone ( i, j ))
+                    List.map (renderHex model cs.tile 1.0) (( i, j ) :: generateZone ( i, j ))
 
                 Polar ->
                     List.map (\( u, v ) -> st1 u v) hexCoordinates

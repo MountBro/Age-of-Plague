@@ -25,13 +25,13 @@ update msg model =
     case msg of
         LevelBegin n ->
             if n <= 2 then
-                ( levelInit n model, Cmd.none )
+                ( levelInit n model |> loadTheme n, Cmd.none )
 
             else if n == 5 then
-                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 6) )
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 6) )
 
             else
-                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 4) )
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
 
         InitializeHands lc ->
             let
@@ -336,13 +336,13 @@ loadTheme : Int -> Model -> Model
 loadTheme n model =
     case n of
         3 ->
-            { model | theme = Polar }
+            { model | theme = Plain }
 
         4 ->
             { model | theme = Urban }
 
         5 ->
-            { model | theme = Plane }
+            { model | theme = Polar }
 
         _ ->
             { model | theme = Minimum }

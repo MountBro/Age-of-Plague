@@ -13,15 +13,33 @@ import SvgSrc exposing (..)
 import Tile exposing (..)
 
 
+origin : Model -> Pos
+origin model =
+    case model.currentLevel of
+        2 ->
+            para.tileOrigin |> posAdd para.l2shift
+
+        3 ->
+            para.tileOrigin |> posAdd para.l3shift
+
+        4 ->
+            para.tileOrigin |> posAdd para.l4shift
+
+        5 ->
+            para.tileOrigin |> posAdd para.l5shift
+
+        6 ->
+            para.tileOrigin |> posAdd para.l6shift
+
+        _ ->
+            para.tileOrigin
+
+
 renderHex : Model -> String -> Float -> ( Int, Int ) -> Html Msg
 renderHex model cstr opa ( i, j ) =
     let
         ( x0, y0 ) =
-            if model.currentLevel /= 2 then
-                para.tileOrigin
-
-            else
-                posAdd para.l2shift para.tileOrigin
+            origin model
 
         a =
             para.a
@@ -48,11 +66,7 @@ renderFilm : Model -> ( Int, Int ) -> Html Msg
 renderFilm model ( i, j ) =
     let
         ( x0, y0 ) =
-            if model.currentLevel /= 2 then
-                para.tileOrigin
-
-            else
-                posAdd para.l2shift para.tileOrigin
+            origin model
 
         a =
             para.a
@@ -134,11 +148,7 @@ renderTile model t =
             t1 + 3 * t2
 
         ( x0, y0 ) =
-            if model.currentLevel /= 2 then
-                para.tileOrigin
-
-            else
-                posAdd para.l2shift para.tileOrigin
+            origin model
 
         ( x, y ) =
             posAdd (rc ( i, j )) ( x0, y0 )
@@ -236,7 +246,7 @@ renderTile model t =
                     , SA.fontFamily "sans-serif"
                     , x - 5.0 |> String.fromFloat |> SA.x
                     , y + 5.0 |> String.fromFloat |> SA.y
-                    , SA.fill "white"
+                    , SA.fill cs.constructionCaption
                     ]
                     [ constructionCaption |> Svg.text ]
                 ]
@@ -248,7 +258,7 @@ renderTile model t =
                     , SA.fontFamily "sans-serif"
                     , x - 15.0 |> String.fromFloat |> SA.x
                     , y - 10.0 |> String.fromFloat |> SA.y
-                    , SA.fill "green"
+                    , SA.fill "#4ddd81"
                     ]
                     [ t.population - t.sick |> String.fromInt |> Svg.text ]
                 , text_
@@ -277,15 +287,20 @@ renderTile model t =
                 Minimum ->
                     List.map (renderHex model cs.tile 1.0) (( i, j ) :: generateZone ( i, j ))
 
+                Plain ->
+                    List.map (renderHex model cs.tile 1.0) (( i, j ) :: generateZone ( i, j ))
+
                 Polar ->
                     List.map (\( u, v ) -> st1 u v) hexCoordinates
 
-                _ ->
-                    List.map (\( u, v ) -> myTile u v) hexCoordinates
+                Urban ->
+                    List.map (renderHex model cs.tile 1.0) (( i, j ) :: generateZone ( i, j ))
 
+        --            _ ->
+        --              List.map (\( u, v ) -> myTile u v) hexCoordinates
         -- list of positions of the seven hexs in a tile.
     in
-    tiles ++ [ border ] ++ [ cons ] ++ [ populationInfo ]
+    tiles ++ [ border ] ++ [ populationInfo ] ++ [ cons ]
 
 
 renderTileFilm : Model -> Tile -> List (Html Msg)

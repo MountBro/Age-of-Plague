@@ -350,10 +350,10 @@ renderVirusSkills model =
                     "revenge"
 
                 4 ->
-                    "unblockable"
+                    "horrify"
 
                 5 ->
-                    "horrify"
+                    "unblockable"
 
                 _ ->
                     ""
@@ -361,7 +361,16 @@ renderVirusSkills model =
         special =
             virusSkillIcon str 810.0 y 50.0
     in
-    svg [] [ mutate, takeover, special ]
+    if List.member model.currentLevel [ 3, 4, 5 ] then
+        svg [] [ mutate, takeover, special ]
+
+    else
+        svg []
+            [ mutate
+            , takeover
+            , virusSkillIcon "unblockable" 810 y 50.0
+            , virusSkillIcon "horrify" 750 y 50.0
+            ]
 
 
 virusInfoButton : Float -> Float -> Float -> Html Msg
@@ -387,6 +396,14 @@ virusInfoButton x y w =
 
 virusInfoButton_ =
     virusInfoButton 750 (para.houseButtonY - 70.0) 50.0
+
+
+virusInfoButtonTutorial =
+    virusInfoButton 930 (para.houseButtonY - 70.0) 50.0
+
+
+virusInfoButtonEndless =
+    virusInfoButton 870 para.houseButtonY 50.0
 
 
 deadHead : Float -> Float -> Float -> Html Msg

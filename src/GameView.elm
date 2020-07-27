@@ -46,7 +46,12 @@ viewGame model =
                         ++ List.foldl (\x -> \y -> x ++ y) [] (List.map (renderTile model) model.city.tilesIndex)
                         ++ renderVirus model model.virus
                         ++ renderantiVirus model model.av
-                        ++ [ renderLevelProgress model ]
+                        ++ (if List.member model.currentLevel [ 3, 4, 5 ] then
+                                [ renderLevelProgress model ]
+
+                            else
+                                []
+                           )
                         --++ renderFlags [ 5, 10, 15 ]
                         ++ [ renderConsole model ]
                         --++ [ renderNextRound ]
@@ -61,8 +66,21 @@ viewGame model =
                             else
                                 []
                            )
-                        ++ [ renderVirusSkills model ]
-                        ++ [ virusInfoButton_ ]
+                        ++ (if model.currentLevel == 6 then
+                                [ endlessLevelProgress model ]
+
+                            else
+                                []
+                           )
+                        ++ (if List.member model.currentLevel [ 1, 2 ] then
+                                [ virusInfoButtonTutorial ]
+
+                            else if List.member model.currentLevel [ 3, 4, 5 ] then
+                                [ renderVirusSkills model, virusInfoButton_ ]
+
+                            else
+                                [ renderVirusSkills model, virusInfoButtonEndless ]
+                           )
                         ++ renderHands model
                         ++ renderHand model
                         ++ film
@@ -424,6 +442,7 @@ renderConsole model =
                 , SA.stroke cs.consoleStroke
                 , SA.strokeWidth "4"
                 , SA.fill cs.consoleBkg
+                , cs.consoleOpacity |> String.fromFloat |> SA.fillOpacity
                 ]
                 []
     in
@@ -533,8 +552,8 @@ renderVirusInf model =
                     ++ rule
                     ++ " virus units,\nthe virus would spread to this hex next round."
                 ]
-                    ++ [ "☣ Mutate: \nat round 10, change the virus spread pattern.\n"
-                            ++ "☣ TakeOver: \nat round 16, for tiles where\nlocal dead >= 3 x local healthy population\nvirus would occupy all their hexes.\n"
+                    ++ [ "☣ Mutate: \nActivated at round 10, change the virus spread pattern.\n"
+                            ++ "☣ TakeOver: \nActivated at round 16, for tiles where\nlocal dead >= 3 x local healthy population\nvirus would occupy all their hexes.\n"
                        ]
 
             else if model.currentLevel == 6 then
@@ -546,12 +565,11 @@ renderVirusInf model =
                     ++ "%.\n"
                     ++ "\u{1F9EC} Virus spread pattern:\nIf a hex is surrounded by "
                     ++ rule
-                    ++ " virus units,\nthe virus would spread to this hex next round."
-                    ++ "Virus special skills:\n"
+                    ++ " virus units,\nthe virus would spread to this hex next round.\n"
                     ++ "☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
                     ++ "☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
                     ++ "☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n"
-                    ++ "☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population"
+                    ++ "☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population."
                 ]
 
             else
@@ -574,7 +592,7 @@ renderVirusInf model =
 
             else if model.currentLevel == 5 then
                 inf_
-                    ++ [ "☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population" ]
+                    ++ [ "☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population." ]
                     ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
@@ -609,8 +627,12 @@ renderVirusInf model =
         indexed =
             List.indexedMap Tuple.pair inf
 
-        height =
-            List.length inf |> toFloat |> (*) para.clh |> (+) 10.0
+        h =
+            if model.currentLevel == 6 then
+                para.infh + 80.0
+
+            else
+                para.infh
 
         t =
             model.theme
@@ -627,7 +649,7 @@ renderVirusInf model =
         bkg =
             rect
                 [ para.infw |> String.fromFloat |> SA.width
-                , para.infh |> String.fromFloat |> SA.height
+                , h |> String.fromFloat |> SA.height
                 , SA.stroke cs.infStroke
                 , SA.strokeWidth "2"
                 , SA.fill cs.infBkg
@@ -645,6 +667,11 @@ renderVirusInf model =
         , para.infy |> String.fromFloat |> SA.y
         , SA.viewBox vbArg
         , para.infw |> String.fromFloat |> SA.width
-        , para.infh |> String.fromFloat |> SA.height
+        , h |> String.fromFloat |> SA.height
         ]
         (bkg :: txt)
+
+
+endlessLevelProgress : Model -> Html Msg
+endlessLevelProgress model =
+    GameViewBasic.caption 810 (para.houseButtonY + 50.0) "white" (String.fromInt model.currentRound) 60

@@ -1,6 +1,7 @@
 module GameViewCards exposing (..)
 
 import Card exposing (..)
+import ColorScheme exposing (..)
 import GameViewBasic exposing (..)
 import Html exposing (..)
 import Message exposing (..)
@@ -43,17 +44,79 @@ renderCardPng width x y c =
 renderInitCardFilm : Float -> Int -> Float -> Float -> Card -> Model -> Html Msg
 renderInitCardFilm width n x y c model =
     let
-        tint =
-            if n == model.mouseOverCardToReplace && model.replaceChance > 0 then
-                rect
-                    [ x |> String.fromFloat |> SA.x
-                    , y |> String.fromFloat |> SA.y
-                    , "yellow" |> SA.fill
-                    , SA.fillOpacity "0.3"
-                    , width |> String.fromFloat |> SA.width
-                    , 1.6 * width |> String.fromFloat |> SA.height
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        indexed =
+            c.fd |> String.lines |> List.indexedMap Tuple.pair
+
+        indexedLength =
+            List.length indexed
+
+        h =
+            toFloat indexedLength * para.cdlp + para.cdm
+
+        w =
+            para.cdw
+
+        cdy =
+            y + 1.6 * para.icw
+
+        cdx =
+            x + 0.55 * para.icw
+
+        vbArg =
+            "0 0 " ++ String.fromFloat w ++ " " ++ String.fromFloat h
+
+        lt =
+            indexed
+                |> List.map
+                    (\( n_, str ) ->
+                        ( para.cdm + toFloat n_ * para.cdlp, str )
+                    )
+                |> List.map
+                    (\( y_, str ) ->
+                        GameViewBasic.caption para.cdm (y_ + 0.5 * para.cdm) cs.cdText str para.cdfs
+                    )
+
+        cardDescription =
+            svg
+                [ cdx |> String.fromFloat |> SA.x
+                , cdy |> String.fromFloat |> SA.y
+                , SA.viewBox vbArg
+                , w |> String.fromFloat |> SA.width
+                , h |> String.fromFloat |> SA.height
+                ]
+                ([ rect
+                    [ w |> String.fromFloat |> SA.width
+                    , h |> String.fromFloat |> SA.height
+                    , "0" |> SA.x
+                    , "0" |> SA.y
+                    , cs.cdBkg |> SA.fill
+                    , "0.5" |> SA.fillOpacity
                     ]
                     []
+                 ]
+                    ++ lt
+                )
+
+        tint =
+            if n == model.mouseOverCardToReplace && model.replaceChance > 0 then
+                svg []
+                    [ rect
+                        [ x |> String.fromFloat |> SA.x
+                        , y |> String.fromFloat |> SA.y
+                        , "yellow" |> SA.fill
+                        , SA.fillOpacity "0.3"
+                        , width |> String.fromFloat |> SA.width
+                        , 1.6 * width |> String.fromFloat |> SA.height
+                        ]
+                        []
+                    , cardDescription
+                    ]
 
             else
                 rect [] []
@@ -75,17 +138,79 @@ renderInitCardFilm width n x y c model =
 renderCardFilm : Float -> Int -> Float -> Float -> Card -> Model -> Html Msg
 renderCardFilm width n x y c model =
     let
-        tint =
-            if n == model.mouseOverCard then
-                rect
-                    [ x |> String.fromFloat |> SA.x
-                    , y |> String.fromFloat |> SA.y
-                    , "yellow" |> SA.fill
-                    , SA.fillOpacity "0.3"
-                    , width |> String.fromFloat |> SA.width
-                    , 1.6 * width |> String.fromFloat |> SA.height
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        indexed =
+            c.fd |> String.lines |> List.indexedMap Tuple.pair
+
+        indexedLength =
+            List.length indexed
+
+        h =
+            toFloat indexedLength * para.cdlp + para.cdm
+
+        w =
+            para.cdw
+
+        cdy =
+            y + 1.6 * para.hcw
+
+        cdx =
+            x + 0.25 * para.hcw
+
+        vbArg =
+            "0 0 " ++ String.fromFloat w ++ " " ++ String.fromFloat h
+
+        lt =
+            indexed
+                |> List.map
+                    (\( n_, str ) ->
+                        ( para.cdm + toFloat n_ * para.cdlp, str )
+                    )
+                |> List.map
+                    (\( y_, str ) ->
+                        GameViewBasic.caption para.cdm (y_ + 0.55 * para.cdm) cs.cdText str para.cdfs
+                    )
+
+        cardDescription =
+            svg
+                [ cdx |> String.fromFloat |> SA.x
+                , cdy |> String.fromFloat |> SA.y
+                , SA.viewBox vbArg
+                , w |> String.fromFloat |> SA.width
+                , h |> String.fromFloat |> SA.height
+                ]
+                ([ rect
+                    [ w |> String.fromFloat |> SA.width
+                    , h |> String.fromFloat |> SA.height
+                    , "0" |> SA.x
+                    , "0" |> SA.y
+                    , cs.cdBkg |> SA.fill
+                    , "0.8" |> SA.fillOpacity
                     ]
                     []
+                 ]
+                    ++ lt
+                )
+
+        tint =
+            if n == model.mouseOverCard then
+                svg []
+                    [ rect
+                        [ x |> String.fromFloat |> SA.x
+                        , y |> String.fromFloat |> SA.y
+                        , "yellow" |> SA.fill
+                        , SA.fillOpacity "0.3"
+                        , width |> String.fromFloat |> SA.width
+                        , 1.6 * width |> String.fromFloat |> SA.height
+                        ]
+                        []
+                    , cardDescription
+                    ]
 
             else
                 rect [] []
@@ -148,7 +273,7 @@ renderHands model =
             List.indexedMap Tuple.pair hands
                 |> List.map
                     (\( n, c ) ->
-                        ( n, ( para.hclm + (digitNum - 1.0) * para.hcdi + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
+                        ( n, ( para.hclm + para.hcdi + (para.hcw + para.hcg) * toFloat n, para.hctm ), c )
                     )
     in
     List.map

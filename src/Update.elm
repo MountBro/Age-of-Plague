@@ -25,13 +25,13 @@ update msg model =
     case msg of
         LevelBegin n ->
             if n <= 2 then
-                ( levelInit n model, Cmd.none )
+                ( levelInit n model |> loadTheme n, Cmd.none )
 
             else if n == 5 then
-                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 6) )
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 6) )
 
             else
-                ( levelInit n model, Random.generate InitializeHands (cardsGenerator model 4) )
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
 
         InitializeHands lc ->
             let
@@ -172,7 +172,7 @@ update msg model =
                     , Cmd.none
                     )
 
-                else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum)  then
+                else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
                     ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
                     , Cmd.none
                     )
@@ -188,7 +188,13 @@ update msg model =
                     )
 
             else
-                ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Insufficient power, can't play this card!!!" ] }, Cmd.none )
+                ( { model
+                    | actionDescribe =
+                        model.actionDescribe
+                            ++ [ Warning ("[" ++ card.name ++ "]:\n" ++ "Insufficient power!") ]
+                  }
+                , Cmd.none
+                )
 
         FreezeRet prob rand ->
             let
@@ -322,18 +328,21 @@ update msg model =
         Message.Click _ ->
             ( model, Cmd.none )
 
+        ViewVirusInfo ->
+            ( { model | virusInfo = not model.virusInfo }, Cmd.none )
+
 
 loadTheme : Int -> Model -> Model
 loadTheme n model =
     case n of
         3 ->
-            { model | theme = Polar }
+            { model | theme = Plain }
 
         4 ->
             { model | theme = Urban }
 
         5 ->
-            { model | theme = Plane }
+            { model | theme = Polar }
 
         _ ->
             { model | theme = Minimum }

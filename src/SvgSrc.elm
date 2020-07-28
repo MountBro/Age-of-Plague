@@ -171,7 +171,7 @@ skeletonHand x y width =
     svg []
         [ Svg.image
             [ x |> String.fromFloat |> Svg.Attributes.x
-            , "./assets/guide/SkeletonHand.png_" |> xlinkHref
+            , "./assets/guide/SkeletonHand_.png" |> xlinkHref
             , y |> String.fromFloat |> Svg.Attributes.y
             , width |> String.fromFloat |> Svg.Attributes.width
             ]
@@ -243,3 +243,10 @@ hand2Draw =
         (para.drawButtonX + para.drawButtonW + 30.0)
         (para.drawButtonY + 10.0)
         100.0
+
+
+hand2IcStart =
+    skeletonHand
+        (para.icgsx - 180.0)
+        (para.icgsy + 0.2 * para.icgsa)
+        160.0

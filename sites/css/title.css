@@ -13,7 +13,7 @@ p {
 #t1 {
     font-size: 120px;
     top: 2%;
-    color: #FF9900;
+    color: #cedbde;
     animation: neon5 1.5s ease-in-out infinite alternate;
 }
 
@@ -21,7 +21,7 @@ p {
     font-size: 60px;
     top: 15%;
     right: 2%;
-    color: #ffaf38;
+    color: #cedbde;
     animation: neon5 1.5s ease-in-out infinite alternate;
 }
 

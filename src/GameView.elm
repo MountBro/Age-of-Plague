@@ -386,7 +386,7 @@ consoleText model =
             para.consolelm
 
         myLog =
-            model.actionDescribe
+            model.actionDescribe |> List.reverse
 
         ( w, a ) =
             List.partition isWarning myLog

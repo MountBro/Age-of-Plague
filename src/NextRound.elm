@@ -27,7 +27,6 @@ toNextRound model =
         else if model.hands == [] && model.currentRound == 2 then
             ( { model
                 | currentRound = 3
-                , economy = 6
               }
                 |> initLog
                 |> clearCurrentRoundTodo
@@ -53,7 +52,6 @@ toNextRound model =
               }
                 |> clearCurrentRoundTodo
                 |> virusEvolve
-                |> ecoInc
                 |> powerInc
                 |> initLog
             , Cmd.none
@@ -65,7 +63,6 @@ toNextRound model =
               }
                 |> clearCurrentRoundTodo
                 |> virusEvolve
-                |> ecoInc
                 |> powerInc
                 |> initLog
             , Cmd.none
@@ -74,14 +71,12 @@ toNextRound model =
         else if model.currentRound == 4 then
             ( { model
                 | currentRound = model.currentRound + 1
-                , economy = 6
                 , power = 6
                 , virus = virus2
                 , hands = [ cut, quarantine, megaCut, megaCut, cut, megaCut, hospital ]
               }
                 |> clearCurrentRoundTodo
                 |> virusEvolve
-                |> ecoInc
                 |> powerInc
                 |> initLog
             , Cmd.none
@@ -105,7 +100,6 @@ toNextRound model =
     else
         ( { model | currentRound = model.currentRound + 1, behavior = initBehavior, drawChance = 1 }
             |> clearCurrentRoundTodo
-            |> ecoInc
             |> powerInc
             |> initLog
             |> judgeWin
@@ -119,31 +113,23 @@ renewStatus model =
     model
         |> clearCurrentRoundTodo
         |> virusEvolve
-        |> ecoInc
         |> powerInc
         |> initLog
         |> judgeWin
         |> endlessVirCreator
 
 
-ecoInc : Model -> Model
-ecoInc model =
-    { model
-        | economy =
-            round
-                (toFloat
-                    (model.economy
-                        + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
-                    )
-                    * model.ecoRatio
-                )
-        , ecoRatio = 1.0
-    }
-
-
 powerInc : Model -> Model
 powerInc model =
-    { model | power = model.power + para.basicPowerInc }
+    if model.power + para.basicPowerInc >= model.maxPower then
+        let
+            w =
+                "Maximum Power reached. " |> Warning
+        in
+        { model | power = model.maxPower, actionDescribe = w :: model.actionDescribe }
+
+    else
+        { model | power = model.power + para.basicPowerInc }
 
 
 virusEvolve : Model -> Model

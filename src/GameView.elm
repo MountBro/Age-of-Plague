@@ -99,7 +99,6 @@ viewGame model =
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
                 , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
-                , Html.text ("economy: " ++ String.fromInt model.economy)
                 ]
 
         Drawing ->
@@ -227,14 +226,19 @@ powerInfo model =
 powerIncInfo : Model -> Svg Msg
 powerIncInfo model =
     GameViewBasic.caption
-        (para.pix + 40.0)
-        (para.piy + 15.0)
+        (para.pix + 30.0)
+        (para.piy + 20.0)
         (model.theme
             |> colorScheme
             |> .powerColor
         )
-        "(+2)"
-        15
+        ("/"
+            ++ String.fromInt model.maxPower
+            ++ ", +"
+            ++ String.fromInt para.basicPowerInc
+            ++ " per round."
+        )
+        10
 
 
 renderFlag : Int -> Html Msg
@@ -361,7 +365,7 @@ ml2s m =
             ("⚠" ++ " " ++ str) |> String.lines |> List.reverse
 
         CardPlayed c ->
-            ("💬" ++ "[" ++ c.name ++ "]: \n" ++ c.describe)
+            ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ c.describe)
                 |> String.lines
                 |> List.reverse
 

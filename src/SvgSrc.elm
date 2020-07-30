@@ -215,18 +215,8 @@ revSkeletonHand x y width =
 hand2FirstCard : Model -> Html.Html Msg
 hand2FirstCard model =
     let
-        digitNum =
-            if model.economy < 10 then
-                1.0
-
-            else if model.economy < 100 then
-                2.0
-
-            else
-                3.0
-
         x =
-            para.hclm + (digitNum - 1.0) * para.hcdi + (para.hcw + para.hcg) + 30.0
+            para.hclm + para.hcdi + (para.hcw + para.hcg) + 30.0
     in
     revSkeletonHand x 45.0 100.0
 

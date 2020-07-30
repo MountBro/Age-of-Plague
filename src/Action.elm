@@ -5,6 +5,7 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Message exposing (..)
 import Model exposing (..)
+import Parameters exposing (..)
 import Population exposing (..)
 import Random exposing (float, generate)
 import Tile exposing (..)
@@ -421,7 +422,6 @@ performAction action model =
                                         { x | qua = True }
 
                                     else
-
                                         x
                                 )
                                 city_.tilesIndex
@@ -526,7 +526,7 @@ performAction action model =
                 num =
                     model.warehouseNum + 1
             in
-            ( { model | city = city, warehouseNum = num } |> updateLog, Cmd.none )
+            ( { model | city = city, maxPower = para.warehousePowerInc + model.maxPower } |> updateLog, Cmd.none )
 
         Warmwave_KIA ( ( i, j ), prob ) ->
             ( model |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )

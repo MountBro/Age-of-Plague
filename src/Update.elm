@@ -124,24 +124,36 @@ update msg model =
             toNextRound model
 
         DrawACard ->
-            if model.currentLevel == 1 && para.ecoThreshold <= model.economy then
-                if model.currentRound == 3 && model.todo == [] then
-                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
+            if model.power >= para.drawCardCost then
+                if model.currentLevel == 1 then
+                    if model.currentRound == 3 && model.todo == [] then
+                        ( { model | power = model.power - para.drawCardCost }, Random.generate DrawCard (cardGenerator model) )
+
+                    else
+                        ( model, Cmd.none )
+
+                else if model.currentLevel == 2 && model.currentRound <= 4 then
+                    ( model, Cmd.none )
+
+                else if List.length model.hands < 10 then
+                    ( { model | power = model.power - para.drawCardCost }, Random.generate DrawCard (cardGenerator model) )
+
+                else if List.length model.hands >= 10 then
+                    let
+                        w =
+                            "Can't draw a card right now:\nmaximum number of hands (10)\nreached." |> Warning
+                    in
+                    ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
 
                 else
                     ( model, Cmd.none )
 
-            else if model.currentLevel == 2 && model.currentRound <= 4 then
-                ( model, Cmd.none )
-
-            else if para.ecoThreshold <= model.economy && List.length model.hands < 10 then
-                ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
-
-            else if para.ecoThreshold <= model.economy && List.length model.hands >= 10 then
-                ( { model | actionDescribe = [ Warning "Can't Draw, too many hand cards ( > 10 )!!!\n" ] ++ model.actionDescribe }, Cmd.none )
-
             else
-                ( model, Cmd.none )
+                let
+                    w =
+                        "Can't draw a card right now:\npower insufficient." |> Warning
+                in
+                ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
 
         DrawCard c ->
             ( { model | hands = c :: model.hands }, Cmd.none )

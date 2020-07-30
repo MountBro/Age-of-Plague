@@ -151,41 +151,58 @@ update msg model =
                 card.cost
                     <= model.power
             then
-                if List.member card targetCardlst then
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , selHex = SelHexOn
-                        , power = model.power - card.cost
-                        , hands = LE.remove card model.hands
-                        , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
-                      }
-                    , P.cardToMusic ""
-                    )
+                if model.selHex == SelHexOff then
+                    if List.member card targetCardlst then
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , selHex = SelHexOn
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                            , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
+                          }
+                        , P.cardToMusic ""
+                        )
 
-                else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
-                        , power = model.power - card.cost
-                        , hands = LE.remove card model.hands
-                      }
-                    , Cmd.none
-                    )
+                    else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                          }
+                        , Cmd.none
+                        )
 
-                else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
-                    ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
-                    , Cmd.none
-                    )
+                    else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
+                        ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
+                        , Cmd.none
+                        )
+
+                    else
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                          }
+                        , Cmd.none
+                        )
 
                 else
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
-                        , power = model.power - card.cost
-                        , hands = LE.remove card model.hands
-                      }
-                    , Cmd.none
-                    )
+                    let
+                        mc =
+                            toCardSelected model
+                    in
+                    case mc of
+                        Just c ->
+                            ( { model
+                                | actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ c.name ++ "]:\nPlease select a hexagon") ]
+                              }
+                            , Cmd.none
+                            )
+
+                        Nothing ->
+                            ( model, Cmd.none )
 
             else
                 ( { model

@@ -270,3 +270,17 @@ winCondition =
     , 160 -- amber
     , 80 -- St.P
     ]
+
+
+toCardSelected : Model -> Maybe Card
+toCardSelected model =
+    let
+        sel =
+            model.cardSelected
+    in
+    case sel of
+        SelectCard c ->
+            Just c
+
+        NoCard ->
+            Nothing

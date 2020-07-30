@@ -64,7 +64,7 @@
     animation: entry 1s linear 1;
 }
 
-#card1 {
+#c1 {
     position: absolute;
     left: var(--initPosX);
     top: var(--initPosY);
@@ -72,7 +72,7 @@
     background-size: cover;
 }
 
-#card2 {
+#c2 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx));
     top: var(--initPosY);
@@ -81,7 +81,7 @@
     background-size: cover;
 }
 
-#card3 {
+#c3 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 2);
     top: var(--initPosY);
@@ -469,6 +469,7 @@ p {
 #cardsTitle {
     top: 2%;
     right: 2%;
+    font-size: 100px;
 }
 
 #cardsBack {

@@ -397,7 +397,7 @@ organClone =
         3
         [ OrganCloneI ( 0, 0 ) ]
         "Organ Clone"
-        "One local dead saves one patient."
+        "Each local saves one patient."
         "Inside the chosen tile, each one of the dead could \nsave one infected."
 
 
@@ -517,8 +517,8 @@ warehouse =
         2
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
-        "+2 economy per round."
-        "+2 economy per round."
+        "+2 maximum power."
+        "+2 maximum power."
 
 
 warmwave =

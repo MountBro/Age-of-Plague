@@ -1,0 +1,494 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+/* the following root section is for parameters */
+
+:root {
+    --initPosX: -215%;
+    --dx: 35%;
+    --initPosY: 45%;
+    --secdPosY: 70%;
+}
+
+
+/* These are for the buttons */
+
+#cardsBack {
+    position: relative;
+    display: inline-block;
+    padding: 25px 30px;
+    margin: auto 20px;
+    color: #03e9f4;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.5s;
+    letter-spacing: 4px;
+    overflow: hidden;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+#cardsBack:hover {
+    background: #03e9f4;
+    color: #050801;
+    box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 200px #03e9f4;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+#cardsBack:nth-child(1) {
+    filter: hue-rotate(270deg);
+}
+
+#cardsBack:nth-child(2) {
+    filter: hue-rotate(110deg);
+}
+
+.wrpr {
+    position: absolute;
+    top: -2%;
+    left: 41%;
+    width: 250px;
+    height: 400px;
+    perspective: 900px;
+}
+
+.ctnr {
+    position: absolute;
+    top: 10%;
+    width: 30%;
+    height: 30%;
+    transition: 0.5s all ease;
+    transform: rotateX(60deg) scale(0.7);
+    perspective: 900px;
+    box-shadow: 0px 20px 50px #555;
+    animation: entry 1s linear 1;
+}
+
+#c1 {
+    position: absolute;
+    left: var(--initPosX);
+    top: var(--initPosY);
+    background-image: url(../assets/cardPNG/PowerOverload.png);
+    background-size: cover;
+}
+
+#c2 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx));
+    top: var(--initPosY);
+    /* This is temp pic, flase one! */
+    background-image: url(../assets/cardPNG/Judgement.png);
+    background-size: cover;
+}
+
+#c3 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 2);
+    top: var(--initPosY);
+    /* This is temp pic, flase one! */
+    background-image: url(../assets/cardPNG/Resurgence.png);
+    background-size: cover;
+}
+
+#c4 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 3);
+    top: var(--initPosY);
+    background-image: url(../assets/cardPNG/Blizzard.png);
+    background-size: cover;
+}
+
+#c5 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 4);
+    top: var(--initPosY);
+    /* This is temp pic, flase one! */
+    background-image: url(../assets/cardPNG/GoingViral.png);
+    background-size: cover;
+}
+
+#c6 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 5);
+    top: var(--initPosY);
+    background-image: url(../assets/cardPNG/Cut.png);
+    background-size: cover;
+}
+
+#c7 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 6);
+    top: var(--initPosY);
+    background-image: url(../assets/cardPNG/996.png);
+    background-size: cover;
+}
+
+#c8 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 7);
+    top: var(--initPosY);
+    background-image: url(../assets/cardPNG/MegaCut.png);
+    background-size: cover;
+}
+
+#c9 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 8);
+    top: var(--initPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c10 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 9);
+    top: var(--initPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c11 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 10);
+    top: var(--initPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c12 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 11);
+    top: var(--initPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c13 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 12);
+    top: var(--initPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c14 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 13);
+    top: var(--initPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c15 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 14);
+    top: var(--initPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c16 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 0);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c17 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 1);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c18 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 2);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c19 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 3);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c20 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 4);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c21 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 5);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c22 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 6);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c23 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 7);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c24 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 8);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c25 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 9);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c26 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 10);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c27 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 11);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c28 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 12);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c29 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) * 13);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+#c30 {
+    position: absolute;
+    left: calc(var(--initPosX) + var(--dx) *14);
+    top: var(--secdPosY);
+    /* width: 100%;
+    height: 100%; */
+    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
+    /* z-index: 1; */
+    /* box-shadow: 0px 20px 100px #555; */
+}
+
+.ctnr:hover {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg) scale(1) translateY(20px);
+    transition: 0.5s all ease;
+    z-index: 99999999999;
+    margin-top: -1cm;
+    margin-left: -1cm;
+}
+
+.ctnr::after {
+    content: attr(data-info);
+    /* display: inline; */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    opacity: 0;
+    width: 92%;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5em;
+    padding: 0.5em 0.8em;
+    background: #00478a;
+    color: #fff;
+    pointer-events: none;
+    /* This prevents the box from apearing when hovered. */
+    transition: opacity 250ms, top 250ms;
+}
+
+.ctnr:hover::after {
+    opacity: 0.8;
+}
+
+
+/* span {
+    position: absolute;
+    top: 0%;
+    left: 55%;
+    border-radius: 100%;
+    background-color: #fff;
+    z-index: 10;
+} */
+
+.story {
+    position: absolute;
+    top: 45%;
+    left: 0%;
+    height: 55%;
+    width: 100%;
+    /* background: linear-gradient(to bottom, #eba65b 0%, #d99267 40%); */
+    z-index: 30;
+}
+
+.info {
+    position: absolute;
+    top: 10%;
+}
+
+h3 {
+    text-align: center;
+    text-shadow: 0px 0px 10px #eee;
+    color: #000;
+    letter-spacing: 2px;
+}
+
+h4 {
+    color: #111;
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    letter-spacing: 2px;
+}
+
+h1 {
+    color: whitesmoke;
+    position: fixed;
+    top: 7%;
+    text-align: center;
+    margin: 20px 100px;
+    font-family: 'Raleway';
+    font-size: xx-large;
+}
+
+p {
+    font-size: 14px;
+    color: #fff;
+    padding: 0px 20px 20px 20px;
+    line-height: 150%;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+#cardsTitle {
+    top: 2%;
+    right: 2%;
+    font-size: 100px;
+}
+
+#cardsBack {
+    position: fixed;
+    top: 150%;
+    left: 25%;
+}
+
+.image {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* the following is the pictures' attributes */
+
+.pic {
+    width: 100%;
+}

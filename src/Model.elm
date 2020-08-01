@@ -2,11 +2,13 @@ module Model exposing (..)
 
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
-import Debug
+import ColorScheme exposing (..)
 import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (..)
 import Parameters exposing (..)
+import Random exposing (Generator, list, map)
+import Random.List exposing (choose)
 import Task
 import Tile exposing (..)
 import Todo exposing (..)
@@ -14,8 +16,7 @@ import Virus exposing (..)
 
 
 type alias Model =
-    { -- to do : List Card
-      city : City
+    { city : City
     , behavior : Behavior
     , state : Gamestatus
     , currentRound : Int
@@ -28,14 +29,98 @@ type alias Model =
     , roundTodoCleared : Bool
     , av : AntiVirus
     , power : Int
-    , economy : Int
-    , basicEcoOutput : Int
+    , maxPower : Int
     , warehouseNum : Int
-    , ecoRatio : Int
+    , ecoRatio : Float
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
+    , hands : List Card
+    , deck : List Card
+    , mouseOverCardToReplace : Int
+    , mouseOverCard : Int
+    , replaceChance : Int
+    , drawChance : Int
+    , actionDescribe : List MyLog
+    , currentLevel : Int
+    , theme : Theme
+    , counter : Int -- deadly up
+    , flowRate : Int -- population flow rate
+    , virusInfo : Bool
+    , waveNum : Int
     }
+
+
+initModel : () -> ( Model, Cmd Msg )
+initModel _ =
+    ( { city =
+            initCity 20
+                []
+      , behavior = initBehavior
+      , currentRound = 1
+      , state = HomePage
+      , screenSize = ( 600, 800 )
+      , viewport = Nothing
+      , virus = initHandsVirus 1 |> Tuple.second
+      , region = NoRegion
+      , cardSelected = NoCard
+      , todo = []
+      , roundTodoCleared = False
+      , av = initAntiVirus
+      , power = 50
+      , maxPower = 10
+      , warehouseNum = 0
+      , ecoRatio = 1.0
+      , selectedHex = ( -233, -233 )
+      , mouseOver = ( -233, -233 )
+      , selHex = SelHexOff
+      , hands = initHandsVirus 1 |> Tuple.first --megaClone
+      , deck = allCards
+      , mouseOverCardToReplace = negate 1
+      , mouseOverCard = negate 1
+      , replaceChance = 3
+      , drawChance = 0
+      , actionDescribe = []
+      , counter = 3
+      , currentLevel = 1 --1
+      , theme = Polar
+      , flowRate = 1
+      , virusInfo = False
+      , waveNum = 0
+      }
+    , Task.perform GotViewport Browser.Dom.getViewport
+    )
+
+
+type MyLog
+    = CardPlayed Card
+    | Warning String
+
+
+isWarning : MyLog -> Bool
+isWarning l =
+    case l of
+        Warning str ->
+            True
+
+        _ ->
+            False
+
+
+type Gamestatus
+    = Playing
+    | Drawing
+    | Playcard
+    | Stopped
+    | HomePage
+    | CardPage
+    | Finished Int
+    | Wasted
+
+
+initLog : Model -> Model
+initLog model =
+    { model | actionDescribe = [] }
 
 
 type Region
@@ -53,63 +138,9 @@ type CardSelected
     | SelectCard Card
 
 
-type alias City =
-    { tilesindex : List Tile
-    }
-
-
 type alias Behavior =
     { populationFlow : Bool
     , virusEvolve : Bool
-    }
-
-
-initCity : Int -> List ( Int, Int ) -> City
-initCity tilepeo l =
-    let
-        tiles =
-            initTiles tilepeo l
-    in
-    City tiles
-
-
-sumPopulation : City -> Int
-sumPopulation city =
-    city.tilesindex
-        |> List.map (\x -> x.population)
-        |> List.sum
-
-
-sumSick : City -> Int
-sumSick city =
-    city.tilesindex
-        |> List.map (\x -> x.sick)
-        |> List.sum
-
-
-sumDead : City -> Int
-sumDead city =
-    city.tilesindex
-        |> List.map (\x -> x.dead)
-        |> List.sum
-
-
-initVirus : Virus
-initVirus =
-    { rules = [ 2, 4 ]
-    , pos = [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ) ]
-
-    --, pos = cartesianProduct (List.range -5 5) (List.range -5 5)
-    , number = 0
-    , infect = 1
-    , kill = 0.5
-    }
-
-
-initAntiVirus : AntiVirus
-initAntiVirus =
-    { rules = [ 2 ]
-    , pos = [ ( 3, 2 ), ( 3, 3 ) ]
     }
 
 
@@ -117,235 +148,137 @@ initBehavior =
     { populationFlow = True, virusEvolve = True }
 
 
-initModel : () -> ( Model, Cmd Msg )
-initModel _ =
-    ( { city =
-            initCity 10
-                [ ( 0, 0 )
-                , ( 0, 1 )
-                , ( 0, 2 )
-                , ( 1, -1 )
-                , ( 1, 0 )
-                , ( 1, 1 )
-                , ( 2, -1 )
-                , ( 2, 0 )
-                , ( 2, 1 )
-                , ( 3, -1 )
-                ]
-      , behavior = initBehavior
-      , state = Playing
-      , currentRound = 1
-      , screenSize = ( 600, 800 )
-      , viewport = Nothing
-      , virus = initVirus
-      , region = NoRegion
-      , cardSelected = NoCard
-      , todo = []
-      , roundTodoCleared = False
-      , av = initAntiVirus
-      , power = 10000
-      , economy = 10000
-      , basicEcoOutput = para.basicEcoOutput
-      , warehouseNum = 0
-      , ecoRatio = 1
-      , selectedHex = ( -233, -233 )
-      , mouseOver = ( -233, -233 )
-      , selHex = SelHexOff
-      }
-    , Task.perform GotViewport Browser.Dom.getViewport
-    )
-
-
-sickupdate : List Tile -> List ( Int, Int ) -> Int -> List Tile
-sickupdate t lstvir inf =
-    List.map
-        (\x ->
-            if (LE.count ((==) x.indice) lstvir > 0) && x.sick + inf * LE.count ((==) x.indice) lstvir <= x.population then
-                { x
-                    | sick = x.sick + inf * LE.count ((==) x.indice) lstvir
-                }
-
-            else if LE.count ((==) x.indice) lstvir > 0 then
-                { x
-                    | sick = x.population
-                }
-
-            else
-                x
-        )
-        t
-
-
-virusKill : Virus -> City -> City
-virusKill vir city =
+judgeBuild : Model -> ( Int, Int ) -> Bool
+judgeBuild model ( i, j ) =
     let
-        dr =
-            vir.kill
+        hostilelst =
+            hospitalTiles model.city.tilesIndex
 
-        patients =
-            toFloat (sumSick city)
+        quatilelst =
+            quarantineTiles model.city.tilesIndex
 
-        death =
-            patients
-                * dr
-                |> round
-
-        ( lstInfectedn, lstInfected1 ) =
-            city.tilesindex
-                |> List.partition (\x -> x.sick > 0)
-                |> Tuple.first
-                |> List.sortBy .sick
-                |> List.partition (\x -> x.sick > 1)
-
-        estimateDeath =
-            List.map (\x -> round (toFloat x.sick * (0.05 + dr))) lstInfectedn
-                |> List.sum
-
-        deathlst =
-            if death <= estimateDeath then
-                List.take (round (toFloat death / toFloat estimateDeath) * List.length lstInfectedn) lstInfectedn
-
-            else
-                lstInfectedn ++ List.take (death - estimateDeath) lstInfected1
+        waretilelst =
+            warehouseTiles model.city.tilesIndex
     in
-    { city
-        | tilesindex =
-            List.map
-                (\x ->
-                    if List.member x deathlst then
-                        { x
-                            | sick = x.sick - round (toFloat x.sick * dr)
-                            , dead = x.dead + round (toFloat x.sick * dr)
-                            , population = x.population - round (toFloat x.sick * dr)
-                        }
-
-                    else
-                        x
-                )
-                city.tilesindex
-    }
+    model.cardSelected
+        == SelectCard hospital
+        && List.member (converHextoTile ( i, j )) hostilelst
+        || model.cardSelected
+        == SelectCard quarantine
+        && List.member (converHextoTile ( i, j )) quatilelst
+        || model.cardSelected
+        == SelectCard warehouse
+        && List.member (converHextoTile ( i, j )) waretilelst
 
 
-infect : City -> Virus -> City
-infect city virus =
+initlevelmap : Int -> City
+initlevelmap level =
     let
-        inf =
-            virus.infect
-
-        lstTile =
-            city.tilesindex
-
-        lstvirHexIndice =
-            virus.pos
-
-        lstvirTilesIndice =
-            List.map (\x -> converHextoTile x) lstvirHexIndice
-    in
-    { city
-        | tilesindex = sickupdate lstTile lstvirTilesIndice inf
-    }
-
-
-populationFlow : Int -> City -> City
-populationFlow n city =
-    let
-        citytileslst =
-            city.tilesindex
-
-        t =
-            List.take n citytileslst
-                |> List.drop (n - 1)
+        citytile =
+            getElement level map
                 |> List.head
-                |> Maybe.withDefault (Tile ( -100, -100 ) 100 0 0 NoConstruction 0)
+                |> Maybe.withDefault []
+    in
+    initCity 20 citytile
 
-        lstnTile =
-            --not include tile t itself
-            validNeighborTile citytileslst t
 
-        numNeig =
-            --number of valid neighbor tiles around tile t (not including tile t)
-            List.length lstnTile
+mapLevel =
+    [ cartesianProduct [ 0, 1 ] [ 0, 1 ]
+    , cartesianProduct [ 0, 1 ] [ 0, 1 ]
+    , cartesianProduct [ 2 ] [ -3, -2, -1, 0, 1, 2 ] ++ cartesianProduct [ 1 ] [ -2, -1, 0, 1, 2 ] ++ cartesianProduct [ 0 ] [ -1, 0, 2, 3 ] ++ cartesianProduct [ 3 ] [ 0, 1 ] ++ [ ( 4, 0 ) ]
+    , cartesianProduct [ -1, 0, 1 ] [ -1, 0, 1 ] ++ cartesianProduct [ 0, 1, 2 ] [ 2, 3 ] ++ [ ( 2, 1 ) ]
+    , [ ( 0, 0 )
+      , ( 0, 1 )
+      , ( 0, 2 )
+      , ( 0, 3 )
+      , ( 1, -1 )
+      , ( 1, 0 )
+      , ( 1, 1 )
+      , ( 1, 2 )
+      , ( 2, -2 )
+      , ( 2, -1 )
+      , ( 2, 0 )
+      , ( 2, 1 )
+      , ( 2, 2 )
+      , ( 3, -1 )
+      , ( 3, -2 )
+      ]
+    ]
 
-        sickleave =
-            --the number of leaving patients
-            if t.population > numNeig then
-                round (toFloat (t.sick * numNeig) / toFloat t.population)
+
+map =
+    let
+        map_ =
+            List.drop 2 mapLevel
+                |> List.foldr (++) []
+                |> LE.unique
+    in
+    mapLevel ++ [ map_ ]
+
+
+tutorialHands =
+    [ [ megaClone ], [ cut, megaCut ] ]
+
+
+initHandsVirus : Int -> ( List Card, Virus )
+initHandsVirus level =
+    let
+        hand =
+            if level <= 2 then
+                getElement level tutorialHands
+                    |> List.foldr (\x -> \y -> x ++ y) []
 
             else
-                t.sick
+                []
 
-        leaveLst =
-            -- make a ordered list of tiles people would go. Compatible for population < numNeig
-            List.sortBy (\x -> x.sick + x.dead * 2) lstnTile
-                |> List.map (\x -> x.indice)
-                |> List.take t.population
-
-        sickLst =
-            leaveLst
-                |> List.take sickleave
+        vir =
+            getElement level virus
+                |> List.head
+                |> Maybe.withDefault (Virus [] [] 0 0 0)
     in
-    if n <= List.length citytileslst then
-        let
-            newcitytileslst =
-                if t.population >= numNeig then
-                    List.map
-                        (\x ->
-                            if x == t then
-                                { x
-                                    | population = x.population - numNeig
-                                    , sick = x.sick - sickleave
-                                }
-
-                            else if List.member x.indice sickLst then
-                                { x
-                                    | population = x.population + 1
-                                    , sick = x.sick + 1
-                                }
-
-                            else if List.member x.indice leaveLst then
-                                { x | population = x.population + 1 }
-
-                            else
-                                x
-                        )
-                        citytileslst
-
-                else
-                    List.map
-                        (\x ->
-                            if x == t then
-                                { x
-                                    | population = 0
-                                    , sick = 0
-                                }
-
-                            else if List.member x.indice sickLst then
-                                { x
-                                    | population = x.population + 1
-                                    , sick = x.sick + 1
-                                }
-
-                            else if List.member x.indice leaveLst then
-                                { x | population = x.population + 1 }
-
-                            else
-                                x
-                        )
-                        citytileslst
-
-            newcity =
-                { city
-                    | tilesindex = newcitytileslst
-                }
-        in
-        populationFlow (n + 1) newcity
-
-    else
-        city
+    ( hand, vir )
 
 
-updateCity : City -> Virus -> City
-updateCity city vir =
-    infect city vir
-        |> virusKill vir
-        |> populationFlow 1
+lr : Model -> ( Int, Int )
+lr model =
+    ( model.currentLevel, model.currentRound )
+
+
+updateDeck : Int -> List Card
+updateDeck n =
+    getElement n cardPiles
+        |> List.foldr (++) []
+
+
+cardGenerator : Model -> Generator Card
+cardGenerator model =
+    choose model.deck
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+
+
+cardsGenerator : Model -> Int -> Generator (List Card)
+cardsGenerator model n =
+    choose model.deck
+        |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
+        |> Random.list n
+
+
+winCondition =
+    [ 140 -- Atlanta
+    , 160 -- amber
+    , 80 -- St.P
+    ]
+
+
+toCardSelected : Model -> Maybe Card
+toCardSelected model =
+    let
+        sel =
+            model.cardSelected
+    in
+    case sel of
+        SelectCard c ->
+            Just c
+
+        NoCard ->
+            Nothing

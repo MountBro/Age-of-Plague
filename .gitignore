@@ -1,8 +1,15 @@
-# Ignore all tmp files created by matlab
 *.m~
 *.elm~
-elm-stuff
-
 *.elmi
 *.elmo
 *.dat
+
+# elm-package generate files 
+elm-stuff/
+
+# build file
+sites/elm.js
+sites/index.html
+
+# webstorm generate directory
+.idea/

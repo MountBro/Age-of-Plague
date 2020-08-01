@@ -1,13 +1,21 @@
 module Update exposing (..)
 
+import Action exposing (..)
 import Browser.Dom exposing (Error, Viewport)
 import Card exposing (..)
+import ColorScheme exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
+import InitLevel exposing (..)
+import List.Extra as LE
 import Message exposing (Msg(..))
 import Model exposing (..)
+import NextRound exposing (..)
 import Parameters exposing (..)
+import Ports as P exposing (..)
 import Random exposing (..)
+import RegionFill exposing (..)
+import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
 
@@ -15,10 +23,81 @@ import Virus exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        LevelBegin n ->
+            if n <= 2 then
+                ( levelInit n model |> loadTheme n, Cmd.none )
+
+            else if n == 5 then
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 6) )
+
+            else
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
+
+        InitializeHands lc ->
+            let
+                loglc =
+                    log "lc" lc
+
+                specialCards =
+                    if model.currentLevel == 5 then
+                        --St.P
+                        [ blizzard
+                        , drought
+                        , hospital
+                        , quarantine
+                        ]
+
+                    else if model.currentLevel == 4 then
+                        --Amber
+                        [ megaClone
+                        , organClone
+                        , resurgence
+                        , purification
+                        , cut
+                        , hospital
+                        ]
+
+                    else if model.currentLevel == 3 then
+                        -- Atlanta
+                        [ defenseline
+                        , sacrifice
+                        , goingViral
+                        , judgement
+                        , hospital
+                        , hospital
+                        ]
+
+                    else
+                        [ quarantine
+                        , hospital
+                        , cut
+                        , cut
+                        , megaCut
+                        , coldWave
+                        ]
+            in
+            ( { model | hands = lc ++ specialCards }, Cmd.none )
+
+        ReplaceCard c replacement ->
+            let
+                hands_ =
+                    model.hands
+
+                hands =
+                    hands_
+                        |> LE.remove c
+                        |> List.append [ replacement ]
+            in
+            ( { model | hands = hands }, Cmd.none )
+
         Resize w h ->
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
         Tick newTime ->
+            let
+                log1 =
+                    log "selhex" model.selHex
+            in
             if not (finished model.todo) then
                 model |> pickAction |> mFillRegion
 
@@ -29,7 +108,10 @@ update msg model =
             ( model, Cmd.none )
 
         GotViewport viewport ->
-            ( { model | viewport = Just viewport, screenSize = ( viewport.viewport.width, viewport.viewport.height ) }
+            ( { model
+                | viewport = Just viewport
+                , screenSize = ( viewport.viewport.width, viewport.viewport.height )
+              }
             , Cmd.none
             )
 
@@ -39,35 +121,109 @@ update msg model =
             )
 
         NextRound ->
-            if model.behavior.virusEvolve then
-                ( { model | currentRound = model.currentRound + 1 } |> clearCurrentRoundTodo |> virusEvolve |> ecoInc, Cmd.none )
+            toNextRound model
 
-            else
-                ( { model | currentRound = model.currentRound + 1, behavior = initBehavior } |> clearCurrentRoundTodo |> ecoInc, Cmd.none )
+        DrawACard ->
+            if model.power >= para.drawCardCost then
+                if model.currentLevel == 1 then
+                    if model.currentRound == 3 && model.todo == [] then
+                        ( { model | power = model.power - para.drawCardCost }, Random.generate DrawCard (cardGenerator model) )
 
-        PlayCard card ->
-            if card.cost <= model.power && para.ecoThreshold <= model.economy then
-                if card == cut || card == megaCut then
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , selHex = SelHexOn
-                        , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
-                      }
-                    , Cmd.none
-                    )
+                    else
+                        ( model, Cmd.none )
+
+                else if model.currentLevel == 2 && model.currentRound <= 4 then
+                    ( model, Cmd.none )
+
+                else if List.length model.hands < 10 then
+                    ( { model | power = model.power - para.drawCardCost }, Random.generate DrawCard (cardGenerator model) )
+
+                else if List.length model.hands >= 10 then
+                    let
+                        w =
+                            "Can't draw a card right now:\nmaximum number of hands (10)\nreached." |> Warning
+                    in
+                    ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
 
                 else
-                    ( { model
-                        | todo = model.todo ++ [ ( True, card.action ) ]
-                        , power = model.power - card.cost
-                        , economy = model.economy - para.ecoThreshold
-                      }
-                    , Cmd.none
-                    )
+                    ( model, Cmd.none )
 
             else
-                ( model, Cmd.none )
+                let
+                    w =
+                        "Can't draw a card right now:\npower insufficient." |> Warning
+                in
+                ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
+
+        DrawCard c ->
+            ( { model | hands = c :: model.hands }, Cmd.none )
+
+        PlayCard card ->
+            if
+                card.cost
+                    <= model.power
+            then
+                if model.selHex == SelHexOff then
+                    if List.member card targetCardlst then
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , selHex = SelHexOn
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                            , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
+                          }
+                        , P.cardToMusic ""
+                        )
+
+                    else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                          }
+                        , Cmd.none
+                        )
+
+                    else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
+                        ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
+                        , Cmd.none
+                        )
+
+                    else
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                          }
+                        , Cmd.none
+                        )
+
+                else
+                    let
+                        mc =
+                            toCardSelected model
+                    in
+                    case mc of
+                        Just c ->
+                            ( { model
+                                | actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ c.name ++ "]:\nPlease select a hexagon") ]
+                              }
+                            , Cmd.none
+                            )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+            else
+                ( { model
+                    | actionDescribe =
+                        model.actionDescribe
+                            ++ [ Warning ("[" ++ card.name ++ "]:\n" ++ "Insufficient power!") ]
+                  }
+                , Cmd.none
+                )
 
         FreezeRet prob rand ->
             let
@@ -93,192 +249,159 @@ update msg model =
             in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
 
+        MouseOverCard n ->
+            if model.state == Playing then
+                ( { model | mouseOverCard = n }, Cmd.none )
 
-ecoInc : Model -> Model
-ecoInc model =
-    { model
-        | economy =
-            model.economy
-                + (model.basicEcoOutput + model.warehouseNum * para.warehouseOutput)
-                * model.ecoRatio
-        , ecoRatio = 1
-    }
+            else
+                ( model, Cmd.none )
 
+        MouseOverCardToReplace n ->
+            if model.state == Drawing then
+                ( { model | mouseOverCardToReplace = n }, Cmd.none )
 
-virusEvolve : Model -> Model
-virusEvolve model =
-    { model
-        | city = updateCity model.city model.virus
-        , virus = change model.virus model.av |> Tuple.first
-        , av = change model.virus model.av |> Tuple.second
-    }
+            else
+                ( model, Cmd.none )
 
+        SelectCardToReplace c ->
+            model |> replaceCard c
 
-clearCurrentRoundTodo : Model -> Model
-clearCurrentRoundTodo model =
-    let
-        todo_ =
-            model.todo
+        StartRound1 ->
+            ( { model | state = Playing, drawChance = 0 }, Cmd.none )
 
-        todo =
-            List.map (\( x, y ) -> ( x, List.drop 1 y )) todo_
-                |> List.filter (\( x, y ) -> not (List.isEmpty y))
-                |> List.map (\( x, y ) -> ( True, y ))
-    in
-    { model | todo = todo, roundTodoCleared = False }
+        HosInvalid ->
+            ( { model
+                | power = model.power + 4
+              }
+            , Cmd.none
+            )
 
+        Message.Alert txt ->
+            ( model, sendMsg txt )
 
-pickAction : Model -> ( Model, Cmd Msg )
-pickAction model =
-    let
-        ( finished, unfinished_ ) =
-            List.partition (\( x, y ) -> not x) model.todo
-
-        headQueue_ =
-            unfinished_
-                |> List.head
-                |> Maybe.withDefault finishedEmptyQueue
-
-        headAction =
-            headQueue_
-                |> Tuple.second
-                |> List.head
-                |> Maybe.withDefault NoAction
-
-        headQueue =
-            ( False, Tuple.second headQueue_ )
-
-        todo =
-            finished ++ [ headQueue ] ++ List.drop 1 unfinished_
-    in
-    { model | todo = todo } |> performAction headAction
-
-
-performAction : Action -> Model -> ( Model, Cmd Msg )
-performAction action model =
-    case action of
-        IncPowerI inc ->
-            ( { model | power = model.power + inc }, Cmd.none )
-
-        Freeze prob ->
-            ( model, Random.generate (FreezeRet prob) (Random.float 0 1) )
-
-        FreezeI ->
+        KillTileVir ( ( i, j ), prob ) rand ->
             let
-                behavior_ =
-                    model.behavior
-
-                behavior =
-                    { behavior_ | virusEvolve = False }
-            in
-            ( { model | behavior = behavior }, Cmd.none )
-
-        EcoDoubleI ->
-            ( { model | ecoRatio = 2 * model.ecoRatio }, Cmd.none )
-
-        EcoDoubleI_Freeze prob ->
-            ( { model | ecoRatio = 2 * model.ecoRatio }, Random.generate (FreezeRet prob) (Random.float 0 1) )
-
-        CutHexI ( i, j ) ->
-            let
-                virus_ =
-                    model.virus
-
-                pos_ =
-                    virus_.pos
-
-                pos =
-                    List.filter (\( x, y ) -> ( x, y ) /= ( i, j )) pos_
-
-                virus =
-                    { virus_ | pos = pos }
-            in
-            ( { model | virus = virus }, Cmd.none )
-
-        CutTileI ( i, j ) ->
-            let
-                ( t1, t2 ) =
+                ( ti, tj ) =
                     converHextoTile ( i, j )
 
-                ( c1, c2 ) =
-                    ( 2 * t1 - t2, t1 + 3 * t2 )
-
-                lc =
-                    log "chosenTile" ( t1, t2 )
-
                 virus_ =
                     model.virus
 
-                pos_ =
-                    virus_.pos
-
-                pos =
-                    List.filter
-                        (\( x, y ) ->
-                            not (List.member ( x, y ) (( c1, c2 ) :: generateZone ( c1, c2 )))
-                        )
-                        pos_
-
-                virus =
-                    { virus_ | pos = pos }
-            in
-            ( { model | virus = virus }, Cmd.none )
-
-        Activate996I ->
-            let
-                virus_ =
-                    model.virus
-
-                dr =
-                    1.05 * virus_.kill
-
-                virus =
-                    { virus_ | kill = dr }
-            in
-            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus }, Cmd.none )
-
-        _ ->
-            ( model, Cmd.none )
-
-
-type alias Sel =
-    ( Int, Int )
-
-
-mFillRegion : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-mFillRegion ( model, cm ) =
-    case model.cardSelected of
-        NoCard ->
-            ( model, Cmd.none )
-
-        SelectCard card ->
-            case model.selHex of
-                SelHexOn ->
-                    if model.selectedHex /= ( -233, -233 ) then
-                        ( { model
-                            | todo =
-                                model.todo
-                                    ++ [ Tuple.first (fillRegion card model.selectedHex) ]
-                            , selHex = SelHexOff
-                            , selectedHex = ( -233, -233 )
-                          }
-                        , Cmd.batch [ cm, Tuple.second (fillRegion card model.selectedHex) ]
-                        )
+                vir =
+                    if prob <= rand then
+                        { virus_
+                            | pos = List.filter (\x -> converHextoTile x /= ( ti, tj )) virus_.pos
+                        }
 
                     else
-                        ( model, cm )
+                        virus_
+            in
+            ( { model | virus = vir }, Cmd.none )
 
-                SelHexOff ->
-                    ( model, Cmd.none )
+        JudgeVirPeo ( ( i, j ), prob ) rand ->
+            let
+                ( ti, tj ) =
+                    converHextoTile ( i, j )
+
+                virus =
+                    model.virus
+
+                tilelst =
+                    model.city.tilesIndex
+
+                city =
+                    model.city
+
+                virus_ =
+                    if prob <= rand then
+                        { virus
+                            | pos = List.filter (\x -> converHextoTile x /= ( ti, tj )) virus.pos
+                        }
+
+                    else
+                        virus
+
+                city_ =
+                    if prob > rand then
+                        { city
+                            | tilesIndex =
+                                List.map
+                                    (\x ->
+                                        if x.indice == ( ti, tj ) then
+                                            { x
+                                                | dead = x.population + x.dead
+                                                , sick = 0
+                                                , population = 0
+                                            }
+
+                                        else
+                                            x
+                                    )
+                                    tilelst
+                        }
+
+                    else
+                        city
+            in
+            ( { model | city = city_, virus = virus_ }, Cmd.none )
+
+        Message.Click "home" ->
+            ( { model | state = Model.HomePage }, Cmd.none )
+
+        Message.Click "card" ->
+            ( { model | state = Model.CardPage }, Cmd.none )
+
+        Message.Click "startGame" ->
+            ( { model | state = Model.Playing }, Cmd.none )
+
+        Message.Click _ ->
+            ( model, Cmd.none )
+
+        ViewVirusInfo ->
+            ( { model | virusInfo = not model.virusInfo }, Cmd.none )
 
 
-fillRegion : Card -> Sel -> ( Queue, Cmd Msg )
-fillRegion card sel =
-    if card == cut then
-        ( ( True, [ CutHexI sel ] ), Cmd.none )
+loadTheme : Int -> Model -> Model
+loadTheme n model =
+    case n of
+        3 ->
+            { model | theme = Plain }
 
-    else if card == megaCut then
-        ( ( True, [ CutTileI sel ] ), Cmd.none )
+        4 ->
+            { model | theme = Urban }
+
+        5 ->
+            { model | theme = Polar }
+
+        _ ->
+            { model | theme = Minimum }
+
+
+replaceCard : Card -> Model -> ( Model, Cmd Msg )
+replaceCard c model =
+    if List.member c model.hands && model.replaceChance > 0 then
+        ( { model | replaceChance = model.replaceChance - 1 }, Random.generate (ReplaceCard c) (cardGenerator model) )
 
     else
-        ( finishedEmptyQueue, Cmd.none )
+        let
+            logreplace =
+                log "card to replace does not exist in hands!" ""
+        in
+        ( model, Cmd.none )
+
+
+judgeSummon : Card -> Int -> Int
+judgeSummon card n =
+    let
+        num_ =
+            LE.elemIndex card (Tuple.first summonNum)
+                |> Maybe.withDefault 0
+
+        num =
+            num_ + 1
+
+        add =
+            getElement num (Tuple.second summonNum)
+                |> List.foldr (+) 0
+    in
+    add + n

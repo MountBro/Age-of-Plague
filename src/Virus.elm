@@ -16,6 +16,33 @@ type alias Virus =
 type alias AntiVirus =
     { rules : List Int
     , pos : List ( Int, Int )
+    , life : Int
+    }
+
+
+initVirus : Virus
+initVirus =
+    { rules = [ 2, 3, 4 ] -- [2, 4]
+    , pos = [ ( 0, 1 ), ( 0, 2 ), ( 1, 1 ), ( 1, 2 ), ( 1, 3 ) ] -- [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ]
+    , number = 0
+    , infect = 1
+    , kill = 0
+    }
+
+
+initAntiVirus : AntiVirus
+initAntiVirus =
+    { rules = [ 0, 1, 2, 3, 4, 5, 6 ]
+    , pos = []
+    , life = 0
+    }
+
+
+createAV : ( Int, Int ) -> AntiVirus
+createAV hlst =
+    { rules = [ 0, 1, 2, 3, 4 ]
+    , pos = [ hlst ]
+    , life = 2
     }
 
 
@@ -57,34 +84,66 @@ countavNeighbor pos lstv =
         |> List.sum
 
 
-searchNeighbor : List ( Int, Int ) -> List ( Int, Int )
-searchNeighbor virlst =
+searchValidNeighbor : List ( Int, Int ) -> List ( Int, Int ) -> List ( Int, Int )
+searchValidNeighbor virlst lst =
     List.map (\x -> generateZone x) virlst
         |> List.concat
         |> LE.unique
+        |> List.filter (\x -> List.member (converHextoTile x) lst)
 
 
-judgeAlivevir : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> ( Virus, AntiVirus )
-judgeAlivevir lstvir vir lstanti anti =
+judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )
+judgeAlive lstvir vir lstanti anti lstquatile =
     let
         lstv =
-            List.partition (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x anti.pos)) lstvir
-                |> Tuple.first
+            List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x anti.pos) && not (List.member (converHextoTile x) lstquatile)) lstvir
 
         lsta =
-            List.partition (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member x vir.pos)) lstanti
-                |> Tuple.first
+            if anti.life > 0 then
+                List.filter (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member (converHextoTile x) lstquatile)) lstanti
+
+            else
+                []
     in
-    ( { vir | pos = lstv }, { anti | pos = lsta } )
+    ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )
 
 
-change : Virus -> AntiVirus -> ( Virus, AntiVirus )
-change virus anti =
-    let
-        lstvir =
-            searchNeighbor virus.pos
+virus =
+    [ virus1, virus2, virus3, virus4, virus5, virus6 ]
 
-        lstanti =
-            searchNeighbor anti.pos
-    in
-    judgeAlivevir lstvir virus lstanti anti
+
+virus1 =
+    Virus [] [] 1 1 0
+
+
+virus2 =
+    Virus [ 2, 3, 4 ] ([ ( 0, 1 ), ( 0, 2 ), ( 0, 3 ), ( 0, -1 ), ( 0, 0 ), ( 1, -1 ), ( 1, 0 ) ] ++ converTiletoHex ( 1, 0 ) ++ converTiletoHex ( 1, 1 )) 2 1 0
+
+
+virus3 =
+    Virus [ 2, 3 ] (cartesianProduct [ 1 ] [ 1, 2, 3 ] ++ cartesianProduct [ -1, 0 ] [ 1 ] ++ [ ( 0, 4 ), ( -1, 5 ) ]) 5 1 0.12
+
+
+virus4 =
+    Virus [ 2, 4 ] ([ ( 1, -4 ), ( 2, -4 ), ( 2, -3 ), ( -2, -2 ), ( -3, -1 ), ( -3, 0 ), ( 3, 0 ), ( 3, 1 ) ] ++ converTiletoHex ( 1, -1 ) ++ converTiletoHex ( -1, -1 ) ++ converTiletoHex ( -1, 1 ) ++ generateZone (converTiletoHex_ ( 0, 3 ))) 4 1 0.2
+
+
+virus5 =
+    Virus [ 2, 3, 6 ] (cartesianProduct [ -1 ] [ 0, 1, 2 ] ++ cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ cartesianProduct [ -3 ] [ 6, 7 ] ++ cartesianProduct [ -1, 0 ] [ 8 ] ++ generateZone (converTiletoHex_ ( 0, 3 )) ++ generateZone (converTiletoHex_ ( 2, 2 ))) 3 1 0.48
+
+
+virus6 =
+    Virus [ 2, 5 ] (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 3 ) ]) 6 1 0.05
+
+
+endlssVir =
+    [ (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 3 ) ])
+    , (generateZone (converTiletoHex_ ( 0, 3 )) ++ [ ( -3, 6 ), ( -3, 7 ) ])
+    , (generateZone (converTiletoHex_ ( -1, -1 )) ++ [ ( -2, -2 ), ( -3, 0 ), ( -3, -1 ) ])
+    , (generateZone (converTiletoHex_ ( 2, 3 )) ++ [ ( 4, 7 ), ( 3, 8 ), ( 2, 9 ) ])
+    , (generateZone (converTiletoHex_ ( 4, 0 )) ++ [ ( 7, 2 ), ( 7, 3 ) ])
+    , (generateZone (converTiletoHex_ ( 2, -3 )) ++ [ ( 7, -5 ), ( 5, -6 ) ])
+    ]
+
+ruleLst =
+    [[2,3],[2,4],[2,5],[2,3,6]]

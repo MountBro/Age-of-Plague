@@ -7,6 +7,7 @@ import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events as HE exposing (..)
 import Message as M exposing (..)
+import Svg.Attributes exposing (display)
 
 
 viewAll =
@@ -16,7 +17,7 @@ viewAll =
             , br [] []
             ]
         , H.p [ id "t2" ] [ H.text "After the Apocalypse" ]
-        , div [ class "container" ]
+        , div [ class "container", id "ctr" ]
             [ div [ class "honeycomb " ]
                 [ div [ class "column" ]
                     [ a [ class "hex", id "tut1", HE.onClick (M.LevelBegin 1) ]
@@ -86,7 +87,7 @@ viewAll =
                             ]
                         , span [ class "content" ]
                             [ strong []
-                                [ text "Gallery" ]
+                                [ text "Collection" ]
                             ]
                         ]
                     ]
@@ -94,4 +95,10 @@ viewAll =
                     []
                 ]
             ]
+        , H.audio
+            [ HA.id "bgm"
+            , HA.src "./assets/music/bgm1.mp3"
+            , HA.loop True
+            ]
+            []
         ]

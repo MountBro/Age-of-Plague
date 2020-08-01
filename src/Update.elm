@@ -159,7 +159,7 @@ update msg model =
                         , hands = LE.remove card model.hands
                         , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
                       }
-                    , P.cardToMusic ""
+                    , P.cardToMusic "ice"
                     )
 
                 else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then

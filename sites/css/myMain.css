@@ -32,14 +32,14 @@
 
 #city3 {
     position: absolute;
-    left: calc(var(--x1) + var(--deltaX));
-    top: calc(var(--y1) + var(--DeltaY) + 2 * var(--deltaY));
+    left: calc(var(--x1) + 2 * var(--deltaX));
+    top: calc(var(--y1) + 2 * var(--DeltaY));
 }
 
 #endless {
     position: absolute;
-    left: calc(var(--x1) + 2 * var(--deltaX));
-    top: calc(var(--y1) + 2 * var(--DeltaY));
+    left: calc(var(--x1) + var(--deltaX));
+    top: calc(var(--y1) + var(--DeltaY) + 2 * var(--deltaY));
 }
 
 #gallery {

@@ -1,10 +1,14 @@
 module View exposing (..)
 
 import Card exposing (..)
+import Css exposing (..)
 import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
+import Html.Styled as HS
+import Html.Styled.Attributes as HSA
+import Html.Styled.Events as HSE
 import Json.Decode as D
 import Message exposing (..)
 import Model exposing (..)
@@ -40,8 +44,6 @@ view model =
     div []
         [ svg
             [ SA.viewBox "0 0 1000 600"
-            , SA.height "600"
-            , SA.width "1000"
             , SA.width (model.screenSize |> Tuple.first |> String.fromFloat)
             , SA.height (model.screenSize |> Tuple.second |> String.fromFloat)
             ]
@@ -73,6 +75,9 @@ view model =
         , cardButton fubao
         , cardButton megaCut
         , Html.text (Debug.toString model.todo)
+        , HS.button [ HSA.css [ Css.borderRadius (px 10), Css.hover [ textDecoration underline ] ] ]
+            [ HS.text "Reset" ]
+            |> HS.toUnstyled
         ]
 
 
@@ -90,7 +95,7 @@ bkg =
 
 caption : Float -> Float -> String -> String -> Svg Msg
 caption x y cstr text =
-    text_
+    Svg.text_
         [ SA.fontSize "15"
         , SA.fontFamily "sans-serif"
         , x |> String.fromFloat |> SA.x
@@ -365,7 +370,7 @@ renderTile t =
 
         cons =
             svg []
-                [ text_
+                [ Svg.text_
                     [ SA.fontSize "10"
                     , SA.fontFamily "sans-serif"
                     , x - 5.0 |> String.fromFloat |> SA.x
@@ -377,7 +382,7 @@ renderTile t =
 
         populationInfo =
             svg []
-                [ text_
+                [ Svg.text_
                     [ SA.fontSize "15"
                     , SA.fontFamily "sans-serif"
                     , x - 15.0 |> String.fromFloat |> SA.x
@@ -385,7 +390,7 @@ renderTile t =
                     , SA.fill "green"
                     ]
                     [ t.population - t.sick |> String.fromInt |> Svg.text ]
-                , text_
+                , Svg.text_
                     [ SA.fontSize "15"
                     , SA.fontFamily "sans-serif"
                     , x + 3.0 |> String.fromFloat |> SA.x
@@ -393,7 +398,7 @@ renderTile t =
                     , SA.fill "orange"
                     ]
                     [ t.sick |> String.fromInt |> Svg.text ]
-                , text_
+                , Svg.text_
                     [ SA.fontSize "15"
                     , SA.fontFamily "sans-serif"
                     , x - 5.0 |> String.fromFloat |> SA.x

@@ -678,4 +678,18 @@ renderVirusInf model =
 
 endlessLevelProgress : Model -> Html Msg
 endlessLevelProgress model =
-    GameViewBasic.caption 810 (para.houseButtonY + 50.0) "white" (String.fromInt model.currentRound) 60
+    let
+        r =
+            model.currentRound
+
+        digitNum =
+            if r < 10 then
+                1
+
+            else if r < 100 then
+                2
+
+            else
+                3
+    in
+    GameViewBasic.caption (810 - 30 * (digitNum - 1)) (para.houseButtonY + 45.0) "white" (String.fromInt model.currentRound) 60

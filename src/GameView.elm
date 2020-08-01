@@ -706,13 +706,13 @@ cityInfo model =
     case model.currentLevel of
         3 ->
             """Atlanta is a city with plain terrain and a 
-temperate climate, which is easily 
-attacked by viruses. Fortunately, people 
-find some nano-virus technologies from 
+temperate climate, which makes it highly 
+susceptible to  viruses. Fortunately, people 
+found some nano-virus technologies from 
 a virus research institute before the 
 nuclear war. With special programs, the
- nano-virus can kill some microorganisms,
- including viruses.
+ nano-virus is capable of killing some
+microorganisms, including viruses.
 
 ========SPECIAL CARDS==========
 🃟 Defensive Line
@@ -721,7 +721,7 @@ nuclear war. With special programs, the
 🃟 Judgement
 
 ========OBJECTIVE==========
-No less then 140 surviving population
+No less than 140 surviving population.
 """
 
         4 ->
@@ -733,8 +733,8 @@ damage in the war. Therefore, it kept
  many cutting-edge technologies and
  later became the most populated area
  in the world. To make up for the labor
- loss, Amber developed a mature system
- of cloning.
+ loss, a highly advanced cloning system
+ was developed.
 
 ========SPECIAL CARDS==========
 🃟 Mega Clone 
@@ -743,25 +743,24 @@ damage in the war. Therefore, it kept
 🃟 Purificatio
 =
 ========OBJECTIVE==========
-No less then surviving population
+No less than 160 surviving population.
 """
 
         5 ->
             """Welcome to St.Petersburg, the 
 northernmost city with a population over
  50,000. The climate here is extremely
- cold and dry. The resources that can
- be harvested from land are very
- limited. Therefore, people create a
- weather control system to adapt to
- the environment.
+ cold and dry. The resources harvested 
+from land are very limited. Therefore, 
+people created a weather control system
+ to adapt to the environment.
 
 ========SPECIAL CARDS==========
 🃟 Blizzard 
 🃟 Drought
 
 =========OBJECTIVE==========
-No less then surviving population
+No less than 80 surviving population.
 """
 
         _ ->
@@ -784,7 +783,7 @@ cityInfoText model =
     in
     indexed
         |> List.map (\( n, str ) -> ( para.inflm, para.inftm + para.clh * toFloat n, str ))
-        |> List.map (\( x, y, str ) -> GameViewBasic.caption x y cs.infText str 12)
+        |> List.map (\( x, y, str ) -> GameViewBasic.caption x y cs.consoleText str 12)
 
 
 renderCityInfo : Model -> Html Msg

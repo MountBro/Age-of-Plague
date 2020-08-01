@@ -29,8 +29,7 @@ type alias Model =
     , roundTodoCleared : Bool
     , av : AntiVirus
     , power : Int
-    , economy : Int
-    , basicEcoOutput : Int
+    , maxPower : Int
     , warehouseNum : Int
     , ecoRatio : Float
     , selectedHex : ( Int, Int )
@@ -49,6 +48,7 @@ type alias Model =
     , flowRate : Int -- population flow rate
     , virusInfo : Bool
     , waveNum : Int
+    , freezeTile : List (Int, Int) -- for defenseline
     }
 
 
@@ -69,8 +69,7 @@ initModel _ =
       , roundTodoCleared = False
       , av = initAntiVirus
       , power = 50
-      , economy = 10 --10
-      , basicEcoOutput = para.basicEcoOutput
+      , maxPower = 10
       , warehouseNum = 0
       , ecoRatio = 1.0
       , selectedHex = ( -233, -233 )
@@ -89,6 +88,7 @@ initModel _ =
       , flowRate = 1
       , virusInfo = False
       , waveNum = 0
+      , freezeTile = []
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -270,3 +270,17 @@ winCondition =
     , 160 -- amber
     , 80 -- St.P
     ]
+
+
+toCardSelected : Model -> Maybe Card
+toCardSelected model =
+    let
+        sel =
+            model.cardSelected
+    in
+    case sel of
+        SelectCard c ->
+            Just c
+
+        NoCard ->
+            Nothing

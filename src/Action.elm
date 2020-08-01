@@ -5,11 +5,13 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Message exposing (..)
 import Model exposing (..)
+import Parameters exposing (..)
 import Population exposing (..)
 import Random exposing (float, generate)
 import Tile exposing (..)
 import Todo exposing (..)
 import Virus exposing (..)
+
 
 
 updateLog : Model -> Model
@@ -365,17 +367,8 @@ performAction action model =
             let
                 pos =
                     converHextoTile ( i, j )
-
-                virus_ =
-                    model.virus
-
-                virpos =
-                    List.filter (\x -> converHextoTile x /= pos) virus_.pos
-
-                virus =
-                    { virus_ | pos = virpos }
             in
-            ( { model | virus = virus } |> updateLog, Cmd.none )
+            ( { model | freezeTile = pos :: model.freezeTile } |> updateLog, Cmd.none )
 
         HospitalI ( i, j ) ->
             let
@@ -421,7 +414,6 @@ performAction action model =
                                         { x | qua = True }
 
                                     else
-
                                         x
                                 )
                                 city_.tilesIndex
@@ -526,7 +518,7 @@ performAction action model =
                 num =
                     model.warehouseNum + 1
             in
-            ( { model | city = city, warehouseNum = num } |> updateLog, Cmd.none )
+            ( { model | city = city, maxPower = para.warehousePowerInc + model.maxPower } |> updateLog, Cmd.none )
 
         Warmwave_KIA ( ( i, j ), prob ) ->
             ( model |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )

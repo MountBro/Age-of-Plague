@@ -9984,6 +9984,7 @@ var $author$project$Message$LevelBegin = function (a) {
 	return {$: 'LevelBegin', a: a};
 };
 var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$audio = _VirtualDom_node('audio');
 var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -9995,6 +9996,15 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$loop = $elm$html$Html$Attributes$boolProperty('loop');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -10014,6 +10024,12 @@ var $elm$html$Html$Events$onClick = function (msg) {
 };
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
 var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
@@ -10047,7 +10063,8 @@ var $author$project$ViewMP$viewAll = A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('container')
+					$elm$html$Html$Attributes$class('container'),
+					$elm$html$Html$Attributes$id('ctr')
 				]),
 			_List_fromArray(
 				[
@@ -10371,7 +10388,7 @@ var $author$project$ViewMP$viewAll = A2(
 													_List_Nil,
 													_List_fromArray(
 														[
-															$elm$html$Html$text('Gallery')
+															$elm$html$Html$text('Collection')
 														]))
 												]))
 										]))
@@ -10384,7 +10401,16 @@ var $author$project$ViewMP$viewAll = A2(
 								]),
 							_List_Nil)
 						]))
-				]))
+				])),
+			A2(
+			$elm$html$Html$audio,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$id('bgm'),
+					$elm$html$Html$Attributes$src('./assets/music/bgm1.mp3'),
+					$elm$html$Html$Attributes$loop(true)
+				]),
+			_List_Nil)
 		]));
 var $author$project$ViewCards$backToHome = A2(
 	$elm$html$Html$a,

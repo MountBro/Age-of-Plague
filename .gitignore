@@ -9,7 +9,7 @@ elm-stuff/
 
 # build file
 sites/elm.js
-sites/index.html
+
 
 # webstorm generate directory
 .idea/

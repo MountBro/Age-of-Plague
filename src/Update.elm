@@ -143,7 +143,7 @@ update msg model =
                         w =
                             "Can't draw a card right now:\nmaximum number of hands (10)\nreached." |> Warning
                     in
-                    ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
+                    ( { model | actionDescribe = model.actionDescribe ++ [w] }, Cmd.none )
 
                 else
                     ( model, Cmd.none )
@@ -151,9 +151,9 @@ update msg model =
             else
                 let
                     w =
-                        "Can't draw a card right now:\npower insufficient." |> Warning
+                        Warning "Can't draw a card right now:\npower insufficient."
                 in
-                ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
+                ( { model | actionDescribe = model.actionDescribe ++ [w] }, Cmd.none )
 
         DrawCard c ->
             ( { model | hands = c :: model.hands }, Cmd.none )
@@ -233,8 +233,19 @@ update msg model =
                 behavior =
                     { behavior_ | virusEvolve = not (rand < prob) }
 
+                log =
+                    if rand < prob then
+                        [ Feedback "Luckily, the virus is frozen." ]
+
+                    else
+                        [ Feedback "Oops, the virus isn't frozen." ]
             in
-            ( { model | behavior = behavior }, Cmd.none )
+            ( { model
+                | behavior = behavior
+                , actionDescribe = model.actionDescribe ++ log
+              }
+            , Cmd.none
+            )
 
         SelectHex i j ->
             let
@@ -270,13 +281,6 @@ update msg model =
         StartRound1 ->
             ( { model | state = Playing, drawChance = 0 }, Cmd.none )
 
-        HosInvalid ->
-            ( { model
-                | power = model.power + 4
-              }
-            , Cmd.none
-            )
-
         Message.Alert txt ->
             ( model, sendMsg txt )
 
@@ -288,16 +292,23 @@ update msg model =
                 virus_ =
                     model.virus
 
-                vir =
+                ( vir, log ) =
                     if prob <= rand then
-                        { virus_
+                        ( { virus_
                             | pos = List.filter (\x -> converHextoTile x /= ( ti, tj )) virus_.pos
-                        }
+                          }
+                        , Feedback "Luckily, virus is killed"
+                        )
 
                     else
-                        virus_
+                        ( virus_, Feedback "Oops, nothing changed" )
             in
-            ( { model | virus = vir }, Cmd.none )
+            ( { model
+                | virus = vir
+                , actionDescribe = model.actionDescribe ++ [ log ]
+              }
+            , Cmd.none
+            )
 
         JudgeVirPeo ( ( i, j ), prob ) rand ->
             let
@@ -343,6 +354,13 @@ update msg model =
 
                     else
                         city
+
+                log =
+                    if prob <= rand then
+                        Feedback "Luckily, virus is killed"
+
+                    else
+                        Feedback "Sorry, people are killed"
             in
             ( { model | city = city_, virus = virus_ }, Cmd.none )
 

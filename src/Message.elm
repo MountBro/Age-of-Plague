@@ -25,7 +25,6 @@ type Msg
     | ReplaceCard Card Card
     | StartRound1
     | Alert String
-    | HosInvalid
     | KillTileVir ( ( Int, Int ), Float ) Float
     | JudgeVirPeo ( ( Int, Int ), Float ) Float
     | Click String

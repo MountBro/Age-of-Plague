@@ -210,7 +210,7 @@ judgeWin model =
     else if model.currentRound == 21 && model.currentLevel > 2 && model.currentLevel < 6 && sumPopulation model.city >= List.sum (getElement (model.currentLevel - 2) winCondition) then
         { model | state = Finished model.currentLevel }
 
-    else if model.currentLevel == 6 && sumPopulation model.city > 0 then
+    else if model.currentLevel == 6 && sumPopulation model.city >= List.sum (getElement (model.currentLevel - 2) winCondition) then
         model
 
     else if model.currentRound < 21 && sumPopulation model.city > 0 then
@@ -255,57 +255,71 @@ endlessVirCreator model =
         tiles2 =
             List.map
                 (\x ->
-                    if x.population >= 10 then
-                        { x | population = round (toFloat x.population * 1.2) }
-
-                    else
-                        { x | population = x.population + 3 }
+                    { x | population = x.population + 2 }
                 )
                 tiles_
 
         city2 =
             { city_ | tilesIndex = tiles2 }
     in
-    if model.currentLevel == 6 && model.virus.number == 6 && List.isEmpty virus.pos then
+    if model.currentLevel == 6 && num == 6 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = [ Warning "Congrats!\nYou defeat one wave!\nEmergency is temporarily gone.\nAll quaratines reset." ]
+            | actionDescribe = Warning ("Congrats!!\nYou've defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.") :: model.actionDescribe
             , city = city1
             , virus = virus
             , waveNum = model.waveNum + 1
         }
 
-    else if model.currentLevel == 6 && model.virus.number > 2 && List.isEmpty virus.pos then
+    else if model.currentLevel == 6 && num == 5 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = [ Warning ("Next wave would come in " ++ Debug.toString (model.virus.number - 2) ++ " turns\n") ]
+            | actionDescribe = Warning ("Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.") :: model.actionDescribe
             , virus = virus
-        }
-
-    else if model.currentLevel == 6 && model.virus.number == 2 then
-        { model
-            | actionDescribe = [ Warning "Next wave would come next\nturn.You accept refugees from other cities\n" ]
             , city = city2
+        }
+
+    else if model.currentLevel == 6 && num == 4 then
+        { model
+            | actionDescribe = Warning "Next wave: next turn\n" :: model.actionDescribe
             , virus = virus
         }
 
-    else if model.currentLevel == 6 && model.virus.number == 1 then
-        { model | virus = selectVirus model.currentRound }
+    else if model.currentLevel == 6 && num == 3 then
+        { model | virus = selectVirus model.currentRound model.waveNum }
 
     else
         model
 
 
-selectVirus : Int -> Virus
-selectVirus n =
+selectVirus : Int -> Int -> Virus
+selectVirus n wave =
     let
         pos =
-            getElement (1 + modBy 6 n) endlssVir
-                |> List.foldr (++) []
+            if wave >= 3 && 1 + modBy 6 wave /= 1 + modBy 5 n then
+                getElement (1 + modBy 6 wave) endlssVir
+                    ++ getElement (1 + modBy 5 n) endlssVir
+                    |> List.foldr (++) []
+                    |> LE.unique
+
+            else if wave >= 3 && 1 + modBy 6 wave == 1 + modBy 5 n then
+                getElement (1 + modBy 6 wave) endlssVir
+                    ++ getElement (1 + modBy 6 n) endlssVir
+                    |> List.foldr (++) []
+                    |> LE.unique
+
+            else
+                getElement (1 + modBy 6 wave) endlssVir
+                    |> List.foldr (++) []
 
         rules =
-            getElement (1 + modBy 4 n) ruleLst
-                |> List.foldr (++) []
+            if wave > 6 then
+                getElement (4 + modBy 5 wave) ruleLst
+                    |> List.foldr (++) []
+
+            else
+                getElement (1 + modBy 3 n) ruleLst
+                    |> List.foldr (++) []
     in
-    Virus rules pos 6 1 (min (0.05 + toFloat (n // 15) / 50) 0.48)
+    Virus rules pos 6 1 (min (0.1 + toFloat wave * 0.04) 0.66)
 
 
 takeOver : Model -> Model

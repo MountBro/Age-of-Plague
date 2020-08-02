@@ -357,7 +357,7 @@ rain =
         3
         [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ]
         "Rain"
-        "‧ 50% of virus freezing chance;\n‧ The economy output doubles."
+        "‧ 50% of virus freezing chance;\n‧ The power output +1."
         "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The economy output doubles for two rounds."
 
 
@@ -388,7 +388,7 @@ fubao =
         [ Activate996I, Activate996I ]
         "996"
         "‧ Economy doubles;\n‧ Death rate increases 5%."
-        "In the next 2 rounds, economy temporarily doubles, \nbut the death rate permanently rises 5%."
+        "In the next 2 rounds, +1 power, \nbut the death rate permanently rises 5%."
 
 
 organClone =

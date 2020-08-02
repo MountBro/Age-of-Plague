@@ -369,6 +369,8 @@ ml2s m =
             ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ c.describe)
                 |> String.lines
                 |> List.reverse
+        Feedback str ->
+            ("⨀ " ++ str) |> String.lines |> List.reverse
 
 
 consoleText : Model -> List (Html Msg)
@@ -389,12 +391,8 @@ consoleText model =
         myLog =
             model.actionDescribe |> List.reverse
 
-        ( w, a ) =
-            List.partition isWarning myLog
-
         indexed =
-            w
-                ++ a
+            myLog
                 |> List.map ml2s
                 |> List.foldl (\x -> \y -> x ++ y) []
                 |> List.indexedMap Tuple.pair

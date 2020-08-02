@@ -134,11 +134,11 @@ virus5 =
 
 
 virus6 =
-    Virus [ 2, 5 ] (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 3 ) ]) 6 1 0.05
+    Virus [ 2, 5 ] (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 6 ) ] ++ generateZone (converTiletoHex_ ( -1, 1 ))) 6 1 0.05
 
 
 endlssVir =
-    [ (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 3 ) ])
+    [ (cartesianProduct [ -2 ] [ 4, 5 ] ++ [ ( -3, 6 ), ( -3, 7 ) ] ++ generateZone (converTiletoHex_ ( 0, 3 )))
     , (generateZone (converTiletoHex_ ( 0, 3 )) ++ [ ( -3, 6 ), ( -3, 7 ) ])
     , (generateZone (converTiletoHex_ ( -1, -1 )) ++ [ ( -2, -2 ), ( -3, 0 ), ( -3, -1 ) ])
     , (generateZone (converTiletoHex_ ( 2, 3 )) ++ [ ( 4, 7 ), ( 3, 8 ), ( 2, 9 ) ])
@@ -147,4 +147,4 @@ endlssVir =
     ]
 
 ruleLst =
-    [[2,3],[2,4],[2,5],[2,3,6]]
+    [[2,5], [2,4], [2,3], [2,3,6], [2,3,5], [2,4,6], [2,4,5], [2,3,4] ]

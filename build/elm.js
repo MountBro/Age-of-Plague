@@ -5417,7 +5417,7 @@ var $author$project$Card$fubao = A6(
 		[$author$project$Card$Activate996I, $author$project$Card$Activate996I]),
 	'996',
 	'‧ Economy doubles;\n‧ Death rate increases 5%.',
-	'In the next 2 rounds, economy temporarily doubles, \nbut the death rate permanently rises 5%.');
+	'In the next 2 rounds, +1 power, \nbut the death rate permanently rises 5%.');
 var $author$project$Card$AVI = function (a) {
 	return {$: 'AVI', a: a};
 };
@@ -5595,7 +5595,7 @@ var $author$project$Card$rain = A6(
 			$author$project$Card$EcoDoubleI_Freeze(0.5)
 		]),
 	'Rain',
-	'‧ 50% of virus freezing chance;\n‧ The economy output doubles.',
+	'‧ 50% of virus freezing chance;\n‧ The power output +1.',
 	'In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The economy output doubles for two rounds.');
 var $author$project$Card$ResurgenceI = function (a) {
 	return {$: 'ResurgenceI', a: a};
@@ -6117,6 +6117,7 @@ var $author$project$Model$initModel = function (_v0) {
 			drawChance: 0,
 			ecoRatio: 1.0,
 			flowRate: 1,
+			freezeTile: _List_Nil,
 			hands: $author$project$Model$initHandsVirus(1).a,
 			maxPower: 10,
 			mouseOver: _Utils_Tuple2(-233, -233),
@@ -6829,6 +6830,9 @@ var $author$project$Message$DrawCard = function (a) {
 	return {$: 'DrawCard', a: a};
 };
 var $author$project$Model$Drawing = {$: 'Drawing'};
+var $author$project$Model$Feedback = function (a) {
+	return {$: 'Feedback', a: a};
+};
 var $author$project$Message$InitializeHands = function (a) {
 	return {$: 'InitializeHands', a: a};
 };
@@ -6847,6 +6851,93 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
+var $elm_community$list_extra$List$Extra$count = function (predicate) {
+	return A2(
+		$elm$core$List$foldl,
+		F2(
+			function (x, acc) {
+				return predicate(x) ? (acc + 1) : acc;
+			}),
+		0);
+};
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $author$project$Tile$hosNum = function (tlst) {
+	return $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (x) {
+				return x.hos;
+			},
+			tlst));
+};
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Tile$quaNum = function (tlst) {
+	return $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (x) {
+				return x.qua;
+			},
+			tlst));
+};
+var $author$project$Tile$wareNum = function (tlst) {
+	return $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (x) {
+				return x.wareHouse;
+			},
+			tlst));
+};
+var $author$project$Model$adjustDeck = function (model) {
+	var hands = model.hands;
+	var deck0 = model.deck;
+	var city = model.city;
+	var deck1 = (_Utils_cmp(
+		$author$project$Tile$hosNum(city.tilesIndex) + A2(
+			$elm_community$list_extra$List$Extra$count,
+			$elm$core$Basics$eq($author$project$Card$hospital),
+			hands),
+		$elm$core$List$length(city.tilesIndex)) < 0) ? deck0 : A2(
+		$elm$core$List$filter,
+		function (x) {
+			return !_Utils_eq(x, $author$project$Card$hospital);
+		},
+		deck0);
+	var deck2 = (_Utils_cmp(
+		$author$project$Tile$quaNum(city.tilesIndex) + A2(
+			$elm_community$list_extra$List$Extra$count,
+			$elm$core$Basics$eq($author$project$Card$quarantine),
+			hands),
+		$elm$core$List$length(city.tilesIndex)) < 0) ? deck1 : A2(
+		$elm$core$List$filter,
+		function (x) {
+			return !_Utils_eq(x, $author$project$Card$quarantine);
+		},
+		deck1);
+	var deck = (_Utils_cmp(
+		$author$project$Tile$wareNum(city.tilesIndex) + A2(
+			$elm_community$list_extra$List$Extra$count,
+			$elm$core$Basics$eq($author$project$Card$warehouse),
+			hands),
+		$elm$core$List$length(city.tilesIndex)) < 0) ? deck2 : A2(
+		$elm$core$List$filter,
+		function (x) {
+			return !_Utils_eq(x, $author$project$Card$warehouse);
+		},
+		deck2);
+	return deck;
+};
 var $elm$random$Random$Generator = function (a) {
 	return {$: 'Generator', a: a};
 };
@@ -6964,7 +7055,8 @@ var $author$project$Model$cardGenerator = function (model) {
 			var y = _v0.b;
 			return A2($elm$core$Maybe$withDefault, $author$project$Card$cut, x);
 		},
-		$elm_community$random_extra$Random$List$choose(model.deck));
+		$elm_community$random_extra$Random$List$choose(
+			$author$project$Model$adjustDeck(model)));
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Ports$cardToMusic = _Platform_outgoingPort('cardToMusic', $elm$json$Json$Encode$string);
@@ -7011,17 +7103,6 @@ var $author$project$Model$cardsGenerator = F2(
 					return A2($elm$core$Maybe$withDefault, $author$project$Card$cut, x);
 				},
 				$elm_community$random_extra$Random$List$choose(model.deck)));
-	});
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
 	});
 var $elm$core$Basics$abs = function (n) {
 	return (n < 0) ? (-n) : n;
@@ -7386,6 +7467,7 @@ var $author$project$InitLevel$levelInit = F2(
 			model,
 			{
 				actionDescribe: _List_Nil,
+				av: $author$project$Virus$initAntiVirus,
 				behavior: $author$project$Model$initBehavior,
 				city: $author$project$Model$initlevelmap(n),
 				counter: 3,
@@ -7393,8 +7475,9 @@ var $author$project$InitLevel$levelInit = F2(
 				currentRound: 1,
 				deck: $author$project$Model$updateDeck(n),
 				flowRate: 1,
+				freezeTile: _List_Nil,
 				hands: $author$project$Model$initHandsVirus(n).a,
-				power: 26,
+				power: 28,
 				selHex: $author$project$Model$SelHexOff,
 				state: $author$project$Model$Playing,
 				theme: $author$project$ColorScheme$Minimum,
@@ -7404,6 +7487,7 @@ var $author$project$InitLevel$levelInit = F2(
 			model,
 			{
 				actionDescribe: _List_Nil,
+				av: $author$project$Virus$initAntiVirus,
 				behavior: $author$project$Model$initBehavior,
 				city: $author$project$Model$initlevelmap(n),
 				counter: 3,
@@ -7411,6 +7495,7 @@ var $author$project$InitLevel$levelInit = F2(
 				currentRound: 1,
 				deck: $author$project$Model$updateDeck(n),
 				flowRate: 1,
+				freezeTile: _List_Nil,
 				hands: _List_Nil,
 				power: 6,
 				replaceChance: 3,
@@ -7623,7 +7708,6 @@ var $author$project$RegionFill$fillRegion = F2(
 				card),
 			$elm$core$Platform$Cmd$none) : _Utils_Tuple2($author$project$Todo$finishedEmptyQueue, $elm$core$Platform$Cmd$none)))))))))))))))));
 	});
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$RegionFill$mFillRegion = function (_v0) {
 	var model = _v0.a;
 	var cm = _v0.b;
@@ -7877,31 +7961,27 @@ var $elm$random$Random$float = F2(
 var $author$project$Model$CardPlayed = function (a) {
 	return {$: 'CardPlayed', a: a};
 };
-var $author$project$Model$isWarning = function (l) {
-	if (l.$ === 'Warning') {
-		var str = l.a;
-		return true;
-	} else {
-		return false;
-	}
-};
-var $author$project$Action$updateLog = function (model) {
-	var warning = A2($elm$core$List$filter, $author$project$Model$isWarning, model.actionDescribe);
-	var card = A2($elm$core$List$map, $elm$core$Tuple$second, model.todo);
-	var log = A2($elm$core$List$map, $author$project$Model$CardPlayed, card);
-	return _Utils_update(
-		model,
-		{
-			actionDescribe: _Utils_ap(log, warning)
-		});
-};
-var $author$project$Action$performAction = F2(
-	function (action, model) {
+var $author$project$Action$updateLog = F2(
+	function (card, model) {
+		var log_ = _List_fromArray(
+			[
+				$author$project$Model$CardPlayed(card)
+			]);
+		return _Utils_update(
+			model,
+			{
+				actionDescribe: _Utils_ap(model.actionDescribe, log_)
+			});
+	});
+var $author$project$Action$performAction = F3(
+	function (card, action, model) {
 		switch (action.$) {
 			case 'IncPowerI':
 				var inc = action.a;
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{power: model.power + inc})),
@@ -7909,7 +7989,7 @@ var $author$project$Action$performAction = F2(
 			case 'Freeze':
 				var prob = action.a;
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(model),
+					A2($author$project$Action$updateLog, card, model),
 					A2(
 						$elm$random$Random$generate,
 						$author$project$Message$FreezeRet(prob),
@@ -7920,7 +8000,9 @@ var $author$project$Action$performAction = F2(
 					behavior_,
 					{virusEvolve: false});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{behavior: behavior})),
@@ -7928,7 +8010,9 @@ var $author$project$Action$performAction = F2(
 			case 'EcoDoubleI_Freeze':
 				var prob = action.a;
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{ecoRatio: 2 * model.ecoRatio})),
@@ -7956,7 +8040,9 @@ var $author$project$Action$performAction = F2(
 					virus_,
 					{pos: pos});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{virus: virus})),
@@ -7997,7 +8083,9 @@ var $author$project$Action$performAction = F2(
 					virus_,
 					{pos: pos});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{virus: virus})),
@@ -8009,7 +8097,9 @@ var $author$project$Action$performAction = F2(
 					virus_,
 					{kill: dr});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{ecoRatio: 2 * model.ecoRatio, virus: virus})),
@@ -8036,7 +8126,9 @@ var $author$project$Action$performAction = F2(
 					city_,
 					{tilesIndex: tilelst});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8061,7 +8153,9 @@ var $author$project$Action$performAction = F2(
 					city_,
 					{tilesIndex: tilelst});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8083,7 +8177,9 @@ var $author$project$Action$performAction = F2(
 					city_,
 					{tilesIndex: tilelst});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8108,7 +8204,9 @@ var $author$project$Action$performAction = F2(
 					city_,
 					{tilesIndex: tilelst});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8146,7 +8244,9 @@ var $author$project$Action$performAction = F2(
 					city_,
 					{tilesIndex: tilelst});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city, virus: virus})),
@@ -8174,7 +8274,9 @@ var $author$project$Action$performAction = F2(
 					city_,
 					{tilesIndex: tilelst});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8183,25 +8285,17 @@ var $author$project$Action$performAction = F2(
 				var _v12 = action.a;
 				var i = _v12.a;
 				var j = _v12.b;
-				var virus_ = model.virus;
 				var pos = $author$project$Geometry$converHextoTile(
 					_Utils_Tuple2(i, j));
-				var virpos = A2(
-					$elm$core$List$filter,
-					function (x) {
-						return !_Utils_eq(
-							$author$project$Geometry$converHextoTile(x),
-							pos);
-					},
-					virus_.pos);
-				var virus = _Utils_update(
-					virus_,
-					{pos: virpos});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
-							{virus: virus})),
+							{
+								freezeTile: A2($elm$core$List$cons, pos, model.freezeTile)
+							})),
 					$elm$core$Platform$Cmd$none);
 			case 'HospitalI':
 				var _v13 = action.a;
@@ -8227,7 +8321,9 @@ var $author$project$Action$performAction = F2(
 							city_.tilesIndex)
 					});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8256,7 +8352,9 @@ var $author$project$Action$performAction = F2(
 							city_.tilesIndex)
 					});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8276,7 +8374,9 @@ var $author$project$Action$performAction = F2(
 							city_.tilesIndex)
 					});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8305,7 +8405,9 @@ var $author$project$Action$performAction = F2(
 							city_.tilesIndex)
 					});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city})),
@@ -8345,7 +8447,9 @@ var $author$project$Action$performAction = F2(
 				var j = _v22.b;
 				var prob = _v21.b;
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{ecoRatio: 0.5 * model.ecoRatio})),
@@ -8381,7 +8485,9 @@ var $author$project$Action$performAction = F2(
 							city_.tilesIndex)
 					});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city, maxPower: $author$project$Parameters$para.warehousePowerInc + model.maxPower})),
@@ -8393,7 +8499,7 @@ var $author$project$Action$performAction = F2(
 				var j = _v26.b;
 				var prob = _v25.b;
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(model),
+					A2($author$project$Action$updateLog, card, model),
 					A2(
 						$elm$random$Random$generate,
 						$author$project$Message$KillTileVir(
@@ -8406,7 +8512,9 @@ var $author$project$Action$performAction = F2(
 				var i = _v27.a;
 				var j = _v27.b;
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{
@@ -8421,7 +8529,7 @@ var $author$project$Action$performAction = F2(
 				var j = _v29.b;
 				var prob = _v28.b;
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(model),
+					A2($author$project$Action$updateLog, card, model),
 					A2(
 						$elm$random$Random$generate,
 						$author$project$Message$JudgeVirPeo(
@@ -8467,7 +8575,9 @@ var $author$project$Action$performAction = F2(
 						tilesIndex: A2($author$project$Population$evacuate, t, city)
 					});
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{city: city_})),
@@ -8477,7 +8587,9 @@ var $author$project$Action$performAction = F2(
 				var hands_ = model.hands;
 				var hands = A2($elm$core$List$append, hands_, cardlst);
 				return _Utils_Tuple2(
-					$author$project$Action$updateLog(
+					A2(
+						$author$project$Action$updateLog,
+						card,
 						_Utils_update(
 							model,
 							{hands: hands})),
@@ -8503,6 +8615,7 @@ var $author$project$Action$pickAction = function (model) {
 		$elm$core$Maybe$withDefault,
 		$author$project$Todo$finishedEmptyQueue,
 		$elm$core$List$head(unfinished_));
+	var card = headQueue_.b;
 	var headAction = A2(
 		$elm$core$Maybe$withDefault,
 		$author$project$Card$NoAction,
@@ -8516,8 +8629,9 @@ var $author$project$Action$pickAction = function (model) {
 			_List_fromArray(
 				[headQueue]),
 			A2($elm$core$List$drop, 1, unfinished_)));
-	return A2(
+	return A3(
 		$author$project$Action$performAction,
+		card,
 		headAction,
 		_Utils_update(
 			model,
@@ -8606,7 +8720,7 @@ var $author$project$NextRound$clearCurrentRoundTodo = function (model) {
 				todo_)));
 	return _Utils_update(
 		model,
-		{roundTodoCleared: false, selHex: $author$project$Model$SelHexOff, todo: todo});
+		{freezeTile: _List_Nil, roundTodoCleared: false, selHex: $author$project$Model$SelHexOff, todo: todo});
 };
 var $author$project$Virus$endlssVir = _List_fromArray(
 	[
@@ -8617,10 +8731,14 @@ var $author$project$Virus$endlssVir = _List_fromArray(
 				[-2]),
 			_List_fromArray(
 				[3, 4, 5])),
-		_List_fromArray(
-			[
-				_Utils_Tuple2(-3, 3)
-			])),
+		_Utils_ap(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(-3, 3)
+				]),
+			$author$project$Geometry$generateZone(
+				$author$project$Geometry$converTiletoHex_(
+					_Utils_Tuple2(0, 3))))),
 		_Utils_ap(
 		$author$project$Geometry$generateZone(
 			$author$project$Geometry$converTiletoHex_(
@@ -8676,53 +8794,94 @@ var $elm$core$Basics$min = F2(
 var $author$project$Virus$ruleLst = _List_fromArray(
 	[
 		_List_fromArray(
-		[2, 3]),
+		[2, 5]),
 		_List_fromArray(
 		[2, 4]),
 		_List_fromArray(
-		[2, 5]),
+		[2, 3]),
 		_List_fromArray(
-		[2, 3, 6])
+		[2, 3, 6]),
+		_List_fromArray(
+		[2, 3, 5]),
+		_List_fromArray(
+		[2, 4, 6]),
+		_List_fromArray(
+		[2, 4, 5]),
+		_List_fromArray(
+		[2, 3, 4])
 	]);
-var $author$project$NextRound$selectVirus = function (n) {
-	var rules = A3(
-		$elm$core$List$foldr,
-		$elm$core$Basics$append,
-		_List_Nil,
-		A2(
-			$author$project$Geometry$getElement,
-			1 + A2($elm$core$Basics$modBy, 4, n),
-			$author$project$Virus$ruleLst));
-	var pos = A3(
-		$elm$core$List$foldr,
-		$elm$core$Basics$append,
-		_List_Nil,
-		A2(
-			$author$project$Geometry$getElement,
-			1 + A2($elm$core$Basics$modBy, 6, n),
-			$author$project$Virus$endlssVir));
-	return A5(
-		$author$project$Virus$Virus,
-		rules,
-		pos,
-		6,
-		1,
-		A2($elm$core$Basics$min, 0.05 + (((n / 15) | 0) / 50), 0.48));
-};
-var $elm$core$Debug$toString = _Debug_toString;
+var $author$project$NextRound$selectVirus = F2(
+	function (n, wave) {
+		var rules = (wave > 6) ? A3(
+			$elm$core$List$foldr,
+			$elm$core$Basics$append,
+			_List_Nil,
+			A2(
+				$author$project$Geometry$getElement,
+				4 + A2($elm$core$Basics$modBy, 5, wave),
+				$author$project$Virus$ruleLst)) : A3(
+			$elm$core$List$foldr,
+			$elm$core$Basics$append,
+			_List_Nil,
+			A2(
+				$author$project$Geometry$getElement,
+				1 + A2($elm$core$Basics$modBy, 3, n),
+				$author$project$Virus$ruleLst));
+		var pos = ((wave >= 3) && (!_Utils_eq(
+			1 + A2($elm$core$Basics$modBy, 6, wave),
+			1 + A2($elm$core$Basics$modBy, 5, n)))) ? $elm_community$list_extra$List$Extra$unique(
+			A3(
+				$elm$core$List$foldr,
+				$elm$core$Basics$append,
+				_List_Nil,
+				_Utils_ap(
+					A2(
+						$author$project$Geometry$getElement,
+						1 + A2($elm$core$Basics$modBy, 6, wave),
+						$author$project$Virus$endlssVir),
+					A2(
+						$author$project$Geometry$getElement,
+						1 + A2($elm$core$Basics$modBy, 5, n),
+						$author$project$Virus$endlssVir)))) : (((wave >= 3) && _Utils_eq(
+			1 + A2($elm$core$Basics$modBy, 6, wave),
+			1 + A2($elm$core$Basics$modBy, 5, n))) ? $elm_community$list_extra$List$Extra$unique(
+			A3(
+				$elm$core$List$foldr,
+				$elm$core$Basics$append,
+				_List_Nil,
+				_Utils_ap(
+					A2(
+						$author$project$Geometry$getElement,
+						1 + A2($elm$core$Basics$modBy, 6, wave),
+						$author$project$Virus$endlssVir),
+					A2(
+						$author$project$Geometry$getElement,
+						1 + A2($elm$core$Basics$modBy, 6, n),
+						$author$project$Virus$endlssVir)))) : A3(
+			$elm$core$List$foldr,
+			$elm$core$Basics$append,
+			_List_Nil,
+			A2(
+				$author$project$Geometry$getElement,
+				1 + A2($elm$core$Basics$modBy, 6, wave),
+				$author$project$Virus$endlssVir)));
+		return A5(
+			$author$project$Virus$Virus,
+			rules,
+			pos,
+			6,
+			1,
+			A2($elm$core$Basics$min, 0.1 + (wave * 0.04), 0.66));
+	});
 var $author$project$NextRound$endlessVirCreator = function (model) {
 	var virus_ = model.virus;
 	var tiles_ = model.city.tilesIndex;
 	var tiles2 = A2(
 		$elm$core$List$map,
 		function (x) {
-			return (x.population >= 10) ? _Utils_update(
+			return _Utils_update(
 				x,
-				{
-					population: $elm$core$Basics$round(x.population * 1.2)
-				}) : _Utils_update(
-				x,
-				{population: x.population + 3});
+				{population: x.population + 2});
 		},
 		tiles_);
 	var tiles1 = A2(
@@ -8744,38 +8903,37 @@ var $author$project$NextRound$endlessVirCreator = function (model) {
 	var city1 = _Utils_update(
 		city_,
 		{tilesIndex: tiles1});
-	return ((model.currentLevel === 6) && ((model.virus.number === 6) && $elm$core$List$isEmpty(virus.pos))) ? _Utils_update(
+	return ((model.currentLevel === 6) && ((num === 6) && $elm$core$List$isEmpty(virus.pos))) ? _Utils_update(
 		model,
 		{
-			actionDescribe: _List_fromArray(
-				[
-					$author$project$Model$Warning('Congrats!\nYou defeat one wave!\nEmergency is temporarily gone.\nAll quaratines reset.')
-				]),
+			actionDescribe: A2(
+				$elm$core$List$cons,
+				$author$project$Model$Warning('Congrats!!\nYou\'ve defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.'),
+				model.actionDescribe),
 			city: city1,
 			virus: virus,
 			waveNum: model.waveNum + 1
-		}) : (((model.currentLevel === 6) && ((model.virus.number > 2) && $elm$core$List$isEmpty(virus.pos))) ? _Utils_update(
+		}) : (((model.currentLevel === 6) && ((num === 5) && $elm$core$List$isEmpty(virus.pos))) ? _Utils_update(
 		model,
 		{
-			actionDescribe: _List_fromArray(
-				[
-					$author$project$Model$Warning(
-					'Next wave would come in ' + ($elm$core$Debug$toString(model.virus.number - 2) + ' turns\n'))
-				]),
-			virus: virus
-		}) : (((model.currentLevel === 6) && (model.virus.number === 2)) ? _Utils_update(
-		model,
-		{
-			actionDescribe: _List_fromArray(
-				[
-					$author$project$Model$Warning('Next wave would come next\nturn.You accept refugees from other cities\n')
-				]),
+			actionDescribe: A2(
+				$elm$core$List$cons,
+				$author$project$Model$Warning('Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.'),
+				model.actionDescribe),
 			city: city2,
 			virus: virus
-		}) : (((model.currentLevel === 6) && (model.virus.number === 1)) ? _Utils_update(
+		}) : (((model.currentLevel === 6) && (num === 4)) ? _Utils_update(
 		model,
 		{
-			virus: $author$project$NextRound$selectVirus(model.currentRound)
+			actionDescribe: A2(
+				$elm$core$List$cons,
+				$author$project$Model$Warning('Next wave: next turn\n'),
+				model.actionDescribe),
+			virus: virus
+		}) : (((model.currentLevel === 6) && (num === 3)) ? _Utils_update(
+		model,
+		{
+			virus: A2($author$project$NextRound$selectVirus, model.currentRound, model.waveNum)
 		}) : model)));
 };
 var $author$project$Model$initLog = function (model) {
@@ -8800,7 +8958,7 @@ var $author$project$Tile$sumPopulation = function (city) {
 			city.tilesIndex));
 };
 var $author$project$Model$winCondition = _List_fromArray(
-	[140, 160, 80]);
+	[140, 160, 80, 50]);
 var $author$project$NextRound$judgeWin = function (model) {
 	return ((model.currentLevel === 1) && (model.currentRound === 4)) ? _Utils_update(
 		model,
@@ -8817,7 +8975,10 @@ var $author$project$NextRound$judgeWin = function (model) {
 		model,
 		{
 			state: $author$project$Model$Finished(model.currentLevel)
-		}) : (((model.currentLevel === 6) && ($author$project$Tile$sumPopulation(model.city) > 0)) ? model : (((model.currentRound < 21) && ($author$project$Tile$sumPopulation(model.city) > 0)) ? model : _Utils_update(
+		}) : (((model.currentLevel === 6) && (_Utils_cmp(
+		$author$project$Tile$sumPopulation(model.city),
+		$elm$core$List$sum(
+			A2($author$project$Geometry$getElement, model.currentLevel - 2, $author$project$Model$winCondition))) > -1)) ? model : (((model.currentRound < 21) && ($author$project$Tile$sumPopulation(model.city) > 0)) ? model : _Utils_update(
 		model,
 		{state: $author$project$Model$Wasted})))));
 };
@@ -8860,18 +9021,6 @@ var $author$project$Virus$countavNeighbor = F2(
 	});
 var $author$project$Virus$judgeAlive = F5(
 	function (lstvir, vir, lstanti, anti, lstquatile) {
-		var lstv = A2(
-			$elm$core$List$filter,
-			function (x) {
-				return A2(
-					$elm$core$List$member,
-					A2($author$project$Virus$countInfectedNeighbor, x, vir.pos),
-					vir.rules) && ((!A2($elm$core$List$member, x, anti.pos)) && (!A2(
-					$elm$core$List$member,
-					$author$project$Geometry$converHextoTile(x),
-					lstquatile)));
-			},
-			lstvir);
 		var lsta = (anti.life > 0) ? A2(
 			$elm$core$List$filter,
 			function (x) {
@@ -8884,6 +9033,18 @@ var $author$project$Virus$judgeAlive = F5(
 					lstquatile));
 			},
 			lstanti) : _List_Nil;
+		var lstv = A2(
+			$elm$core$List$filter,
+			function (x) {
+				return A2(
+					$elm$core$List$member,
+					A2($author$project$Virus$countInfectedNeighbor, x, vir.pos),
+					vir.rules) && ((!A2($elm$core$List$member, x, lsta)) && (!A2(
+					$elm$core$List$member,
+					$author$project$Geometry$converHextoTile(x),
+					lstquatile)));
+			},
+			lstvir);
 		return _Utils_Tuple2(
 			_Utils_update(
 				vir,
@@ -9011,7 +9172,7 @@ var $author$project$NextRound$mutate = F2(
 				actionDescribe: _Utils_ap(
 					_List_fromArray(
 						[
-							$author$project$Model$Warning('Spread pattern mutates!!!\n(see the virus info console)\n')
+							$author$project$Model$Warning('Spread pattern mutates!!!\n(See the virus info panel)\n')
 						]),
 					model.actionDescribe),
 				virus: vir
@@ -9036,7 +9197,7 @@ var $author$project$NextRound$revenge = F2(
 						actionDescribe: _Utils_ap(
 							_List_fromArray(
 								[
-									$author$project$Model$Warning('Virus become stronger!!!\n(see the virus info console)\n')
+									$author$project$Model$Warning('Virus become stronger!!!\n(See the virus info panel)\n')
 								]),
 							model.actionDescribe),
 						counter: 3,
@@ -9060,10 +9221,14 @@ var $author$project$NextRound$revenge = F2(
 var $elm$core$List$sort = function (xs) {
 	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
 };
+var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$NextRound$takeOver = function (model) {
 	var vir = model.virus;
+	var r = model.currentRound;
+	var lv = model.currentLevel;
+	var freezeTiles = model.freezeTile;
 	var city = model.city;
-	var tilelst = ((model.currentLevel !== 6) && _Utils_eq(model.currentRound, $author$project$Parameters$para.tor)) ? A2(
+	var tilelst = ((lv !== 6) && _Utils_eq(r, $author$project$Parameters$para.tor)) ? A2(
 		$elm$core$List$map,
 		function (x) {
 			return x.indice;
@@ -9071,9 +9236,9 @@ var $author$project$NextRound$takeOver = function (model) {
 		A2(
 			$elm$core$List$filter,
 			function (x) {
-				return _Utils_cmp((x.population - x.sick) * 3, x.dead) < 1;
+				return (_Utils_cmp((x.population - x.sick) * 3, x.dead) < 1) && (!A2($elm$core$List$member, x.indice, freezeTiles));
 			},
-			city.tilesIndex)) : (((model.currentLevel === 6) && ((!_Utils_eq(model.virus.pos, _List_Nil)) && (!A2($elm$core$Basics$modBy, $author$project$Parameters$para.tor, model.currentRound)))) ? A2(
+			city.tilesIndex)) : (((lv === 6) && ((!_Utils_eq(vir.pos, _List_Nil)) && (!A2($elm$core$Basics$modBy, $author$project$Parameters$para.tor, r)))) ? A2(
 		$elm$core$List$map,
 		function (x) {
 			return x.indice;
@@ -9081,7 +9246,7 @@ var $author$project$NextRound$takeOver = function (model) {
 		A2(
 			$elm$core$List$filter,
 			function (x) {
-				return _Utils_cmp((x.population - x.sick) * 6, x.dead) < 1;
+				return (_Utils_cmp((x.population - x.sick) * 6, x.dead) < 1) && (!A2($elm$core$List$member, x.indice, freezeTiles));
 			},
 			city.tilesIndex)) : _List_Nil);
 	var extraVir = $elm$core$List$concat(
@@ -9094,7 +9259,7 @@ var $author$project$NextRound$takeOver = function (model) {
 	var message = $elm$core$List$isEmpty(extraVir) ? _List_Nil : _List_fromArray(
 		[
 			$author$project$Model$Warning(
-			'Virus outbreaks in damaged areas\n' + ('(Dead>=' + ($elm$core$Debug$toString(3 * (((model.currentRound / 17) | 0) + 1)) + 'xHealthy population)\n')))
+			'Virus outbreaks in damaged areas\n' + ('(Dead>=' + ($elm$core$Debug$toString(3 * (((r / 17) | 0) + 1)) + 'xHealthy population)\n')))
 		]);
 	var pos = $elm_community$list_extra$List$Extra$unique(
 		_Utils_ap(vir.pos, extraVir));
@@ -9170,13 +9335,13 @@ var $author$project$NextRound$unBlockable = function (model) {
 		var actionDescribe = (!num) ? _Utils_ap(model.actionDescribe, _List_Nil) : ((num === 1) ? _Utils_ap(
 			_List_fromArray(
 				[
-					$author$project$Model$Warning('Emergency!!!\nOne Quarantine down!!!\nPatients nearby>3x(quarantine population)\nPatients broke into a quarantine.\n')
+					$author$project$Model$Warning('Emergency!!!\nPatients broke into one quarantine!!\nPatients nearby>3x(quarantine population)\n\n')
 				]),
 			model.actionDescribe) : _Utils_ap(
 			_List_fromArray(
 				[
 					$author$project$Model$Warning(
-					'Emergency!!!\n' + ($elm$core$Debug$toString(num) + ' Quarantines down!!!\nPatients nearby>3x(quarantine population)\n'))
+					'Emergency!!!\nPatients broke into ' + ($elm$core$Debug$toString(num) + ' quarantines!!\nPatients nearby>3x(quarantine population)\n'))
 				]),
 			model.actionDescribe));
 		return _Utils_update(
@@ -9185,15 +9350,6 @@ var $author$project$NextRound$unBlockable = function (model) {
 	} else {
 		return model;
 	}
-};
-var $elm_community$list_extra$List$Extra$count = function (predicate) {
-	return A2(
-		$elm$core$List$foldl,
-		F2(
-			function (x, acc) {
-				return predicate(x) ? (acc + 1) : acc;
-			}),
-		0);
 };
 var $author$project$Tile$sickupdate = F3(
 	function (t, lstvir, inf) {
@@ -9411,17 +9567,18 @@ var $author$project$Population$updateCity = function (model) {
 	var vir = model.virus;
 	var city = model.city;
 	var city_ = A2(
-		$author$project$Population$pFlow,
-		model,
+		$author$project$Population$infect,
+		vir,
 		A2(
-			$author$project$Population$infect,
-			vir,
+			$author$project$Population$pFlow,
+			model,
 			A2($author$project$Population$virusKill, vir, city)));
 	return city_;
 };
 var $author$project$NextRound$virusEvolve = function (model) {
-	var size = $elm$core$List$length(model.virus.pos);
-	var rules = model.virus.rules;
+	var vir = model.virus;
+	var size = $elm$core$List$length(vir.pos);
+	var rules = vir.rules;
 	var newrules = $elm$core$List$sort(
 		A2(
 			$elm$core$List$append,
@@ -9435,10 +9592,34 @@ var $author$project$NextRound$virusEvolve = function (model) {
 						return !A2($elm$core$List$member, x, rules);
 					},
 					A2($elm$core$List$range, 2, 6)))));
+	var frozeTile = model.freezeTile;
+	var freezePos = A2(
+		$elm$core$List$filter,
+		function (x) {
+			return A2(
+				$elm$core$List$member,
+				$author$project$Geometry$converHextoTile(x),
+				frozeTile);
+		},
+		vir.pos);
 	var city = $author$project$Population$updateCity(model);
-	var _v0 = A3($author$project$Population$change, model.virus, model.av, model.city);
-	var virus = _v0.a;
+	var _v0 = A3($author$project$Population$change, vir, model.av, model.city);
+	var virus_ = _v0.a;
 	var av = _v0.b;
+	var virPos = _Utils_ap(
+		A2(
+			$elm$core$List$filter,
+			function (x) {
+				return !A2(
+					$elm$core$List$member,
+					$author$project$Geometry$converHextoTile(x),
+					frozeTile);
+			},
+			virus_.pos),
+		freezePos);
+	var virus = _Utils_update(
+		virus_,
+		{pos: virPos});
 	return $author$project$NextRound$horrify(
 		A2(
 			$author$project$NextRound$revenge,
@@ -9454,11 +9635,11 @@ var $author$project$NextRound$virusEvolve = function (model) {
 };
 var $author$project$NextRound$renewStatus = function (model) {
 	return $author$project$NextRound$endlessVirCreator(
-		$author$project$NextRound$judgeWin(
-			$author$project$Model$initLog(
-				$author$project$NextRound$powerInc(
-					$author$project$NextRound$virusEvolve(
-						$author$project$NextRound$clearCurrentRoundTodo(model))))));
+		$author$project$NextRound$clearCurrentRoundTodo(
+			$author$project$NextRound$judgeWin(
+				$author$project$Model$initLog(
+					$author$project$NextRound$powerInc(
+						$author$project$NextRound$virusEvolve(model))))));
 };
 var $author$project$NextRound$toNextRound = function (model) {
 	return (model.currentLevel === 1) ? (((model.currentRound === 1) && _Utils_eq(model.hands, _List_Nil)) ? _Utils_Tuple2(
@@ -9487,8 +9668,8 @@ var $author$project$NextRound$toNextRound = function (model) {
 		$elm$core$Platform$Cmd$none) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none)))) : ((model.currentLevel === 2) ? ((model.currentRound === 1) ? _Utils_Tuple2(
 		$author$project$Model$initLog(
 			$author$project$NextRound$powerInc(
-				$author$project$NextRound$virusEvolve(
-					$author$project$NextRound$clearCurrentRoundTodo(
+				$author$project$NextRound$clearCurrentRoundTodo(
+					$author$project$NextRound$virusEvolve(
 						_Utils_update(
 							model,
 							{
@@ -9499,16 +9680,16 @@ var $author$project$NextRound$toNextRound = function (model) {
 		$elm$core$Platform$Cmd$none) : (((model.currentRound < 4) && _Utils_eq(model.hands, _List_Nil)) ? _Utils_Tuple2(
 		$author$project$Model$initLog(
 			$author$project$NextRound$powerInc(
-				$author$project$NextRound$virusEvolve(
-					$author$project$NextRound$clearCurrentRoundTodo(
+				$author$project$NextRound$clearCurrentRoundTodo(
+					$author$project$NextRound$virusEvolve(
 						_Utils_update(
 							model,
 							{currentRound: model.currentRound + 1}))))),
 		$elm$core$Platform$Cmd$none) : ((model.currentRound === 4) ? _Utils_Tuple2(
 		$author$project$Model$initLog(
 			$author$project$NextRound$powerInc(
-				$author$project$NextRound$virusEvolve(
-					$author$project$NextRound$clearCurrentRoundTodo(
+				$author$project$NextRound$clearCurrentRoundTodo(
+					$author$project$NextRound$virusEvolve(
 						_Utils_update(
 							model,
 							{
@@ -9661,7 +9842,10 @@ var $author$project$Update$update = F2(
 										_Utils_update(
 											model,
 											{
-												actionDescribe: A2($elm$core$List$cons, w, model.actionDescribe)
+												actionDescribe: _Utils_ap(
+													model.actionDescribe,
+													_List_fromArray(
+														[w]))
 											}),
 										$elm$core$Platform$Cmd$none);
 								} else {
@@ -9676,7 +9860,10 @@ var $author$project$Update$update = F2(
 						_Utils_update(
 							model,
 							{
-								actionDescribe: A2($elm$core$List$cons, w, model.actionDescribe)
+								actionDescribe: _Utils_ap(
+									model.actionDescribe,
+									_List_fromArray(
+										[w]))
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -9795,6 +9982,13 @@ var $author$project$Update$update = F2(
 			case 'FreezeRet':
 				var prob = msg.a;
 				var rand = msg.b;
+				var log = (_Utils_cmp(rand, prob) < 0) ? _List_fromArray(
+					[
+						$author$project$Model$Feedback('Luckily, the virus is frozen.')
+					]) : _List_fromArray(
+					[
+						$author$project$Model$Feedback('Oops, the virus isn\'t frozen.')
+					]);
 				var behavior_ = model.behavior;
 				var behavior = _Utils_update(
 					behavior_,
@@ -9804,7 +9998,10 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{behavior: behavior}),
+						{
+							actionDescribe: _Utils_ap(model.actionDescribe, log),
+							behavior: behavior
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'SelectHex':
 				var i = msg.a;
@@ -9857,12 +10054,6 @@ var $author$project$Update$update = F2(
 						model,
 						{drawChance: 0, state: $author$project$Model$Playing}),
 					$elm$core$Platform$Cmd$none);
-			case 'HosInvalid':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{power: model.power + 4}),
-					$elm$core$Platform$Cmd$none);
 			case 'Alert':
 				var txt = msg.a;
 				return _Utils_Tuple2(
@@ -9880,37 +10071,50 @@ var $author$project$Update$update = F2(
 					_Utils_Tuple2(i, j));
 				var ti = _v4.a;
 				var tj = _v4.b;
-				var vir = (_Utils_cmp(prob, rand) < 1) ? _Utils_update(
+				var _v5 = (_Utils_cmp(prob, rand) < 1) ? _Utils_Tuple2(
+					_Utils_update(
+						virus_,
+						{
+							pos: A2(
+								$elm$core$List$filter,
+								function (x) {
+									return !_Utils_eq(
+										$author$project$Geometry$converHextoTile(x),
+										_Utils_Tuple2(ti, tj));
+								},
+								virus_.pos)
+						}),
+					$author$project$Model$Feedback('Luckily, virus is killed')) : _Utils_Tuple2(
 					virus_,
-					{
-						pos: A2(
-							$elm$core$List$filter,
-							function (x) {
-								return !_Utils_eq(
-									$author$project$Geometry$converHextoTile(x),
-									_Utils_Tuple2(ti, tj));
-							},
-							virus_.pos)
-					}) : virus_;
+					$author$project$Model$Feedback('Oops, nothing changed'));
+				var vir = _v5.a;
+				var log = _v5.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{virus: vir}),
+						{
+							actionDescribe: _Utils_ap(
+								model.actionDescribe,
+								_List_fromArray(
+									[log])),
+							virus: vir
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'JudgeVirPeo':
-				var _v5 = msg.a;
-				var _v6 = _v5.a;
-				var i = _v6.a;
-				var j = _v6.b;
-				var prob = _v5.b;
+				var _v6 = msg.a;
+				var _v7 = _v6.a;
+				var i = _v7.a;
+				var j = _v7.b;
+				var prob = _v6.b;
 				var rand = msg.b;
 				var virus = model.virus;
 				var tilelst = model.city.tilesIndex;
+				var log = (_Utils_cmp(prob, rand) < 1) ? $author$project$Model$Feedback('Luckily, virus is killed') : $author$project$Model$Feedback('Sorry, people are killed');
 				var city = model.city;
-				var _v7 = $author$project$Geometry$converHextoTile(
+				var _v8 = $author$project$Geometry$converHextoTile(
 					_Utils_Tuple2(i, j));
-				var ti = _v7.a;
-				var tj = _v7.b;
+				var ti = _v8.a;
+				var tj = _v8.b;
 				var city_ = (_Utils_cmp(prob, rand) > 0) ? _Utils_update(
 					city,
 					{
@@ -10398,6 +10602,8 @@ var $author$project$ViewCards$backToHome = A2(
 		[
 			$elm$html$Html$text('Back')
 		]));
+var $author$project$ViewCards$filteredCards = _List_fromArray(
+	[$author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$blizzard, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$megaClone, $author$project$Card$purification, $author$project$Card$sacrifice, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$drought, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob]);
 var $elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
@@ -10411,6 +10617,8 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $author$project$ViewCards$viewSingleCard = F2(
 	function (n, card) {
 		return A2(
@@ -10420,7 +10628,8 @@ var $author$project$ViewCards$viewSingleCard = F2(
 					$elm$html$Html$Attributes$class('ctnr'),
 					$elm$html$Html$Attributes$id(
 					'c' + $elm$core$String$fromInt(n + 1)),
-					A2($elm$html$Html$Attributes$attribute, 'data-info', card.describe)
+					A2($elm$html$Html$Attributes$attribute, 'data-info', card.describe),
+					A2($elm$html$Html$Attributes$style, 'background-image', 'url(./assets/cardPNG/' + (card.name + '.png)'))
 				]),
 			_List_fromArray(
 				[
@@ -10440,13 +10649,7 @@ var $author$project$ViewCards$viewSingleCard = F2(
 								]),
 							_List_fromArray(
 								[
-									A2(
-									$elm$html$Html$h3,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(card.name)
-										]))
+									A2($elm$html$Html$h3, _List_Nil, _List_Nil)
 								]))
 						]))
 				]));
@@ -10458,7 +10661,7 @@ var $author$project$ViewCards$cardsArray = A2(
 		var c = _v0.b;
 		return A2($author$project$ViewCards$viewSingleCard, n, c);
 	},
-	A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, $author$project$Card$allCards));
+	A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, $author$project$ViewCards$filteredCards));
 var $author$project$ViewCards$viewCard = _List_fromArray(
 	[
 		A2(
@@ -10495,7 +10698,7 @@ var $author$project$ColorScheme$colorScheme = function (t) {
 		case 'Urban':
 			return {bkg: '#071e26', cdBkg: '#f2f2f0', cdStroke: '', cdText: 'black', consoleBkg: 'black', consoleOpacity: 0.7, consoleStroke: '#4d454a', consoleText: '#23ff12', constructionCaption: 'white', drawBkg: '#535455', drawStroke: 'white', guideBkg: '#a5bcc0', guideStroke: '#6f787e', guideTextColor: 'black', infBkg: 'purple', infOpacity: 0.8, infStroke: '#2e3f48', infText: 'white', levelProgressBkg: '#131231', levelProgressFill: '#71c1d8', levelProgressStroke: '#f6f6f6', nextRoundBkg: '#6a8ee2', powerColor: '#e4fad2', tile: '#02c5ce', tileStroke: '#b957ce'};
 		default:
-			return {bkg: '#8698af', cdBkg: '#f2f2f0', cdStroke: '', cdText: 'black', consoleBkg: '#f8f8f8', consoleOpacity: 0.7, consoleStroke: '#97b2dc', consoleText: '#1c3981', constructionCaption: '#3276c2', drawBkg: '#535455', drawStroke: 'white', guideBkg: '#a5bcc0', guideStroke: '#6f787e', guideTextColor: 'black', infBkg: 'purple', infOpacity: 0.8, infStroke: '#2e3f48', infText: 'white', levelProgressBkg: '#1e1e1f', levelProgressFill: '#e4fad2', levelProgressStroke: '#f6f6f6', nextRoundBkg: '#6a8ee2', powerColor: '#e4fad2', tile: '#547286', tileStroke: 'white'};
+			return {bkg: '#8698af', cdBkg: '#f2f2f0', cdStroke: '', cdText: 'black', consoleBkg: '#f8f8f8', consoleOpacity: 0.7, consoleStroke: '#97b2dc', consoleText: '#1c3981', constructionCaption: '#3276c2', drawBkg: '#535455', drawStroke: 'white', guideBkg: '#a5bcc0', guideStroke: '#6f787e', guideTextColor: 'black', infBkg: 'purple', infOpacity: 0.8, infStroke: '#2e3f48', infText: 'white', levelProgressBkg: '#1e1e1f', levelProgressFill: '#e4fad2', levelProgressStroke: '#f6f6f6', nextRoundBkg: '#6a8ee2', powerColor: '#e4fad2', tile: '#547286', tileStroke: 'yellow'};
 	}
 };
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
@@ -10533,7 +10736,7 @@ var $author$project$GameViewBasic$caption = F5(
 				[
 					$elm$svg$Svg$Attributes$fontSize(
 					$elm$core$String$fromInt(fontSize)),
-					$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
+					$elm$svg$Svg$Attributes$fontFamily('Bree Serif'),
 					$elm$svg$Svg$Attributes$x(
 					$elm$core$String$fromFloat(x)),
 					$elm$svg$Svg$Attributes$y(
@@ -10602,10 +10805,12 @@ var $author$project$GameViewButtons$drawButton = F4(
 	});
 var $author$project$GameViewButtons$drawButton_ = A3($author$project$GameViewButtons$drawButton, $author$project$Parameters$para.drawButtonX, $author$project$Parameters$para.drawButtonY, $author$project$Parameters$para.drawButtonW);
 var $author$project$GameView$endlessLevelProgress = function (model) {
+	var r = model.currentRound;
+	var digitNum = (r < 10) ? 1 : ((r < 100) ? 2 : 3);
 	return A5(
 		$author$project$GameViewBasic$caption,
-		810,
-		$author$project$Parameters$para.houseButtonY + 50.0,
+		810 - (30 * (digitNum - 1)),
+		$author$project$Parameters$para.houseButtonY + 45.0,
 		'white',
 		$elm$core$String$fromInt(model.currentRound),
 		60);
@@ -10835,16 +11040,101 @@ var $author$project$GameView$powerInfo = function (model) {
 		$elm$core$String$fromInt(model.power),
 		$author$project$Parameters$para.pifs);
 };
+var $author$project$GameView$cityInfo = function (model) {
+	var _v0 = model.currentLevel;
+	switch (_v0) {
+		case 3:
+			return 'Atlanta is a city with plain terrain and a \ntemperate climate, which makes it highly \nsusceptible to  viruses. Fortunately, people \nfound some nano-virus technologies from \na virus research institute before the \nnuclear war. With special programs, the\n nano-virus is capable of killing some\nmicroorganisms, including viruses.\n\n========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n========OBJECTIVE==========\nNo less than 140 surviving population.\n';
+		case 4:
+			return 'Before the devastating war, Amber was a\n "Tech City" whose citizens were mainly\n made up of researchers and scholars.\nFortunately, Amber didn\'t take much \ndamage in the war. Therefore, it kept\n many cutting-edge technologies and\n later became the most populated area\n in the world. To make up for the labor\n loss, a highly advanced cloning system\n was developed.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purificatio\n=\n========OBJECTIVE==========\nNo less than 160 surviving population.\n';
+		case 5:
+			return 'Welcome to St.Petersburg, the \nnorthernmost city with a population over\n 50,000. The climate here is extremely\n cold and dry. The resources harvested \nfrom land are very limited. Therefore, \npeople created a weather control system\n to adapt to the environment.\n\n========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n=========OBJECTIVE==========\nNo less than 80 surviving population.\n';
+		default:
+			return '';
+	}
+};
 var $elm$core$String$lines = _String_lines;
+var $author$project$GameView$cityInfoText = function (model) {
+	var t = model.theme;
+	var indexed = A2(
+		$elm$core$List$indexedMap,
+		$elm$core$Tuple$pair,
+		$elm$core$String$lines(
+			$author$project$GameView$cityInfo(model)));
+	var cs = $author$project$ColorScheme$colorScheme(t);
+	return A2(
+		$elm$core$List$map,
+		function (_v1) {
+			var x = _v1.a;
+			var y = _v1.b;
+			var str = _v1.c;
+			return A5($author$project$GameViewBasic$caption, x, y, cs.consoleText, str, 12);
+		},
+		A2(
+			$elm$core$List$map,
+			function (_v0) {
+				var n = _v0.a;
+				var str = _v0.b;
+				return _Utils_Tuple3($author$project$Parameters$para.inflm, $author$project$Parameters$para.inftm + ($author$project$Parameters$para.clh * n), str);
+			},
+			indexed));
+};
+var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
+var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var $author$project$GameView$renderCityInfo = function (model) {
+	var y = $author$project$Parameters$para.ictm;
+	var x = $author$project$Parameters$para.iclm + (5.0 * ($author$project$Parameters$para.icw + $author$project$Parameters$para.icg));
+	var w = (1000.0 - x) - ($author$project$Parameters$para.icg * 0.5);
+	var txt = $author$project$GameView$cityInfoText(model);
+	var t = model.theme;
+	var h = ((2.0 * 1.6) * $author$project$Parameters$para.icw) + $author$project$Parameters$para.icg;
+	var vbArg = '0 0 ' + ($elm$core$String$fromFloat(w) + (' ' + $elm$core$String$fromFloat(h)));
+	var cs = $author$project$ColorScheme$colorScheme(t);
+	var bkg = A2(
+		$elm$svg$Svg$rect,
+		_List_fromArray(
+			[
+				$elm$svg$Svg$Attributes$width(
+				$elm$core$String$fromFloat(w)),
+				$elm$svg$Svg$Attributes$height(
+				$elm$core$String$fromFloat(h)),
+				$elm$svg$Svg$Attributes$stroke(cs.consoleStroke),
+				$elm$svg$Svg$Attributes$strokeWidth('4'),
+				$elm$svg$Svg$Attributes$fill(cs.consoleBkg),
+				$elm$svg$Svg$Attributes$fillOpacity(
+				$elm$core$String$fromFloat(cs.consoleOpacity))
+			]),
+		_List_Nil);
+	return A2(
+		$elm$svg$Svg$svg,
+		_List_fromArray(
+			[
+				$elm$svg$Svg$Attributes$x(
+				$elm$core$String$fromFloat(x)),
+				$elm$svg$Svg$Attributes$y(
+				$elm$core$String$fromFloat(y)),
+				$elm$svg$Svg$Attributes$viewBox(vbArg),
+				$elm$svg$Svg$Attributes$width(
+				$elm$core$String$fromFloat(w)),
+				$elm$svg$Svg$Attributes$height(
+				$elm$core$String$fromFloat(h))
+			]),
+		A2($elm$core$List$cons, bkg, txt));
+};
 var $author$project$GameView$ml2s = function (m) {
-	if (m.$ === 'Warning') {
-		var str = m.a;
-		return $elm$core$List$reverse(
-			$elm$core$String$lines('⚠' + (' ' + str)));
-	} else {
-		var c = m.a;
-		return $elm$core$List$reverse(
-			$elm$core$String$lines('💬 ' + ('[' + (c.name + (']: \n' + c.describe)))));
+	switch (m.$) {
+		case 'Warning':
+			var str = m.a;
+			return $elm$core$List$reverse(
+				$elm$core$String$lines('⚠' + (' ' + str)));
+		case 'CardPlayed':
+			var c = m.a;
+			return $elm$core$List$reverse(
+				$elm$core$String$lines('💬 ' + ('[' + (c.name + (']: \n' + c.describe)))));
+		default:
+			var str = m.a;
+			return $elm$core$List$reverse(
+				$elm$core$String$lines('⨀ ' + str));
 	}
 };
 var $author$project$GameView$consoleText = function (model) {
@@ -10852,10 +11142,6 @@ var $author$project$GameView$consoleText = function (model) {
 	var t = model.theme;
 	var myLog = $elm$core$List$reverse(model.actionDescribe);
 	var lm = $author$project$Parameters$para.consolelm;
-	var cs = $author$project$ColorScheme$colorScheme(t);
-	var _v0 = A2($elm$core$List$partition, $author$project$Model$isWarning, myLog);
-	var w = _v0.a;
-	var a = _v0.b;
 	var indexed = A2(
 		$elm$core$List$indexedMap,
 		$elm$core$Tuple$pair,
@@ -10867,30 +11153,26 @@ var $author$project$GameView$consoleText = function (model) {
 				};
 			},
 			_List_Nil,
-			A2(
-				$elm$core$List$map,
-				$author$project$GameView$ml2s,
-				_Utils_ap(w, a))));
+			A2($elm$core$List$map, $author$project$GameView$ml2s, myLog)));
 	var indexedLength = $elm$core$List$length(indexed);
+	var cs = $author$project$ColorScheme$colorScheme(t);
 	var lt = A2(
 		$elm$core$List$map,
-		function (_v2) {
-			var y = _v2.a;
-			var str = _v2.b;
+		function (_v1) {
+			var y = _v1.a;
+			var str = _v1.b;
 			return A5($author$project$GameViewBasic$caption, lm * 0.3, y, cs.consoleText, str, $author$project$Parameters$para.consolefs);
 		},
 		A2(
 			$elm$core$List$map,
-			function (_v1) {
-				var n = _v1.a;
-				var str = _v1.b;
+			function (_v0) {
+				var n = _v0.a;
+				var str = _v0.b;
 				return _Utils_Tuple2((indexedLength - n) * $author$project$Parameters$para.consolelp, str);
 			},
 			indexed));
 	return lt;
 };
-var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
-var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $author$project$GameView$renderConsole = function (model) {
 	var w = $author$project$Parameters$para.consoleWidth;
 	var tm = ($author$project$Parameters$para.hctm + (1.6 * $author$project$Parameters$para.hcw)) + 20.0;
@@ -11011,9 +11293,9 @@ var $author$project$GameView$renderFinished = F2(
 var $author$project$Message$tutorial = _List_fromArray(
 	[
 		_List_fromArray(
-		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was\nlogged in the console. Concerning the population distribution,\nplease notice the numbers on the map. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist\nbut the same kind can\'t, please try the rest of the cards.', 'Hint: cards have costs. Plauing a card costs your power\nwhich is displayed on the left top coner of the screen\nIt would accumulate over turns. Please click next round.', 'Please notice the figures besides the draw button. It\'s\nyour economy. Draw a card costs 6 economy. Like Power,\neconomy would accumulate over turns. Please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.']),
+		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was\nlogged in the console. Concerning the population distribution,\nplease notice the numbers on the map. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist\nbut the same kind can\'t, please try the rest of the cards.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.']),
 		_List_fromArray(
-		['In the previous tutorial, you\'ve learned about cards and\nentering next rounds. The purple stuff on the map is\nthe [virus]. Detailed information and special virus\nskills will be demonstrated once the window on the right\nis clicked. Now please try [Cut] and [MegaCut]\nand click next round', 'As you might have noticed, [MegaCut] clears virus on one\ntile while [cut] only clear a hexagon. Now please use [Going Viral]', 'Anti-virus (Blue) can be released by player, it exterminate\nlocal virus units and could survive three rounds\nPlease proceed to next turn to witness its spread.', 'Win or lose is decided by the remaining population after\ncertain rounds (except the endless mode). In this\ntutorial, however, you have to eliminate all the virus\non the map. Hint: remember to draw new cards and accumulate\n resource (power & economy) by clicking next round.', 'Please be aware of populationFlow between tiles. In each\nround, exchange of at most 2 population (including\npatients) occurs between neighboring tiles.\nPlease keep on fighting!', 'Great job!\nClick next turn to finish the tutorial.'])
+		['In the previous tutorial, you\'ve learned about cards and entering\nnext rounds. The colored stuff on the map is the [virus]\n. Detailed information and special virus\nskills will be demonstrated once the window on the right\nis clicked. Now please try [Cut] and [MegaCut]\nand click next round', 'As you might have noticed, [MegaCut] clears virus on one\ntile while [cut] only clear a hexagon. Now please use [Going Viral]', 'Anti-virus (always blue) can be released by player, it exterminate\nlocal virus units and could survive three rounds\nPlease proceed to next turn to witness its spread.', 'Win or lose is decided by the remaining population after\ncertain rounds (except the endless mode). In this\ntutorial, however, you have to eliminate all the virus\non the map. Hint: remember to draw new cards and accumulate\n resource (power & economy) by clicking next round.', 'Please be aware of populationFlow between tiles. In each\nround, exchange of at most 2 population (including\npatients) occurs between neighboring tiles.\nPlease keep on fighting!', 'Great job!\nClick next turn to finish the tutorial.'])
 	]);
 var $author$project$Action$createGuide = function (model) {
 	var str = A3(
@@ -13176,8 +13458,13 @@ var $author$project$GameView$viewGame = function (model) {
 												[
 													$author$project$GameViewButtons$icGameStart(model)
 												]),
-											_List_fromArray(
-												[$author$project$GameViewButtons$houseButton_])))))))
+											_Utils_ap(
+												_List_fromArray(
+													[$author$project$GameViewButtons$houseButton_]),
+												_List_fromArray(
+													[
+														$author$project$GameView$renderCityInfo(model)
+													]))))))))
 					]));
 		case 'Finished':
 			var n = _v0.a;
@@ -13194,7 +13481,7 @@ var $author$project$View$viewAll = function (model) {
 		case 'Playing':
 			return A2(
 				$author$project$View$Document,
-				'game',
+				'Game',
 				_List_fromArray(
 					[
 						$author$project$GameView$viewGame(model)
@@ -13202,15 +13489,15 @@ var $author$project$View$viewAll = function (model) {
 		case 'HomePage':
 			return A2(
 				$author$project$View$Document,
-				'main',
+				'Age of Plague',
 				_List_fromArray(
 					[$author$project$ViewMP$viewAll]));
 		case 'CardPage':
-			return A2($author$project$View$Document, 'card', $author$project$ViewCards$viewCard);
+			return A2($author$project$View$Document, 'Card Gallery', $author$project$ViewCards$viewCard);
 		default:
 			return A2(
 				$author$project$View$Document,
-				'game',
+				'Game',
 				_List_fromArray(
 					[
 						$author$project$GameView$viewGame(model)

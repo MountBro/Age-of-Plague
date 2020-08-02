@@ -8536,6 +8536,13 @@ var $elm_community$list_extra$List$Extra$remove = F2(
 				A2($elm_community$list_extra$List$Extra$remove, x, ys));
 		}
 	});
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $author$project$Message$ReplaceCard = F2(
 	function (a, b) {
 		return {$: 'ReplaceCard', a: a, b: b};
@@ -9607,7 +9614,6 @@ var $author$project$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'Tick':
 				var newTime = msg.a;
-				var log1 = A2($elm$core$Debug$log, 'selhex', model.selHex);
 				return (!$author$project$Todo$finished(model.todo)) ? $author$project$RegionFill$mFillRegion(
 					$author$project$Action$pickAction(model)) : $author$project$RegionFill$mFillRegion(
 					_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
@@ -9708,7 +9714,8 @@ var $author$project$Update$update = F2(
 									power: model.power - card.cost,
 									selHex: $author$project$Model$SelHexOn
 								}),
-							$author$project$Ports$cardToMusic('')) : (((A2(
+							$author$project$Ports$cardToMusic(
+								A3($elm$core$String$replace, ' ', '', card.name))) : (((A2(
 							$author$project$Update$judgeSummon,
 							card,
 							$elm$core$List$length(model.hands)) <= 10) && A2($elm$core$List$member, card, $author$project$Card$summonNum.a)) ? _Utils_Tuple2(
@@ -9727,7 +9734,8 @@ var $author$project$Update$update = F2(
 												card)
 											]))
 								}),
-							$elm$core$Platform$Cmd$none) : (((A2(
+							$author$project$Ports$cardToMusic(
+								A3($elm$core$String$replace, ' ', '', card.name))) : (((A2(
 							$author$project$Update$judgeSummon,
 							card,
 							$elm$core$List$length(model.hands)) > 10) && A2($elm$core$List$member, card, $author$project$Card$summonNum.a)) ? _Utils_Tuple2(
@@ -9757,7 +9765,8 @@ var $author$project$Update$update = F2(
 												card)
 											]))
 								}),
-							$elm$core$Platform$Cmd$none)));
+							$author$project$Ports$cardToMusic(
+								A3($elm$core$String$replace, ' ', '', card.name)))));
 					} else {
 						var mc = $author$project$Model$toCardSelected(model);
 						if (mc.$ === 'Just') {
@@ -9809,10 +9818,6 @@ var $author$project$Update$update = F2(
 			case 'SelectHex':
 				var i = msg.a;
 				var j = msg.b;
-				var log1 = A2(
-					$elm$core$Debug$log,
-					'i, j: ',
-					_Utils_Tuple2(i, j));
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -9823,10 +9828,6 @@ var $author$project$Update$update = F2(
 			case 'MouseOver':
 				var i = msg.a;
 				var j = msg.b;
-				var log2 = A2(
-					$elm$core$Debug$log,
-					'over',
-					_Utils_Tuple2(i, j));
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -9856,12 +9857,6 @@ var $author$project$Update$update = F2(
 					_Utils_update(
 						model,
 						{drawChance: 0, state: $author$project$Model$Playing}),
-					$elm$core$Platform$Cmd$none);
-			case 'HosInvalid':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{power: model.power + 4}),
 					$elm$core$Platform$Cmd$none);
 			case 'Alert':
 				var txt = msg.a;
@@ -11545,13 +11540,6 @@ var $author$project$GameViewCards$renderCardFilm = F6(
 						]),
 					_List_Nil)
 				]));
-	});
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
 	});
 var $author$project$Card$toPngUrl = function (c) {
 	return './assets/cardPNG/' + (A3($elm$core$String$replace, ' ', '', c.name) + '.png');

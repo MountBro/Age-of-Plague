@@ -263,13 +263,6 @@ update msg model =
         StartRound1 ->
             ( { model | state = Playing, drawChance = 0 }, Cmd.none )
 
-        HosInvalid ->
-            ( { model
-                | power = model.power + 4
-              }
-            , Cmd.none
-            )
-
         Message.Alert txt ->
             ( model, sendMsg txt )
 

@@ -22,14 +22,14 @@
         document.addEventListener("mouseover", playBgm);
 
         // The music and sounds
-        var jiujiuliu = new Aduio("./assets/music/996.wav");
+        var jiujiuliu = new Audio("./assets/music/996.wav");
         var ice = new Audio("./assets/music/ice.wav");
 
         function playBgm() {
             var bgm = document.getElementById("bgm");
             bgm.volume = 0.2;
             bgm.play();
-            document.removeEventListener('click', playBgm)
+            document.removeEventListener('over', playBgm)
         }
 
         var cardSound = function(msg) {
@@ -39,8 +39,8 @@
                     jiujiuliu.play();
                     break;
 
-                case "ice":
-                    ice.volume = 2;
+                case "Blizzard":
+                    ice.volume = 0.5;
                     ice.play();
 
                 default:

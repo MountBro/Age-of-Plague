@@ -198,8 +198,8 @@ updateCity model =
 
         city_ =
             virusKill vir city
-                |> infect vir
                 |> pFlow model
+                |> infect vir
     in
     city_
 

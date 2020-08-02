@@ -13,6 +13,7 @@ import Todo exposing (..)
 import Virus exposing (..)
 
 
+
 updateLog : Model -> Model
 updateLog model =
     let
@@ -366,17 +367,8 @@ performAction action model =
             let
                 pos =
                     converHextoTile ( i, j )
-
-                virus_ =
-                    model.virus
-
-                virpos =
-                    List.filter (\x -> converHextoTile x /= pos) virus_.pos
-
-                virus =
-                    { virus_ | pos = virpos }
             in
-            ( { model | virus = virus } |> updateLog, Cmd.none )
+            ( { model | freezeTile = pos :: model.freezeTile } |> updateLog, Cmd.none )
 
         HospitalI ( i, j ) ->
             let

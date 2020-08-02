@@ -48,6 +48,7 @@ type alias Model =
     , flowRate : Int -- population flow rate
     , virusInfo : Bool
     , waveNum : Int
+    , freezeTile : List (Int, Int) -- for defenseline
     }
 
 
@@ -87,6 +88,7 @@ initModel _ =
       , flowRate = 1
       , virusInfo = False
       , waveNum = 0
+      , freezeTile = []
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )

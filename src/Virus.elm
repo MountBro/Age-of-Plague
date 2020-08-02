@@ -95,8 +95,6 @@ searchValidNeighbor virlst lst =
 judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )
 judgeAlive lstvir vir lstanti anti lstquatile =
     let
-        lstv =
-            List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x anti.pos) && not (List.member (converHextoTile x) lstquatile)) lstvir
 
         lsta =
             if anti.life > 0 then
@@ -104,6 +102,9 @@ judgeAlive lstvir vir lstanti anti lstquatile =
 
             else
                 []
+        lstv =
+            List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x lsta) && not (List.member (converHextoTile x) lstquatile)) lstvir
+
     in
     ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )
 

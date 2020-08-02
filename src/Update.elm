@@ -232,6 +232,7 @@ update msg model =
 
                 behavior =
                     { behavior_ | virusEvolve = not (rand < prob) }
+
             in
             ( { model | behavior = behavior }, Cmd.none )
 

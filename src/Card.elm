@@ -67,17 +67,20 @@ cardPilestutorial =
     [ blizzard ]
 
 
-cardPile5 =
-    [ blizzard
-    , blizzard
-    , blizzard
-    , drought
-    , drought
-    , drought
-    , powerOverload
+
+cardPile3 =
+    -- Atlanta
+    [ defenseline
+    , defenseline
+    , sacrifice
+    , sacrifice
+    , goingViral
+    , goingViral
+    , goingViral
+    , judgement
+    , judgement
     , powerOverload
     , onStandby
-    , coldWave
     , coldWave
     , rain
     , cut
@@ -90,31 +93,30 @@ cardPile5 =
     , cut
     , cut
     , cut
-    , cut
-    , cut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
-    , fubao
+    , hospital
+    , hospital
     , hospital
     , hospital
     , hospital
     , hospital
     , hospital
     , quarantine
-    , quarantine
-    , quarantine
+    , enhancedHealing
+    , enhancedHealing
     , enhancedHealing
     , cellBroadcast
     , warehouse
-    , warehouse
-    , warmwave
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
+    , firstAid
+    , medMob
     , medMob
     , medMob
     ]
@@ -174,19 +176,17 @@ cardPile4 =
     ]
 
 
-cardPile3 =
-    -- Atlanta
-    [ defenseline
-    , defenseline
-    , sacrifice
-    , sacrifice
-    , goingViral
-    , goingViral
-    , goingViral
-    , judgement
-    , judgement
+cardPile5 =
+    [ blizzard
+    , blizzard
+    , blizzard
+    , drought
+    , drought
+    , drought
+    , powerOverload
     , powerOverload
     , onStandby
+    , coldWave
     , coldWave
     , rain
     , cut
@@ -199,34 +199,34 @@ cardPile3 =
     , cut
     , cut
     , cut
+    , cut
+    , cut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
-    , hospital
-    , hospital
+    , fubao
     , hospital
     , hospital
     , hospital
     , hospital
     , hospital
     , quarantine
-    , enhancedHealing
-    , enhancedHealing
+    , quarantine
+    , quarantine
     , enhancedHealing
     , cellBroadcast
     , warehouse
+    , warehouse
+    , warmwave
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
-    , firstAid
-    , medMob
     , medMob
     , medMob
     ]
-
 
 allCards =
     [ powerOverload

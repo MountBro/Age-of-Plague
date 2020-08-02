@@ -10398,6 +10398,8 @@ var $author$project$ViewCards$backToHome = A2(
 		[
 			$elm$html$Html$text('Back')
 		]));
+var $author$project$ViewCards$filteredCards = _List_fromArray(
+	[$author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$blizzard, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$megaClone, $author$project$Card$purification, $author$project$Card$sacrifice, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$drought, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob]);
 var $elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
@@ -10411,6 +10413,8 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $author$project$ViewCards$viewSingleCard = F2(
 	function (n, card) {
 		return A2(
@@ -10420,7 +10424,8 @@ var $author$project$ViewCards$viewSingleCard = F2(
 					$elm$html$Html$Attributes$class('ctnr'),
 					$elm$html$Html$Attributes$id(
 					'c' + $elm$core$String$fromInt(n + 1)),
-					A2($elm$html$Html$Attributes$attribute, 'data-info', card.describe)
+					A2($elm$html$Html$Attributes$attribute, 'data-info', card.describe),
+					A2($elm$html$Html$Attributes$style, 'background-image', 'url(./assets/cardPNG/' + (card.name + '.png)'))
 				]),
 			_List_fromArray(
 				[
@@ -10440,13 +10445,7 @@ var $author$project$ViewCards$viewSingleCard = F2(
 								]),
 							_List_fromArray(
 								[
-									A2(
-									$elm$html$Html$h3,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(card.name)
-										]))
+									A2($elm$html$Html$h3, _List_Nil, _List_Nil)
 								]))
 						]))
 				]));
@@ -10458,7 +10457,7 @@ var $author$project$ViewCards$cardsArray = A2(
 		var c = _v0.b;
 		return A2($author$project$ViewCards$viewSingleCard, n, c);
 	},
-	A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, $author$project$Card$allCards));
+	A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, $author$project$ViewCards$filteredCards));
 var $author$project$ViewCards$viewCard = _List_fromArray(
 	[
 		A2(
@@ -10533,7 +10532,7 @@ var $author$project$GameViewBasic$caption = F5(
 				[
 					$elm$svg$Svg$Attributes$fontSize(
 					$elm$core$String$fromInt(fontSize)),
-					$elm$svg$Svg$Attributes$fontFamily('sans-serif'),
+					$elm$svg$Svg$Attributes$fontFamily('Bree Serif'),
 					$elm$svg$Svg$Attributes$x(
 					$elm$core$String$fromFloat(x)),
 					$elm$svg$Svg$Attributes$y(
@@ -10602,10 +10601,12 @@ var $author$project$GameViewButtons$drawButton = F4(
 	});
 var $author$project$GameViewButtons$drawButton_ = A3($author$project$GameViewButtons$drawButton, $author$project$Parameters$para.drawButtonX, $author$project$Parameters$para.drawButtonY, $author$project$Parameters$para.drawButtonW);
 var $author$project$GameView$endlessLevelProgress = function (model) {
+	var r = model.currentRound;
+	var digitNum = (r < 10) ? 1 : ((r < 100) ? 2 : 3);
 	return A5(
 		$author$project$GameViewBasic$caption,
-		810,
-		$author$project$Parameters$para.houseButtonY + 50.0,
+		810 - (30 * (digitNum - 1)),
+		$author$project$Parameters$para.houseButtonY + 45.0,
 		'white',
 		$elm$core$String$fromInt(model.currentRound),
 		60);
@@ -10835,7 +10836,87 @@ var $author$project$GameView$powerInfo = function (model) {
 		$elm$core$String$fromInt(model.power),
 		$author$project$Parameters$para.pifs);
 };
+var $author$project$GameView$cityInfo = function (model) {
+	var _v0 = model.currentLevel;
+	switch (_v0) {
+		case 3:
+			return 'Atlanta is a city with plain terrain and a \ntemperate climate, which makes it highly \nsusceptible to  viruses. Fortunately, people \nfound some nano-virus technologies from \na virus research institute before the \nnuclear war. With special programs, the\n nano-virus is capable of killing some\nmicroorganisms, including viruses.\n\n========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n========OBJECTIVE==========\nNo less than 140 surviving population.\n';
+		case 4:
+			return 'Before the devastating war, Amber was a\n "Tech City" whose citizens were mainly\n made up of researchers and scholars.\nFortunately, Amber didn\'t take much \ndamage in the war. Therefore, it kept\n many cutting-edge technologies and\n later became the most populated area\n in the world. To make up for the labor\n loss, a highly advanced cloning system\n was developed.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purificatio\n=\n========OBJECTIVE==========\nNo less than 160 surviving population.\n';
+		case 5:
+			return 'Welcome to St.Petersburg, the \nnorthernmost city with a population over\n 50,000. The climate here is extremely\n cold and dry. The resources harvested \nfrom land are very limited. Therefore, \npeople created a weather control system\n to adapt to the environment.\n\n========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n=========OBJECTIVE==========\nNo less than 80 surviving population.\n';
+		default:
+			return '';
+	}
+};
 var $elm$core$String$lines = _String_lines;
+var $author$project$GameView$cityInfoText = function (model) {
+	var t = model.theme;
+	var indexed = A2(
+		$elm$core$List$indexedMap,
+		$elm$core$Tuple$pair,
+		$elm$core$String$lines(
+			$author$project$GameView$cityInfo(model)));
+	var cs = $author$project$ColorScheme$colorScheme(t);
+	return A2(
+		$elm$core$List$map,
+		function (_v1) {
+			var x = _v1.a;
+			var y = _v1.b;
+			var str = _v1.c;
+			return A5($author$project$GameViewBasic$caption, x, y, cs.consoleText, str, 12);
+		},
+		A2(
+			$elm$core$List$map,
+			function (_v0) {
+				var n = _v0.a;
+				var str = _v0.b;
+				return _Utils_Tuple3($author$project$Parameters$para.inflm, $author$project$Parameters$para.inftm + ($author$project$Parameters$para.clh * n), str);
+			},
+			indexed));
+};
+var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
+var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var $author$project$GameView$renderCityInfo = function (model) {
+	var y = $author$project$Parameters$para.ictm;
+	var x = $author$project$Parameters$para.iclm + (5.0 * ($author$project$Parameters$para.icw + $author$project$Parameters$para.icg));
+	var w = (1000.0 - x) - ($author$project$Parameters$para.icg * 0.5);
+	var txt = $author$project$GameView$cityInfoText(model);
+	var t = model.theme;
+	var h = ((2.0 * 1.6) * $author$project$Parameters$para.icw) + $author$project$Parameters$para.icg;
+	var vbArg = '0 0 ' + ($elm$core$String$fromFloat(w) + (' ' + $elm$core$String$fromFloat(h)));
+	var cs = $author$project$ColorScheme$colorScheme(t);
+	var bkg = A2(
+		$elm$svg$Svg$rect,
+		_List_fromArray(
+			[
+				$elm$svg$Svg$Attributes$width(
+				$elm$core$String$fromFloat(w)),
+				$elm$svg$Svg$Attributes$height(
+				$elm$core$String$fromFloat(h)),
+				$elm$svg$Svg$Attributes$stroke(cs.consoleStroke),
+				$elm$svg$Svg$Attributes$strokeWidth('4'),
+				$elm$svg$Svg$Attributes$fill(cs.consoleBkg),
+				$elm$svg$Svg$Attributes$fillOpacity(
+				$elm$core$String$fromFloat(cs.consoleOpacity))
+			]),
+		_List_Nil);
+	return A2(
+		$elm$svg$Svg$svg,
+		_List_fromArray(
+			[
+				$elm$svg$Svg$Attributes$x(
+				$elm$core$String$fromFloat(x)),
+				$elm$svg$Svg$Attributes$y(
+				$elm$core$String$fromFloat(y)),
+				$elm$svg$Svg$Attributes$viewBox(vbArg),
+				$elm$svg$Svg$Attributes$width(
+				$elm$core$String$fromFloat(w)),
+				$elm$svg$Svg$Attributes$height(
+				$elm$core$String$fromFloat(h))
+			]),
+		A2($elm$core$List$cons, bkg, txt));
+};
 var $author$project$GameView$ml2s = function (m) {
 	if (m.$ === 'Warning') {
 		var str = m.a;
@@ -10889,8 +10970,6 @@ var $author$project$GameView$consoleText = function (model) {
 			indexed));
 	return lt;
 };
-var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
-var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $author$project$GameView$renderConsole = function (model) {
 	var w = $author$project$Parameters$para.consoleWidth;
 	var tm = ($author$project$Parameters$para.hctm + (1.6 * $author$project$Parameters$para.hcw)) + 20.0;
@@ -13176,8 +13255,13 @@ var $author$project$GameView$viewGame = function (model) {
 												[
 													$author$project$GameViewButtons$icGameStart(model)
 												]),
-											_List_fromArray(
-												[$author$project$GameViewButtons$houseButton_])))))))
+											_Utils_ap(
+												_List_fromArray(
+													[$author$project$GameViewButtons$houseButton_]),
+												_List_fromArray(
+													[
+														$author$project$GameView$renderCityInfo(model)
+													]))))))))
 					]));
 		case 'Finished':
 			var n = _v0.a;
@@ -13194,7 +13278,7 @@ var $author$project$View$viewAll = function (model) {
 		case 'Playing':
 			return A2(
 				$author$project$View$Document,
-				'game',
+				'Game',
 				_List_fromArray(
 					[
 						$author$project$GameView$viewGame(model)
@@ -13202,15 +13286,15 @@ var $author$project$View$viewAll = function (model) {
 		case 'HomePage':
 			return A2(
 				$author$project$View$Document,
-				'main',
+				'Age of Plague',
 				_List_fromArray(
 					[$author$project$ViewMP$viewAll]));
 		case 'CardPage':
-			return A2($author$project$View$Document, 'card', $author$project$ViewCards$viewCard);
+			return A2($author$project$View$Document, 'Card Gallery', $author$project$ViewCards$viewCard);
 		default:
 			return A2(
 				$author$project$View$Document,
-				'game',
+				'Game',
 				_List_fromArray(
 					[
 						$author$project$GameView$viewGame(model)

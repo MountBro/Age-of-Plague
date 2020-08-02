@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+@font-face {
+    font-family: 'Rowdies';
+    src: url('../assets/font/Rowdies-Light.ttf');
+}
+
 
 /* the following root section is for parameters */
 
@@ -23,7 +27,7 @@
     transition: 0.5s;
     letter-spacing: 4px;
     overflow: hidden;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Rowdies';
     font-weight: bold;
     font-size: x-large;
 }
@@ -58,7 +62,7 @@
     width: 30%;
     height: 30%;
     transition: 0.5s all ease;
-    transform: rotateX(60deg) scale(0.7);
+    transform: rotateX(30deg) scale(0.7);
     perspective: 900px;
     box-shadow: 0px 20px 50px #555;
     animation: entry 1s linear 1;
@@ -68,33 +72,30 @@
     position: absolute;
     left: var(--initPosX);
     top: var(--initPosY);
-    background-image: url(../assets/cardPNG/PowerOverload.png);
     background-size: cover;
+    background-image: url(../assets/cardPNG/PowerOverload.png);
 }
 
 #c2 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx));
     top: var(--initPosY);
-    /* This is temp pic, flase one! */
-    background-image: url(../assets/cardPNG/Judgement.png);
     background-size: cover;
+    background-image: url(../assets/cardPNG/OnStandby.png);
 }
 
 #c3 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 2);
     top: var(--initPosY);
-    /* This is temp pic, flase one! */
-    background-image: url(../assets/cardPNG/Resurgence.png);
     background-size: cover;
+    background-image: url(../assets/cardPNG/ColdWave.png);
 }
 
 #c4 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 3);
     top: var(--initPosY);
-    background-image: url(../assets/cardPNG/Blizzard.png);
     background-size: cover;
 }
 
@@ -102,8 +103,6 @@
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 4);
     top: var(--initPosY);
-    /* This is temp pic, flase one! */
-    background-image: url(../assets/cardPNG/GoingViral.png);
     background-size: cover;
 }
 
@@ -111,7 +110,6 @@
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 5);
     top: var(--initPosY);
-    background-image: url(../assets/cardPNG/Cut.png);
     background-size: cover;
 }
 
@@ -119,15 +117,14 @@
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 6);
     top: var(--initPosY);
-    background-image: url(../assets/cardPNG/996.png);
     background-size: cover;
+    background-image: url(../assets/cardPNG/MegaCut.png);
 }
 
 #c8 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 7);
     top: var(--initPosY);
-    background-image: url(../assets/cardPNG/MegaCut.png);
     background-size: cover;
 }
 
@@ -135,242 +132,150 @@
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 8);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/OrganClone.png);
 }
 
 #c10 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 9);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/HumanClone.png);
 }
 
 #c11 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 10);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/MegaClone.png);
 }
 
 #c12 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 11);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c13 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 12);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c14 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 13);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c15 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 14);
     top: var(--initPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/DefensiveLine.png);
 }
 
 #c16 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 0);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c17 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 1);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c18 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 2);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/EnhancedHealing.png);
 }
 
 #c19 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 3);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/CellBroadcast.png);
 }
 
 #c20 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 4);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c21 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 5);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c22 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 6);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/WarmWave.png);
 }
 
 #c23 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 7);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/GoingViral.png);
 }
 
 #c24 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 8);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c25 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 9);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c26 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 10);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/compulsoryMedicalRecruitment.png);
 }
 
 #c27 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 11);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
 }
 
 #c28 {
     position: absolute;
     left: calc(var(--initPosX) + var(--dx) * 12);
     top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
-}
-
-#c29 {
-    position: absolute;
-    left: calc(var(--initPosX) + var(--dx) * 13);
-    top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
-}
-
-#c30 {
-    position: absolute;
-    left: calc(var(--initPosX) + var(--dx) *14);
-    top: var(--secdPosY);
-    /* width: 100%;
-    height: 100%; */
-    background: linear-gradient(to bottom, #eba65b 30%, #d99267 100%);
-    /* z-index: 1; */
-    /* box-shadow: 0px 20px 100px #555; */
+    background-size: cover;
+    background-image: url(../assets/cardPNG/MedicalMobilization.png);
 }
 
 .ctnr:hover {
@@ -391,12 +296,13 @@
     top: 100%;
     left: 0;
     opacity: 0;
-    width: 92%;
-    font-size: 13px;
+    width: 87%;
+    font-size: 20px;
     font-weight: 700;
+    font-family: 'Rowdies';
     line-height: 1.5em;
     padding: 0.5em 0.8em;
-    background: #00478a;
+    background: #000;
     color: #fff;
     pointer-events: none;
     /* This prevents the box from apearing when hovered. */
@@ -406,16 +312,6 @@
 .ctnr:hover::after {
     opacity: 0.8;
 }
-
-
-/* span {
-    position: absolute;
-    top: 0%;
-    left: 55%;
-    border-radius: 100%;
-    background-color: #fff;
-    z-index: 10;
-} */
 
 .story {
     position: absolute;
@@ -453,7 +349,7 @@ h1 {
     top: 7%;
     text-align: center;
     margin: 20px 100px;
-    font-family: 'Raleway';
+    font-family: 'Rowdies';
     font-size: xx-large;
 }
 

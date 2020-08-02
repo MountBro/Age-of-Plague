@@ -1,4 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300&display=swap'); */
+
+@font-face {
+    font-family: 'Rowdies';
+    src: url('../assets/font/Rowdies-Light.ttf');
+}
+
 p {
     position: absolute;
     top: 12%;
@@ -6,23 +12,27 @@ p {
     font-family: Audiowide;
     font-size: 200px;
     /* animation: neon5 1.5s ease-in-out infinite alternate; */
-    font-family: 'Raleway', sans-serif;
-    font-weight: bold;
+    font-family: 'Rowdies';
 }
 
 #t1 {
     font-size: 120px;
-    top: 2%;
-    color: #FF9900;
-    animation: neon5 1.5s ease-in-out infinite alternate;
+    top: -3%;
+    left: 20%;
+    color: #cedbde;
+    font-family: 'Rowdies';
+    /* animation: neon5 1.5s ease-in-out infinite alternate; */
 }
 
 #t2 {
     font-size: 60px;
-    top: 15%;
-    right: 2%;
-    color: #ffaf38;
-    animation: neon5 1.5s ease-in-out infinite alternate;
+    top: 20%;
+    right: 20%;
+    text-align: center;
+    margin: auto;
+    color: #cedbde;
+    font-family: 'Rowdies';
+    /* animation: neon5 1.5s ease-in-out infinite alternate; */
 }
 
 

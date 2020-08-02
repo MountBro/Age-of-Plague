@@ -135,6 +135,7 @@ viewGame model =
                            )
                         ++ [ icGameStart model ]
                         ++ [ houseButton_ ]
+                        ++ [ renderCityInfo model ]
                     )
                 ]
 
@@ -678,4 +679,156 @@ renderVirusInf model =
 
 endlessLevelProgress : Model -> Html Msg
 endlessLevelProgress model =
-    GameViewBasic.caption 810 (para.houseButtonY + 50.0) "white" (String.fromInt model.currentRound) 60
+    let
+        r =
+            model.currentRound
+
+        digitNum =
+            if r < 10 then
+                1
+
+            else if r < 100 then
+                2
+
+            else
+                3
+    in
+    GameViewBasic.caption
+        (810 - 30 * (digitNum - 1))
+        (para.houseButtonY + 45.0)
+        "white"
+        (String.fromInt model.currentRound)
+        60
+
+
+cityInfo : Model -> String
+cityInfo model =
+    case model.currentLevel of
+        3 ->
+            """Atlanta is a city with plain terrain and a 
+temperate climate, which makes it highly 
+susceptible to  viruses. Fortunately, people 
+found some nano-virus technologies from 
+a virus research institute before the 
+nuclear war. With special programs, the
+ nano-virus is capable of killing some
+microorganisms, including viruses.
+
+========SPECIAL CARDS==========
+🃟 Defensive Line
+🃟 Sacrifice 
+🃟 Going Viral
+🃟 Judgement
+
+========OBJECTIVE==========
+No less than 140 surviving population.
+"""
+
+        4 ->
+            """Before the devastating war, Amber was a
+ "Tech City" whose citizens were mainly
+ made up of researchers and scholars.
+Fortunately, Amber didn't take much 
+damage in the war. Therefore, it kept
+ many cutting-edge technologies and
+ later became the most populated area
+ in the world. To make up for the labor
+ loss, a highly advanced cloning system
+ was developed.
+
+========SPECIAL CARDS==========
+🃟 Mega Clone 
+🃟 Organ Clone
+🃟 Resurgence
+🃟 Purificatio
+=
+========OBJECTIVE==========
+No less than 160 surviving population.
+"""
+
+        5 ->
+            """Welcome to St.Petersburg, the 
+northernmost city with a population over
+ 50,000. The climate here is extremely
+ cold and dry. The resources harvested 
+from land are very limited. Therefore, 
+people created a weather control system
+ to adapt to the environment.
+
+========SPECIAL CARDS==========
+🃟 Blizzard 
+🃟 Drought
+
+=========OBJECTIVE==========
+No less than 80 surviving population.
+"""
+
+        _ ->
+            ""
+
+
+cityInfoText : Model -> List (Html Msg)
+cityInfoText model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        indexed =
+            cityInfo model
+                |> String.lines
+                |> List.indexedMap Tuple.pair
+    in
+    indexed
+        |> List.map (\( n, str ) -> ( para.inflm, para.inftm + para.clh * toFloat n, str ))
+        |> List.map (\( x, y, str ) -> GameViewBasic.caption x y cs.consoleText str 12)
+
+
+renderCityInfo : Model -> Html Msg
+renderCityInfo model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        x =
+            para.iclm + 5.0 * (para.icw + para.icg)
+
+        y =
+            para.ictm
+
+        w =
+            1000.0 - x - para.icg * 0.5
+
+        h =
+            2.0 * 1.6 * para.icw + para.icg
+
+        vbArg =
+            "0 0 " ++ String.fromFloat w ++ " " ++ String.fromFloat h
+
+        bkg =
+            rect
+                [ w |> String.fromFloat |> SA.width
+                , h |> String.fromFloat |> SA.height
+                , SA.stroke cs.consoleStroke
+                , SA.strokeWidth "4"
+                , SA.fill cs.consoleBkg
+                , cs.consoleOpacity |> String.fromFloat |> SA.fillOpacity
+                ]
+                []
+
+        txt =
+            cityInfoText model
+    in
+    svg
+        [ x |> String.fromFloat |> SA.x
+        , y |> String.fromFloat |> SA.y
+        , SA.viewBox vbArg
+        , w |> String.fromFloat |> SA.width
+        , h |> String.fromFloat |> SA.height
+        ]
+        (bkg :: txt)

@@ -29,13 +29,13 @@ viewAll : Model -> Document Msg
 viewAll model =
     case model.state of
         Model.Playing ->
-            Document "game" [ viewGame model ]
+            Document "Game" [ viewGame model ]
 
         Model.HomePage ->
-            Document "main" [ MP.viewAll ]
+            Document "Age of Plague" [ MP.viewAll ]
 
         Model.CardPage ->
-            Document "card" VC.viewCard
+            Document "Card Gallery" VC.viewCard
 
         _ ->
-            Document "game" [ viewGame model ]
+            Document "Game" [ viewGame model ]

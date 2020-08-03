@@ -891,14 +891,14 @@ livingPopulationInfo model =
                 750.0
 
             else
-                770.0
+                780.0
 
         y =
             if model.currentLevel /= 6 then
                 410.0
 
             else
-                415.0
+                418.0
 
         fs =
             if model.currentLevel /= 6 then

@@ -5,6 +5,7 @@ import Debug exposing (log, toString)
 import Geometry exposing (..)
 import Message exposing (..)
 import Model exposing (..)
+import Parameters exposing (..)
 import Population exposing (..)
 import Random exposing (float, generate)
 import Tile exposing (..)
@@ -12,19 +13,13 @@ import Todo exposing (..)
 import Virus exposing (..)
 
 
-updateLog : Model -> Model
-updateLog model =
+updateLog : Card -> Model -> Model
+updateLog card model =
     let
-        card =
-            List.map Tuple.second model.todo
-
         log =
-            List.map CardPlayed card
-
-        warning =
-            List.filter isWarning model.actionDescribe
+            [ CardPlayed card ]
     in
-    { model | actionDescribe = log ++ warning }
+    { model | actionDescribe = model.actionDescribe ++ log }
 
 
 createGuide : Model -> List String
@@ -101,20 +96,23 @@ pickAction model =
         headQueue =
             ( ( False, headQueue_ |> Tuple.first |> Tuple.second ), Tuple.second headQueue_ )
 
+        card =
+            Tuple.second headQueue_
+
         todo =
             finished ++ [ headQueue ] ++ List.drop 1 unfinished_
     in
-    { model | todo = todo } |> performAction headAction
+    { model | todo = todo } |> performAction card headAction
 
 
-performAction : Action -> Model -> ( Model, Cmd Msg )
-performAction action model =
+performAction : Card -> Action -> Model -> ( Model, Cmd Msg )
+performAction card action model =
     case action of
         IncPowerI inc ->
-            ( { model | power = model.power + inc } |> updateLog, Cmd.none )
+            ( { model | power = model.power + inc } |> updateLog card, Cmd.none )
 
         Freeze prob ->
-            ( model |> updateLog, Random.generate (FreezeRet prob) (Random.float 0 1) )
+            ( model |> updateLog card, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         FreezeI ->
             let
@@ -124,10 +122,10 @@ performAction action model =
                 behavior =
                     { behavior_ | virusEvolve = False }
             in
-            ( { model | behavior = behavior } |> updateLog, Cmd.none )
+            ( { model | behavior = behavior } |> updateLog card, Cmd.none )
 
-        EcoDoubleI_Freeze prob ->
-            ( { model | ecoRatio = 2 * model.ecoRatio } |> updateLog, Random.generate (FreezeRet prob) (Random.float 0 1) )
+        PowDoubleI_Freeze prob ->
+            ( { model | power = model.power + 1 } |> updateLog card, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         CutHexI ( i, j ) ->
             let
@@ -143,7 +141,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = pos }
             in
-            ( { model | virus = virus } |> updateLog, Cmd.none )
+            ( { model | virus = virus } |> updateLog card, Cmd.none )
 
         CutTileI ( i, j ) ->
             let
@@ -172,7 +170,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = pos }
             in
-            ( { model | virus = virus } |> updateLog, Cmd.none )
+            ( { model | virus = virus } |> updateLog card, Cmd.none )
 
         Activate996I ->
             let
@@ -180,12 +178,12 @@ performAction action model =
                     model.virus
 
                 dr =
-                    1.024 * virus_.kill
+                    min (1.024 * virus_.kill) 0.6
 
                 virus =
                     { virus_ | kill = dr }
             in
-            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus } |> updateLog, Cmd.none )
+            ( { model | power = model.power + 1 , virus = virus } |> updateLog card, Cmd.none )
 
         OrganCloneI ( i, j ) ->
             let
@@ -216,7 +214,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         HumanCloneI ( i, j ) ->
             let
@@ -243,7 +241,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         MegaCloneI ->
             let
@@ -254,12 +252,12 @@ performAction action model =
                     model.city.tilesIndex
 
                 tilelst =
-                    List.map (\x -> { x | population = round (toFloat x.population * 1.5) }) tilelst_
+                    List.map (\x -> { x | population = x.sick + ceiling (toFloat (x.population - x.sick) * 1.5) }) tilelst_
 
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         PurificationI ( i, j ) ->
             let
@@ -286,7 +284,7 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         SacrificeI ( i, j ) ->
             let
@@ -329,7 +327,7 @@ performAction action model =
                 virus =
                     { virus_ | pos = virpos }
             in
-            ( { model | city = city, virus = virus } |> updateLog, Cmd.none )
+            ( { model | city = city, virus = virus } |> updateLog card, Cmd.none )
 
         ResurgenceI ( i, j ) ->
             let
@@ -359,23 +357,14 @@ performAction action model =
                 city =
                     { city_ | tilesIndex = tilelst }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         FreezevirusI ( i, j ) ->
             let
                 pos =
                     converHextoTile ( i, j )
-
-                virus_ =
-                    model.virus
-
-                virpos =
-                    List.filter (\x -> converHextoTile x /= pos) virus_.pos
-
-                virus =
-                    { virus_ | pos = virpos }
             in
-            ( { model | virus = virus } |> updateLog, Cmd.none )
+            ( { model | freezeTile = pos :: model.freezeTile } |> updateLog card, Cmd.none )
 
         HospitalI ( i, j ) ->
             let
@@ -402,7 +391,7 @@ performAction action model =
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         QuarantineI ( i, j ) ->
             let
@@ -421,13 +410,12 @@ performAction action model =
                                         { x | qua = True }
 
                                     else
-
                                         x
                                 )
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         EnhancedHealingI ->
             let
@@ -448,7 +436,7 @@ performAction action model =
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         AttractPeoI ( i, j ) ->
             let
@@ -472,7 +460,7 @@ performAction action model =
                                 city_.tilesIndex
                     }
             in
-            ( { model | city = city } |> updateLog, Cmd.none )
+            ( { model | city = city } |> updateLog card, Cmd.none )
 
         StopAttractI ( i, j ) ->
             let
@@ -499,7 +487,7 @@ performAction action model =
             ( { model | city = city }, Cmd.none )
 
         DroughtI_Kill ( ( i, j ), prob ) ->
-            ( { model | ecoRatio = 0.5 * model.ecoRatio } |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
+            ( { model | powRatio = 0.5 * model.powRatio } |> updateLog card, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
 
         WarehouseI ( i, j ) ->
             let
@@ -522,20 +510,17 @@ performAction action model =
                                 )
                                 city_.tilesIndex
                     }
-
-                num =
-                    model.warehouseNum + 1
             in
-            ( { model | city = city, warehouseNum = num } |> updateLog, Cmd.none )
+            ( { model | city = city, maxPower = para.warehousePowerInc + model.maxPower } |> updateLog card, Cmd.none )
 
         Warmwave_KIA ( ( i, j ), prob ) ->
-            ( model |> updateLog, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
+            ( model |> updateLog card, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
 
         AVI ( i, j ) ->
-            ( { model | av = createAV ( i, j ) } |> updateLog, Cmd.none )
+            ( { model | av = createAV ( i, j ) } |> updateLog card, Cmd.none )
 
         JudgeI_Kill ( ( i, j ), prob ) ->
-            ( model |> updateLog, Random.generate (JudgeVirPeo ( ( i, j ), prob )) (Random.float 0 1) )
+            ( model |> updateLog card, Random.generate (JudgeVirPeo ( ( i, j ), prob )) (Random.float 0 1) )
 
         EvacuateI ( i, j ) ->
             let
@@ -559,7 +544,7 @@ performAction action model =
                             evacuate t city
                     }
             in
-            ( { model | city = city_ } |> updateLog, Cmd.none )
+            ( { model | city = city_ } |> updateLog card, Cmd.none )
 
         Summon cardlst ->
             let
@@ -569,7 +554,7 @@ performAction action model =
                 hands =
                     List.append hands_ cardlst
             in
-            ( { model | hands = hands } |> updateLog, Cmd.none )
+            ( { model | hands = hands } |> updateLog card, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

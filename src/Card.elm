@@ -25,10 +25,7 @@ type Action
     = IncPowerI Int
     | FreezeI
     | Freeze Float
-    | EcoDoubleI
-    | EcoDoubleI_Freeze Float
-    | DisableEvolveI
-    | DisableEvolve Float
+    | PowDoubleI_Freeze Float
     | NoAction
     | CutHexI ( Int, Int )
     | CutTileI ( Int, Int )
@@ -67,17 +64,20 @@ cardPilestutorial =
     [ blizzard ]
 
 
-cardPile5 =
-    [ blizzard
-    , blizzard
-    , blizzard
-    , drought
-    , drought
-    , drought
-    , powerOverload
+
+cardPile3 =
+    -- Atlanta
+    [ defenseline
+    , defenseline
+    , sacrifice
+    , sacrifice
+    , goingViral
+    , goingViral
+    , goingViral
+    , judgement
+    , judgement
     , powerOverload
     , onStandby
-    , coldWave
     , coldWave
     , rain
     , cut
@@ -90,31 +90,30 @@ cardPile5 =
     , cut
     , cut
     , cut
-    , cut
-    , cut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
-    , fubao
+    , hospital
+    , hospital
     , hospital
     , hospital
     , hospital
     , hospital
     , hospital
     , quarantine
-    , quarantine
-    , quarantine
+    , enhancedHealing
+    , enhancedHealing
     , enhancedHealing
     , cellBroadcast
     , warehouse
-    , warehouse
-    , warmwave
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
+    , firstAid
+    , medMob
     , medMob
     , medMob
     ]
@@ -174,19 +173,17 @@ cardPile4 =
     ]
 
 
-cardPile3 =
-    -- Atlanta
-    [ defenseline
-    , defenseline
-    , sacrifice
-    , sacrifice
-    , goingViral
-    , goingViral
-    , goingViral
-    , judgement
-    , judgement
+cardPile5 =
+    [ blizzard
+    , blizzard
+    , blizzard
+    , drought
+    , drought
+    , drought
+    , powerOverload
     , powerOverload
     , onStandby
+    , coldWave
     , coldWave
     , rain
     , cut
@@ -199,34 +196,34 @@ cardPile3 =
     , cut
     , cut
     , cut
+    , cut
+    , cut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
-    , hospital
-    , hospital
+    , fubao
     , hospital
     , hospital
     , hospital
     , hospital
     , hospital
     , quarantine
-    , enhancedHealing
-    , enhancedHealing
+    , quarantine
+    , quarantine
     , enhancedHealing
     , cellBroadcast
     , warehouse
+    , warehouse
+    , warmwave
     , warmwave
     , lowSoundWave
     , compulsoryMR
     , firstAid
-    , firstAid
-    , medMob
     , medMob
     , medMob
     ]
-
 
 allCards =
     [ powerOverload
@@ -243,6 +240,11 @@ allCards =
     , cut
     , cut
     , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
     , megaCut
     , megaCut
     , megaCut
@@ -355,10 +357,10 @@ rain =
     Card
         NoSel
         3
-        [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ]
+        [ PowDoubleI_Freeze 0.5, PowDoubleI_Freeze 0.5 ]
         "Rain"
-        "‧ 50% of virus freezing chance;\n‧ The economy output doubles."
-        "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The economy output doubles for two rounds."
+        "‧ 50% of virus freezing chance;\n‧ The power output +1."
+        "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The power output +1 for two rounds."
 
 
 cut =
@@ -387,8 +389,8 @@ fubao =
         1
         [ Activate996I, Activate996I ]
         "996"
-        "‧ Economy doubles;\n‧ Death rate increases 5%."
-        "In the next 2 rounds, economy temporarily doubles, \nbut the death rate permanently rises 5%."
+        "‧Power +1, death rate increases 5%."
+        "In the next 2 rounds, +1 power, \nbut the death rate permanently rises 5%."
 
 
 organClone =
@@ -397,7 +399,7 @@ organClone =
         3
         [ OrganCloneI ( 0, 0 ) ]
         "Organ Clone"
-        "One local dead saves one patient."
+        "Each local saves one patient."
         "Inside the chosen tile, each one of the dead could \nsave one infected."
 
 
@@ -417,8 +419,8 @@ megaClone =
         8
         [ MegaCloneI ]
         "Mega Clone"
-        "Healthy population x1.25."
-        "Healthy population x1.25."
+        "Healthy population x1.5."
+        "Healthy population x1.5."
 
 
 purification =
@@ -507,18 +509,18 @@ drought =
         2
         [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
         "Drought"
-        "‧ 50% to kill local virus; \n‧ Economy output halves."
-        "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe economy output halves for two rounds."
+        "‧ 50% to kill local virus; \n‧ Power output halves."
+        "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe power output halves for two rounds."
 
 
 warehouse =
     Card
         TileSel
-        2
+        4
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
-        "+2 economy per round."
-        "+2 economy per round."
+        "+2 maximum power."
+        "+2 maximum power."
 
 
 warmwave =

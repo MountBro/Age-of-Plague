@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="./css/myMain.css" />
     <link rel="stylesheet" href="./css/cards.css" />
     <link rel="stylesheet" href="./css/viewMain.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
     <script src="./elm.js"></script>
 </head>
 
@@ -21,13 +23,13 @@
 
         // The music and sounds
         var jiujiuliu = new Audio("./assets/music/996.wav");
-        var blizzard = new Audio("./assets/music/ice.wav");
+        var ice = new Audio("./assets/music/ice.wav");
 
         function playBgm() {
             var bgm = document.getElementById("bgm");
             bgm.volume = 0.2;
             bgm.play();
-            document.removeEventListener("click", playBgm);
+            document.removeEventListener('over', playBgm)
         }
 
         var cardSound = function(msg) {
@@ -38,7 +40,7 @@
                     break;
 
                 case "Blizzard":
-                    ice.volume = 2;
+                    ice.volume = 0.5;
                     ice.play();
 
                 default:

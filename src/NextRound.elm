@@ -50,21 +50,23 @@ toNextRound model =
                 | currentRound = model.currentRound + 1
                 , hands = [ goingViral ]
               }
+                |> initLog
                 |> virusEvolve
                 |> clearCurrentRoundTodo
                 |> powerInc
-                |> initLog
             , Cmd.none
             )
+        else if model.currentRound == 2 && model.selHex == SelHexOn then
+            (model, Cmd.none)
 
         else if model.currentRound < 4 && model.hands == [] then
             ( { model
                 | currentRound = model.currentRound + 1
               }
+                |> initLog
                 |> virusEvolve
                 |> clearCurrentRoundTodo
                 |> powerInc
-                |> initLog
             , Cmd.none
             )
 
@@ -75,10 +77,10 @@ toNextRound model =
                 , virus = virus2
                 , hands = [ cut, quarantine, megaCut, megaCut, cut, megaCut, hospital ]
               }
+                |> initLog
                 |> virusEvolve
                 |> clearCurrentRoundTodo
                 |> powerInc
-                |> initLog
             , Cmd.none
             )
 
@@ -111,9 +113,9 @@ toNextRound model =
 renewStatus : Model -> Model
 renewStatus model =
     model
+        |> initLog
         |> virusEvolve
         |> powerInc
-        |> initLog
         |> judgeWin
         |> clearCurrentRoundTodo
         |> endlessVirCreator
@@ -126,7 +128,7 @@ powerInc model =
             w =
                 "Maximum Power reached. " |> Warning
         in
-        { model | power = model.maxPower, actionDescribe = w :: model.actionDescribe }
+        { model | power = model.maxPower, actionDescribe = model.actionDescribe ++ [w] }
 
     else
         { model | power = model.power + round (model.powRatio * toFloat para.basicPowerInc) }
@@ -216,6 +218,9 @@ judgeWin model =
     else if model.currentRound < 21 && sumPopulation model.city > 0 then
         model
 
+    else if model.currentLevel == 2 then
+        model
+
     else
         { model | state = Wasted }
 
@@ -264,7 +269,7 @@ endlessVirCreator model =
     in
     if model.currentLevel == 6 && num == 6 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = Warning ("Congrats!!\nYou've defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.") :: model.actionDescribe
+            | actionDescribe = model.actionDescribe ++ [ Warning ("Congrats!!\nYou've defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.") ]
             , city = city1
             , virus = virus
             , waveNum = model.waveNum + 1
@@ -272,7 +277,7 @@ endlessVirCreator model =
 
     else if model.currentLevel == 6 && num == 5 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = Warning ("Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.") :: model.actionDescribe
+            | actionDescribe = model.actionDescribe ++ [ Warning ("Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.") ]
             , virus = virus
             , city = city2
         }
@@ -366,14 +371,14 @@ takeOver model =
                 []
 
             else
-                [ Warning ("Virus outbreaks in damaged areas\n" ++ "(Dead>=" ++ Debug.toString (3 * (r // 17 + 1)) ++ "xHealthy population)\n") ]
+                model.actionDescribe ++ [ Warning "Virus skill Take over activated!\nVirus outbreaks in damaged areas" ]
 
         vir_ =
             { vir | pos = pos }
     in
     { model
         | virus = vir_
-        , actionDescribe = message ++ model.actionDescribe
+        , actionDescribe =model.actionDescribe ++ message
     }
 
 
@@ -415,12 +420,10 @@ unBlockable model =
                     model.actionDescribe ++ []
 
                 else if num == 1 then
-                    [ Warning "Emergency!!!\nPatients broke into one quarantine!!\nPatients nearby>3x(quarantine population)\n\n" ]
-                        ++ model.actionDescribe
+                    model.actionDescribe ++ [ Warning "Virus skill Unblockable activated!\nPatients broke into one quarantine!!" ]
 
                 else
-                    [ Warning ("Emergency!!!\nPatients broke into " ++ Debug.toString num ++ " quarantines!!\nPatients nearby>3x(quarantine population)\n") ]
-                        ++ model.actionDescribe
+                    model.actionDescribe ++ [ Warning ("Virus skill Unblockable activated!\nPatients broke into " ++ Debug.toString num ++ " quarantines!!") ]
         in
         { model
             | city = city_
@@ -437,21 +440,20 @@ mutate rule model =
         vir_ =
             model.virus
 
-        vir =
+        (vir,msg) =
             if model.currentRound == para.mr && model.currentLevel < 6 then
-                { vir_ | rules = rule }
+                ({ vir_ | rules = rule }, [ Warning "Virus skill Mutate activated!\nSpread pattern mutates!!!" ])
 
             else if model.currentLevel == 6 && modBy para.mr model.currentRound == 0 && List.length vir_.pos < 4 then
-                { vir_ | rules = rule }
+                ({ vir_ | rules = rule }, [ Warning "Virus skill Mutate activated!\nSpread pattern mutates!!!" ])
 
             else
-                vir_
+                (vir_, [])
     in
     { model
         | virus = vir
         , actionDescribe =
-            [ Warning "Spread pattern mutates!!!\n(See the virus info panel)\n" ]
-                ++ model.actionDescribe
+            model.actionDescribe ++ msg
     }
 
 
@@ -473,8 +475,7 @@ revenge size model =
                 | virus = virus
                 , counter = 3
                 , actionDescribe =
-                    [ Warning "Virus become stronger!!!\n(See the virus info panel)\n" ]
-                        ++ model.actionDescribe
+                    model.actionDescribe ++ [ Warning "Virus skill Revenge activated!\nVirus become stronger!!!" ]
             }
 
         else if size < List.length model.virus.pos then
@@ -498,8 +499,7 @@ horrify model =
             { model
                 | flowRate = 2
                 , actionDescribe =
-                    [ Warning "Terror spreads among citizens:\npopulation flow x2.\n (Healthy<dead+sick)\n" ]
-                        ++ model.actionDescribe
+                    model.actionDescribe ++ [ Warning "Virus skill Horrify activated!\nTerror spreads among citizens:\npopulation flow x2." ]
             }
 
         else if sumSick city + sumDead city >= sumPopulation city then
@@ -509,8 +509,7 @@ horrify model =
             { model
                 | flowRate = 1
                 , actionDescribe =
-                    [ Warning "Citzens calm down (Healthy<dead+sick)\nInitialize population flow rate.\n" ]
-                        ++ model.actionDescribe
+                    model.actionDescribe ++ [ Warning "Virus skill Horrify deactivated!\nCitizens calm down.\nInitialize population flow rate.\n" ]
             }
 
         else

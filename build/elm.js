@@ -8000,7 +8000,7 @@ var $author$project$Action$performAction = F3(
 					if (inc > 0) {
 						var w = (_Utils_cmp(model.power + inc, model.maxPower) > 0) ? _List_fromArray(
 							[
-								$author$project$Model$Warning('Maximum Power reached.')
+								$author$project$Model$Warning('Maximum Power reached. ')
 							]) : _List_Nil;
 						var str = 'Power increased by ' + ($elm$core$String$fromInt(inc) + '.');
 						var ml = A2($author$project$Model$CardPlayed_, card, str);
@@ -8024,14 +8024,14 @@ var $author$project$Action$performAction = F3(
 						if (inc < 0) {
 							var str = 'Power decreased by ' + ($elm$core$String$fromInt(-inc) + '.');
 							var ml = A2($author$project$Model$CardPlayed_, card, str);
-							var acd = (_Utils_cmp(model.power + inc, model.maxPower) < 0) ? A2(
+							var acd = A2(
 								$elm$core$List$filter,
 								function (x) {
 									return !_Utils_eq(
 										x,
-										$author$project$Model$Warning('Maximum Power reached.'));
+										$author$project$Model$Warning('Maximum Power reached. '));
 								},
-								model.actionDescribe) : model.actionDescribe;
+								model.actionDescribe);
 							return _Utils_Tuple2(
 								A2(
 									$author$project$Action$updateLog,
@@ -8053,7 +8053,7 @@ var $author$project$Action$performAction = F3(
 				} else {
 					var w = (_Utils_cmp(model.power + inc, model.maxPower) > 0) ? _List_fromArray(
 						[
-							$author$project$Model$Warning('Maximum Power reached.')
+							$author$project$Model$Warning('Maximum Power reached. ')
 						]) : _List_Nil;
 					return _Utils_Tuple2(
 						A2(

@@ -122,7 +122,7 @@ performAction card action model =
 
                         w =
                             if model.power + inc > model.maxPower then
-                                [ Warning "Maximum Power reached." ]
+                                [ Warning "Maximum Power reached. " ]
 
                             else
                                 []
@@ -140,7 +140,7 @@ performAction card action model =
                             CardPlayed_ card str
 
                         acd =
-                            List.filter (\x -> x /= Warning "Maximum Power reached.") model.actionDescribe
+                            List.filter (\x -> x /= (Warning "Maximum Power reached. ")) model.actionDescribe
                     in
                     ( { model | power = min (model.power + inc) model.maxPower, actionDescribe = acd ++ [ ml ] } |> updateLog card, Cmd.none )
 
@@ -151,7 +151,7 @@ performAction card action model =
                 let
                     w =
                         if model.power + inc > model.maxPower then
-                            [ Warning "Maximum Power reached." ]
+                            [ Warning "Maximum Power reached. " ]
 
                         else
                             []

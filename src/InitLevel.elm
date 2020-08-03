@@ -26,6 +26,7 @@ levelInit n model =
             , selHex = SelHexOff
             , av = initAntiVirus
             , freezeTile = []
+            , virusInfo = False
         }
 
     else
@@ -48,4 +49,5 @@ levelInit n model =
             , waveNum = 0
             , av = initAntiVirus
             , freezeTile = []
+            , virusInfo = False
         }

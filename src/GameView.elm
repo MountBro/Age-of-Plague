@@ -646,7 +646,11 @@ renderVirusInf model =
 
             else if model.currentLevel == 5 then
                 inf_
+<<<<<<< HEAD
                     ++ [ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation." ]
+=======
+                    ++ [ "☣ Unblockable: \na quarantine would fall if\npatients nearby > 3 x quarantine population." ]
+>>>>>>> 7e13fe1aeb5dc6beb557758797c1b9ca09073747
                     ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
@@ -755,13 +759,13 @@ cityInfo model =
     case model.currentLevel of
         3 ->
             """Atlanta is a city with plain terrain and a 
-temperate climate, which makes it highly 
-susceptible to  viruses. Fortunately, people 
-found some nano-virus technologies from 
-a virus research institute before the 
-nuclear war. With special programs, the
- nano-virus is capable of killing some
-microorganisms, including viruses.
+temperate climate, making it highly
+susceptible to viruses. Fortunately, some
+nano-virus technologies were found
+from a virus research institute before
+the nuclear war. With special programs,
+the nano-virus can kill some
+microorganisms, including the viruses.
 
 ========SPECIAL CARDS==========
 🃟 Defensive Line
@@ -774,16 +778,16 @@ No less than 140 surviving population.
 """
 
         4 ->
-            """Before the devastating war, Amber was a
- "Tech City" whose citizens were mainly
- made up of researchers and scholars.
-Fortunately, Amber didn't take much 
+            """Before the devastating war, Amber was
+a "Tech City" whose citizens were mainly
+made up of researchers and scholars.
+Fortunately, Amber didn't take much
 damage in the war. Therefore, it kept
- many cutting-edge technologies and
- later became the most populated area
- in the world. To make up for the labor
- loss, a highly advanced cloning system
- was developed.
+many cutting-edge technologies and
+later became the most populated area
+in the world. To make up for the labor
+loss, a highly advanced cloning system
+was developed.
 
 ========SPECIAL CARDS==========
 🃟 Mega Clone 
@@ -796,13 +800,14 @@ No less than 160 surviving population.
 """
 
         5 ->
-            """Welcome to St.Petersburg, the 
-northernmost city with a population over
- 50,000. The climate here is extremely
- cold and dry. The resources harvested 
-from land are very limited. Therefore, 
-people created a weather control system
- to adapt to the environment.
+            """Welcome to St.Petersburg, the
+northernmost city with a population
+over 50,000. The climate here is
+extremely cold and dry. The resources
+harvested from land are very limited.
+Therefore, people created a weather
+control system to adapt to the
+environment.
 
 ========SPECIAL CARDS==========
 🃟 Blizzard 
@@ -812,6 +817,27 @@ people created a weather control system
 No less than 80 surviving population.
 """
 
+        6 ->
+            """        Welcome to the endless mode!!!
+Unlike the former levels, there will be
+endless waves of virus. Between two
+waves, there will be a few buffer rounds
+and a population bonus. As game goes
+on, virus would be stronger and more
+deadly. The game will end once the total
+population drops below the required
+amount.
+
+========SPECIAL CARDS==========
+🃟 Mega Clone        🃟 Drought
+🃟 Organ Clone      🃟 Defensive Line
+🃟 Resurgence        🃟 Sacrifice
+🃟 Purification       🃟 Going Viral
+🃟 Blizzard               🃟 Judgement
+
+=========OBJECTIVE==========
+No less than 50 surviving population.
+"""
         _ ->
             ""
 

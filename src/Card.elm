@@ -1,5 +1,7 @@
 module Card exposing (..)
 
+import List.Extra as LE
+
 
 type alias Card =
     { selMode : Selection
@@ -228,6 +230,10 @@ cardPile3 =
     ]
 
 
+allCardsUnique =
+    allCards |> LE.unique
+
+
 allCards =
     [ powerOverload
     , onStandby
@@ -305,6 +311,10 @@ toPngUrl c =
 toSoundUrl : Card -> String
 toSoundUrl c =
     "./assets/sound/" ++ String.replace " " "" c.name ++ ".wav"
+
+
+
+-- sites/assets/sound/EnhancedHealing.wav
 
 
 powerOverload =

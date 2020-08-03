@@ -10,7 +10,7 @@ body {
 /* line 11, ../sass/view.scss */
 .container {
   position: relative;
-  top: 120px;
+  top: -130px;
   -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
   -webkit-transition: all 0.3s ease-out;

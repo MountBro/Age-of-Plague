@@ -1,46 +1,34 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300&display=swap'); */
 
 @font-face {
-    font-family: 'Rowdies';
-    src: url('../assets/font/Rowdies-Light.ttf');
+    font-family: "Rowdies";
+    src: url("../assets/font/Rowdies-Light.ttf");
 }
 
 p {
-    position: absolute;
-    top: 12%;
-    margin: 0 auto;
-    font-family: Audiowide;
     font-size: 200px;
-    /* animation: neon5 1.5s ease-in-out infinite alternate; */
-    font-family: 'Rowdies';
+    font-family: "Rowdies";
 }
 
 #t1 {
     font-size: 120px;
-    top: -3%;
-    left: 20%;
+    margin: auto 0px;
+    position: relative;
+    left: -10%;
     color: #cedbde;
-    font-family: 'Rowdies';
-    /* animation: neon5 1.5s ease-in-out infinite alternate; */
+    font-family: "Rowdies";
+    padding: 0px;
 }
 
 #t2 {
     font-size: 60px;
-    top: 20%;
-    right: 20%;
+    margin: -10px auto;
+    position: relative;
+    top: -2%;
+    left: 17%;
     text-align: center;
-    margin: auto;
+    width: 50%;
     color: #cedbde;
-    font-family: 'Rowdies';
-    /* animation: neon5 1.5s ease-in-out infinite alternate; */
+    font-family: "Rowdies";
+    z-index: 999;
 }
-
-
-/* @keyframes neon5 {
-    from {
-        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF9900, 0 0 70px #FF9900, 0 0 80px #FF9900, 0 0 100px #FF9900, 0 0 150px #FF9900;
-    }
-    to {
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FF9900, 0 0 35px #FF9900, 0 0 40px #FF9900, 0 0 50px #FF9900, 0 0 75px #FF9900;
-    }
-} */

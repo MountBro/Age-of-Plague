@@ -66,6 +66,7 @@ viewGame model =
                             else
                                 []
                            )
+                        ++  renderPopulationGuide model
                         ++ (if model.currentLevel == 6 then
                                 [ endlessLevelProgress model ]
 
@@ -514,6 +515,7 @@ renderGuide model =
                     ]
                     []
                 ]
+
     in
     if model.currentLevel == 1 || model.currentLevel == 2 then
         bkg
@@ -525,6 +527,40 @@ renderGuide model =
     else
         []
 
+
+renderPopulationGuide : Model -> List (Html Msg)
+renderPopulationGuide model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+        bkg_ =
+            svg []
+                [ Svg.defs []
+                    [ sh2 ]
+                , rect
+                    [ 270 |> String.fromFloat |> SA.width
+                    , 95 |> String.fromFloat |> SA.height
+                    , cs.guideBkg |> SA.fill
+                    , 640 |> String.fromFloat |> SA.x
+                    , 300 |> String.fromFloat |> SA.y
+                    , "5" |> SA.rx
+                    , "2" |> SA.strokeWidth
+                    , cs.guideStroke |> SA.stroke
+                    , SA.filter "url(#shadow-filter)"
+                    ]
+                    []
+                ]
+    in
+    if model.currentLevel == 1 && model.currentRound == 2 then
+        bkg_
+            :: [ GameViewBasic.caption 650.0 320.0 "green" "Green figures: healthy population." 16
+               , GameViewBasic.caption 650.0 350.0 "yellow" "Yellow figures: sick population." 16
+               , GameViewBasic.caption 650.0 380.0 "red" "Red figures: dead number." 16]
+    else
+        []
 
 renderVirusInf : Model -> Html Msg
 renderVirusInf model =
@@ -607,7 +643,7 @@ renderVirusInf model =
                     |> List.foldl (\x -> \y -> x ++ y) []
 
             else if model.currentLevel == 2 then
-                [ "\u{1FA78} Infect rate:\neach virus cell would infect"
+                [ "\u{1FA78} Infect rate:\neach virus cell would infect "
                     ++ infect
                     ++ " local citizens per turn.\n"
                     ++ "Theoretical death rate: "

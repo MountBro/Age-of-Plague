@@ -1,9 +1,13 @@
-/* line 2, ../sass/view.scss */
+@font-face {
+  font-family: "Rowdies";
+  src: url("../assets/font/Rowdies-Light.ttf");
+}
+/* line 7, ../sass/view.scss */
 body {
   background-color: #171d25;
 }
 
-/* line 6, ../sass/view.scss */
+/* line 11, ../sass/view.scss */
 .container {
   position: relative;
   top: 120px;
@@ -18,7 +22,7 @@ body {
   z-index: 1;
   overflow: hidden;
 }
-/* line 14, ../sass/view.scss */
+/* line 19, ../sass/view.scss */
 .container .honeycomb {
   display: block;
   position: absolute;
@@ -41,16 +45,16 @@ body {
   transform-origin: center 65%;
   z-index: 5;
 }
-/* line 28, ../sass/view.scss */
+/* line 34, ../sass/view.scss */
 .container .honeycomb .column {
   width: 62px;
   transform-style: preserve-3d;
 }
-/* line 31, ../sass/view.scss */
+/* line 37, ../sass/view.scss */
 .container .honeycomb .column:nth-child(odd) {
   margin-top: 36px;
 }
-/* line 35, ../sass/view.scss */
+/* line 41, ../sass/view.scss */
 .container .honeycomb .hex {
   position: relative;
   float: left;
@@ -70,7 +74,7 @@ body {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   opacity: 0.8;
 }
-/* line 47, ../sass/view.scss */
+/* line 53, ../sass/view.scss */
 .container .honeycomb .hex:hover {
   opacity: 1;
   -moz-transform: translateZ(20px);
@@ -82,7 +86,7 @@ body {
   -webkit-transition-duration: 200ms;
   transition-duration: 200ms;
 }
-/* line 51, ../sass/view.scss */
+/* line 57, ../sass/view.scss */
 .container .honeycomb .hex:hover .content {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -91,7 +95,7 @@ body {
   -webkit-transform: rotateX(-90deg) translateZ(-40px) translateY(-50px);
   transform: rotateX(-90deg) translateZ(-40px) translateY(-50px);
 }
-/* line 56, ../sass/view.scss */
+/* line 62, ../sass/view.scss */
 .container .honeycomb .hex .wrapper {
   position: absolute;
   top: 0;
@@ -99,19 +103,19 @@ body {
   height: 100%;
   width: 100%;
 }
-/* line 62, ../sass/view.scss */
+/* line 68, ../sass/view.scss */
 .container .honeycomb .hex .wrapper .color-1 {
   background: #03e9f4;
 }
-/* line 64, ../sass/view.scss */
+/* line 70, ../sass/view.scss */
 .container .honeycomb .hex .wrapper .color-1:before {
   border-right-color: #03e9f4;
 }
-/* line 67, ../sass/view.scss */
+/* line 73, ../sass/view.scss */
 .container .honeycomb .hex .wrapper .color-1:after {
   border-left-color: #03e9f4;
 }
-/* line 72, ../sass/view.scss */
+/* line 78, ../sass/view.scss */
 .container .honeycomb .hex .content {
   display: block;
   position: absolute;
@@ -133,21 +137,21 @@ body {
   pointer-events: none;
   -webkit-font-smoothing: antialiased;
 }
-/* line 84, ../sass/view.scss */
+/* line 90, ../sass/view.scss */
 .container .honeycomb .hex .content strong {
   display: block;
-  font: 600 26px/1.1 verdana, sans-serif;
+  font: 600 26px/1.1 Rowdies;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.8);
 }
-/* line 92, ../sass/view.scss */
+/* line 98, ../sass/view.scss */
 .container .honeycomb .hex .content small {
   display: block;
-  font: 15px/1.1 verdana, sans-serif;
+  font: 15px/1.1 Rowdies;
 }
-/* line 98, ../sass/view.scss */
+/* line 104, ../sass/view.scss */
 .container .honeycomb .shadows {
   display: block;
   position: absolute;
@@ -169,7 +173,7 @@ body {
   pointer-events: none;
 }
 
-/* line 113, ../sass/view.scss */
+/* line 119, ../sass/view.scss */
 .hexagon {
   display: block;
   position: absolute;
@@ -177,7 +181,7 @@ body {
   height: 124px;
   background-color: #ffffff;
 }
-/* line 119, ../sass/view.scss */
+/* line 125, ../sass/view.scss */
 .hexagon:before, .hexagon:after {
   content: "";
   position: relative;
@@ -185,18 +189,18 @@ body {
   border-top: 62px solid transparent;
   border-bottom: 62px solid transparent;
 }
-/* line 127, ../sass/view.scss */
+/* line 133, ../sass/view.scss */
 .hexagon:before {
   border-right: 36px solid #ffffff;
   left: -36px;
 }
-/* line 131, ../sass/view.scss */
+/* line 137, ../sass/view.scss */
 .hexagon:after {
   border-left: 36px solid #ffffff;
   right: -36px;
 }
 
-/* line 137, ../sass/view.scss */
+/* line 143, ../sass/view.scss */
 .hidden {
   display: none;
 }

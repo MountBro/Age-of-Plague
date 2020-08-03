@@ -94,10 +94,6 @@ update msg model =
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
         Tick newTime ->
-            let
-                log1 =
-                    log "selhex" model.selHex
-            in
             if not (finished model.todo) then
                 model |> pickAction |> mFillRegion
 
@@ -172,7 +168,9 @@ update msg model =
                             , hands = LE.remove card model.hands
                             , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
                           }
-                        , P.cardToMusic ""
+                        , card.name
+                            |> String.replace " " ""
+                            |> P.cardToMusic
                         )
 
                     else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then
@@ -182,7 +180,9 @@ update msg model =
                             , power = model.power - card.cost
                             , hands = LE.remove card model.hands
                           }
-                        , Cmd.none
+                        , card.name
+                            |> String.replace " " ""
+                            |> P.cardToMusic
                         )
 
                     else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
@@ -197,7 +197,9 @@ update msg model =
                             , power = model.power - card.cost
                             , hands = LE.remove card model.hands
                           }
-                        , Cmd.none
+                        , card.name
+                            |> String.replace " " ""
+                            |> P.cardToMusic
                         )
 
                 else
@@ -248,17 +250,9 @@ update msg model =
             )
 
         SelectHex i j ->
-            let
-                log1 =
-                    log "i, j: " ( i, j )
-            in
             ( { model | selectedHex = ( i, j ) }, Cmd.none )
 
         MouseOver i j ->
-            let
-                log2 =
-                    log "over" ( i, j )
-            in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
 
         MouseOverCard n ->

@@ -31,7 +31,7 @@ type alias Model =
     , power : Int
     , maxPower : Int
     , warehouseNum : Int
-    , ecoRatio : Float
+    , powRatio : Float
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
@@ -71,7 +71,7 @@ initModel _ =
       , power = 50
       , maxPower = 10
       , warehouseNum = 0
-      , ecoRatio = 1.0
+      , powRatio = 1.0
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff

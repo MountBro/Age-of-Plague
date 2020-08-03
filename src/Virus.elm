@@ -95,8 +95,6 @@ searchValidNeighbor virlst lst =
 judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )
 judgeAlive lstvir vir lstanti anti lstquatile =
     let
-        lstv =
-            List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x anti.pos) && not (List.member (converHextoTile x) lstquatile)) lstvir
 
         lsta =
             if anti.life > 0 then
@@ -104,6 +102,9 @@ judgeAlive lstvir vir lstanti anti lstquatile =
 
             else
                 []
+        lstv =
+            List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x lsta) && not (List.member (converHextoTile x) lstquatile)) lstvir
+
     in
     ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )
 
@@ -133,11 +134,11 @@ virus5 =
 
 
 virus6 =
-    Virus [ 2, 5 ] (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 3 ) ]) 6 1 0.05
+    Virus [ 2, 5 ] (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 6 ) ] ++ generateZone (converTiletoHex_ ( -1, 1 ))) 6 1 0.05
 
 
 endlssVir =
-    [ (cartesianProduct [ -2 ] [ 3, 4, 5 ] ++ [ ( -3, 3 ) ])
+    [ (cartesianProduct [ -2 ] [ 4, 5 ] ++ [ ( -3, 6 ), ( -3, 7 ) ] ++ generateZone (converTiletoHex_ ( 0, 3 )))
     , (generateZone (converTiletoHex_ ( 0, 3 )) ++ [ ( -3, 6 ), ( -3, 7 ) ])
     , (generateZone (converTiletoHex_ ( -1, -1 )) ++ [ ( -2, -2 ), ( -3, 0 ), ( -3, -1 ) ])
     , (generateZone (converTiletoHex_ ( 2, 3 )) ++ [ ( 4, 7 ), ( 3, 8 ), ( 2, 9 ) ])
@@ -146,4 +147,4 @@ endlssVir =
     ]
 
 ruleLst =
-    [[2,3],[2,4],[2,5],[2,3,6]]
+    [[2,5], [2,4], [2,3], [2,3,6], [2,3,5], [2,4,6], [2,4,5], [2,3,4] ]

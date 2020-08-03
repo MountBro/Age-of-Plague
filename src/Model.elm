@@ -31,7 +31,7 @@ type alias Model =
     , power : Int
     , maxPower : Int
     , warehouseNum : Int
-    , ecoRatio : Float
+    , powRatio : Float
     , selectedHex : ( Int, Int )
     , mouseOver : ( Int, Int )
     , selHex : SelHex
@@ -48,6 +48,7 @@ type alias Model =
     , flowRate : Int -- population flow rate
     , virusInfo : Bool
     , waveNum : Int
+    , freezeTile : List ( Int, Int ) -- for defenseline
     }
 
 
@@ -70,7 +71,7 @@ initModel _ =
       , power = 50
       , maxPower = 10
       , warehouseNum = 0
-      , ecoRatio = 1.0
+      , powRatio = 1.0
       , selectedHex = ( -233, -233 )
       , mouseOver = ( -233, -233 )
       , selHex = SelHexOff
@@ -87,6 +88,7 @@ initModel _ =
       , flowRate = 1
       , virusInfo = False
       , waveNum = 0
+      , freezeTile = []
       }
     , Task.perform GotViewport Browser.Dom.getViewport
     )
@@ -95,6 +97,8 @@ initModel _ =
 type MyLog
     = CardPlayed Card
     | Warning String
+    | Feedback String
+    | CardPlayed_ Card String
 
 
 isWarning : MyLog -> Bool
@@ -250,9 +254,45 @@ updateDeck n =
         |> List.foldr (++) []
 
 
+adjustDeck : Model -> List Card
+adjustDeck model =
+    let
+        deck0 =
+            model.deck
+
+        hands =
+            model.hands
+
+        city =
+            model.city
+
+        deck1 =
+            if hosNum city.tilesIndex + LE.count ((==) hospital) hands < List.length city.tilesIndex then
+                deck0
+
+            else
+                List.filter (\x -> x /= hospital) deck0
+
+        deck2 =
+            if quaNum city.tilesIndex + LE.count ((==) quarantine) hands < List.length city.tilesIndex then
+                deck1
+
+            else
+                List.filter (\x -> x /= quarantine) deck1
+
+        deck =
+            if wareNum city.tilesIndex + LE.count ((==) warehouse) hands < List.length city.tilesIndex then
+                deck2
+
+            else
+                List.filter (\x -> x /= warehouse) deck2
+    in
+    deck
+
+
 cardGenerator : Model -> Generator Card
 cardGenerator model =
-    choose model.deck
+    choose (adjustDeck model)
         |> Random.map (\( x, y ) -> Maybe.withDefault cut x)
 
 
@@ -267,6 +307,7 @@ winCondition =
     [ 140 -- Atlanta
     , 160 -- amber
     , 80 -- St.P
+    , 50
     ]
 
 

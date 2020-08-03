@@ -66,6 +66,7 @@ viewGame model =
                             else
                                 []
                            )
+                        ++ renderPopulationGuide model
                         ++ (if model.currentLevel == 6 then
                                 [ endlessLevelProgress model ]
 
@@ -370,6 +371,14 @@ ml2s m =
                 |> String.lines
                 |> List.reverse
 
+        Feedback str ->
+            ("⨀ " ++ str) |> String.lines |> List.reverse
+
+        CardPlayed_ c str ->
+            ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ str)
+                |> String.lines
+                |> List.reverse
+
 
 consoleText : Model -> List (Html Msg)
 consoleText model =
@@ -389,12 +398,8 @@ consoleText model =
         myLog =
             model.actionDescribe |> List.reverse
 
-        ( w, a ) =
-            List.partition isWarning myLog
-
         indexed =
-            w
-                ++ a
+            myLog
                 |> List.map ml2s
                 |> List.foldl (\x -> \y -> x ++ y) []
                 |> List.indexedMap Tuple.pair
@@ -528,6 +533,44 @@ renderGuide model =
         []
 
 
+renderPopulationGuide : Model -> List (Html Msg)
+renderPopulationGuide model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        bkg_ =
+            svg []
+                [ Svg.defs []
+                    [ sh2 ]
+                , rect
+                    [ 270 |> String.fromFloat |> SA.width
+                    , 95 |> String.fromFloat |> SA.height
+                    , cs.guideBkg |> SA.fill
+                    , 640 |> String.fromFloat |> SA.x
+                    , 300 |> String.fromFloat |> SA.y
+                    , "5" |> SA.rx
+                    , "2" |> SA.strokeWidth
+                    , cs.guideStroke |> SA.stroke
+                    , SA.filter "url(#shadow-filter)"
+                    ]
+                    []
+                ]
+    in
+    if model.currentLevel == 1 && model.currentRound == 2 then
+        bkg_
+            :: [ GameViewBasic.caption 650.0 320.0 "green" "Green figures: healthy population." 16
+               , GameViewBasic.caption 650.0 350.0 "yellow" "Yellow figures: sick population." 16
+               , GameViewBasic.caption 650.0 380.0 "red" "Red figures: dead number." 16
+               ]
+
+    else
+        []
+
+
 renderVirusInf : Model -> Html Msg
 renderVirusInf model =
     let
@@ -574,7 +617,7 @@ renderVirusInf model =
                     ++ "☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
                     ++ "☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
                     ++ "☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n"
-                    ++ "☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population."
+                    ++ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation."
                 ]
 
             else
@@ -597,7 +640,7 @@ renderVirusInf model =
 
             else if model.currentLevel == 5 then
                 inf_
-                    ++ [ "☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population." ]
+                    ++ [ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation." ]
                     ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
@@ -609,7 +652,7 @@ renderVirusInf model =
                     |> List.foldl (\x -> \y -> x ++ y) []
 
             else if model.currentLevel == 2 then
-                [ "\u{1FA78} Infect rate:\neach virus cell would infect"
+                [ "\u{1FA78} Infect rate:\neach virus cell would infect "
                     ++ infect
                     ++ " local citizens per turn.\n"
                     ++ "Theoretical death rate: "

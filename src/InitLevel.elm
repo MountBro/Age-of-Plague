@@ -27,6 +27,7 @@ levelInit n model =
             , av = initAntiVirus
             , freezeTile = []
             , virusInfo = False
+            , powRatio = 1.0
         }
 
     else
@@ -50,4 +51,5 @@ levelInit n model =
             , av = initAntiVirus
             , freezeTile = []
             , virusInfo = False
+            , powRatio = 1.0
         }

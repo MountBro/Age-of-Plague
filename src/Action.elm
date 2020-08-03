@@ -109,7 +109,17 @@ performAction : Card -> Action -> Model -> ( Model, Cmd Msg )
 performAction card action model =
     case action of
         IncPowerI inc ->
-            ( { model | power = model.power + inc } |> updateLog card, Cmd.none )
+            if model.power + inc > model.maxPower then
+                ( { model
+                    | power = model.maxPower
+                    , actionDescribe = model.actionDescribe ++ [ "Maximum Power reached." |> Warning ]
+                  }
+                    |> updateLog card
+                , Cmd.none
+                )
+
+            else
+                ( { model | power = max (model.power + inc) 0 } |> updateLog card, Cmd.none )
 
         Freeze prob ->
             ( model |> updateLog card, Random.generate (FreezeRet prob) (Random.float 0 1) )
@@ -183,7 +193,7 @@ performAction card action model =
                 virus =
                     { virus_ | kill = dr }
             in
-            ( { model | power = model.power + 1 , virus = virus } |> updateLog card, Cmd.none )
+            ( { model | power = model.power + 1, virus = virus } |> updateLog card, Cmd.none )
 
         OrganCloneI ( i, j ) ->
             let
@@ -288,6 +298,9 @@ performAction card action model =
 
         SacrificeI ( i, j ) ->
             let
+                pos =
+                    converHextoTile ( i, j )
+
                 virus_ =
                     model.virus
 
@@ -295,7 +308,7 @@ performAction card action model =
                     virus_.pos
 
                 virpos =
-                    List.filter (\x -> converHextoTile x /= ( i, j )) virpos_
+                    List.filter (\x -> converHextoTile x /= pos) virpos_
 
                 city_ =
                     model.city

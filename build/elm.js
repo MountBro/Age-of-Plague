@@ -8227,17 +8227,6 @@ var $author$project$Action$performAction = F3(
 				var j = _v10.b;
 				var virus_ = model.virus;
 				var virpos_ = virus_.pos;
-				var virpos = A2(
-					$elm$core$List$filter,
-					function (x) {
-						return !_Utils_eq(
-							$author$project$Geometry$converHextoTile(x),
-							_Utils_Tuple2(i, j));
-					},
-					virpos_);
-				var virus = _Utils_update(
-					virus_,
-					{pos: virpos});
 				var tilepos = $author$project$Geometry$converHextoTile(
 					_Utils_Tuple2(i, j));
 				var tilelst_ = model.city.tilesIndex;
@@ -8249,6 +8238,19 @@ var $author$project$Action$performAction = F3(
 							{dead: x.dead + x.sick, population: x.population - x.sick, sick: 0}) : x;
 					},
 					tilelst_);
+				var pos = $author$project$Geometry$converHextoTile(
+					_Utils_Tuple2(i, j));
+				var virpos = A2(
+					$elm$core$List$filter,
+					function (x) {
+						return !_Utils_eq(
+							$author$project$Geometry$converHextoTile(x),
+							pos);
+					},
+					virpos_);
+				var virus = _Utils_update(
+					virus_,
+					{pos: virpos});
 				var city_ = model.city;
 				var city = _Utils_update(
 					city_,

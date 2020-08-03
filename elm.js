@@ -7838,7 +7838,7 @@ var $author$project$Parameters$para = {
 	l3shift: _Utils_Tuple2(0.0, 20.0),
 	l4shift: _Utils_Tuple2(0.0, -50.0),
 	l5shift: _Utils_Tuple2(-10.0, 20.0),
-	l6shift: _Utils_Tuple2(-12.0, 13.0),
+	l6shift: _Utils_Tuple2(-26.0, 35.0),
 	mr: 10,
 	mtc: '#5b9fa6',
 	nextButtonW: 50.0,
@@ -7877,6 +7877,10 @@ var $elm$core$List$partition = F2(
 			step,
 			_Utils_Tuple2(_List_Nil, _List_Nil),
 			list);
+	});
+var $author$project$Model$CardPlayed_ = F2(
+	function (a, b) {
+		return {$: 'CardPlayed_', a: a, b: b};
 	});
 var $author$project$Message$FreezeRet = F2(
 	function (a, b) {
@@ -7986,14 +7990,54 @@ var $author$project$Action$performAction = F3(
 		switch (action.$) {
 			case 'IncPowerI':
 				var inc = action.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Action$updateLog,
-						card,
-						_Utils_update(
-							model,
-							{power: model.power + inc})),
-					$elm$core$Platform$Cmd$none);
+				if (_Utils_eq(card, $author$project$Card$powerOverload)) {
+					if (inc > 0) {
+						var str = 'Power increased by ' + ($elm$core$String$fromInt(inc) + '.');
+						var ml = A2($author$project$Model$CardPlayed_, card, str);
+						return _Utils_Tuple2(
+							A2(
+								$author$project$Action$updateLog,
+								card,
+								_Utils_update(
+									model,
+									{
+										actionDescribe: _Utils_ap(
+											model.actionDescribe,
+											_List_fromArray(
+												[ml]))
+									})),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						if (inc < 0) {
+							var str = 'Power decreased by ' + ($elm$core$String$fromInt(-inc) + '.');
+							var ml = A2($author$project$Model$CardPlayed_, card, str);
+							return _Utils_Tuple2(
+								A2(
+									$author$project$Action$updateLog,
+									card,
+									_Utils_update(
+										model,
+										{
+											actionDescribe: _Utils_ap(
+												model.actionDescribe,
+												_List_fromArray(
+													[ml]))
+										})),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						}
+					}
+				} else {
+					return _Utils_Tuple2(
+						A2(
+							$author$project$Action$updateLog,
+							card,
+							_Utils_update(
+								model,
+								{power: model.power + inc})),
+						$elm$core$Platform$Cmd$none);
+				}
 			case 'Freeze':
 				var prob = action.a;
 				return _Utils_Tuple2(
@@ -10763,6 +10807,7 @@ var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$svg$Svg$Attributes$xmlSpace = A2(_VirtualDom_attributeNS, 'http://www.w3.org/XML/1998/namespace', 'xml:space');
 var $author$project$GameViewBasic$caption = F5(
 	function (x, y, cstr, text, fontSize) {
 		return A2(
@@ -10776,7 +10821,8 @@ var $author$project$GameViewBasic$caption = F5(
 					$elm$core$String$fromFloat(x)),
 					$elm$svg$Svg$Attributes$y(
 					$elm$core$String$fromFloat(y)),
-					$elm$svg$Svg$Attributes$fill(cstr)
+					$elm$svg$Svg$Attributes$fill(cstr),
+					$elm$svg$Svg$Attributes$xmlSpace('preserve')
 				]),
 			_List_fromArray(
 				[
@@ -11015,6 +11061,34 @@ var $author$project$GameViewButtons$icGameStart = function (model) {
 				_List_Nil)
 			]));
 };
+var $author$project$GameView$livingPopulationInfo = function (model) {
+	var y = (model.currentLevel !== 6) ? 410.0 : 418.0;
+	var x = (model.currentLevel !== 6) ? 750.0 : 780.0;
+	var win = function () {
+		var _v0 = model.currentLevel;
+		switch (_v0) {
+			case 3:
+				return 140;
+			case 4:
+				return 160;
+			case 5:
+				return 80;
+			case 6:
+				return 50;
+			default:
+				return 0;
+		}
+	}();
+	var living = $author$project$Tile$sumPopulation(model.city);
+	var str = 'Living population/objective: ' + ($elm$core$String$fromInt(living) + ('/' + $elm$core$String$fromInt(win)));
+	var fs = (model.currentLevel !== 6) ? 15 : 13;
+	var color = (_Utils_cmp(
+		living,
+		$elm$core$Basics$floor(1.2 * win)) < 0) ? '#a90b08' : ((_Utils_cmp(
+		living,
+		$elm$core$Basics$floor(1.5 * win)) < 0) ? '#fd2d29' : ((_Utils_cmp(living, win * 2) < 0) ? '#fb8d8d' : 'white'));
+	return A5($author$project$GameViewBasic$caption, x, y, color, str, fs);
+};
 var $author$project$Message$NextRound = {$: 'NextRound'};
 var $author$project$GameViewButtons$nextButton = F3(
 	function (x, y, w) {
@@ -11081,7 +11155,7 @@ var $author$project$GameView$cityInfo = function (model) {
 		case 3:
 			return 'Atlanta is a city with plain terrain and a \ntemperate climate, which makes it highly \nsusceptible to  viruses. Fortunately, people \nfound some nano-virus technologies from \na virus research institute before the \nnuclear war. With special programs, the\n nano-virus is capable of killing some\nmicroorganisms, including viruses.\n\n========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n========OBJECTIVE==========\nNo less than 140 surviving population.\n';
 		case 4:
-			return 'Before the devastating war, Amber was a\n "Tech City" whose citizens were mainly\n made up of researchers and scholars.\nFortunately, Amber didn\'t take much \ndamage in the war. Therefore, it kept\n many cutting-edge technologies and\n later became the most populated area\n in the world. To make up for the labor\n loss, a highly advanced cloning system\n was developed.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purificatio\n=\n========OBJECTIVE==========\nNo less than 160 surviving population.\n';
+			return 'Before the devastating war, Amber was a\n "Tech City" whose citizens were mainly\n made up of researchers and scholars.\nFortunately, Amber didn\'t take much \ndamage in the war. Therefore, it kept\n many cutting-edge technologies and\n later became the most populated area\n in the world. To make up for the labor\n loss, a highly advanced cloning system\n was developed.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purification\n\n========OBJECTIVE==========\nNo less than 160 surviving population.\n';
 		case 5:
 			return 'Welcome to St.Petersburg, the \nnorthernmost city with a population over\n 50,000. The climate here is extremely\n cold and dry. The resources harvested \nfrom land are very limited. Therefore, \npeople created a weather control system\n to adapt to the environment.\n\n========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n=========OBJECTIVE==========\nNo less than 80 surviving population.\n';
 		default:
@@ -11166,10 +11240,15 @@ var $author$project$GameView$ml2s = function (m) {
 			var c = m.a;
 			return $elm$core$List$reverse(
 				$elm$core$String$lines('💬 ' + ('[' + (c.name + (']: \n' + c.describe)))));
-		default:
+		case 'Feedback':
 			var str = m.a;
 			return $elm$core$List$reverse(
 				$elm$core$String$lines('⨀ ' + str));
+		default:
+			var c = m.a;
+			var str = m.b;
+			return $elm$core$List$reverse(
+				$elm$core$String$lines('💬 ' + ('[' + (c.name + (']: \n' + str)))));
 	}
 };
 var $author$project$GameView$consoleText = function (model) {
@@ -12910,7 +12989,7 @@ var $author$project$GameView$renderVirusInf = function (model) {
 			['☣ Mutate: \nActivated at round 10, change the virus spread pattern.\n' + '☣ TakeOver: \nActivated at round 16, for tiles where\nlocal dead >= 3 x local healthy population\nvirus would occupy all their hexes.\n'])) : ((model.currentLevel === 6) ? _List_fromArray(
 		[
 			'\uD83E\uDE78 Infect rate:\nEach virus cell would infect ' + (infect + (' local citizens per turn.\n' + ('Theoretical death rate: ' + ($elm$core$String$fromInt(
-			$elm$core$Basics$round(vir.kill * 100)) + ('%.\n' + ('\uD83E\uDDEC Virus spread pattern:\nIf a hex is surrounded by ' + (rule + (' virus units,\nthe virus would spread to this hex next round.\n' + ('☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n' + ('☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n' + ('☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n' + '☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population.')))))))))))
+			$elm$core$Basics$round(vir.kill * 100)) + ('%.\n' + ('\uD83E\uDDEC Virus spread pattern:\nIf a hex is surrounded by ' + (rule + (' virus units,\nthe virus would spread to this hex next round.\n' + ('☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n' + ('☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n' + ('☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n' + '☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation.')))))))))))
 		]) : _List_fromArray(
 		['No virus in Tutorial 1.']));
 	var inf = (model.currentLevel === 3) ? A3(
@@ -12962,7 +13041,7 @@ var $author$project$GameView$renderVirusInf = function (model) {
 				inf_,
 				_Utils_ap(
 					_List_fromArray(
-						['☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population.']),
+						['☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation.']),
 					_List_fromArray(
 						[unfold]))))) : ((model.currentLevel === 6) ? A3(
 		$elm$core$List$foldl,
@@ -13438,15 +13517,24 @@ var $author$project$GameView$viewGame = function (model) {
 																							$author$project$GameViewButtons$virusInfoButtonEndless
 																						])),
 																					_Utils_ap(
-																						$author$project$GameViewCards$renderHands(model),
+																						A2(
+																							$elm$core$List$member,
+																							model.currentLevel,
+																							_List_fromArray(
+																								[3, 4, 5, 6])) ? _List_fromArray(
+																							[
+																								$author$project$GameView$livingPopulationInfo(model)
+																							]) : _List_Nil,
 																						_Utils_ap(
-																							$author$project$GameView$renderHand(model),
+																							$author$project$GameViewCards$renderHands(model),
 																							_Utils_ap(
-																								film,
-																								model.virusInfo ? _List_fromArray(
-																									[
-																										$author$project$GameView$renderVirusInf(model)
-																									]) : _List_Nil))))))))))))))))))),
+																								$author$project$GameView$renderHand(model),
+																								_Utils_ap(
+																									film,
+																									model.virusInfo ? _List_fromArray(
+																										[
+																											$author$project$GameView$renderVirusInf(model)
+																										]) : _List_Nil)))))))))))))))))))),
 						$elm$html$Html$text(
 						'round ' + ($elm$core$String$fromInt(model.currentRound) + '. ')),
 						$elm$html$Html$text(

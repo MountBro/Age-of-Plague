@@ -16,10 +16,10 @@ import Virus exposing (..)
 updateLog : Card -> Model -> Model
 updateLog card model =
     let
-        log_ =
+        log =
             [ CardPlayed card ]
     in
-    { model | actionDescribe = model.actionDescribe ++ log_ }
+    { model | actionDescribe = model.actionDescribe ++ log }
 
 
 createGuide : Model -> List String
@@ -124,8 +124,8 @@ performAction card action model =
             in
             ( { model | behavior = behavior } |> updateLog card, Cmd.none )
 
-        EcoDoubleI_Freeze prob ->
-            ( { model | ecoRatio = 2 * model.ecoRatio } |> updateLog card, Random.generate (FreezeRet prob) (Random.float 0 1) )
+        PowDoubleI_Freeze prob ->
+            ( { model | power = model.power + 1 } |> updateLog card, Random.generate (FreezeRet prob) (Random.float 0 1) )
 
         CutHexI ( i, j ) ->
             let
@@ -178,12 +178,12 @@ performAction card action model =
                     model.virus
 
                 dr =
-                    1.024 * virus_.kill
+                    min (1.024 * virus_.kill) 0.6
 
                 virus =
                     { virus_ | kill = dr }
             in
-            ( { model | ecoRatio = 2 * model.ecoRatio, virus = virus } |> updateLog card, Cmd.none )
+            ( { model | power = model.power + 1 , virus = virus } |> updateLog card, Cmd.none )
 
         OrganCloneI ( i, j ) ->
             let
@@ -252,7 +252,7 @@ performAction card action model =
                     model.city.tilesIndex
 
                 tilelst =
-                    List.map (\x -> { x | population = round (toFloat x.population * 1.5) }) tilelst_
+                    List.map (\x -> { x | population = x.sick + ceiling (toFloat (x.population - x.sick) * 1.5) }) tilelst_
 
                 city =
                     { city_ | tilesIndex = tilelst }
@@ -487,7 +487,7 @@ performAction card action model =
             ( { model | city = city }, Cmd.none )
 
         DroughtI_Kill ( ( i, j ), prob ) ->
-            ( { model | ecoRatio = 0.5 * model.ecoRatio } |> updateLog card, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
+            ( { model | powRatio = 0.5 * model.powRatio } |> updateLog card, Random.generate (KillTileVir ( ( i, j ), prob )) (Random.float 0 1) )
 
         WarehouseI ( i, j ) ->
             let
@@ -510,9 +510,6 @@ performAction card action model =
                                 )
                                 city_.tilesIndex
                     }
-
-                num =
-                    model.warehouseNum + 1
             in
             ( { model | city = city, maxPower = para.warehousePowerInc + model.maxPower } |> updateLog card, Cmd.none )
 

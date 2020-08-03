@@ -121,7 +121,7 @@ renewStatus model =
 
 powerInc : Model -> Model
 powerInc model =
-    if model.power + para.basicPowerInc >= model.maxPower then
+    if model.power + round (model.powRatio * toFloat para.basicPowerInc) >= model.maxPower then
         let
             w =
                 "Maximum Power reached. " |> Warning
@@ -129,7 +129,7 @@ powerInc model =
         { model | power = model.maxPower, actionDescribe = w :: model.actionDescribe }
 
     else
-        { model | power = model.power + para.basicPowerInc }
+        { model | power = model.power + round (model.powRatio * toFloat para.basicPowerInc) }
 
 
 virusEvolve : Model -> Model
@@ -465,7 +465,7 @@ revenge size model =
 
                 virus =
                     { virus_
-                        | kill = min (virus_.kill * 1.1) 0.6
+                        | kill = min (virus_.kill * 1.1) 0.66
                         , infect = min (virus_.infect + 1) 2
                     }
             in

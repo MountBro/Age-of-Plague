@@ -25,10 +25,7 @@ type Action
     = IncPowerI Int
     | FreezeI
     | Freeze Float
-    | EcoDoubleI
-    | EcoDoubleI_Freeze Float
-    | DisableEvolveI
-    | DisableEvolve Float
+    | PowDoubleI_Freeze Float
     | NoAction
     | CutHexI ( Int, Int )
     | CutTileI ( Int, Int )
@@ -243,6 +240,11 @@ allCards =
     , cut
     , cut
     , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
+    , megaCut
     , megaCut
     , megaCut
     , megaCut
@@ -355,10 +357,10 @@ rain =
     Card
         NoSel
         3
-        [ EcoDoubleI_Freeze 0.5, EcoDoubleI_Freeze 0.5 ]
+        [ PowDoubleI_Freeze 0.5, PowDoubleI_Freeze 0.5 ]
         "Rain"
         "‧ 50% of virus freezing chance;\n‧ The power output +1."
-        "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The economy output doubles for two rounds."
+        "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The power output +1 for two rounds."
 
 
 cut =
@@ -387,7 +389,7 @@ fubao =
         1
         [ Activate996I, Activate996I ]
         "996"
-        "‧ Economy doubles;\n‧ Death rate increases 5%."
+        "‧Power +1, death rate increases 5%."
         "In the next 2 rounds, +1 power, \nbut the death rate permanently rises 5%."
 
 
@@ -417,8 +419,8 @@ megaClone =
         8
         [ MegaCloneI ]
         "Mega Clone"
-        "Healthy population x1.25."
-        "Healthy population x1.25."
+        "Healthy population x1.5."
+        "Healthy population x1.5."
 
 
 purification =
@@ -507,14 +509,14 @@ drought =
         2
         [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
         "Drought"
-        "‧ 50% to kill local virus; \n‧ Economy output halves."
-        "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe economy output halves for two rounds."
+        "‧ 50% to kill local virus; \n‧ Power output halves."
+        "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe power output halves for two rounds."
 
 
 warehouse =
     Card
         TileSel
-        2
+        4
         [ WarehouseI ( 0, 0 ) ]
         "Warehouse"
         "+2 maximum power."

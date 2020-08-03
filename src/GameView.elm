@@ -82,6 +82,12 @@ viewGame model =
                             else
                                 [ renderVirusSkills model, virusInfoButtonEndless ]
                            )
+                        ++ (if List.member model.currentLevel [ 3, 4, 5, 6 ] then
+                                [ livingPopulationInfo model ]
+
+                            else
+                                []
+                           )
                         ++ renderHands model
                         ++ renderHand model
                         ++ film
@@ -783,8 +789,8 @@ damage in the war. Therefore, it kept
 🃟 Mega Clone 
 🃟 Organ Clone
 🃟 Resurgence
-🃟 Purificatio
-=
+🃟 Purification
+
 ========OBJECTIVE==========
 No less than 160 surviving population.
 """
@@ -875,3 +881,69 @@ renderCityInfo model =
         , h |> String.fromFloat |> SA.height
         ]
         (bkg :: txt)
+
+
+livingPopulationInfo : Model -> Html Msg
+livingPopulationInfo model =
+    let
+        x =
+            if model.currentLevel /= 6 then
+                750.0
+
+            else
+                770.0
+
+        y =
+            if model.currentLevel /= 6 then
+                410.0
+
+            else
+                415.0
+
+        fs =
+            if model.currentLevel /= 6 then
+                15
+
+            else
+                13
+
+        living =
+            sumPopulation model.city
+
+        win =
+            case model.currentLevel of
+                3 ->
+                    140
+
+                4 ->
+                    160
+
+                5 ->
+                    80
+
+                6 ->
+                    50
+
+                _ ->
+                    0
+
+        str =
+            "Living population/objective: "
+                ++ String.fromInt living
+                ++ "/"
+                ++ String.fromInt win
+
+        color =
+            if living < (win |> toFloat |> (*) 1.2 |> floor) then
+                "#a90b08"
+
+            else if living < (win |> toFloat |> (*) 1.5 |> floor) then
+                "#fd2d29"
+
+            else if living < win * 2 then
+                "#fb8d8d"
+
+            else
+                "white"
+    in
+    GameViewBasic.caption x y color str fs

@@ -306,7 +306,7 @@ winCondition =
     [ 140 -- Atlanta
     , 160 -- amber
     , 80 -- St.P
-    , 50
+    , 50 -- Endless
     ]
 
 

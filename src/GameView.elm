@@ -774,8 +774,8 @@ damage in the war. Therefore, it kept
 🃟 Mega Clone 
 🃟 Organ Clone
 🃟 Resurgence
-🃟 Purificatio
-=
+🃟 Purification
+
 ========OBJECTIVE==========
 No less than 160 surviving population.
 """

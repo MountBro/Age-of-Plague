@@ -311,7 +311,7 @@ selectVirus n wave =
                     |> List.foldr (++) []
 
         rules =
-            if wave > 6 then
+            if wave > 8 then
                 getElement (4 + modBy 5 wave) ruleLst
                     |> List.foldr (++) []
 

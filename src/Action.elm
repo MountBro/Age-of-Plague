@@ -109,17 +109,54 @@ performAction : Card -> Action -> Model -> ( Model, Cmd Msg )
 performAction card action model =
     case action of
         IncPowerI inc ->
-            if model.power + inc > model.maxPower then
-                ( { model
-                    | power = model.maxPower
-                    , actionDescribe = model.actionDescribe ++ [ "Maximum Power reached." |> Warning ]
-                  }
-                    |> updateLog card
-                , Cmd.none
-                )
+            if card == powerOverload then
+                if inc > 0 then
+                    let
+                        str =
+                            "Power increased by "
+                                ++ String.fromInt inc
+                                ++ "."
+
+                        ml =
+                            CardPlayed_ card str
+
+                        w =
+                            if model.power + inc > model.maxPower then
+                                [ Warning "Maximum Power reached." ]
+
+                            else
+                                []
+                    in
+                    ( { model | power = min (model.power + inc) model.maxPower, actionDescribe = model.actionDescribe ++ w ++ [ ml ] } |> updateLog card, Cmd.none )
+
+                else if inc < 0 then
+                    let
+                        str =
+                            "Power decreased by "
+                                ++ String.fromInt (negate inc)
+                                ++ "."
+
+                        ml =
+                            CardPlayed_ card str
+
+                        acd =
+                            List.filter (\x -> x /= Warning "Maximum Power reached.") model.actionDescribe
+                    in
+                    ( { model | power = min (model.power + inc) model.maxPower, actionDescribe = acd ++ [ ml ] } |> updateLog card, Cmd.none )
+
+                else
+                    ( model, Cmd.none )
 
             else
-                ( { model | power = max (model.power + inc) 0 } |> updateLog card, Cmd.none )
+                let
+                    w =
+                        if model.power + inc > model.maxPower then
+                            [ Warning "Maximum Power reached." ]
+
+                        else
+                            []
+                in
+                ( { model | power = min (model.power + inc) model.maxPower, actionDescribe = model.actionDescribe ++ w } |> updateLog card, Cmd.none )
 
         Freeze prob ->
             ( model |> updateLog card, Random.generate (FreezeRet prob) (Random.float 0 1) )
@@ -568,6 +605,9 @@ performAction card action model =
                     List.append hands_ cardlst
             in
             ( { model | hands = hands } |> updateLog card, Cmd.none )
+
+        DroughtRecoverI ->
+            ( { model | powRatio = 4 * model.powRatio }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

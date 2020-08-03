@@ -1,5 +1,7 @@
 module Card exposing (..)
 
+import List.Extra as LE
+
 
 type alias Card =
     { selMode : Selection
@@ -50,6 +52,7 @@ type Action
     | JudgeI_Kill ( ( Int, Int ), Float )
     | EvacuateI ( Int, Int )
     | StopEVAI ( Int, Int )
+    | DroughtRecoverI
 
 
 
@@ -62,7 +65,6 @@ cardPiles =
 
 cardPilestutorial =
     [ blizzard ]
-
 
 
 cardPile3 =
@@ -225,6 +227,7 @@ cardPile5 =
     , medMob
     ]
 
+
 allCards =
     [ powerOverload
     , onStandby
@@ -307,6 +310,10 @@ toPngUrl c =
 toSoundUrl : Card -> String
 toSoundUrl c =
     "./assets/sound/" ++ String.replace " " "" c.name ++ ".wav"
+
+
+
+-- sites/assets/sound/EnhancedHealing.wav
 
 
 powerOverload =
@@ -406,7 +413,7 @@ organClone =
 humanClone =
     Card
         TileSel
-        3
+        2
         [ HumanCloneI ( 0, 0 ) ]
         "Human Clone"
         "Double the local population."
@@ -456,7 +463,7 @@ resurgence =
 defenseline =
     Card
         TileSel
-        2
+        4
         [ FreezevirusI ( 0, 0 ), FreezevirusI ( 0, 0 ) ]
         "Defensive Line"
         "Froze virus."
@@ -507,7 +514,7 @@ drought =
     Card
         TileSel
         2
-        [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
+        [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtRecoverI ]
         "Drought"
         "‧ 50% to kill local virus; \n‧ Power output halves."
         "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe power output halves for two rounds."

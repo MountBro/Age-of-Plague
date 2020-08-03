@@ -98,6 +98,7 @@ type MyLog
     = CardPlayed Card
     | Warning String
     | Feedback String
+    | CardPlayed_ Card String
 
 
 isWarning : MyLog -> Bool

@@ -66,7 +66,7 @@ viewGame model =
                             else
                                 []
                            )
-                        ++  renderPopulationGuide model
+                        ++ renderPopulationGuide model
                         ++ (if model.currentLevel == 6 then
                                 [ endlessLevelProgress model ]
 
@@ -81,6 +81,12 @@ viewGame model =
 
                             else
                                 [ renderVirusSkills model, virusInfoButtonEndless ]
+                           )
+                        ++ (if List.member model.currentLevel [ 3, 4, 5, 6 ] then
+                                [ livingPopulationInfo model ]
+
+                            else
+                                []
                            )
                         ++ renderHands model
                         ++ renderHand model
@@ -227,6 +233,10 @@ powerInfo model =
 
 powerIncInfo : Model -> Svg Msg
 powerIncInfo model =
+    let
+        inc =
+            round (model.powRatio * toFloat para.basicPowerInc)
+    in
     GameViewBasic.caption
         (para.pix + 30.0)
         (para.piy + 20.0)
@@ -237,7 +247,7 @@ powerIncInfo model =
         ("/"
             ++ String.fromInt model.maxPower
             ++ ", +"
-            ++ String.fromInt para.basicPowerInc
+            ++ String.fromInt inc
             ++ " per round."
         )
         10
@@ -370,8 +380,14 @@ ml2s m =
             ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ c.describe)
                 |> String.lines
                 |> List.reverse
+
         Feedback str ->
             ("⨀ " ++ str) |> String.lines |> List.reverse
+
+        CardPlayed_ c str ->
+            ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ str)
+                |> String.lines
+                |> List.reverse
 
 
 consoleText : Model -> List (Html Msg)
@@ -515,7 +531,6 @@ renderGuide model =
                     ]
                     []
                 ]
-
     in
     if model.currentLevel == 1 || model.currentLevel == 2 then
         bkg
@@ -536,6 +551,7 @@ renderPopulationGuide model =
 
         cs =
             colorScheme t
+
         bkg_ =
             svg []
                 [ Svg.defs []
@@ -558,9 +574,12 @@ renderPopulationGuide model =
         bkg_
             :: [ GameViewBasic.caption 650.0 320.0 "green" "Green figures: healthy population." 16
                , GameViewBasic.caption 650.0 350.0 "yellow" "Yellow figures: sick population." 16
-               , GameViewBasic.caption 650.0 380.0 "red" "Red figures: dead number." 16]
+               , GameViewBasic.caption 650.0 380.0 "red" "Red figures: dead number." 16
+               ]
+
     else
         []
+
 
 renderVirusInf : Model -> Html Msg
 renderVirusInf model =
@@ -608,7 +627,7 @@ renderVirusInf model =
                     ++ "☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
                     ++ "☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
                     ++ "☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n"
-                    ++ "☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population."
+                    ++ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation."
                 ]
 
             else
@@ -631,7 +650,7 @@ renderVirusInf model =
 
             else if model.currentLevel == 5 then
                 inf_
-                    ++ [ "☣ Unblockable: \na quarantine would fall if\npatients nearby > 3 x quarantine population." ]
+                    ++ [ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation." ]
                     ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
@@ -819,6 +838,7 @@ amount.
 =========OBJECTIVE==========
 No less than 50 surviving population.
 """
+
         _ ->
             ""
 
@@ -888,3 +908,69 @@ renderCityInfo model =
         , h |> String.fromFloat |> SA.height
         ]
         (bkg :: txt)
+
+
+livingPopulationInfo : Model -> Html Msg
+livingPopulationInfo model =
+    let
+        x =
+            if model.currentLevel /= 6 then
+                750.0
+
+            else
+                780.0
+
+        y =
+            if model.currentLevel /= 6 then
+                410.0
+
+            else
+                418.0
+
+        fs =
+            if model.currentLevel /= 6 then
+                15
+
+            else
+                13
+
+        living =
+            sumPopulation model.city
+
+        win =
+            case model.currentLevel of
+                3 ->
+                    140
+
+                4 ->
+                    160
+
+                5 ->
+                    80
+
+                6 ->
+                    50
+
+                _ ->
+                    0
+
+        str =
+            "Living population/objective: "
+                ++ String.fromInt living
+                ++ "/"
+                ++ String.fromInt win
+
+        color =
+            if living < (win |> toFloat |> (*) 1.2 |> floor) then
+                "#a90b08"
+
+            else if living < (win |> toFloat |> (*) 1.5 |> floor) then
+                "#fd2d29"
+
+            else if living < win * 2 then
+                "#fb8d8d"
+
+            else
+                "white"
+    in
+    GameViewBasic.caption x y color str fs

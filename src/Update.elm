@@ -139,7 +139,7 @@ update msg model =
                         w =
                             "Can't draw a card right now:\nmaximum number of hands (10)\nreached." |> Warning
                     in
-                    ( { model | actionDescribe = model.actionDescribe ++ [w] }, Cmd.none )
+                    ( { model | actionDescribe = model.actionDescribe ++ [ w ] }, Cmd.none )
 
                 else
                     ( model, Cmd.none )
@@ -149,7 +149,7 @@ update msg model =
                     w =
                         Warning "Can't draw a card right now:\npower insufficient."
                 in
-                ( { model | actionDescribe = model.actionDescribe ++ [w] }, Cmd.none )
+                ( { model | actionDescribe = model.actionDescribe ++ [ w ] }, Cmd.none )
 
         DrawCard c ->
             ( { model | hands = c :: model.hands }, Cmd.none )
@@ -186,7 +186,7 @@ update msg model =
                         )
 
                     else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
-                        ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
+                        ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum number of\ncards (10) exceeded!!!" ] }
                         , Cmd.none
                         )
 

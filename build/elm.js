@@ -5338,7 +5338,7 @@ var $author$project$Card$FreezevirusI = function (a) {
 var $author$project$Card$defenseline = A6(
 	$author$project$Card$Card,
 	$author$project$Card$TileSel,
-	2,
+	4,
 	_List_fromArray(
 		[
 			$author$project$Card$FreezevirusI(
@@ -5352,6 +5352,7 @@ var $author$project$Card$defenseline = A6(
 var $author$project$Card$DroughtI_Kill = function (a) {
 	return {$: 'DroughtI_Kill', a: a};
 };
+var $author$project$Card$DroughtRecoverI = {$: 'DroughtRecoverI'};
 var $author$project$Card$drought = A6(
 	$author$project$Card$Card,
 	$author$project$Card$TileSel,
@@ -5365,7 +5366,8 @@ var $author$project$Card$drought = A6(
 			$author$project$Card$DroughtI_Kill(
 			_Utils_Tuple2(
 				_Utils_Tuple2(0, 0),
-				0.5))
+				0.5)),
+			$author$project$Card$DroughtRecoverI
 		]),
 	'Drought',
 	'‧ 50% to kill local virus; \n‧ Power output halves.',
@@ -5439,7 +5441,7 @@ var $author$project$Card$HumanCloneI = function (a) {
 var $author$project$Card$humanClone = A6(
 	$author$project$Card$Card,
 	$author$project$Card$TileSel,
-	3,
+	2,
 	_List_fromArray(
 		[
 			$author$project$Card$HumanCloneI(
@@ -7481,6 +7483,7 @@ var $author$project$InitLevel$levelInit = F2(
 				flowRate: 1,
 				freezeTile: _List_Nil,
 				hands: $author$project$Model$initHandsVirus(n).a,
+				powRatio: 1.0,
 				power: 30,
 				selHex: $author$project$Model$SelHexOff,
 				state: $author$project$Model$Playing,
@@ -7502,6 +7505,7 @@ var $author$project$InitLevel$levelInit = F2(
 				flowRate: 1,
 				freezeTile: _List_Nil,
 				hands: _List_Nil,
+				powRatio: 1.0,
 				power: 6,
 				replaceChance: 3,
 				selHex: $author$project$Model$SelHexOff,
@@ -7840,7 +7844,7 @@ var $author$project$Parameters$para = {
 	l3shift: _Utils_Tuple2(0.0, 20.0),
 	l4shift: _Utils_Tuple2(0.0, -50.0),
 	l5shift: _Utils_Tuple2(-10.0, 20.0),
-	l6shift: _Utils_Tuple2(-12.0, 13.0),
+	l6shift: _Utils_Tuple2(-26.0, 35.0),
 	mr: 10,
 	mtc: '#5b9fa6',
 	nextButtonW: 50.0,
@@ -7879,6 +7883,10 @@ var $elm$core$List$partition = F2(
 			step,
 			_Utils_Tuple2(_List_Nil, _List_Nil),
 			list);
+	});
+var $author$project$Model$CardPlayed_ = F2(
+	function (a, b) {
+		return {$: 'CardPlayed_', a: a, b: b};
 	});
 var $author$project$Message$FreezeRet = F2(
 	function (a, b) {
@@ -7988,14 +7996,77 @@ var $author$project$Action$performAction = F3(
 		switch (action.$) {
 			case 'IncPowerI':
 				var inc = action.a;
-				return _Utils_Tuple2(
-					A2(
-						$author$project$Action$updateLog,
-						card,
-						_Utils_update(
-							model,
-							{power: model.power + inc})),
-					$elm$core$Platform$Cmd$none);
+				if (_Utils_eq(card, $author$project$Card$powerOverload)) {
+					if (inc > 0) {
+						var w = (_Utils_cmp(model.power + inc, model.maxPower) > 0) ? _List_fromArray(
+							[
+								$author$project$Model$Warning('Maximum Power reached.')
+							]) : _List_Nil;
+						var str = 'Power increased by ' + ($elm$core$String$fromInt(inc) + '.');
+						var ml = A2($author$project$Model$CardPlayed_, card, str);
+						return _Utils_Tuple2(
+							A2(
+								$author$project$Action$updateLog,
+								card,
+								_Utils_update(
+									model,
+									{
+										actionDescribe: _Utils_ap(
+											model.actionDescribe,
+											_Utils_ap(
+												w,
+												_List_fromArray(
+													[ml]))),
+										power: A2($elm$core$Basics$min, model.power + inc, model.maxPower)
+									})),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						if (inc < 0) {
+							var str = 'Power decreased by ' + ($elm$core$String$fromInt(-inc) + '.');
+							var ml = A2($author$project$Model$CardPlayed_, card, str);
+							var acd = (_Utils_cmp(model.power + inc, model.maxPower) < 0) ? A2(
+								$elm$core$List$filter,
+								function (x) {
+									return !_Utils_eq(
+										x,
+										$author$project$Model$Warning('Maximum Power reached.'));
+								},
+								model.actionDescribe) : model.actionDescribe;
+							return _Utils_Tuple2(
+								A2(
+									$author$project$Action$updateLog,
+									card,
+									_Utils_update(
+										model,
+										{
+											actionDescribe: _Utils_ap(
+												acd,
+												_List_fromArray(
+													[ml])),
+											power: A2($elm$core$Basics$min, model.power + inc, model.maxPower)
+										})),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						}
+					}
+				} else {
+					var w = (_Utils_cmp(model.power + inc, model.maxPower) > 0) ? _List_fromArray(
+						[
+							$author$project$Model$Warning('Maximum Power reached.')
+						]) : _List_Nil;
+					return _Utils_Tuple2(
+						A2(
+							$author$project$Action$updateLog,
+							card,
+							_Utils_update(
+								model,
+								{
+									actionDescribe: _Utils_ap(model.actionDescribe, w),
+									power: A2($elm$core$Basics$min, model.power + inc, model.maxPower)
+								})),
+						$elm$core$Platform$Cmd$none);
+				}
 			case 'Freeze':
 				var prob = action.a;
 				return _Utils_Tuple2(
@@ -8605,6 +8676,12 @@ var $author$project$Action$performAction = F3(
 							model,
 							{hands: hands})),
 					$elm$core$Platform$Cmd$none);
+			case 'DroughtRecoverI':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{powRatio: 4 * model.powRatio}),
+					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -9004,7 +9081,7 @@ var $author$project$NextRound$judgeWin = function (model) {
 var $author$project$NextRound$powerInc = function (model) {
 	if (_Utils_cmp(
 		model.power + $elm$core$Basics$round(model.powRatio * $author$project$Parameters$para.basicPowerInc),
-		model.maxPower) > -1) {
+		model.maxPower) > 0) {
 		var w = $author$project$Model$Warning('Maximum Power reached. ');
 		return _Utils_update(
 			model,
@@ -9013,12 +9090,14 @@ var $author$project$NextRound$powerInc = function (model) {
 					model.actionDescribe,
 					_List_fromArray(
 						[w])),
+				powRatio: 1.0,
 				power: model.maxPower
 			});
 	} else {
 		return _Utils_update(
 			model,
 			{
+				powRatio: 1.0,
 				power: model.power + $elm$core$Basics$round(model.powRatio * $author$project$Parameters$para.basicPowerInc)
 			});
 	}
@@ -9960,7 +10039,7 @@ var $author$project$Update$update = F2(
 										model.actionDescribe,
 										_List_fromArray(
 											[
-												$author$project$Model$Warning('Can\'t summon, maximum hand cards ( > 10 )!!!')
+												$author$project$Model$Warning('Can\'t summon, maximum number of\ncards (10) exceeded!!!')
 											]))
 								}),
 							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
@@ -10265,385 +10344,392 @@ var $elm$html$Html$Attributes$src = function (url) {
 var $elm$html$Html$strong = _VirtualDom_node('strong');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$ViewMP$viewAll = A2(
-	$elm$html$Html$div,
-	_List_Nil,
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$p,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$id('t1')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Age of Plague'),
-					A2($elm$html$Html$br, _List_Nil, _List_Nil)
-				])),
-			A2(
-			$elm$html$Html$p,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$id('t2')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('After the Apocalypse')
-				])),
-			A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('container'),
-					$elm$html$Html$Attributes$id('ctr')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('honeycomb ')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('column')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('hex'),
-											$elm$html$Html$Attributes$id('tut1'),
-											$elm$html$Html$Events$onClick(
-											$author$project$Message$LevelBegin(1))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('wrapper')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$class('hexagon color-1')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('content')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$strong,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Tutorial1')
-														]))
-												]))
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('hex'),
-											$elm$html$Html$Attributes$id('tut2'),
-											$elm$html$Html$Events$onClick(
-											$author$project$Message$LevelBegin(2))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('wrapper')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$class('hexagon color-1')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('content')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$strong,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Tutorial2')
-														]))
-												]))
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('hex'),
-											$elm$html$Html$Attributes$id('city1'),
-											$elm$html$Html$Events$onClick(
-											$author$project$Message$LevelBegin(3))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('wrapper')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$class('hexagon color-1')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('content')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$strong,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('City 1')
-														]))
-												]))
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('hex'),
-											$elm$html$Html$Attributes$id('city2'),
-											$elm$html$Html$Events$onClick(
-											$author$project$Message$LevelBegin(4))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('wrapper')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$class('hexagon color-1')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('content')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$strong,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('City 2')
-														]))
-												]))
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('hex'),
-											$elm$html$Html$Attributes$id('city3'),
-											$elm$html$Html$Events$onClick(
-											$author$project$Message$LevelBegin(5))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('wrapper')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$class('hexagon color-1')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('content')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$strong,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('City 3')
-														]))
-												]))
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('hex'),
-											$elm$html$Html$Attributes$id('endless'),
-											$elm$html$Html$Events$onClick(
-											$author$project$Message$LevelBegin(6))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('wrapper')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$class('hexagon color-1')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('content')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$strong,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Endless')
-														]))
-												]))
-										])),
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('hex'),
-											$elm$html$Html$Attributes$id('gallery'),
-											$elm$html$Html$Events$onClick(
-											$author$project$Message$Click('card'))
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('wrapper')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$class('hexagon color-1')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('content')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$strong,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Collection')
-														]))
-												]))
-										]))
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('shadows')
-								]),
-							_List_Nil)
-						]))
-				])),
-			A2(
-			$elm$html$Html$audio,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$id('bgm'),
-					$elm$html$Html$Attributes$src('./assets/music/bgm1.mp3'),
-					$elm$html$Html$Attributes$loop(true)
-				]),
-			_List_Nil)
-		]));
+var $author$project$ViewMP$viewAll = _List_fromArray(
+	[
+		A2(
+		$elm$html$Html$p,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$id('t1')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Age of Plague'),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil)
+			])),
+		A2(
+		$elm$html$Html$p,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$id('t2')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('After the Apocalypse')
+			])),
+		A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('container'),
+				$elm$html$Html$Attributes$id('ctr')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('honeycomb ')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('column')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('hex'),
+										$elm$html$Html$Attributes$id('tut1'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Message$LevelBegin(1))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('wrapper')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('hexagon color-1')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$strong,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Tutorial1')
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('hex'),
+										$elm$html$Html$Attributes$id('tut2'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Message$LevelBegin(2))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('wrapper')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('hexagon color-1')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$strong,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Tutorial2')
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('hex'),
+										$elm$html$Html$Attributes$id('city1'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Message$LevelBegin(3))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('wrapper')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('hexagon color-1')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$strong,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('City 1')
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('hex'),
+										$elm$html$Html$Attributes$id('city2'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Message$LevelBegin(4))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('wrapper')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('hexagon color-1')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$strong,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('City 2')
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('hex'),
+										$elm$html$Html$Attributes$id('city3'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Message$LevelBegin(5))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('wrapper')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('hexagon color-1')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$strong,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('City 3')
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('hex'),
+										$elm$html$Html$Attributes$id('endless'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Message$LevelBegin(6))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('wrapper')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('hexagon color-1')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$strong,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Endless')
+													]))
+											]))
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('hex'),
+										$elm$html$Html$Attributes$id('gallery'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Message$Click('card'))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('wrapper')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('hexagon color-1')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('content')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$strong,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Collection')
+													]))
+											]))
+									]))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('shadows')
+							]),
+						_List_Nil)
+					]))
+			])),
+		A2(
+		$elm$html$Html$span,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$id('About')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Team LJWZ© presents')
+			])),
+		A2(
+		$elm$html$Html$audio,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$id('bgm'),
+				$elm$html$Html$Attributes$src('./assets/music/bgm1.mp3'),
+				$elm$html$Html$Attributes$loop(true)
+			]),
+		_List_Nil)
+	]);
 var $author$project$ViewCards$backToHome = A2(
 	$elm$html$Html$a,
 	_List_fromArray(
@@ -11036,6 +11122,34 @@ var $author$project$GameViewButtons$icGameStart = function (model) {
 				_List_Nil)
 			]));
 };
+var $author$project$GameView$livingPopulationInfo = function (model) {
+	var y = (model.currentLevel !== 6) ? 410.0 : 418.0;
+	var x = (model.currentLevel !== 6) ? 750.0 : 780.0;
+	var win = function () {
+		var _v0 = model.currentLevel;
+		switch (_v0) {
+			case 3:
+				return 140;
+			case 4:
+				return 160;
+			case 5:
+				return 80;
+			case 6:
+				return 50;
+			default:
+				return 0;
+		}
+	}();
+	var living = $author$project$Tile$sumPopulation(model.city);
+	var str = 'Living population/objective: ' + ($elm$core$String$fromInt(living) + ('/' + $elm$core$String$fromInt(win)));
+	var fs = (model.currentLevel !== 6) ? 15 : 13;
+	var color = (_Utils_cmp(
+		living,
+		$elm$core$Basics$floor(1.2 * win)) < 0) ? '#a90b08' : ((_Utils_cmp(
+		living,
+		$elm$core$Basics$floor(1.5 * win)) < 0) ? '#fd2d29' : ((_Utils_cmp(living, win * 2) < 0) ? '#fb8d8d' : 'white'));
+	return A5($author$project$GameViewBasic$caption, x, y, color, str, fs);
+};
 var $author$project$Message$NextRound = {$: 'NextRound'};
 var $author$project$GameViewButtons$nextButton = F3(
 	function (x, y, w) {
@@ -11079,12 +11193,13 @@ var $author$project$GameViewButtons$nextButton = F3(
 	});
 var $author$project$GameViewButtons$nextButton_ = A3($author$project$GameViewButtons$nextButton, $author$project$Parameters$para.nextButtonX, $author$project$Parameters$para.nextButtonY, $author$project$Parameters$para.nextButtonW);
 var $author$project$GameView$powerIncInfo = function (model) {
+	var inc = $elm$core$Basics$round(model.powRatio * $author$project$Parameters$para.basicPowerInc);
 	return A5(
 		$author$project$GameViewBasic$caption,
 		$author$project$Parameters$para.pix + 30.0,
 		$author$project$Parameters$para.piy + 20.0,
 		$author$project$ColorScheme$colorScheme(model.theme).powerColor,
-		'/' + ($elm$core$String$fromInt(model.maxPower) + (', +' + ($elm$core$String$fromInt($author$project$Parameters$para.basicPowerInc) + ' per round.'))),
+		'/' + ($elm$core$String$fromInt(model.maxPower) + (', +' + ($elm$core$String$fromInt(inc) + ' per round.'))),
 		10);
 };
 var $author$project$GameView$powerInfo = function (model) {
@@ -11189,10 +11304,15 @@ var $author$project$GameView$ml2s = function (m) {
 			var c = m.a;
 			return $elm$core$List$reverse(
 				$elm$core$String$lines('💬 ' + ('[' + (c.name + (']: \n' + c.describe)))));
-		default:
+		case 'Feedback':
 			var str = m.a;
 			return $elm$core$List$reverse(
 				$elm$core$String$lines('⨀ ' + str));
+		default:
+			var c = m.a;
+			var str = m.b;
+			return $elm$core$List$reverse(
+				$elm$core$String$lines('💬 ' + ('[' + (c.name + (']: \n' + str)))));
 	}
 };
 var $author$project$GameView$consoleText = function (model) {
@@ -12933,7 +13053,7 @@ var $author$project$GameView$renderVirusInf = function (model) {
 			['☣ Mutate: \nActivated at round 10, change the virus spread pattern.\n' + '☣ TakeOver: \nActivated at round 16, for tiles where\nlocal dead >= 3 x local healthy population\nvirus would occupy all their hexes.\n'])) : ((model.currentLevel === 6) ? _List_fromArray(
 		[
 			'\uD83E\uDE78 Infect rate:\nEach virus cell would infect ' + (infect + (' local citizens per turn.\n' + ('Theoretical death rate: ' + ($elm$core$String$fromInt(
-			$elm$core$Basics$round(vir.kill * 100)) + ('%.\n' + ('\uD83E\uDDEC Virus spread pattern:\nIf a hex is surrounded by ' + (rule + (' virus units,\nthe virus would spread to this hex next round.\n' + ('☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n' + ('☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n' + ('☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n' + '☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population.')))))))))))
+			$elm$core$Basics$round(vir.kill * 100)) + ('%.\n' + ('\uD83E\uDDEC Virus spread pattern:\nIf a hex is surrounded by ' + (rule + (' virus units,\nthe virus would spread to this hex next round.\n' + ('☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n' + ('☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n' + ('☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n' + '☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation.')))))))))))
 		]) : _List_fromArray(
 		['No virus in Tutorial 1.']));
 	var inf = (model.currentLevel === 3) ? A3(
@@ -12985,7 +13105,7 @@ var $author$project$GameView$renderVirusInf = function (model) {
 				inf_,
 				_Utils_ap(
 					_List_fromArray(
-						['☣ Unblockable: \na quarantine would fall if\npatients nearby > 3 x quarantine population.']),
+						['☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation.']),
 					_List_fromArray(
 						[unfold]))))) : ((model.currentLevel === 6) ? A3(
 		$elm$core$List$foldl,
@@ -13461,15 +13581,24 @@ var $author$project$GameView$viewGame = function (model) {
 																							$author$project$GameViewButtons$virusInfoButtonEndless
 																						])),
 																					_Utils_ap(
-																						$author$project$GameViewCards$renderHands(model),
+																						A2(
+																							$elm$core$List$member,
+																							model.currentLevel,
+																							_List_fromArray(
+																								[3, 4, 5, 6])) ? _List_fromArray(
+																							[
+																								$author$project$GameView$livingPopulationInfo(model)
+																							]) : _List_Nil,
 																						_Utils_ap(
-																							$author$project$GameView$renderHand(model),
+																							$author$project$GameViewCards$renderHands(model),
 																							_Utils_ap(
-																								film,
-																								model.virusInfo ? _List_fromArray(
-																									[
-																										$author$project$GameView$renderVirusInf(model)
-																									]) : _List_Nil))))))))))))))))))),
+																								$author$project$GameView$renderHand(model),
+																								_Utils_ap(
+																									film,
+																									model.virusInfo ? _List_fromArray(
+																										[
+																											$author$project$GameView$renderVirusInf(model)
+																										]) : _List_Nil)))))))))))))))))))),
 						$elm$html$Html$text(
 						'round ' + ($elm$core$String$fromInt(model.currentRound) + '. ')),
 						$elm$html$Html$text(
@@ -13583,11 +13712,7 @@ var $author$project$View$viewAll = function (model) {
 						$author$project$GameView$viewGame(model)
 					]));
 		case 'HomePage':
-			return A2(
-				$author$project$View$Document,
-				'Age of Plague',
-				_List_fromArray(
-					[$author$project$ViewMP$viewAll]));
+			return A2($author$project$View$Document, 'Age of Plague', $author$project$ViewMP$viewAll);
 		case 'CardPage':
 			return A2($author$project$View$Document, 'Card Gallery', $author$project$ViewCards$viewCard);
 		default:

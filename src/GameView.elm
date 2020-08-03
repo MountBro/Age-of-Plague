@@ -646,11 +646,7 @@ renderVirusInf model =
 
             else if model.currentLevel == 5 then
                 inf_
-<<<<<<< HEAD
                     ++ [ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation." ]
-=======
-                    ++ [ "☣ Unblockable: \na quarantine would fall if\npatients nearby > 3 x quarantine population." ]
->>>>>>> 7e13fe1aeb5dc6beb557758797c1b9ca09073747
                     ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
@@ -838,6 +834,7 @@ amount.
 =========OBJECTIVE==========
 No less than 50 surviving population.
 """
+
         _ ->
             ""
 

@@ -7486,7 +7486,8 @@ var $author$project$InitLevel$levelInit = F2(
 				state: $author$project$Model$Playing,
 				theme: $author$project$ColorScheme$Minimum,
 				todo: _List_Nil,
-				virus: $author$project$Model$initHandsVirus(n).b
+				virus: $author$project$Model$initHandsVirus(n).b,
+				virusInfo: false
 			}) : _Utils_update(
 			model,
 			{
@@ -7507,6 +7508,7 @@ var $author$project$InitLevel$levelInit = F2(
 				state: $author$project$Model$Drawing,
 				todo: _List_Nil,
 				virus: $author$project$Model$initHandsVirus(n).b,
+				virusInfo: false,
 				waveNum: 0
 			});
 	});
@@ -8823,7 +8825,7 @@ var $author$project$Virus$ruleLst = _List_fromArray(
 	]);
 var $author$project$NextRound$selectVirus = F2(
 	function (n, wave) {
-		var rules = (wave > 6) ? A3(
+		var rules = (wave > 8) ? A3(
 			$elm$core$List$foldr,
 			$elm$core$Basics$append,
 			_List_Nil,
@@ -8917,20 +8919,24 @@ var $author$project$NextRound$endlessVirCreator = function (model) {
 	return ((model.currentLevel === 6) && ((num === 6) && $elm$core$List$isEmpty(virus.pos))) ? _Utils_update(
 		model,
 		{
-			actionDescribe: A2(
-				$elm$core$List$cons,
-				$author$project$Model$Warning('Congrats!!\nYou\'ve defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.'),
-				model.actionDescribe),
+			actionDescribe: _Utils_ap(
+				model.actionDescribe,
+				_List_fromArray(
+					[
+						$author$project$Model$Warning('Congrats!!\nYou\'ve defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.')
+					])),
 			city: city1,
 			virus: virus,
 			waveNum: model.waveNum + 1
 		}) : (((model.currentLevel === 6) && ((num === 5) && $elm$core$List$isEmpty(virus.pos))) ? _Utils_update(
 		model,
 		{
-			actionDescribe: A2(
-				$elm$core$List$cons,
-				$author$project$Model$Warning('Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.'),
-				model.actionDescribe),
+			actionDescribe: _Utils_ap(
+				model.actionDescribe,
+				_List_fromArray(
+					[
+						$author$project$Model$Warning('Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.')
+					])),
 			city: city2,
 			virus: virus
 		}) : (((model.currentLevel === 6) && (num === 4)) ? _Utils_update(
@@ -8989,9 +8995,9 @@ var $author$project$NextRound$judgeWin = function (model) {
 		}) : (((model.currentLevel === 6) && (_Utils_cmp(
 		$author$project$Tile$sumPopulation(model.city),
 		$elm$core$List$sum(
-			A2($author$project$Geometry$getElement, model.currentLevel - 2, $author$project$Model$winCondition))) > -1)) ? model : (((model.currentRound < 21) && ($author$project$Tile$sumPopulation(model.city) > 0)) ? model : _Utils_update(
+			A2($author$project$Geometry$getElement, model.currentLevel - 2, $author$project$Model$winCondition))) > -1)) ? model : (((model.currentRound < 21) && ($author$project$Tile$sumPopulation(model.city) > 0)) ? model : ((model.currentLevel === 2) ? model : _Utils_update(
 		model,
-		{state: $author$project$Model$Wasted})))));
+		{state: $author$project$Model$Wasted}))))));
 };
 var $author$project$NextRound$powerInc = function (model) {
 	if (_Utils_cmp(
@@ -9001,7 +9007,10 @@ var $author$project$NextRound$powerInc = function (model) {
 		return _Utils_update(
 			model,
 			{
-				actionDescribe: A2($elm$core$List$cons, w, model.actionDescribe),
+				actionDescribe: _Utils_ap(
+					model.actionDescribe,
+					_List_fromArray(
+						[w])),
 				power: model.maxPower
 			});
 	} else {
@@ -9150,11 +9159,11 @@ var $author$project$NextRound$horrify = function (model) {
 			model,
 			{
 				actionDescribe: _Utils_ap(
+					model.actionDescribe,
 					_List_fromArray(
 						[
-							$author$project$Model$Warning('Terror spreads among citizens:\npopulation flow x2.\n (Healthy<dead+sick)\n')
-						]),
-					model.actionDescribe),
+							$author$project$Model$Warning('Virus skill Horrify activated!\nTerror spreads among citizens:\npopulation flow x2.')
+						])),
 				flowRate: 2
 			}) : ((_Utils_cmp(
 			$author$project$Tile$sumSick(city) + $author$project$Tile$sumDead(city),
@@ -9162,11 +9171,11 @@ var $author$project$NextRound$horrify = function (model) {
 			model,
 			{
 				actionDescribe: _Utils_ap(
+					model.actionDescribe,
 					_List_fromArray(
 						[
-							$author$project$Model$Warning('Citzens calm down (Healthy<dead+sick)\nInitialize population flow rate.\n')
-						]),
-					model.actionDescribe),
+							$author$project$Model$Warning('Virus skill Horrify deactivated!\nCitizens calm down.\nInitialize population flow rate.\n')
+						])),
 				flowRate: 1
 			}) : model));
 	} else {
@@ -9176,20 +9185,27 @@ var $author$project$NextRound$horrify = function (model) {
 var $author$project$NextRound$mutate = F2(
 	function (rule, model) {
 		var vir_ = model.virus;
-		var vir = (_Utils_eq(model.currentRound, $author$project$Parameters$para.mr) && (model.currentLevel < 6)) ? _Utils_update(
-			vir_,
-			{rules: rule}) : (((model.currentLevel === 6) && ((!A2($elm$core$Basics$modBy, $author$project$Parameters$para.mr, model.currentRound)) && ($elm$core$List$length(vir_.pos) < 4))) ? _Utils_update(
-			vir_,
-			{rules: rule}) : vir_);
+		var _v0 = (_Utils_eq(model.currentRound, $author$project$Parameters$para.mr) && (model.currentLevel < 6)) ? _Utils_Tuple2(
+			_Utils_update(
+				vir_,
+				{rules: rule}),
+			_List_fromArray(
+				[
+					$author$project$Model$Warning('Virus skill Mutate activated!\nSpread pattern mutates!!!')
+				])) : (((model.currentLevel === 6) && ((!A2($elm$core$Basics$modBy, $author$project$Parameters$para.mr, model.currentRound)) && ($elm$core$List$length(vir_.pos) < 4))) ? _Utils_Tuple2(
+			_Utils_update(
+				vir_,
+				{rules: rule}),
+			_List_fromArray(
+				[
+					$author$project$Model$Warning('Virus skill Mutate activated!\nSpread pattern mutates!!!')
+				])) : _Utils_Tuple2(vir_, _List_Nil));
+		var vir = _v0.a;
+		var msg = _v0.b;
 		return _Utils_update(
 			model,
 			{
-				actionDescribe: _Utils_ap(
-					_List_fromArray(
-						[
-							$author$project$Model$Warning('Spread pattern mutates!!!\n(See the virus info panel)\n')
-						]),
-					model.actionDescribe),
+				actionDescribe: _Utils_ap(model.actionDescribe, msg),
 				virus: vir
 			});
 	});
@@ -9210,11 +9226,11 @@ var $author$project$NextRound$revenge = F2(
 					model,
 					{
 						actionDescribe: _Utils_ap(
+							model.actionDescribe,
 							_List_fromArray(
 								[
-									$author$project$Model$Warning('Virus become stronger!!!\n(See the virus info panel)\n')
-								]),
-							model.actionDescribe),
+									$author$project$Model$Warning('Virus skill Revenge activated!\nVirus become stronger!!!')
+								])),
 						counter: 3,
 						virus: virus
 					});
@@ -9236,7 +9252,6 @@ var $author$project$NextRound$revenge = F2(
 var $elm$core$List$sort = function (xs) {
 	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
 };
-var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$NextRound$takeOver = function (model) {
 	var vir = model.virus;
 	var r = model.currentRound;
@@ -9271,11 +9286,12 @@ var $author$project$NextRound$takeOver = function (model) {
 				return $author$project$Geometry$converTiletoHex(x);
 			},
 			tilelst));
-	var message = $elm$core$List$isEmpty(extraVir) ? _List_Nil : _List_fromArray(
-		[
-			$author$project$Model$Warning(
-			'Virus outbreaks in damaged areas\n' + ('(Dead>=' + ($elm$core$Debug$toString(3 * (((r / 17) | 0) + 1)) + 'xHealthy population)\n')))
-		]);
+	var message = $elm$core$List$isEmpty(extraVir) ? _List_Nil : _Utils_ap(
+		model.actionDescribe,
+		_List_fromArray(
+			[
+				$author$project$Model$Warning('Virus skill Take over activated!\nVirus outbreaks in damaged areas')
+			]));
 	var pos = $elm_community$list_extra$List$Extra$unique(
 		_Utils_ap(vir.pos, extraVir));
 	var vir_ = _Utils_update(
@@ -9284,7 +9300,7 @@ var $author$project$NextRound$takeOver = function (model) {
 	return _Utils_update(
 		model,
 		{
-			actionDescribe: _Utils_ap(message, model.actionDescribe),
+			actionDescribe: _Utils_ap(model.actionDescribe, message),
 			virus: vir_
 		});
 };
@@ -9304,6 +9320,7 @@ var $author$project$Tile$neighborSick = F2(
 					},
 					tlst)));
 	});
+var $elm$core$Debug$toString = _Debug_toString;
 var $elm$core$List$unzip = function (pairs) {
 	var step = F2(
 		function (_v0, _v1) {
@@ -9348,17 +9365,17 @@ var $author$project$NextRound$unBlockable = function (model) {
 		var num = $elm$core$List$sum(
 			$elm$core$List$unzip(tilelst).b);
 		var actionDescribe = (!num) ? _Utils_ap(model.actionDescribe, _List_Nil) : ((num === 1) ? _Utils_ap(
+			model.actionDescribe,
 			_List_fromArray(
 				[
-					$author$project$Model$Warning('Emergency!!!\nPatients broke into one quarantine!!\nPatients nearby>3x(quarantine population)\n\n')
-				]),
-			model.actionDescribe) : _Utils_ap(
+					$author$project$Model$Warning('Virus skill Unblockable activated!\nPatients broke into one quarantine!!')
+				])) : _Utils_ap(
+			model.actionDescribe,
 			_List_fromArray(
 				[
 					$author$project$Model$Warning(
-					'Emergency!!!\nPatients broke into ' + ($elm$core$Debug$toString(num) + ' quarantines!!\nPatients nearby>3x(quarantine population)\n'))
-				]),
-			model.actionDescribe));
+					'Virus skill Unblockable activated!\nPatients broke into ' + ($elm$core$Debug$toString(num) + ' quarantines!!'))
+				])));
 		return _Utils_update(
 			model,
 			{actionDescribe: actionDescribe, city: city_});
@@ -9652,9 +9669,9 @@ var $author$project$NextRound$renewStatus = function (model) {
 	return $author$project$NextRound$endlessVirCreator(
 		$author$project$NextRound$clearCurrentRoundTodo(
 			$author$project$NextRound$judgeWin(
-				$author$project$Model$initLog(
-					$author$project$NextRound$powerInc(
-						$author$project$NextRound$virusEvolve(model))))));
+				$author$project$NextRound$powerInc(
+					$author$project$NextRound$virusEvolve(
+						$author$project$Model$initLog(model))))));
 };
 var $author$project$NextRound$toNextRound = function (model) {
 	return (model.currentLevel === 1) ? (((model.currentRound === 1) && _Utils_eq(model.hands, _List_Nil)) ? _Utils_Tuple2(
@@ -9681,10 +9698,10 @@ var $author$project$NextRound$toNextRound = function (model) {
 						model,
 						{currentRound: 4})))),
 		$elm$core$Platform$Cmd$none) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none)))) : ((model.currentLevel === 2) ? ((model.currentRound === 1) ? _Utils_Tuple2(
-		$author$project$Model$initLog(
-			$author$project$NextRound$powerInc(
-				$author$project$NextRound$clearCurrentRoundTodo(
-					$author$project$NextRound$virusEvolve(
+		$author$project$NextRound$powerInc(
+			$author$project$NextRound$clearCurrentRoundTodo(
+				$author$project$NextRound$virusEvolve(
+					$author$project$Model$initLog(
 						_Utils_update(
 							model,
 							{
@@ -9692,19 +9709,19 @@ var $author$project$NextRound$toNextRound = function (model) {
 								hands: _List_fromArray(
 									[$author$project$Card$goingViral])
 							}))))),
-		$elm$core$Platform$Cmd$none) : (((model.currentRound < 4) && _Utils_eq(model.hands, _List_Nil)) ? _Utils_Tuple2(
-		$author$project$Model$initLog(
-			$author$project$NextRound$powerInc(
-				$author$project$NextRound$clearCurrentRoundTodo(
-					$author$project$NextRound$virusEvolve(
+		$elm$core$Platform$Cmd$none) : (((model.currentRound === 2) && _Utils_eq(model.selHex, $author$project$Model$SelHexOn)) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : (((model.currentRound < 4) && _Utils_eq(model.hands, _List_Nil)) ? _Utils_Tuple2(
+		$author$project$NextRound$powerInc(
+			$author$project$NextRound$clearCurrentRoundTodo(
+				$author$project$NextRound$virusEvolve(
+					$author$project$Model$initLog(
 						_Utils_update(
 							model,
 							{currentRound: model.currentRound + 1}))))),
 		$elm$core$Platform$Cmd$none) : ((model.currentRound === 4) ? _Utils_Tuple2(
-		$author$project$Model$initLog(
-			$author$project$NextRound$powerInc(
-				$author$project$NextRound$clearCurrentRoundTodo(
-					$author$project$NextRound$virusEvolve(
+		$author$project$NextRound$powerInc(
+			$author$project$NextRound$clearCurrentRoundTodo(
+				$author$project$NextRound$virusEvolve(
+					$author$project$Model$initLog(
 						_Utils_update(
 							model,
 							{
@@ -9719,7 +9736,7 @@ var $author$project$NextRound$toNextRound = function (model) {
 			_Utils_update(
 				model,
 				{currentRound: model.currentRound + 1})),
-		$elm$core$Platform$Cmd$none) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none))))) : (model.behavior.virusEvolve ? _Utils_Tuple2(
+		$elm$core$Platform$Cmd$none) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none)))))) : (model.behavior.virusEvolve ? _Utils_Tuple2(
 		$author$project$NextRound$renewStatus(
 			_Utils_update(
 				model,
@@ -10763,6 +10780,7 @@ var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$svg$Svg$Attributes$xmlSpace = A2(_VirtualDom_attributeNS, 'http://www.w3.org/XML/1998/namespace', 'xml:space');
 var $author$project$GameViewBasic$caption = F5(
 	function (x, y, cstr, text, fontSize) {
 		return A2(
@@ -10776,7 +10794,8 @@ var $author$project$GameViewBasic$caption = F5(
 					$elm$core$String$fromFloat(x)),
 					$elm$svg$Svg$Attributes$y(
 					$elm$core$String$fromFloat(y)),
-					$elm$svg$Svg$Attributes$fill(cstr)
+					$elm$svg$Svg$Attributes$fill(cstr),
+					$elm$svg$Svg$Attributes$xmlSpace('preserve')
 				]),
 			_List_fromArray(
 				[
@@ -11079,11 +11098,13 @@ var $author$project$GameView$cityInfo = function (model) {
 	var _v0 = model.currentLevel;
 	switch (_v0) {
 		case 3:
-			return 'Atlanta is a city with plain terrain and a \ntemperate climate, which makes it highly \nsusceptible to  viruses. Fortunately, people \nfound some nano-virus technologies from \na virus research institute before the \nnuclear war. With special programs, the\n nano-virus is capable of killing some\nmicroorganisms, including viruses.\n\n========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n========OBJECTIVE==========\nNo less than 140 surviving population.\n';
+			return 'Atlanta is a city with plain terrain and a \ntemperate climate, making it highly\nsusceptible to viruses. Fortunately, some\nnano-virus technologies were found\nfrom a virus research institute before\nthe nuclear war. With special programs,\nthe nano-virus can kill some\nmicroorganisms, including the viruses.\n\n========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n========OBJECTIVE==========\nNo less than 140 surviving population.\n';
 		case 4:
-			return 'Before the devastating war, Amber was a\n "Tech City" whose citizens were mainly\n made up of researchers and scholars.\nFortunately, Amber didn\'t take much \ndamage in the war. Therefore, it kept\n many cutting-edge technologies and\n later became the most populated area\n in the world. To make up for the labor\n loss, a highly advanced cloning system\n was developed.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purificatio\n=\n========OBJECTIVE==========\nNo less than 160 surviving population.\n';
+			return 'Before the devastating war, Amber was\na "Tech City" whose citizens were mainly\nmade up of researchers and scholars.\nFortunately, Amber didn\'t take much\ndamage in the war. Therefore, it kept\nmany cutting-edge technologies and\nlater became the most populated area\nin the world. To make up for the labor\nloss, a highly advanced cloning system\nwas developed.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purification\n\n========OBJECTIVE==========\nNo less than 160 surviving population.\n';
 		case 5:
-			return 'Welcome to St.Petersburg, the \nnorthernmost city with a population over\n 50,000. The climate here is extremely\n cold and dry. The resources harvested \nfrom land are very limited. Therefore, \npeople created a weather control system\n to adapt to the environment.\n\n========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n=========OBJECTIVE==========\nNo less than 80 surviving population.\n';
+			return 'Welcome to St.Petersburg, the\nnorthernmost city with a population\nover 50,000. The climate here is\nextremely cold and dry. The resources\nharvested from land are very limited.\nTherefore, people created a weather\ncontrol system to adapt to the\nenvironment.\n\n========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n=========OBJECTIVE==========\nNo less than 80 surviving population.\n';
+		case 6:
+			return '        Welcome to the endless mode!!!\nUnlike the former levels, there will be\nendless waves of virus. Between two\nwaves, there will be a few buffer rounds\nand a population bonus. As game goes\non, virus would be stronger and more\ndeadly. The game will end once the total\npopulation drops below the required\namount.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone        🃟 Drought\n🃟 Organ Clone      🃟 Defensive Line\n🃟 Resurgence        🃟 Sacrifice\n🃟 Purification       🃟 Going Viral\n🃟 Blizzard               🃟 Judgement\n\n=========OBJECTIVE==========\nNo less than 50 surviving population.\n';
 		default:
 			return '';
 	}
@@ -11330,7 +11351,7 @@ var $author$project$Message$tutorial = _List_fromArray(
 		_List_fromArray(
 		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was\nlogged in the console. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist but the same\nkind can\'t, please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.']),
 		_List_fromArray(
-		['In the previous tutorial, you\'ve learned about cards and entering\nnext rounds. The colored stuff on the map is the [virus]. For details\n(spread pattern, special skills) about the virus, click the [i] button\non the right. Now, please try the button and the cards.\nOr you could just skip to next round', 'As you might have noticed, [MegaCut] clears virus on one\ntile while [cut] only clear a hexagon. Now please use [Going Viral]', 'Anti-virus (always blue) can be released by player, it exterminate\nlocal virus units and could survive three rounds\nPlease proceed to next turn to witness its spread.', 'Win or lose is decided by the remaining population after\ncertain rounds (except the endless mode). In this\ntutorial, however, you have to eliminate all the virus\non the map. Hint: remember to draw new cards and accumulate\n resource (power & economy) by clicking next round.', 'Please be aware of populationFlow between tiles. In each\nround, exchange of at most 2 population (including\npatients) occurs between neighboring tiles.\nPlease keep on fighting!', 'Great job!\nClick next turn to finish the tutorial.'])
+		['In the previous tutorial, you\'ve learned about cards and entering\nnext rounds. The colored stuff on the map is the [virus]. For details\n(spread pattern, special skills) about the virus, click the [i] button\non the right. Now, please try the button and the cards.\nOr you could just skip to next round.', 'As you might have noticed, [MegaCut] clears virus on one tile while\n[cut] only clear a hexagon. Now please use [Going Viral].', 'Anti-virus (always blue) can be released by player, it exterminate\nlocal virus units and could survive three rounds\nPlease proceed to next turn to witness its spread.', 'Win or lose is decided by the remaining population after certain\nrounds (except the endless mode). In this tutorial, however, you\nhave to eliminate all the virus on the map.\nHint: remember to draw new cards and accumulate resource\n(power & economy) by clicking next round.', 'Please be aware of populationFlow between tiles. In each round,\nexchange of at most 2 population (including patients) occurs\nbetween neighboring tiles.\nPlease keep on fighting!', 'Great job!\nClick next turn to finish the tutorial.'])
 	]);
 var $author$project$Action$createGuide = function (model) {
 	var str = A3(
@@ -12962,7 +12983,7 @@ var $author$project$GameView$renderVirusInf = function (model) {
 				inf_,
 				_Utils_ap(
 					_List_fromArray(
-						['☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population.']),
+						['☣ Unblockable: \na quarantine would fall if\npatients nearby > 3 x quarantine population.']),
 					_List_fromArray(
 						[unfold]))))) : ((model.currentLevel === 6) ? A3(
 		$elm$core$List$foldl,

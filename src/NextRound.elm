@@ -50,8 +50,8 @@ toNextRound model =
                 | currentRound = model.currentRound + 1
                 , hands = [ goingViral ]
               }
-                |> virusEvolve
                 |> clearCurrentRoundTodo
+                |> virusEvolve
                 |> powerInc
                 |> initLog
             , Cmd.none
@@ -61,8 +61,8 @@ toNextRound model =
             ( { model
                 | currentRound = model.currentRound + 1
               }
-                |> virusEvolve
                 |> clearCurrentRoundTodo
+                |> virusEvolve
                 |> powerInc
                 |> initLog
             , Cmd.none
@@ -75,8 +75,8 @@ toNextRound model =
                 , virus = virus2
                 , hands = [ cut, quarantine, megaCut, megaCut, cut, megaCut, hospital ]
               }
-                |> virusEvolve
                 |> clearCurrentRoundTodo
+                |> virusEvolve
                 |> powerInc
                 |> initLog
             , Cmd.none
@@ -111,17 +111,17 @@ toNextRound model =
 renewStatus : Model -> Model
 renewStatus model =
     model
+        |> clearCurrentRoundTodo
         |> virusEvolve
         |> powerInc
         |> initLog
         |> judgeWin
-        |> clearCurrentRoundTodo
         |> endlessVirCreator
 
 
 powerInc : Model -> Model
 powerInc model =
-    if model.power + round (model.powRatio * toFloat para.basicPowerInc) >= model.maxPower then
+    if model.power + para.basicPowerInc >= model.maxPower then
         let
             w =
                 "Maximum Power reached. " |> Warning
@@ -129,23 +129,17 @@ powerInc model =
         { model | power = model.maxPower, actionDescribe = w :: model.actionDescribe }
 
     else
-        { model | power = model.power + round (model.powRatio * toFloat para.basicPowerInc) }
+        { model | power = model.power + para.basicPowerInc }
 
 
 virusEvolve : Model -> Model
 virusEvolve model =
     let
-        vir =
-            model.virus
-
         size =
-            List.length vir.pos
+            List.length model.virus.pos
 
         rules =
-            vir.rules
-
-        frozeTile =
-            model.freezeTile
+            model.virus.rules
 
         newrules =
             List.filter (\x -> not (List.member x rules)) (List.range 2 6)
@@ -153,17 +147,8 @@ virusEvolve model =
                 |> List.append rules
                 |> List.sort
 
-        freezePos =
-            List.filter (\x -> List.member (converHextoTile x) frozeTile) vir.pos
-
-        ( virus_, av ) =
-            change vir model.av model.city
-
-        virPos =
-            List.filter (\x -> not (List.member (converHextoTile x) frozeTile)) virus_.pos ++ freezePos
-
-        virus =
-            { virus_ | pos = virPos }
+        ( virus, av ) =
+            change model.virus model.av model.city
 
         city =
             updateCity model
@@ -195,7 +180,6 @@ clearCurrentRoundTodo model =
         | todo = todo
         , roundTodoCleared = False
         , selHex = SelHexOff
-        , freezeTile = []
     }
 
 
@@ -210,7 +194,7 @@ judgeWin model =
     else if model.currentRound == 21 && model.currentLevel > 2 && model.currentLevel < 6 && sumPopulation model.city >= List.sum (getElement (model.currentLevel - 2) winCondition) then
         { model | state = Finished model.currentLevel }
 
-    else if model.currentLevel == 6 && sumPopulation model.city >= List.sum (getElement (model.currentLevel - 2) winCondition) then
+    else if model.currentLevel == 6 && sumPopulation model.city > 0 then
         model
 
     else if model.currentRound < 21 && sumPopulation model.city > 0 then
@@ -255,71 +239,57 @@ endlessVirCreator model =
         tiles2 =
             List.map
                 (\x ->
-                    { x | population = x.population + 2 }
+                    if x.population >= 10 then
+                        { x | population = round (toFloat x.population * 1.2) }
+
+                    else
+                        { x | population = x.population + 3 }
                 )
                 tiles_
 
         city2 =
             { city_ | tilesIndex = tiles2 }
     in
-    if model.currentLevel == 6 && num == 6 && List.isEmpty virus.pos then
+    if model.currentLevel == 6 && model.virus.number == 6 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = Warning ("Congrats!!\nYou've defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.") :: model.actionDescribe
+            | actionDescribe = [ Warning "Congrats!\nYou defeat one wave!\nEmergency is temporarily gone.\nAll quaratines reset." ]
             , city = city1
             , virus = virus
             , waveNum = model.waveNum + 1
         }
 
-    else if model.currentLevel == 6 && num == 5 && List.isEmpty virus.pos then
+    else if model.currentLevel == 6 && model.virus.number > 2 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = Warning ("Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.") :: model.actionDescribe
+            | actionDescribe = [ Warning ("Next wave would come in " ++ Debug.toString (model.virus.number - 2) ++ " turns\n") ]
             , virus = virus
+        }
+
+    else if model.currentLevel == 6 && model.virus.number == 2 then
+        { model
+            | actionDescribe = [ Warning "Next wave would come next\nturn.You accept refugees from other cities\n" ]
             , city = city2
-        }
-
-    else if model.currentLevel == 6 && num == 4 then
-        { model
-            | actionDescribe = Warning "Next wave: next turn\n" :: model.actionDescribe
             , virus = virus
         }
 
-    else if model.currentLevel == 6 && num == 3 then
-        { model | virus = selectVirus model.currentRound model.waveNum }
+    else if model.currentLevel == 6 && model.virus.number == 1 then
+        { model | virus = selectVirus model.currentRound }
 
     else
         model
 
 
-selectVirus : Int -> Int -> Virus
-selectVirus n wave =
+selectVirus : Int -> Virus
+selectVirus n =
     let
         pos =
-            if wave >= 3 && 1 + modBy 6 wave /= 1 + modBy 5 n then
-                getElement (1 + modBy 6 wave) endlssVir
-                    ++ getElement (1 + modBy 5 n) endlssVir
-                    |> List.foldr (++) []
-                    |> LE.unique
-
-            else if wave >= 3 && 1 + modBy 6 wave == 1 + modBy 5 n then
-                getElement (1 + modBy 6 wave) endlssVir
-                    ++ getElement (1 + modBy 6 n) endlssVir
-                    |> List.foldr (++) []
-                    |> LE.unique
-
-            else
-                getElement (1 + modBy 6 wave) endlssVir
-                    |> List.foldr (++) []
+            getElement (1 + modBy 6 n) endlssVir
+                |> List.foldr (++) []
 
         rules =
-            if wave > 6 then
-                getElement (4 + modBy 5 wave) ruleLst
-                    |> List.foldr (++) []
-
-            else
-                getElement (1 + modBy 3 n) ruleLst
-                    |> List.foldr (++) []
+            getElement (1 + modBy 4 n) ruleLst
+                |> List.foldr (++) []
     in
-    Virus rules pos 6 1 (min (0.1 + toFloat wave * 0.04) 0.66)
+    Virus rules pos 6 1 (min (0.05 + toFloat (n // 15) / 50) 0.48)
 
 
 takeOver : Model -> Model
@@ -331,22 +301,13 @@ takeOver model =
         vir =
             model.virus
 
-        lv =
-            model.currentLevel
-
-        r =
-            model.currentRound
-
-        freezeTiles =
-            model.freezeTile
-
         tilelst =
-            if lv /= 6 && r == para.tor then
-                List.filter (\x -> (x.population - x.sick) * 3 <= x.dead && not (List.member x.indice freezeTiles)) city.tilesIndex
+            if model.currentLevel /= 6 && model.currentRound == para.tor then
+                List.filter (\x -> (x.population - x.sick) * 3 <= x.dead) city.tilesIndex
                     |> List.map (\x -> x.indice)
 
-            else if lv == 6 && vir.pos /= [] && modBy para.tor r == 0 then
-                List.filter (\x -> (x.population - x.sick) * 6 <= x.dead && not (List.member x.indice freezeTiles)) city.tilesIndex
+            else if model.currentLevel == 6 && model.virus.pos /= [] && modBy para.tor model.currentRound == 0 then
+                List.filter (\x -> (x.population - x.sick) * 6 <= x.dead) city.tilesIndex
                     |> List.map (\x -> x.indice)
 
             else
@@ -366,7 +327,7 @@ takeOver model =
                 []
 
             else
-                [ Warning ("Virus outbreaks in damaged areas\n" ++ "(Dead>=" ++ Debug.toString (3 * (r // 17 + 1)) ++ "xHealthy population)\n") ]
+                [ Warning ("Virus outbreaks in damaged areas\n" ++ "(Dead>=" ++ Debug.toString (3 * (model.currentRound // 17 + 1)) ++ "xHealthy population)\n") ]
 
         vir_ =
             { vir | pos = pos }
@@ -415,11 +376,11 @@ unBlockable model =
                     model.actionDescribe ++ []
 
                 else if num == 1 then
-                    [ Warning "Emergency!!!\nPatients broke into one quarantine!!\nPatients nearby>3x(quarantine population)\n\n" ]
+                    [ Warning "Emergency!!!\nOne Quarantine down!!!\nPatients nearby>3x(quarantine population)\nPatients broke into a quarantine.\n" ]
                         ++ model.actionDescribe
 
                 else
-                    [ Warning ("Emergency!!!\nPatients broke into " ++ Debug.toString num ++ " quarantines!!\nPatients nearby>3x(quarantine population)\n") ]
+                    [ Warning ("Emergency!!!\n" ++ Debug.toString num ++ " Quarantines down!!!\nPatients nearby>3x(quarantine population)\n") ]
                         ++ model.actionDescribe
         in
         { model
@@ -450,7 +411,7 @@ mutate rule model =
     { model
         | virus = vir
         , actionDescribe =
-            [ Warning "Spread pattern mutates!!!\n(See the virus info panel)\n" ]
+            [ Warning "Spread pattern mutates!!!\n(see the virus info console)\n" ]
                 ++ model.actionDescribe
     }
 
@@ -465,7 +426,7 @@ revenge size model =
 
                 virus =
                     { virus_
-                        | kill = min (virus_.kill * 1.1) 0.66
+                        | kill = min (virus_.kill * 1.1) 0.6
                         , infect = min (virus_.infect + 1) 2
                     }
             in
@@ -473,7 +434,7 @@ revenge size model =
                 | virus = virus
                 , counter = 3
                 , actionDescribe =
-                    [ Warning "Virus become stronger!!!\n(See the virus info panel)\n" ]
+                    [ Warning "Virus become stronger!!!\n(see the virus info console)\n" ]
                         ++ model.actionDescribe
             }
 

@@ -139,7 +139,7 @@ update msg model =
                         w =
                             "Can't draw a card right now:\nmaximum number of hands (10)\nreached." |> Warning
                     in
-                    ( { model | actionDescribe = model.actionDescribe ++ [w] }, Cmd.none )
+                    ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
 
                 else
                     ( model, Cmd.none )
@@ -147,9 +147,9 @@ update msg model =
             else
                 let
                     w =
-                        Warning "Can't draw a card right now:\npower insufficient."
+                        "Can't draw a card right now:\npower insufficient." |> Warning
                 in
-                ( { model | actionDescribe = model.actionDescribe ++ [w] }, Cmd.none )
+                ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
 
         DrawCard c ->
             ( { model | hands = c :: model.hands }, Cmd.none )

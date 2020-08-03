@@ -6,11 +6,6 @@
     --deltaX: 115px;
 }
 
-@font-face {
-    font-family: "Rowdies";
-    src: url("../assets/font/Rowdies-Light.ttf");
-}
-
 #tut1 {
     position: absolute;
     left: var(--x1);

@@ -1,10 +1,5 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300&display=swap'); */
 
-@font-face {
-    font-family: "Rowdies";
-    src: url("../assets/font/Rowdies-Light.ttf");
-}
-
 p {
     font-size: 200px;
     font-family: "Rowdies";

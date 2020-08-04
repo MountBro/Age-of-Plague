@@ -39,13 +39,18 @@ https://package.elm-lang.org/packages/elm/browser/latest/Browser#document
 3 File structure
 
 - sites folder:
-
-  1. index.html & elm.js:
-     This is the main files for our projects.
-  2. css folder:
-     These are our css stylesheets.
-  3. assets:
-     These are the pics and musics embeded in the website.
+  -sites
+  |-css: all the CSS files
+  |-assets
+    |-cardPNG: all the cards pictures
+    |-font: the fonts for the websites
+    |-guide: the skeleton sketch for the game guide
+    |-icons: the icons for the game UI
+    |-sound
+      |-card: all the sounds for cards
+  |-index.html: the "main" file for our web app game
+  |-elm.js: the game core
+  |-sound.js: the game sound effects
 
 - cards folder:
   These markdown files sre descriptions for our card desgin.
@@ -59,7 +64,14 @@ of Life". Detailed transmission of this algorithm could be found in the file
 Population.elm and Virus.elm. On the other hand, visualization is mainly accomplished
 in css. For more details, please refer to the build/css folder.
 
-4 Results
+5 Website architecture
+═══════════════════════
+
+In this website, the main core of the game is designed in elm lang.
+And the main page and the card gallery are designed in elm and CSS.
+CSS files are to make them more beautiful and attractive.
+
+6 Results
 ═════════
 
   The game is accomplished and playable. It contains two tutorial levels, three formal
@@ -67,3 +79,4 @@ levels, an endless mode and a gallery for all the cards. The three formal levels
 represent three different cities. There are altogether 18 basic cards and 10 special
 cards designed for this game. The sound effects, visualization, spread of virus and
 all kinds of cards function quite well.
+

@@ -15,9 +15,11 @@ caption x y cstr text fontSize =
         , x |> String.fromFloat |> SA.x
         , y |> String.fromFloat |> SA.y
         , cstr |> SA.fill
+        , SA.xmlSpace "preserve"
         ]
         [ text |> Svg.text
         ]
+
 
 
 onClick : msg -> Svg.Attribute msg

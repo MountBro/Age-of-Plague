@@ -32,7 +32,7 @@ viewAll model =
             Document "Game" [ viewGame model ]
 
         Model.HomePage ->
-            Document "Age of Plague" [ MP.viewAll ]
+            Document "Age of Plague" MP.viewAll
 
         Model.CardPage ->
             Document "Card Gallery" VC.viewCard

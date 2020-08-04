@@ -66,6 +66,7 @@ viewGame model =
                             else
                                 []
                            )
+                        ++ renderPopulationGuide model
                         ++ (if model.currentLevel == 6 then
                                 [ endlessLevelProgress model ]
 
@@ -81,6 +82,12 @@ viewGame model =
                             else
                                 [ renderVirusSkills model, virusInfoButtonEndless ]
                            )
+                        ++ (if List.member model.currentLevel [ 3, 4, 5, 6 ] then
+                                [ livingPopulationInfo model ]
+
+                            else
+                                []
+                           )
                         ++ renderHands model
                         ++ renderHand model
                         ++ film
@@ -91,14 +98,6 @@ viewGame model =
                                 []
                            )
                     )
-                , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-                , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
-
-                --, div [] (List.map cardButton allCards)
-                , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
-                , Html.text (Debug.toString model.todo)
-                , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
-                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
                 ]
 
         Drawing ->
@@ -226,6 +225,10 @@ powerInfo model =
 
 powerIncInfo : Model -> Svg Msg
 powerIncInfo model =
+    let
+        inc =
+            round (model.powRatio * toFloat para.basicPowerInc)
+    in
     GameViewBasic.caption
         (para.pix + 30.0)
         (para.piy + 20.0)
@@ -236,7 +239,7 @@ powerIncInfo model =
         ("/"
             ++ String.fromInt model.maxPower
             ++ ", +"
-            ++ String.fromInt para.basicPowerInc
+            ++ String.fromInt inc
             ++ " per round."
         )
         10
@@ -370,6 +373,14 @@ ml2s m =
                 |> String.lines
                 |> List.reverse
 
+        Feedback str ->
+            ("⨀ " ++ str) |> String.lines |> List.reverse
+
+        CardPlayed_ c str ->
+            ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ str)
+                |> String.lines
+                |> List.reverse
+
 
 consoleText : Model -> List (Html Msg)
 consoleText model =
@@ -389,12 +400,8 @@ consoleText model =
         myLog =
             model.actionDescribe |> List.reverse
 
-        ( w, a ) =
-            List.partition isWarning myLog
-
         indexed =
-            w
-                ++ a
+            myLog
                 |> List.map ml2s
                 |> List.foldl (\x -> \y -> x ++ y) []
                 |> List.indexedMap Tuple.pair
@@ -528,6 +535,44 @@ renderGuide model =
         []
 
 
+renderPopulationGuide : Model -> List (Html Msg)
+renderPopulationGuide model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        bkg_ =
+            svg []
+                [ Svg.defs []
+                    [ sh2 ]
+                , rect
+                    [ 270 |> String.fromFloat |> SA.width
+                    , 95 |> String.fromFloat |> SA.height
+                    , cs.guideBkg |> SA.fill
+                    , 640 |> String.fromFloat |> SA.x
+                    , 300 |> String.fromFloat |> SA.y
+                    , "5" |> SA.rx
+                    , "2" |> SA.strokeWidth
+                    , cs.guideStroke |> SA.stroke
+                    , SA.filter "url(#shadow-filter)"
+                    ]
+                    []
+                ]
+    in
+    if model.currentLevel == 1 && model.currentRound == 2 then
+        bkg_
+            :: [ GameViewBasic.caption 650.0 320.0 "green" "Green figures: healthy population." 16
+               , GameViewBasic.caption 650.0 350.0 "yellow" "Yellow figures: sick population." 16
+               , GameViewBasic.caption 650.0 380.0 "red" "Red figures: dead number." 16
+               ]
+
+    else
+        []
+
+
 renderVirusInf : Model -> Html Msg
 renderVirusInf model =
     let
@@ -574,7 +619,7 @@ renderVirusInf model =
                     ++ "☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
                     ++ "☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
                     ++ "☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n"
-                    ++ "☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population."
+                    ++ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation."
                 ]
 
             else
@@ -597,7 +642,7 @@ renderVirusInf model =
 
             else if model.currentLevel == 5 then
                 inf_
-                    ++ [ "☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population." ]
+                    ++ [ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation." ]
                     ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
@@ -609,7 +654,7 @@ renderVirusInf model =
                     |> List.foldl (\x -> \y -> x ++ y) []
 
             else if model.currentLevel == 2 then
-                [ "\u{1FA78} Infect rate:\neach virus cell would infect"
+                [ "\u{1FA78} Infect rate:\neach virus cell would infect "
                     ++ infect
                     ++ " local citizens per turn.\n"
                     ++ "Theoretical death rate: "
@@ -705,62 +750,88 @@ cityInfo : Model -> String
 cityInfo model =
     case model.currentLevel of
         3 ->
-            """Atlanta is a city with plain terrain and a 
-temperate climate, which makes it highly 
-susceptible to  viruses. Fortunately, people 
-found some nano-virus technologies from 
-a virus research institute before the 
-nuclear war. With special programs, the
- nano-virus is capable of killing some
-microorganisms, including viruses.
+            """==========City 1 ATLANTA==========
+Atlanta is a city with plain terrain and a
+temperate climate, making it highly
+susceptible to viruses. Fortunately, some
+nano-virus technologies were found
+from a virus research institute before
+the nuclear war. With special programs,
+the nano-virus can kill some
+microorganisms, including the viruses.
 
-========SPECIAL CARDS==========
+==========SPECIAL CARDS==========
 🃟 Defensive Line
 🃟 Sacrifice 
 🃟 Going Viral
 🃟 Judgement
 
-========OBJECTIVE==========
+============OBJECTIVE============
 No less than 140 surviving population.
 """
 
         4 ->
-            """Before the devastating war, Amber was a
- "Tech City" whose citizens were mainly
- made up of researchers and scholars.
-Fortunately, Amber didn't take much 
+            """==========City 2 AMBER==========
+Before the devastating war, Amber was
+a "Tech City" whose citizens were mainly
+made up of researchers and scholars.
+Fortunately, Amber didn't take much
 damage in the war. Therefore, it kept
- many cutting-edge technologies and
- later became the most populated area
- in the world. To make up for the labor
- loss, a highly advanced cloning system
- was developed.
+many cutting-edge technologies and
+later became the most populated area
+in the world. To make up for the labor
+loss, a highly advanced cloning system
+was developed.
 
-========SPECIAL CARDS==========
+==========SPECIAL CARDS==========
 🃟 Mega Clone 
 🃟 Organ Clone
 🃟 Resurgence
-🃟 Purificatio
-=
-========OBJECTIVE==========
+🃟 Purification
+
+============OBJECTIVE============
 No less than 160 surviving population.
 """
 
         5 ->
-            """Welcome to St.Petersburg, the 
-northernmost city with a population over
- 50,000. The climate here is extremely
- cold and dry. The resources harvested 
-from land are very limited. Therefore, 
-people created a weather control system
- to adapt to the environment.
+            """==========City 3 St.Petersburg==========
+Welcome to St.Petersburg, the
+northernmost city with a population
+over 50,000. The climate here is
+extremely cold and dry. The resources
+harvested from land are very limited.
+Therefore, people created a weather
+control system to adapt to the
+environment.
 
-========SPECIAL CARDS==========
+==========SPECIAL CARDS==========
 🃟 Blizzard 
 🃟 Drought
 
-=========OBJECTIVE==========
+============OBJECTIVE============
 No less than 80 surviving population.
+"""
+
+        6 ->
+            """==========THE ENDLESS==========
+Unlike the former levels, there will be
+endless waves of virus. Between two
+waves, there will be a few buffer rounds
+and a population bonus. As game goes
+on, virus would be stronger and more
+deadly. The game will end once the total
+population drops below the required
+amount.
+
+==========SPECIAL CARDS==========
+🃟 Mega Clone        🃟 Drought
+🃟 Organ Clone      🃟 Defensive Line
+🃟 Resurgence        🃟 Sacrifice
+🃟 Purification       🃟 Going Viral
+🃟 Blizzard               🃟 Judgement
+
+============OBJECTIVE============
+No less than 50 surviving population.
 """
 
         _ ->
@@ -832,3 +903,69 @@ renderCityInfo model =
         , h |> String.fromFloat |> SA.height
         ]
         (bkg :: txt)
+
+
+livingPopulationInfo : Model -> Html Msg
+livingPopulationInfo model =
+    let
+        x =
+            if model.currentLevel /= 6 then
+                750.0
+
+            else
+                780.0
+
+        y =
+            if model.currentLevel /= 6 then
+                410.0
+
+            else
+                418.0
+
+        fs =
+            if model.currentLevel /= 6 then
+                15
+
+            else
+                13
+
+        living =
+            sumPopulation model.city
+
+        win =
+            case model.currentLevel of
+                3 ->
+                    140
+
+                4 ->
+                    160
+
+                5 ->
+                    80
+
+                6 ->
+                    50
+
+                _ ->
+                    0
+
+        str =
+            "Living population/objective: "
+                ++ String.fromInt living
+                ++ "/"
+                ++ String.fromInt win
+
+        color =
+            if living < (win |> toFloat |> (*) 1.2 |> floor) then
+                "#a90b08"
+
+            else if living < (win |> toFloat |> (*) 1.5 |> floor) then
+                "#fd2d29"
+
+            else if living < win * 2 then
+                "#fb8d8d"
+
+            else
+                "white"
+    in
+    GameViewBasic.caption x y color str fs

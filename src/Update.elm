@@ -28,7 +28,7 @@ update msg model =
                 ( levelInit n model |> loadTheme n, Cmd.none )
 
             else if n == 5 then
-                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 6) )
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 5) )
 
             else
                 ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
@@ -45,6 +45,7 @@ update msg model =
                         , drought
                         , hospital
                         , quarantine
+                        , cut
                         ]
 
                     else if model.currentLevel == 4 then
@@ -64,7 +65,7 @@ update msg model =
                         , goingViral
                         , judgement
                         , hospital
-                        , hospital
+                        , cut
                         ]
 
                     else
@@ -139,7 +140,7 @@ update msg model =
                         w =
                             "Can't draw a card right now:\nmaximum number of hands (10)\nreached." |> Warning
                     in
-                    ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
+                    ( { model | actionDescribe = model.actionDescribe ++ [ w ] }, Cmd.none )
 
                 else
                     ( model, Cmd.none )
@@ -147,9 +148,9 @@ update msg model =
             else
                 let
                     w =
-                        "Can't draw a card right now:\npower insufficient." |> Warning
+                        Warning "Can't draw a card right now:\npower insufficient."
                 in
-                ( { model | actionDescribe = w :: model.actionDescribe }, Cmd.none )
+                ( { model | actionDescribe = model.actionDescribe ++ [ w ] }, Cmd.none )
 
         DrawCard c ->
             ( { model | hands = c :: model.hands }, Cmd.none )
@@ -186,7 +187,7 @@ update msg model =
                         )
 
                     else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
-                        ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
+                        ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum number of\ncards (10) exceeded!!!" ] }
                         , Cmd.none
                         )
 
@@ -287,7 +288,7 @@ update msg model =
                     model.virus
 
                 ( vir, log ) =
-                    if prob <= rand then
+                    if prob >= rand then
                         ( { virus_
                             | pos = List.filter (\x -> converHextoTile x /= ( ti, tj )) virus_.pos
                           }
@@ -356,7 +357,8 @@ update msg model =
                     else
                         Feedback "Sorry, people are killed"
             in
-            ( { model | city = city_, virus = virus_ }, Cmd.none )
+            ( { model | city = city_, virus = virus_
+                      , actionDescribe = model.actionDescribe ++ [ log ]}, Cmd.none )
 
         Message.Click "home" ->
             ( { model | state = Model.HomePage }, Cmd.none )
@@ -417,4 +419,4 @@ judgeSummon card n =
             getElement num (Tuple.second summonNum)
                 |> List.foldr (+) 0
     in
-    add + n
+    add + n - 1

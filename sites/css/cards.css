@@ -1,9 +1,3 @@
-@font-face {
-    font-family: 'Rowdies';
-    src: url('../assets/font/Rowdies-Light.ttf');
-}
-
-
 /* the following root section is for parameters */
 
 :root {
@@ -363,9 +357,10 @@ p {
 }
 
 #cardsTitle {
-    top: 2%;
-    right: 2%;
+    top: 0%;
+    margin: 0px;
     font-size: 100px;
+    float: right;
 }
 
 #cardsBack {

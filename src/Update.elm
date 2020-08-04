@@ -22,23 +22,16 @@ import Virus exposing (..)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        levelInit m n =
-            Cmd.batch
-                [ Random.generate InitializeHands (cardsGenerator model m)
-                , P.playBgm (toString n)
-                ]
-    in
     case msg of
         LevelBegin n ->
             if n <= 2 then
-                ( levelInit n model |> loadTheme n, P.playBgm (toString n) )
+                ( levelInit n model |> loadTheme n, Cmd.none )
 
             else if n == 5 then
-                ( levelInit n model |> loadTheme n, levelInit 5 n )
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 5) )
 
             else
-                ( levelInit n model |> loadTheme n, levelInit 4 n )
+                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
 
         InitializeHands lc ->
             let
@@ -361,11 +354,16 @@ update msg model =
                     else
                         Feedback "Sorry, people are killed"
             in
-            ( { model | city = city_, virus = virus_
-                      , actionDescribe = model.actionDescribe ++ [ log ]}, Cmd.none )
+            ( { model
+                | city = city_
+                , virus = virus_
+                , actionDescribe = model.actionDescribe ++ [ log ]
+              }
+            , Cmd.none
+            )
 
         Message.Click "home" ->
-            ( { model | state = Model.HomePage }, Cmd.none )
+            ( { model | state = Model.HomePage }, P.pause "all" )
 
         Message.Click "card" ->
             ( { model | state = Model.CardPage }, Cmd.none )

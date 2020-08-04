@@ -5432,7 +5432,7 @@ var $author$project$Card$goingViral = A6(
 		]),
 	'Going Viral',
 	'Release the anti-virus.',
-	'Select a tile. Release the nano-viruses, \nwhich move randomly for 3 rounds and \nhave a "cut" effect.');
+	'Select a tile. Release the nano-viruses, \r\nwhich move randomly for 3 rounds and \r\nhave a "cut" effect.');
 var $author$project$Card$HumanCloneI = function (a) {
 	return {$: 'HumanCloneI', a: a};
 };
@@ -6860,6 +6860,7 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm_community$list_extra$List$Extra$count = function (predicate) {
 	return A2(
 		$elm$core$List$foldl,
@@ -7542,7 +7543,6 @@ var $author$project$Update$loadTheme = F2(
 					{theme: $author$project$ColorScheme$Minimum});
 		}
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Card$NoAction = {$: 'NoAction'};
 var $author$project$Todo$finishedEmptyQueue = _Utils_Tuple2(
 	_Utils_Tuple2(false, _List_Nil),
@@ -7869,6 +7869,7 @@ var $author$project$Parameters$para = {
 	xlp: 710.0,
 	ylp: 520.0
 };
+var $author$project$Ports$pause = _Platform_outgoingPort('pause', $elm$json$Json$Encode$string);
 var $elm$core$List$partition = F2(
 	function (pred, list) {
 		var step = F2(
@@ -8724,6 +8725,7 @@ var $author$project$Action$pickAction = function (model) {
 			model,
 			{todo: todo}));
 };
+var $author$project$Ports$playBgm = _Platform_outgoingPort('playBgm', $elm$json$Json$Encode$string);
 var $elm_community$list_extra$List$Extra$remove = F2(
 	function (x, xs) {
 		if (!xs.b) {
@@ -8764,7 +8766,6 @@ var $author$project$Update$replaceCard = F2(
 			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Ports$sendMsg = _Platform_outgoingPort('sendMsg', $elm$json$Json$Encode$string);
 var $author$project$Card$targetCardlst = _List_fromArray(
 	[$author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$sacrifice, $author$project$Card$purification, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$cellBroadcast, $author$project$Card$drought, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$lowSoundWave]);
 var $author$project$Model$toCardSelected = function (model) {
@@ -9842,23 +9843,36 @@ var $author$project$Update$update = F2(
 						$author$project$Update$loadTheme,
 						n,
 						A2($author$project$InitLevel$levelInit, n, model)),
-					$elm$core$Platform$Cmd$none) : ((n === 5) ? _Utils_Tuple2(
+					$author$project$Ports$playBgm(
+						$elm$core$Debug$toString(n))) : ((n === 5) ? _Utils_Tuple2(
 					A2(
 						$author$project$Update$loadTheme,
 						n,
 						A2($author$project$InitLevel$levelInit, n, model)),
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$InitializeHands,
-						A2($author$project$Model$cardsGenerator, model, 5))) : _Utils_Tuple2(
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								A2(
+								$elm$random$Random$generate,
+								$author$project$Message$InitializeHands,
+								A2($author$project$Model$cardsGenerator, model, 5)),
+								$author$project$Ports$playBgm(
+								$elm$core$Debug$toString(n))
+							]))) : _Utils_Tuple2(
 					A2(
 						$author$project$Update$loadTheme,
 						n,
 						A2($author$project$InitLevel$levelInit, n, model)),
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$InitializeHands,
-						A2($author$project$Model$cardsGenerator, model, 4))));
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								A2(
+								$elm$random$Random$generate,
+								$author$project$Message$InitializeHands,
+								A2($author$project$Model$cardsGenerator, model, 4)),
+								$author$project$Ports$playBgm(
+								$elm$core$Debug$toString(n))
+							]))));
 			case 'InitializeHands':
 				var lc = msg.a;
 				var specialCards = (model.currentLevel === 5) ? _List_fromArray(
@@ -10160,11 +10174,6 @@ var $author$project$Update$update = F2(
 						model,
 						{drawChance: 0, state: $author$project$Model$Playing}),
 					$elm$core$Platform$Cmd$none);
-			case 'Alert':
-				var txt = msg.a;
-				return _Utils_Tuple2(
-					model,
-					$author$project$Ports$sendMsg(txt));
 			case 'KillTileVir':
 				var _v2 = msg.a;
 				var _v3 = _v2.a;
@@ -10266,7 +10275,7 @@ var $author$project$Update$update = F2(
 							_Utils_update(
 								model,
 								{state: $author$project$Model$HomePage}),
-							$elm$core$Platform$Cmd$none);
+							$author$project$Ports$pause('all'));
 					case 'card':
 						return _Utils_Tuple2(
 							_Utils_update(
@@ -10831,10 +10840,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 			_List_fromArray(
 				[$author$project$ViewCards$backToHome])))
 	]);
-var $author$project$Message$Alert = function (a) {
-	return {$: 'Alert', a: a};
-};
-var $author$project$Message$DrawACard = {$: 'DrawACard'};
 var $author$project$ColorScheme$colorScheme = function (t) {
 	switch (t.$) {
 		case 'Minimum':
@@ -10868,7 +10873,6 @@ var $author$project$GameView$background = function (t) {
 			]),
 		_List_Nil);
 };
-var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
 var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var $elm$core$String$fromFloat = _String_fromNumber;
@@ -10896,6 +10900,7 @@ var $author$project$GameViewBasic$caption = F5(
 					$elm$svg$Svg$text(text)
 				]));
 	});
+var $author$project$Message$DrawACard = {$: 'DrawACard'};
 var $elm$svg$Svg$image = $elm$svg$Svg$trustedNode('image');
 var $author$project$GameViewBasic$onClick = function (message) {
 	return A2(
@@ -11221,13 +11226,13 @@ var $author$project$GameView$cityInfo = function (model) {
 	var _v0 = model.currentLevel;
 	switch (_v0) {
 		case 3:
-			return '==========City 1 ATLANTA==========\nAtlanta is a city with plain terrain and a\ntemperate climate, making it highly\nsusceptible to viruses. Fortunately, some\nnano-virus technologies were found\nfrom a virus research institute before\nthe nuclear war. With special programs,\nthe nano-virus can kill some\nmicroorganisms, including the viruses.\n\n==========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n============OBJECTIVE============\nNo less than 140 surviving population.\n';
+			return '==========City 1 ATLANTA==========\r\nAtlanta is a city with plain terrain and a\r\ntemperate climate, making it highly\r\nsusceptible to viruses. Fortunately, some\r\nnano-virus technologies were found\r\nfrom a virus research institute before\r\nthe nuclear war. With special programs,\r\nthe nano-virus can kill some\r\nmicroorganisms, including the viruses.\r\n\r\n==========SPECIAL CARDS==========\r\n🃟 Defensive Line\r\n🃟 Sacrifice \r\n🃟 Going Viral\r\n🃟 Judgement\r\n\r\n============OBJECTIVE============\r\nNo less than 140 surviving population.\r\n';
 		case 4:
-			return '==========City 2 AMBER==========\nBefore the devastating war, Amber was\na "Tech City" whose citizens were mainly\nmade up of researchers and scholars.\nFortunately, Amber didn\'t take much\ndamage in the war. Therefore, it kept\nmany cutting-edge technologies and\nlater became the most populated area\nin the world. To make up for the labor\nloss, a highly advanced cloning system\nwas developed.\n\n==========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purification\n\n============OBJECTIVE============\nNo less than 160 surviving population.\n';
+			return '==========City 2 AMBER==========\r\nBefore the devastating war, Amber was\r\na "Tech City" whose citizens were mainly\r\nmade up of researchers and scholars.\r\nFortunately, Amber didn\'t take much\r\ndamage in the war. Therefore, it kept\r\nmany cutting-edge technologies and\r\nlater became the most populated area\r\nin the world. To make up for the labor\r\nloss, a highly advanced cloning system\r\nwas developed.\r\n\r\n==========SPECIAL CARDS==========\r\n🃟 Mega Clone \r\n🃟 Organ Clone\r\n🃟 Resurgence\r\n🃟 Purification\r\n\r\n============OBJECTIVE============\r\nNo less than 160 surviving population.\r\n';
 		case 5:
-			return '==========City 3 St.Petersburg==========\nWelcome to St.Petersburg, the\nnorthernmost city with a population\nover 50,000. The climate here is\nextremely cold and dry. The resources\nharvested from land are very limited.\nTherefore, people created a weather\ncontrol system to adapt to the\nenvironment.\n\n==========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n============OBJECTIVE============\nNo less than 80 surviving population.\n';
+			return '==========City 3 St.Petersburg==========\r\nWelcome to St.Petersburg, the\r\nnorthernmost city with a population\r\nover 50,000. The climate here is\r\nextremely cold and dry. The resources\r\nharvested from land are very limited.\r\nTherefore, people created a weather\r\ncontrol system to adapt to the\r\nenvironment.\r\n\r\n==========SPECIAL CARDS==========\r\n🃟 Blizzard \r\n🃟 Drought\r\n\r\n============OBJECTIVE============\r\nNo less than 80 surviving population.\r\n';
 		case 6:
-			return '==========THE ENDLESS==========\nUnlike the former levels, there will be\nendless waves of virus. Between two\nwaves, there will be a few buffer rounds\nand a population bonus. As game goes\non, virus would be stronger and more\ndeadly. The game will end once the total\npopulation drops below the required\namount.\n\n==========SPECIAL CARDS==========\n🃟 Mega Clone        🃟 Drought\n🃟 Organ Clone      🃟 Defensive Line\n🃟 Resurgence        🃟 Sacrifice\n🃟 Purification       🃟 Going Viral\n🃟 Blizzard               🃟 Judgement\n\n============OBJECTIVE============\nNo less than 50 surviving population.\n';
+			return '==========THE ENDLESS==========\r\nUnlike the former levels, there will be\r\nendless waves of virus. Between two\r\nwaves, there will be a few buffer rounds\r\nand a population bonus. As game goes\r\non, virus would be stronger and more\r\ndeadly. The game will end once the total\r\npopulation drops below the required\r\namount.\r\n\r\n==========SPECIAL CARDS==========\r\n🃟 Mega Clone        🃟 Drought\r\n🃟 Organ Clone      🃟 Defensive Line\r\n🃟 Resurgence        🃟 Sacrifice\r\n🃟 Purification       🃟 Going Viral\r\n🃟 Blizzard               🃟 Judgement\r\n\r\n============OBJECTIVE============\r\nNo less than 50 surviving population.\r\n';
 		default:
 			return '';
 	}
@@ -11477,7 +11482,7 @@ var $author$project$GameView$renderFinished = F2(
 var $author$project$Message$tutorial = _List_fromArray(
 	[
 		_List_fromArray(
-		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was logged in the\nconsole. In the map, one big block is called a [tile]. Each tile\ncontains 7 hexagons [hex]. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist but the same\nkind can\'t. Please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.', 'Notice: hospital could heal 2 local patients each round. Its heal\neffect can be enhanced by [Enhanced Healing] to at most 5 cured\nper round.']),
+		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was logged in the\nconsole. In the map, one big block is called a [tile]. Each tile contains\n seven hexagons [hex]. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist but the same\nkind can\'t. Please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.', 'Notice: hospital could heal 2 local patients each round. Its heal\neffect can be enhanced by [Enhanced Healing] to at most 5 cured\nper round.']),
 		_List_fromArray(
 		['In the previous tutorial, you\'ve learned about cards and entering\nnext rounds. The colored stuff on the map is the [virus]. For details\n(spread pattern, special skills) about the virus, click the [i] button\non the right. Now, please try the button and the cards.\nOr you could just skip to next round.', 'As you might have noticed, [MegaCut] clears virus on one tile while\n[cut] only clear a hexagon. Now please use [Going Viral].', 'Anti-virus (always blue) can be released by player, it exterminate\nlocal virus units and could survive three rounds\nPlease proceed to next turn to witness its spread.', 'Win or lose is decided by the remaining population after certain\nrounds (except the endless mode). In this tutorial, however, you\nhave to eliminate all the virus on the map.\nHint: remember to draw new cards and accumulate resource\n(power & economy) by clicking next round.', 'Please be aware of populationFlow between tiles. In each round,\nexchange of at most 2 population (including patients) occurs\nbetween neighboring tiles.\nPlease keep on fighting!', 'Great job!\nClick next turn to finish the tutorial.'])
 	]);
@@ -13604,46 +13609,7 @@ var $author$project$GameView$viewGame = function (model) {
 																									model.virusInfo ? _List_fromArray(
 																										[
 																											$author$project$GameView$renderVirusInf(model)
-																										]) : _List_Nil)))))))))))))))))))),
-						$elm$html$Html$text(
-						'round ' + ($elm$core$String$fromInt(model.currentRound) + '. ')),
-						$elm$html$Html$text(
-						'sumPopulation: ' + ($elm$core$Debug$toString(
-							$author$project$Tile$sumPopulation(model.city)) + '. ')),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick(
-								$author$project$Message$Alert('Yo bro!'))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('hello')
-							])),
-						$elm$html$Html$text(
-						$elm$core$Debug$toString(model.todo)),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick(
-								$author$project$Message$LevelBegin(3))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('begin level0')
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Message$DrawACard)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Draw card')
-							]))
+																										]) : _List_Nil))))))))))))))))))))
 					]));
 		case 'Drawing':
 			return A2(

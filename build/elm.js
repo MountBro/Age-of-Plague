@@ -9837,28 +9837,32 @@ var $author$project$Update$update = F2(
 		switch (msg.$) {
 			case 'LevelBegin':
 				var n = msg.a;
-				return (n <= 2) ? _Utils_Tuple2(
-					A2(
-						$author$project$Update$loadTheme,
-						n,
-						A2($author$project$InitLevel$levelInit, n, model)),
-					$elm$core$Platform$Cmd$none) : ((n === 5) ? _Utils_Tuple2(
-					A2(
-						$author$project$Update$loadTheme,
-						n,
-						A2($author$project$InitLevel$levelInit, n, model)),
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$InitializeHands,
-						A2($author$project$Model$cardsGenerator, model, 5))) : _Utils_Tuple2(
-					A2(
-						$author$project$Update$loadTheme,
-						n,
-						A2($author$project$InitLevel$levelInit, n, model)),
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$InitializeHands,
-						A2($author$project$Model$cardsGenerator, model, 4))));
+				if (n <= 2) {
+					return _Utils_Tuple2(
+						A2(
+							$author$project$Update$loadTheme,
+							n,
+							A2($author$project$InitLevel$levelInit, n, model)),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					if (n === 5) {
+						var model_ = A2($author$project$InitLevel$levelInit, n, model);
+						return _Utils_Tuple2(
+							A2($author$project$Update$loadTheme, n, model_),
+							A2(
+								$elm$random$Random$generate,
+								$author$project$Message$InitializeHands,
+								A2($author$project$Model$cardsGenerator, model_, 5)));
+					} else {
+						var model_ = A2($author$project$InitLevel$levelInit, n, model);
+						return _Utils_Tuple2(
+							A2($author$project$Update$loadTheme, n, model_),
+							A2(
+								$elm$random$Random$generate,
+								$author$project$Message$InitializeHands,
+								A2($author$project$Model$cardsGenerator, model_, 4)));
+					}
+				}
 			case 'InitializeHands':
 				var lc = msg.a;
 				var specialCards = (model.currentLevel === 5) ? _List_fromArray(
@@ -9866,7 +9870,6 @@ var $author$project$Update$update = F2(
 					[$author$project$Card$megaClone, $author$project$Card$organClone, $author$project$Card$resurgence, $author$project$Card$purification, $author$project$Card$cut, $author$project$Card$hospital]) : ((model.currentLevel === 3) ? _List_fromArray(
 					[$author$project$Card$defenseline, $author$project$Card$sacrifice, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$hospital, $author$project$Card$cut]) : _List_fromArray(
 					[$author$project$Card$quarantine, $author$project$Card$hospital, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$coldWave])));
-				var loglc = A2($elm$core$Debug$log, 'lc', lc);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -10774,7 +10777,7 @@ var $author$project$ViewCards$viewSingleCard = F2(
 					$elm$html$Html$Attributes$class('ctnr'),
 					$elm$html$Html$Attributes$id(
 					'c' + $elm$core$String$fromInt(n + 1)),
-					A2($elm$html$Html$Attributes$attribute, 'data-info', card.describe),
+					A2($elm$html$Html$Attributes$attribute, 'data-info', card.fd),
 					A2($elm$html$Html$Attributes$style, 'background-image', 'url(./assets/cardPNG/' + (card.name + '.png)'))
 				]),
 			_List_fromArray(
@@ -10831,10 +10834,6 @@ var $author$project$ViewCards$viewCard = _List_fromArray(
 			_List_fromArray(
 				[$author$project$ViewCards$backToHome])))
 	]);
-var $author$project$Message$Alert = function (a) {
-	return {$: 'Alert', a: a};
-};
-var $author$project$Message$DrawACard = {$: 'DrawACard'};
 var $author$project$ColorScheme$colorScheme = function (t) {
 	switch (t.$) {
 		case 'Minimum':
@@ -10868,7 +10867,6 @@ var $author$project$GameView$background = function (t) {
 			]),
 		_List_Nil);
 };
-var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
 var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var $elm$core$String$fromFloat = _String_fromNumber;
@@ -10896,6 +10894,7 @@ var $author$project$GameViewBasic$caption = F5(
 					$elm$svg$Svg$text(text)
 				]));
 	});
+var $author$project$Message$DrawACard = {$: 'DrawACard'};
 var $elm$svg$Svg$image = $elm$svg$Svg$trustedNode('image');
 var $author$project$GameViewBasic$onClick = function (message) {
 	return A2(
@@ -11477,7 +11476,7 @@ var $author$project$GameView$renderFinished = F2(
 var $author$project$Message$tutorial = _List_fromArray(
 	[
 		_List_fromArray(
-		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was logged in the\nconsole. In the map, one big block is called a [tile]. Each tile\ncontains 7 hexagons [hex]. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist but the same\nkind can\'t. Please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.', 'Notice: hospital could heal 2 local patients each round. Its heal\neffect can be enhanced by [Enhanced Healing] to at most 5 cured\nper round.']),
+		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was logged in the\nconsole. In the map, one big block is called a [tile]. Each tile contains\n seven hexagons [hex]. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist but the same\nkind can\'t. Please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.', 'Notice: hospital could heal 2 local patients each round. Its heal\neffect can be enhanced by [Enhanced Healing] to at most 5 cured\nper round.']),
 		_List_fromArray(
 		['In the previous tutorial, you\'ve learned about cards and entering\nnext rounds. The colored stuff on the map is the [virus]. For details\n(spread pattern, special skills) about the virus, click the [i] button\non the right. Now, please try the button and the cards.\nOr you could just skip to next round.', 'As you might have noticed, [MegaCut] clears virus on one tile while\n[cut] only clear a hexagon. Now please use [Going Viral].', 'Anti-virus (always blue) can be released by player, it exterminate\nlocal virus units and could survive three rounds\nPlease proceed to next turn to witness its spread.', 'Win or lose is decided by the remaining population after certain\nrounds (except the endless mode). In this tutorial, however, you\nhave to eliminate all the virus on the map.\nHint: remember to draw new cards and accumulate resource\n(power & economy) by clicking next round.', 'Please be aware of populationFlow between tiles. In each round,\nexchange of at most 2 population (including patients) occurs\nbetween neighboring tiles.\nPlease keep on fighting!', 'Great job!\nClick next turn to finish the tutorial.'])
 	]);
@@ -13604,46 +13603,7 @@ var $author$project$GameView$viewGame = function (model) {
 																									model.virusInfo ? _List_fromArray(
 																										[
 																											$author$project$GameView$renderVirusInf(model)
-																										]) : _List_Nil)))))))))))))))))))),
-						$elm$html$Html$text(
-						'round ' + ($elm$core$String$fromInt(model.currentRound) + '. ')),
-						$elm$html$Html$text(
-						'sumPopulation: ' + ($elm$core$Debug$toString(
-							$author$project$Tile$sumPopulation(model.city)) + '. ')),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick(
-								$author$project$Message$Alert('Yo bro!'))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('hello')
-							])),
-						$elm$html$Html$text(
-						$elm$core$Debug$toString(model.todo)),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick(
-								$author$project$Message$LevelBegin(3))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('begin level0')
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Message$DrawACard)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Draw card')
-							]))
+																										]) : _List_Nil))))))))))))))))))))
 					]));
 		case 'Drawing':
 			return A2(

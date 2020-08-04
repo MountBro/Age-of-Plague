@@ -3,7 +3,8 @@ Table of Contents
 
 1 Architecture
 2 Elm files
-3 Introduction
+3 File struture
+4 Algorithm & Methods
 
 1 Architecture
 ══════════════
@@ -35,23 +36,34 @@ https://package.elm-lang.org/packages/elm/browser/latest/Browser#document
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-4 Introduction
-══════════════
+3 File structure
 
-The main goal of this project is to accomplish a Trading Card Game
-(TCG) with relatively high playability. The game is also expected
-to be related to the real world. Up to the moment this document
-is finished, there have been two tutorial levels, three formal
-levels and an endless mode in the game. To associate with the
-real world, which is facing the COVID-19 when designing this
-project, the game is set in a postwar world where plague
-and viruses are running wild.
+- sites folder:
+
+  1. index.html & elm.js:
+     This is the main files for our projects.
+  2. css folder:
+     These are our css stylesheets.
+  3. assets:
+     These are the pics and musics embeded in the website.
+
+- cards folder:
+  These markdown files sre descriptions for our card desgin.
 
 
-5. Theory
+4 Algorithm & Methods
+═════════════════════
+
+  In this game, the virus transmission algorithm adapts the method of "Conway's Game
+of Life". Detailed transmission of this algorithm could be found in the file
+Population.elm and Virus.elm. On the other hand, visualization is mainly accomplished
+in css. For more details, please refer to the build/css folder.
+
+4 Results
 ═════════
 
-In this game, the virus transmission algorithm adaptes there
-method of "Conway's Game of Life". Detailed transmission of
-this algorithm could be found in the file Population.elm
-and Virus.elm
+  The game is accomplished and playable. It contains two tutorial levels, three formal
+levels, an endless mode and a gallery for all the cards. The three formal levels
+represent three different cities. There are altogether 18 basic cards and 10 special
+cards designed for this game. The sound effects, visualization, spread of virus and
+all kinds of cards function quite well.

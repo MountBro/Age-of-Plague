@@ -1,6 +1,6 @@
 module GameViewButtons exposing (..)
 
-import Card exposing (..)
+
 import ColorScheme exposing (..)
 import GameViewBasic exposing (..)
 import Geometry exposing (..)

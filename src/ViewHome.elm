@@ -1,7 +1,6 @@
 module ViewHome exposing (..)
 
-import Browser exposing (..)
-import Browser.Events exposing (..)
+
 import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events as HE exposing (..)

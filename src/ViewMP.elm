@@ -1,13 +1,10 @@
 module ViewMP exposing (..)
 
-import Browser exposing (..)
-import Browser.Events exposing (onResize)
-import Dict exposing (update)
+
 import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events as HE exposing (..)
 import Message as M exposing (..)
-import Svg.Attributes exposing (display)
 
 
 viewAll =

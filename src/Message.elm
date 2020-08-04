@@ -43,12 +43,6 @@ type KeyValue
     | Character Char
 
 
-type Levelstatus
-    = Win
-    | Lost
-    | Gaming
-
-
 tutorial =
     [ [ "Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now."
       , "After you had played the card, the card's action was logged in the\nconsole. In the map, one big block is called a [tile]. Each tile contains\n seven hexagons [hex]. Now, please click next round."
@@ -66,13 +60,6 @@ tutorial =
       , "Great job!\nClick next turn to finish the tutorial."
       ]
     ]
-
-
-populationGuide =
-    [ "Green figures: healthy population."
-    , "Yellow figures: sick population."
-    , "Red figures: dead number." ]
-
 
 keyDecoder : Decode.Decoder KeyValue
 keyDecoder =
@@ -92,12 +79,3 @@ toKeyValue string =
         _ ->
             Control string
 
-
-inKey : String -> Keyin
-inKey str =
-    case str of
-        "tab" ->
-            Tab
-
-        _ ->
-            Other

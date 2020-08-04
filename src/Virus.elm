@@ -20,15 +20,6 @@ type alias AntiVirus =
     }
 
 
-initVirus : Virus
-initVirus =
-    { rules = [ 2, 3, 4 ] -- [2, 4]
-    , pos = [ ( 0, 1 ), ( 0, 2 ), ( 1, 1 ), ( 1, 2 ), ( 1, 3 ) ] -- [ ( 1, 2 ), ( 1, 3 ), ( 2, 2 ), ( 2, 4 ), ( 2, 3 ), ( 1, 4 ), ( 2, 4 ), ( 0, 3 ) ]
-    , number = 0
-    , infect = 1
-    , kill = 0
-    }
-
 
 initAntiVirus : AntiVirus
 initAntiVirus =

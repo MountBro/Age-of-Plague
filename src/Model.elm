@@ -6,7 +6,6 @@ import ColorScheme exposing (..)
 import Geometry exposing (..)
 import List.Extra as LE
 import Message exposing (..)
-import Parameters exposing (..)
 import Random exposing (Generator, list, map)
 import Random.List exposing (choose)
 import Task
@@ -101,21 +100,9 @@ type MyLog
     | CardPlayed_ Card String
 
 
-isWarning : MyLog -> Bool
-isWarning l =
-    case l of
-        Warning str ->
-            True
-
-        _ ->
-            False
-
-
 type Gamestatus
     = Playing
     | Drawing
-    | Playcard
-    | Stopped
     | HomePage
     | CardPage
     | Finished Int

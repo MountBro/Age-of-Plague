@@ -1,7 +1,6 @@
 module Population exposing (..)
 
 import Geometry exposing (..)
-import List.Extra as LE
 import Model exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)

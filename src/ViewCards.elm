@@ -1,12 +1,10 @@
 module ViewCards exposing (..)
 
-import Browser exposing (..)
-import Browser.Events exposing (..)
+
 import Card exposing (..)
 import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events as HE exposing (..)
-import List.Extra as LE exposing (..)
 import Message exposing (..)
 
 

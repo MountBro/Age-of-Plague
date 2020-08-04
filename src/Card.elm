@@ -1,7 +1,5 @@
 module Card exposing (..)
 
-import List.Extra as LE
-
 
 type alias Card =
     { selMode : Selection
@@ -52,9 +50,6 @@ type Action
     | JudgeI_Kill ( ( Int, Int ), Float )
     | EvacuateI ( Int, Int )
     | StopEVAI ( Int, Int )
-
-
--- Card -> String
 
 
 cardPiles =
@@ -293,10 +288,6 @@ toSoundUrl c =
     "./assets/sound/" ++ String.replace " " "" c.name ++ ".wav"
 
 
-
--- sites/assets/sound/EnhancedHealing.wav
-
-
 powerOverload =
     Card
         NoSel
@@ -305,10 +296,6 @@ powerOverload =
         "Power Overload"
         "+3 power, next round -3 power."
         "+3 power, next round -3 power."
-
-
-
--- "https://wx1.sbimg.cn/2020/07/19/CyowU.png"
 
 
 onStandby =

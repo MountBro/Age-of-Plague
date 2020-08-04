@@ -1,5 +1,7 @@
 module Card exposing (..)
 
+import List.Extra as LE
+
 
 type alias Card =
     { selMode : Selection
@@ -52,7 +54,6 @@ type Action
     | StopEVAI ( Int, Int )
 
 
-
 -- Card -> String
 
 
@@ -64,14 +65,12 @@ cardPilestutorial =
     [ blizzard ]
 
 
-
 cardPile3 =
     -- Atlanta
     [ defenseline
     , defenseline
     , sacrifice
     , sacrifice
-    , goingViral
     , goingViral
     , goingViral
     , judgement
@@ -90,14 +89,13 @@ cardPile3 =
     , cut
     , cut
     , cut
+    , cut
+    , cut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
     , megaCut
-    , hospital
-    , hospital
-    , hospital
     , hospital
     , hospital
     , hospital
@@ -105,13 +103,11 @@ cardPile3 =
     , quarantine
     , enhancedHealing
     , enhancedHealing
-    , enhancedHealing
     , cellBroadcast
     , warehouse
     , warmwave
     , lowSoundWave
     , compulsoryMR
-    , firstAid
     , firstAid
     , medMob
     , medMob
@@ -131,7 +127,6 @@ cardPile4 =
     , purification
     , purification
     , purification
-    , purification
     , powerOverload
     , onStandby
     , coldWave
@@ -149,20 +144,17 @@ cardPile4 =
     , megaCut
     , megaCut
     , megaCut
-    , megaCut
     , fubao
     , humanClone
     , humanClone
     , humanClone
+    , humanClone
     , hospital
     , hospital
-    , hospital
-    , quarantine
     , quarantine
     , quarantine
     , enhancedHealing
     , cellBroadcast
-    , warehouse
     , warehouse
     , warmwave
     , lowSoundWave
@@ -173,11 +165,9 @@ cardPile4 =
     ]
 
 
-cardPile5 =
+cardPile5 = -- St.P
     [ blizzard
     , blizzard
-    , blizzard
-    , drought
     , drought
     , drought
     , powerOverload
@@ -185,6 +175,7 @@ cardPile5 =
     , onStandby
     , coldWave
     , coldWave
+    , rain
     , rain
     , cut
     , cut
@@ -195,10 +186,6 @@ cardPile5 =
     , cut
     , cut
     , cut
-    , cut
-    , cut
-    , cut
-    , megaCut
     , megaCut
     , megaCut
     , megaCut
@@ -206,15 +193,10 @@ cardPile5 =
     , fubao
     , hospital
     , hospital
-    , hospital
-    , hospital
-    , hospital
-    , quarantine
     , quarantine
     , quarantine
     , enhancedHealing
     , cellBroadcast
-    , warehouse
     , warehouse
     , warmwave
     , warmwave
@@ -224,6 +206,7 @@ cardPile5 =
     , medMob
     , medMob
     ]
+
 
 allCards =
     [ powerOverload
@@ -243,6 +226,10 @@ allCards =
     , cut
     , cut
     , cut
+    , cut
+    , cut
+    , cut
+    , megaCut
     , megaCut
     , megaCut
     , megaCut
@@ -251,7 +238,6 @@ allCards =
     , megaCut
     , fubao
     , organClone
-    , humanClone
     , humanClone
     , megaClone
     , purification
@@ -262,14 +248,12 @@ allCards =
     , hospital
     , hospital
     , hospital
-    , hospital
     , quarantine
     , quarantine
     , quarantine
     , enhancedHealing
     , cellBroadcast
     , drought
-    , warehouse
     , warehouse
     , warmwave
     , goingViral
@@ -307,6 +291,10 @@ toPngUrl c =
 toSoundUrl : Card -> String
 toSoundUrl c =
     "./assets/sound/" ++ String.replace " " "" c.name ++ ".wav"
+
+
+
+-- sites/assets/sound/EnhancedHealing.wav
 
 
 powerOverload =
@@ -349,7 +337,7 @@ blizzard =
         8
         [ FreezeI, FreezeI, FreezeI ]
         "Blizzard"
-        "Freeze the viruses."
+        "Freeze the viruses for 3 rounds."
         "Freeze the spread of virus for 3 rounds."
 
 
@@ -359,8 +347,8 @@ rain =
         3
         [ PowDoubleI_Freeze 0.5, PowDoubleI_Freeze 0.5 ]
         "Rain"
-        "‧ 50% of virus freezing chance;\n‧ The power output +1."
-        "In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The power output +1 for two rounds."
+        "In two rounds,\n‧ 50% of virus freezing chance;\n‧ Power +1."
+        "In two rounds, there is a probability of 50% to freeze\nthe spread of viruses for 1 round.\nPower +1 for two rounds."
 
 
 cut =
@@ -389,7 +377,7 @@ fubao =
         1
         [ Activate996I, Activate996I ]
         "996"
-        "‧Power +1, death rate increases 5%."
+        "In two rounds, ‧Power +1;\n‧ Death rate becomes 105% in total."
         "In the next 2 rounds, +1 power, \nbut the death rate permanently rises 5%."
 
 
@@ -399,14 +387,14 @@ organClone =
         3
         [ OrganCloneI ( 0, 0 ) ]
         "Organ Clone"
-        "Each local saves one patient."
+        "Each local dead saves one patient."
         "Inside the chosen tile, each one of the dead could \nsave one infected."
 
 
 humanClone =
     Card
         TileSel
-        3
+        2
         [ HumanCloneI ( 0, 0 ) ]
         "Human Clone"
         "Double the local population."
@@ -429,8 +417,8 @@ purification =
         3
         [ PurificationI ( 0, 0 ) ]
         "Purification"
-        "Healed all local patients."
-        "Heals all patients in a tile."
+        "Heal all local patients."
+        "Heal all patients in a tile."
 
 
 sacrifice =
@@ -450,16 +438,16 @@ resurgence =
         [ ResurgenceI ( 0, 0 ) ]
         "Resurgence"
         "Restore 20% of the dead."
-        "For each tile, restore 20% of the dead."
+        "For the selected tile, restore 20% of the dead."
 
 
 defenseline =
     Card
         TileSel
-        2
+        4
         [ FreezevirusI ( 0, 0 ), FreezevirusI ( 0, 0 ) ]
         "Defensive Line"
-        "Froze virus."
+        "Freezes the virus for 2 rounds\nin a tile."
         "Freezes the spread of viruses for 2 rounds in a tile"
 
 
@@ -469,7 +457,7 @@ hospital =
         4
         [ HospitalI ( 0, 0 ) ]
         "Hospital"
-        "Hospital built."
+        "Build a hospital."
         "Puts a hospital on a tile."
 
 
@@ -479,7 +467,7 @@ quarantine =
         4
         [ QuarantineI ( 0, 0 ) ]
         "Quarantine"
-        "Build a quarantine tile."
+        "Build a quarantine."
         "Puts one tile in quarantine"
 
 
@@ -489,7 +477,7 @@ enhancedHealing =
         4
         [ EnhancedHealingI ]
         "Enhanced Healing"
-        "All hospital healing +1."
+        "All existing hospital healing effect +1\n(not card [hospital]), maximum: +3."
         "Slightly raises the efficiency of hospital healing."
 
 
@@ -500,7 +488,7 @@ cellBroadcast =
         [ AttractPeoI ( 0, 0 ), StopAttractI ( 0, 0 ) ]
         "Cell Broadcast"
         "Ban local population flow."
-        "For a tile, attract 1 population from each \n neighboring tile."
+        "For a tile, attract 1 population from each\nneighboring tile."
 
 
 drought =

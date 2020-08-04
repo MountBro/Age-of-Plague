@@ -95,16 +95,15 @@ searchValidNeighbor virlst lst =
 judgeAlive : List ( Int, Int ) -> Virus -> List ( Int, Int ) -> AntiVirus -> List ( Int, Int ) -> ( Virus, AntiVirus )
 judgeAlive lstvir vir lstanti anti lstquatile =
     let
-
         lsta =
             if anti.life > 0 then
                 List.filter (\x -> List.member (countavNeighbor x anti.pos) anti.rules && not (List.member (converHextoTile x) lstquatile)) lstanti
 
             else
                 []
+
         lstv =
             List.filter (\x -> List.member (countInfectedNeighbor x vir.pos) vir.rules && not (List.member x lsta) && not (List.member (converHextoTile x) lstquatile)) lstvir
-
     in
     ( { vir | pos = lstv }, { anti | pos = lsta, life = max (anti.life - 1) 0 } )
 
@@ -122,7 +121,7 @@ virus2 =
 
 
 virus3 =
-    Virus [ 2, 3 ] (cartesianProduct [ 1 ] [ 1, 2, 3 ] ++ cartesianProduct [ -1, 0 ] [ 1 ] ++ [ ( 0, 4 ), ( -1, 5 ) ]) 5 1 0.12
+    Virus [ 2, 3 ] (cartesianProduct [ 1 ] [ 1, 2, 3 ] ++ cartesianProduct [ -1, 0 ] [ 1 ] ++ [ ( 0, 4 ), ( -3, 8 ), ( -4, 9 ) ] ++ generateZone (converTiletoHex_ ( 0, 2 ))) 5 1 0.12
 
 
 virus4 =
@@ -138,13 +137,14 @@ virus6 =
 
 
 endlssVir =
-    [ (cartesianProduct [ -2 ] [ 4, 5 ] ++ [ ( -3, 6 ), ( -3, 7 ) ] ++ generateZone (converTiletoHex_ ( 0, 3 )))
-    , (generateZone (converTiletoHex_ ( 0, 3 )) ++ [ ( -3, 6 ), ( -3, 7 ) ])
-    , (generateZone (converTiletoHex_ ( -1, -1 )) ++ [ ( -2, -2 ), ( -3, 0 ), ( -3, -1 ) ])
-    , (generateZone (converTiletoHex_ ( 2, 3 )) ++ [ ( 4, 7 ), ( 3, 8 ), ( 2, 9 ) ])
-    , (generateZone (converTiletoHex_ ( 4, 0 )) ++ [ ( 7, 2 ), ( 7, 3 ) ])
-    , (generateZone (converTiletoHex_ ( 2, -3 )) ++ [ ( 7, -5 ), ( 5, -6 ) ])
+    [ cartesianProduct [ -2 ] [ 4, 5 ] ++ [ ( -3, 6 ), ( -3, 7 ) ] ++ generateZone (converTiletoHex_ ( 0, 3 ))
+    , generateZone (converTiletoHex_ ( 0, 3 )) ++ [ ( -3, 6 ), ( -3, 7 ) ]
+    , generateZone (converTiletoHex_ ( -1, -1 )) ++ [ ( -2, -2 ), ( -3, 0 ), ( -3, -1 ) ]
+    , generateZone (converTiletoHex_ ( 2, 3 )) ++ [ ( 4, 7 ), ( 3, 8 ), ( 2, 9 ) ]
+    , generateZone (converTiletoHex_ ( 4, 0 )) ++ [ ( 7, 2 ), ( 7, 3 ) ]
+    , generateZone (converTiletoHex_ ( 2, -3 )) ++ [ ( 7, -5 ), ( 5, -6 ) ]
     ]
 
+
 ruleLst =
-    [[2,5], [2,4], [2,3], [2,3,6], [2,3,5], [2,4,6], [2,4,5], [2,3,4] ]
+    [ [ 2, 5 ], [ 2, 4 ], [ 2, 3 ], [ 2, 3, 6 ], [ 2, 3, 5 ], [ 2, 4, 6 ], [ 2, 4, 5 ], [ 2, 3, 4 ] ]

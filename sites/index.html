@@ -15,39 +15,8 @@
     <script>
         // Here is the main elm app init
         var app = Elm.Main.init();
-        // This is the bgm music
-        var ctnr = document.getElementById("ctr");
-        ctnr.addEventListener("mouseover", playBgm);
-        document.addEventListener("mouseover", playBgm);
-
-        // The music and sounds
-        var jiujiuliu = new Audio("./assets/music/996.wav");
-        var ice = new Audio("./assets/music/ice.wav");
-
-        function playBgm() {
-            var bgm = document.getElementById("bgm");
-            bgm.volume = 0.2;
-            bgm.play();
-            document.removeEventListener('over', playBgm)
-        }
-
-        var cardSound = function(msg) {
-            switch (msg) {
-                case "996":
-                    jiujiuliu.volume = 0.8;
-                    jiujiuliu.play();
-                    break;
-
-                case "Blizzard":
-                    ice.volume = 0.5;
-                    ice.play();
-
-                default:
-                    break;
-            }
-        };
-        app.ports.cardToMusic.subscribe(cardSound);
     </script>
+    <script src="./sound.js"></script>
 </body>
 
 </html>

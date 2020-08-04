@@ -22,16 +22,23 @@ import Virus exposing (..)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        levelInit m n =
+            Cmd.batch
+                [ Random.generate InitializeHands (cardsGenerator model m)
+                , P.playBgm (toString n)
+                ]
+    in
     case msg of
         LevelBegin n ->
             if n <= 2 then
-                ( levelInit n model |> loadTheme n, Cmd.none )
+                ( levelInit n model |> loadTheme n, P.playBgm (toString n) )
 
             else if n == 5 then
-                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 6) )
+                ( levelInit n model |> loadTheme n, levelInit 5 n )
 
             else
-                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
+                ( levelInit n model |> loadTheme n, levelInit 4 n )
 
         InitializeHands lc ->
             let
@@ -274,9 +281,6 @@ update msg model =
 
         StartRound1 ->
             ( { model | state = Playing, drawChance = 0 }, Cmd.none )
-
-        Message.Alert txt ->
-            ( model, sendMsg txt )
 
         KillTileVir ( ( i, j ), prob ) rand ->
             let

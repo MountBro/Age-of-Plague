@@ -95,7 +95,6 @@ viewGame model =
                 , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
 
                 --, div [] (List.map cardButton allCards)
-                , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
                 , Html.text (Debug.toString model.todo)
                 , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
                 , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]

@@ -15,7 +15,7 @@ viewSingleCard n card =
     div
         [ class "ctnr"
         , id ("c" ++ String.fromInt (n + 1))
-        , attribute "data-info" card.describe
+        , attribute "data-info" card.fd
         , HA.style "background-image" ("url(./assets/cardPNG/" ++ card.name ++ ".png)")
         ]
         [ div [ class "story" ]

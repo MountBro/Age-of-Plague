@@ -55,3 +55,25 @@ In this game, the virus transmission algorithm adaptes there
 method of "Conway's Game of Life". Detailed transmission of
 this algorithm could be found in the file Population.elm
 and Virus.elm
+
+6. Website architecture
+═══════════════════════
+
+In this website, the main core of the game is designed in elm lang.
+And the main page and the card gallery are designed in elm and CSS.
+CSS files are to make them more beautiful and attractive.
+
+The structrue for sites folder is like the following:
+
+- sites
+|- css: all the CSS files
+|- assets
+  |- cardPNG: all the cards pictures
+  |- font: the fonts for the websites
+  |- guide: the skeleton sketch for the game guide
+  |- icons: the icons for the game UI
+  |- sound
+    |- card: all the sounds for cards
+|- index.html: the "main" file for our web app game
+|- elm.js: the game core
+|- sound.js: the game sound effects

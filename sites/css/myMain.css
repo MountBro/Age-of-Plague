@@ -1,5 +1,5 @@
 :root {
-    --x1: 280px;
+    --x1: 285px;
     --y1: 50px;
     --deltaY: 136px;
     --DeltaY: 68px;
@@ -46,4 +46,16 @@
     position: absolute;
     left: calc(var(--x1) + 2 * var(--deltaX));
     top: calc(var(--y1) + 2 * var(--DeltaY) + var(--deltaY));
+}
+
+#About {
+    color: #bdb4d5;
+    font-family: Rowdies;
+    font-size: 18px;
+    text-align: center;
+    z-index: 999;
+    /* positions */
+    position: relative;
+    display: block;
+    margin: -150px auto 0px auto;
 }

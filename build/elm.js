@@ -10185,7 +10185,7 @@ var $author$project$Update$update = F2(
 					_Utils_Tuple2(i, j));
 				var ti = _v4.a;
 				var tj = _v4.b;
-				var _v5 = (_Utils_cmp(prob, rand) < 1) ? _Utils_Tuple2(
+				var _v5 = (_Utils_cmp(prob, rand) > -1) ? _Utils_Tuple2(
 					_Utils_update(
 						virus_,
 						{

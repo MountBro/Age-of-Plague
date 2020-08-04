@@ -152,7 +152,6 @@ performAction card action model =
                     w =
                         if model.power + inc > model.maxPower then
                             [ Warning "Maximum Power reached. " ]
-
                         else
                             []
                 in

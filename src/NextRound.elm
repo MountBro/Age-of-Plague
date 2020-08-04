@@ -93,19 +93,9 @@ toNextRound model =
         else
             ( model, Cmd.none )
 
-    else if model.behavior.virusEvolve then
-        ( { model | currentRound = model.currentRound + 1, drawChance = 1 }
-            |> renewStatus
-        , Cmd.none
-        )
-
     else
         ( { model | currentRound = model.currentRound + 1, behavior = initBehavior, drawChance = 1 }
-            |> clearCurrentRoundTodo
-            |> powerInc
-            |> initLog
-            |> judgeWin
-            |> endlessVirCreator
+            |> renewStatus
         , Cmd.none
         )
 
@@ -173,16 +163,26 @@ virusEvolve model =
         city =
             updateCity model
     in
-    { model
-        | city = city
-        , virus = virus
-        , av = av
-    }
-        |> mutate newrules
-        |> takeOver
-        |> unBlockable
-        |> revenge size
-        |> horrify
+    if model.behavior.virusEvolve then
+        { model
+            | city = city
+            , virus = virus
+            , av = av
+        }
+            |> mutate newrules
+            |> takeOver
+            |> unBlockable
+            |> revenge size
+            |> horrify
+    else
+        { model
+            | city = city
+            , av = av
+        }
+            |> mutate newrules
+            |> unBlockable
+            |> revenge size
+            |> horrify
 
 
 clearCurrentRoundTodo : Model -> Model

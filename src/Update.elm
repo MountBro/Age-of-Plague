@@ -35,8 +35,6 @@ update msg model =
 
         InitializeHands lc ->
             let
-                loglc =
-                    log "lc" lc
 
                 specialCards =
                     if model.currentLevel == 5 then

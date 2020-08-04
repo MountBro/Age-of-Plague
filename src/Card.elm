@@ -52,8 +52,6 @@ type Action
     | JudgeI_Kill ( ( Int, Int ), Float )
     | EvacuateI ( Int, Int )
     | StopEVAI ( Int, Int )
-    | DroughtRecoverI
-
 
 
 -- Card -> String
@@ -497,7 +495,7 @@ drought =
     Card
         TileSel
         2
-        [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtRecoverI ]
+        [ DroughtI_Kill ( ( 0, 0 ), 0.5 ), DroughtI_Kill ( ( 0, 0 ), 0.5 ) ]
         "Drought"
         "‧ 50% to kill local virus; \n‧ Power output halves."
         "Choose a tile, in two rounds, the viruses have\n a probability of 50% to die. \nThe power output halves for two rounds."

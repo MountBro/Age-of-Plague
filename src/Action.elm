@@ -40,6 +40,9 @@ createGuide model =
             else if card == [ megaClone ] && model.currentRound == 1 then
                 str |> getElement 2
 
+            else if List.length model.hands == 4 && model.currentRound == 2 then
+                str |> getElement 7
+
             else if List.length model.hands > 0 && model.currentRound == 2 then
                 str |> getElement 3
 
@@ -604,9 +607,6 @@ performAction card action model =
                     List.append hands_ cardlst
             in
             ( { model | hands = hands } |> updateLog card, Cmd.none )
-
-        DroughtRecoverI ->
-            ( { model | powRatio = 4 * model.powRatio }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

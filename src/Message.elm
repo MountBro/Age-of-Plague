@@ -56,6 +56,7 @@ tutorial =
       , "Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round."
       , "The 'deck-like' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw."
       , "Congrats! You've finished tutorial1.\nNow please click next level to proceed to next level."
+      , "Notice: hospital could heal 2 local patients each round. Its heal\neffect can be enhanced by [Enhanced Healing] to at most 5 cured\nper round."
       ]
     , [ "In the previous tutorial, you've learned about cards and entering\nnext rounds. The colored stuff on the map is the [virus]. For details\n(spread pattern, special skills) about the virus, click the [i] button\non the right. Now, please try the button and the cards.\nOr you could just skip to next round."
       , "As you might have noticed, [MegaCut] clears virus on one tile while\n[cut] only clear a hexagon. Now please use [Going Viral]."

@@ -6860,7 +6860,6 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm_community$list_extra$List$Extra$count = function (predicate) {
 	return A2(
 		$elm$core$List$foldl,
@@ -7543,6 +7542,7 @@ var $author$project$Update$loadTheme = F2(
 					{theme: $author$project$ColorScheme$Minimum});
 		}
 	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Card$NoAction = {$: 'NoAction'};
 var $author$project$Todo$finishedEmptyQueue = _Utils_Tuple2(
 	_Utils_Tuple2(false, _List_Nil),
@@ -7869,7 +7869,6 @@ var $author$project$Parameters$para = {
 	xlp: 710.0,
 	ylp: 520.0
 };
-var $author$project$Ports$pause = _Platform_outgoingPort('pause', $elm$json$Json$Encode$string);
 var $elm$core$List$partition = F2(
 	function (pred, list) {
 		var step = F2(
@@ -8725,7 +8724,6 @@ var $author$project$Action$pickAction = function (model) {
 			model,
 			{todo: todo}));
 };
-var $author$project$Ports$playBgm = _Platform_outgoingPort('playBgm', $elm$json$Json$Encode$string);
 var $elm_community$list_extra$List$Extra$remove = F2(
 	function (x, xs) {
 		if (!xs.b) {
@@ -9843,36 +9841,23 @@ var $author$project$Update$update = F2(
 						$author$project$Update$loadTheme,
 						n,
 						A2($author$project$InitLevel$levelInit, n, model)),
-					$author$project$Ports$playBgm(
-						$elm$core$Debug$toString(n))) : ((n === 5) ? _Utils_Tuple2(
+					$elm$core$Platform$Cmd$none) : ((n === 5) ? _Utils_Tuple2(
 					A2(
 						$author$project$Update$loadTheme,
 						n,
 						A2($author$project$InitLevel$levelInit, n, model)),
-					$elm$core$Platform$Cmd$batch(
-						_List_fromArray(
-							[
-								A2(
-								$elm$random$Random$generate,
-								$author$project$Message$InitializeHands,
-								A2($author$project$Model$cardsGenerator, model, 5)),
-								$author$project$Ports$playBgm(
-								$elm$core$Debug$toString(n))
-							]))) : _Utils_Tuple2(
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$InitializeHands,
+						A2($author$project$Model$cardsGenerator, model, 5))) : _Utils_Tuple2(
 					A2(
 						$author$project$Update$loadTheme,
 						n,
 						A2($author$project$InitLevel$levelInit, n, model)),
-					$elm$core$Platform$Cmd$batch(
-						_List_fromArray(
-							[
-								A2(
-								$elm$random$Random$generate,
-								$author$project$Message$InitializeHands,
-								A2($author$project$Model$cardsGenerator, model, 4)),
-								$author$project$Ports$playBgm(
-								$elm$core$Debug$toString(n))
-							]))));
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Message$InitializeHands,
+						A2($author$project$Model$cardsGenerator, model, 4))));
 			case 'InitializeHands':
 				var lc = msg.a;
 				var specialCards = (model.currentLevel === 5) ? _List_fromArray(
@@ -10275,7 +10260,7 @@ var $author$project$Update$update = F2(
 							_Utils_update(
 								model,
 								{state: $author$project$Model$HomePage}),
-							$author$project$Ports$pause('all'));
+							$elm$core$Platform$Cmd$none);
 					case 'card':
 						return _Utils_Tuple2(
 							_Utils_update(

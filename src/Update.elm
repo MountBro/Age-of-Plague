@@ -363,7 +363,7 @@ update msg model =
             )
 
         Message.Click "home" ->
-            ( { model | state = Model.HomePage }, P.pause "all" )
+            ( { model | state = Model.HomePage }, Cmd.none )
 
         Message.Click "card" ->
             ( { model | state = Model.CardPage }, Cmd.none )

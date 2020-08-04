@@ -84,8 +84,8 @@ var cardSound = function(msg) {
             break;
 
         case "Blizzard":
-            ice.volume = 0.8;
-            ice.play();
+            blizzard.volume = 0.8;
+            blizzard.play();
             break;
 
         case "MegaClone":
@@ -119,17 +119,17 @@ var cardSound = function(msg) {
             break;
 
         case "Cut":
-            cut.volume = 0.8;
+            cut.volume = 1;
             cut.play();
             break;
 
         case "MegaCut":
-            megaCut.volume = 0.8;
+            megaCut.volume = 1;
             megaCut.play();
             break;
 
         case "OrganClone":
-            organClone.volume = 0.8;
+            organClone.volume = 0.4;
             organClone.play();
             break;
 
@@ -139,17 +139,17 @@ var cardSound = function(msg) {
             break;
 
         case "Purification":
-            purification.volume = 0.8;
+            purification.volume = 0.3;
             purification.play();
             break;
 
         case "Sacrifice":
-            sacrifice.volume = 0.8;
+            sacrifice.volume = 0.4;
             sacrifice.play();
             break;
 
         case "Resurgence":
-            resurgence.volume = 0.8;
+            resurgence.volume = 0.1;
             resurgence.play();
             break;
 
@@ -189,12 +189,12 @@ var cardSound = function(msg) {
             break;
 
         case "GoingViral":
-            goingVirus.volume = 0.8;
+            goingVirus.volume = 0.6;
             goingVirus.play();
             break;
 
         case "Judgement":
-            judgement.volume = 0.8;
+            judgement.volume = 0.3;
             judgement.play();
             break;
 
@@ -204,7 +204,7 @@ var cardSound = function(msg) {
             break;
 
         case "CompulsoryMedicalRecruitment":
-            compulsorymedical.volume = 0.8;
+            compulsorymedical.volume = 0.2;
             compulsorymedical.play();
             break;
 
@@ -214,7 +214,7 @@ var cardSound = function(msg) {
             break;
 
         case "MedicalMobilization":
-            medicalMobalization.volume = 0.8;
+            medicalMobalization.volume = 0.2;
             medicalMobalization.play();
             break;
 

@@ -24,7 +24,6 @@ type Msg
     | MouseOverCard Int
     | ReplaceCard Card Card
     | StartRound1
-    | Alert String
     | KillTileVir ( ( Int, Int ), Float ) Float
     | JudgeVirPeo ( ( Int, Int ), Float ) Float
     | Click String

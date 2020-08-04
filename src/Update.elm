@@ -282,9 +282,6 @@ update msg model =
         StartRound1 ->
             ( { model | state = Playing, drawChance = 0 }, Cmd.none )
 
-        Message.Alert txt ->
-            ( model, sendMsg txt )
-
         KillTileVir ( ( i, j ), prob ) rand ->
             let
                 ( ti, tj ) =
@@ -363,8 +360,13 @@ update msg model =
                     else
                         Feedback "Sorry, people are killed"
             in
-            ( { model | city = city_, virus = virus_
-                      , actionDescribe = model.actionDescribe ++ [ log ]}, Cmd.none )
+            ( { model
+                | city = city_
+                , virus = virus_
+                , actionDescribe = model.actionDescribe ++ [ log ]
+              }
+            , Cmd.none
+            )
 
         Message.Click "home" ->
             ( { model | state = Model.HomePage }, Cmd.none )

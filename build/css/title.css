@@ -1,0 +1,29 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300&display=swap'); */
+
+p {
+    font-size: 200px;
+    font-family: "Rowdies";
+}
+
+#t1 {
+    font-size: 120px;
+    margin: auto 0px;
+    position: relative;
+    left: -10%;
+    color: #cedbde;
+    font-family: "Rowdies";
+    padding: 0px;
+}
+
+#t2 {
+    font-size: 60px;
+    margin: -10px auto;
+    position: relative;
+    top: -2%;
+    left: 17%;
+    text-align: center;
+    width: 50%;
+    color: #cedbde;
+    font-family: "Rowdies";
+    z-index: 999;
+}

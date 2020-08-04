@@ -40,6 +40,9 @@ createGuide model =
             else if card == [ megaClone ] && model.currentRound == 1 then
                 str |> getElement 2
 
+            else if List.length model.hands == 4 && model.currentRound == 2 then
+                str |> getElement 7
+
             else if List.length model.hands > 0 && model.currentRound == 2 then
                 str |> getElement 3
 
@@ -119,8 +122,15 @@ performAction card action model =
 
                         ml =
                             CardPlayed_ card str
+
+                        w =
+                            if model.power + inc > model.maxPower then
+                                [ Warning "Maximum Power reached. " ]
+
+                            else
+                                []
                     in
-                    ( { model | actionDescribe = model.actionDescribe ++ [ ml ] } |> updateLog card, Cmd.none )
+                    ( { model | power = min (model.power + inc) model.maxPower, actionDescribe = model.actionDescribe ++ w ++ [ ml ] } |> updateLog card, Cmd.none )
 
                 else if inc < 0 then
                     let
@@ -131,14 +141,24 @@ performAction card action model =
 
                         ml =
                             CardPlayed_ card str
+
+                        acd =
+                            List.filter (\x -> x /= (Warning "Maximum Power reached. ")) model.actionDescribe
                     in
-                    ( { model | actionDescribe = model.actionDescribe ++ [ ml ] } |> updateLog card, Cmd.none )
+                    ( { model | power = max (model.power + inc) 0, actionDescribe = acd ++ [ ml ] } |> updateLog card, Cmd.none )
 
                 else
                     ( model, Cmd.none )
 
             else
-                ( { model | power = model.power + inc } |> updateLog card, Cmd.none )
+                let
+                    w =
+                        if model.power + inc > model.maxPower then
+                            [ Warning "Maximum Power reached. " ]
+                        else
+                            []
+                in
+                ( { model | power = min (model.power + inc) model.maxPower, actionDescribe = model.actionDescribe ++ w } |> updateLog card, Cmd.none )
 
         Freeze prob ->
             ( model |> updateLog card, Random.generate (FreezeRet prob) (Random.float 0 1) )
@@ -207,7 +227,7 @@ performAction card action model =
                     model.virus
 
                 dr =
-                    min (1.024 * virus_.kill) 0.6
+                    min (virus_.kill * 1.024) 0.7
 
                 virus =
                     { virus_ | kill = dr }
@@ -317,6 +337,9 @@ performAction card action model =
 
         SacrificeI ( i, j ) ->
             let
+                pos =
+                    converHextoTile ( i, j )
+
                 virus_ =
                     model.virus
 
@@ -324,7 +347,7 @@ performAction card action model =
                     virus_.pos
 
                 virpos =
-                    List.filter (\x -> converHextoTile x /= ( i, j )) virpos_
+                    List.filter (\x -> converHextoTile x /= pos) virpos_
 
                 city_ =
                     model.city
@@ -411,7 +434,7 @@ performAction card action model =
                                     if x.indice == ( ti, tj ) then
                                         { x
                                             | hos = True
-                                            , cureEff = 5
+                                            , cureEff = 2
                                         }
 
                                     else
@@ -457,7 +480,7 @@ performAction card action model =
                             List.map
                                 (\x ->
                                     if x.hos then
-                                        { x | cureEff = x.cureEff + 1 }
+                                        { x | cureEff = min (x.cureEff + 1) 5 }
 
                                     else
                                         x

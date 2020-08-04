@@ -56,8 +56,9 @@ toNextRound model =
                 |> powerInc
             , Cmd.none
             )
+
         else if model.currentRound == 2 && model.selHex == SelHexOn then
-            (model, Cmd.none)
+            ( model, Cmd.none )
 
         else if model.currentRound < 4 && model.hands == [] then
             ( { model
@@ -123,15 +124,22 @@ renewStatus model =
 
 powerInc : Model -> Model
 powerInc model =
-    if model.power + round (model.powRatio * toFloat para.basicPowerInc) >= model.maxPower then
+    if model.power + round (model.powRatio * toFloat para.basicPowerInc) > model.maxPower then
         let
             w =
                 "Maximum Power reached. " |> Warning
         in
-        { model | power = model.maxPower, actionDescribe = model.actionDescribe ++ [w] }
+        { model
+            | power = model.maxPower
+            , powRatio = 1.0
+            , actionDescribe = model.actionDescribe ++ [ w ]
+        }
 
     else
-        { model | power = model.power + round (model.powRatio * toFloat para.basicPowerInc) }
+        { model
+            | power = model.power + round (model.powRatio * toFloat para.basicPowerInc)
+            , powRatio = 1.0
+        }
 
 
 virusEvolve : Model -> Model
@@ -269,7 +277,7 @@ endlessVirCreator model =
     in
     if model.currentLevel == 6 && num == 6 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = model.actionDescribe ++ [ Warning ("Congrats!!\nYou've defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone.") ]
+            | actionDescribe = model.actionDescribe ++ [ Warning "Congrats!!\nYou've defeated one wave!\nAll quaratines reset.\nEmergency is temporarily gone." ]
             , city = city1
             , virus = virus
             , waveNum = model.waveNum + 1
@@ -277,7 +285,7 @@ endlessVirCreator model =
 
     else if model.currentLevel == 6 && num == 5 && List.isEmpty virus.pos then
         { model
-            | actionDescribe = model.actionDescribe ++ [ Warning ("Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city.") ]
+            | actionDescribe = model.actionDescribe ++ [ Warning "Next wave: 2 rounds\nPopulation bonus:\nSome refugees join your city." ]
             , virus = virus
             , city = city2
         }
@@ -316,7 +324,7 @@ selectVirus n wave =
                     |> List.foldr (++) []
 
         rules =
-            if wave > 8 then
+            if wave > 5 then
                 getElement (4 + modBy 5 wave) ruleLst
                     |> List.foldr (++) []
 
@@ -378,7 +386,7 @@ takeOver model =
     in
     { model
         | virus = vir_
-        , actionDescribe =model.actionDescribe ++ message
+        , actionDescribe = model.actionDescribe ++ message
     }
 
 
@@ -440,15 +448,15 @@ mutate rule model =
         vir_ =
             model.virus
 
-        (vir,msg) =
+        ( vir, msg ) =
             if model.currentRound == para.mr && model.currentLevel < 6 then
-                ({ vir_ | rules = rule }, [ Warning "Virus skill Mutate activated!\nSpread pattern mutates!!!" ])
+                ( { vir_ | rules = rule }, [ Warning "Virus skill Mutate activated!\nSpread pattern mutates!!!" ] )
 
             else if model.currentLevel == 6 && modBy para.mr model.currentRound == 0 && List.length vir_.pos < 4 then
-                ({ vir_ | rules = rule }, [ Warning "Virus skill Mutate activated!\nSpread pattern mutates!!!" ])
+                ( { vir_ | rules = rule }, [ Warning "Virus skill Mutate activated!\nSpread pattern mutates!!!" ] )
 
             else
-                (vir_, [])
+                ( vir_, [] )
     in
     { model
         | virus = vir
@@ -459,7 +467,7 @@ mutate rule model =
 
 revenge : Int -> Model -> Model
 revenge size model =
-    if model.currentLevel == 3 then
+    if model.currentLevel == 3 && model.virus.kill < 0.66 then
         if size > List.length model.virus.pos && model.counter == 0 then
             let
                 virus_ =
@@ -467,7 +475,7 @@ revenge size model =
 
                 virus =
                     { virus_
-                        | kill = min (virus_.kill * 1.1) 0.66
+                        | kill = virus_.kill * 1.1
                         , infect = min (virus_.infect + 1) 2
                     }
             in

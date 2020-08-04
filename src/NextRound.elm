@@ -319,7 +319,7 @@ selectVirus n wave =
                     |> List.foldr (++) []
 
         rules =
-            if wave > 8 then
+            if wave > 5 then
                 getElement (4 + modBy 5 wave) ruleLst
                     |> List.foldr (++) []
 
@@ -462,7 +462,7 @@ mutate rule model =
 
 revenge : Int -> Model -> Model
 revenge size model =
-    if model.currentLevel == 3 then
+    if model.currentLevel == 3 && model.virus.kill < 0.66 then
         if size > List.length model.virus.pos && model.counter == 0 then
             let
                 virus_ =
@@ -470,7 +470,7 @@ revenge size model =
 
                 virus =
                     { virus_
-                        | kill = min (virus_.kill * 1.1) 0.66
+                        | kill = virus_.kill * 1.1
                         , infect = min (virus_.infect + 1) 2
                     }
             in

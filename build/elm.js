@@ -5248,7 +5248,7 @@ var $author$project$Card$blizzard = A6(
 	_List_fromArray(
 		[$author$project$Card$FreezeI, $author$project$Card$FreezeI, $author$project$Card$FreezeI]),
 	'Blizzard',
-	'Freeze the viruses.',
+	'Freeze the viruses for 3 rounds.',
 	'Freeze the spread of virus for 3 rounds.');
 var $author$project$Card$AttractPeoI = function (a) {
 	return {$: 'AttractPeoI', a: a};
@@ -5270,7 +5270,7 @@ var $author$project$Card$cellBroadcast = A6(
 		]),
 	'Cell Broadcast',
 	'Ban local population flow.',
-	'For a tile, attract 1 population from each \n neighboring tile.');
+	'For a tile, attract 1 population from each\nneighboring tile.');
 var $author$project$Card$Freeze = function (a) {
 	return {$: 'Freeze', a: a};
 };
@@ -5347,7 +5347,7 @@ var $author$project$Card$defenseline = A6(
 			_Utils_Tuple2(0, 0))
 		]),
 	'Defensive Line',
-	'Froze virus.',
+	'Freezes the virus for 2 rounds\nin a tile.',
 	'Freezes the spread of viruses for 2 rounds in a tile');
 var $author$project$Card$DroughtI_Kill = function (a) {
 	return {$: 'DroughtI_Kill', a: a};
@@ -5380,7 +5380,7 @@ var $author$project$Card$enhancedHealing = A6(
 	_List_fromArray(
 		[$author$project$Card$EnhancedHealingI]),
 	'Enhanced Healing',
-	'All hospital healing +1.',
+	'All existing hospital healing effect +1\n(not card [hospital]), maximum: +3.',
 	'Slightly raises the efficiency of hospital healing.');
 var $author$project$Card$HospitalI = function (a) {
 	return {$: 'HospitalI', a: a};
@@ -5395,7 +5395,7 @@ var $author$project$Card$hospital = A6(
 			_Utils_Tuple2(0, 0))
 		]),
 	'Hospital',
-	'Hospital built.',
+	'Build a hospital.',
 	'Puts a hospital on a tile.');
 var $author$project$Card$firstAid = A6(
 	$author$project$Card$Card,
@@ -5418,7 +5418,7 @@ var $author$project$Card$fubao = A6(
 	_List_fromArray(
 		[$author$project$Card$Activate996I, $author$project$Card$Activate996I]),
 	'996',
-	'‧Power +1, death rate increases 5%.',
+	'In two rounds, ‧Power +1;\n‧ Death rate becomes 105% in total.',
 	'In the next 2 rounds, +1 power, \nbut the death rate permanently rises 5%.');
 var $author$project$Card$AVI = function (a) {
 	return {$: 'AVI', a: a};
@@ -5537,7 +5537,7 @@ var $author$project$Card$organClone = A6(
 			_Utils_Tuple2(0, 0))
 		]),
 	'Organ Clone',
-	'Each local saves one patient.',
+	'Each local dead saves one patient.',
 	'Inside the chosen tile, each one of the dead could \nsave one infected.');
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -5567,8 +5567,8 @@ var $author$project$Card$purification = A6(
 			_Utils_Tuple2(0, 0))
 		]),
 	'Purification',
-	'Healed all local patients.',
-	'Heals all patients in a tile.');
+	'Heal all local patients.',
+	'Heal all patients in a tile.');
 var $author$project$Card$QuarantineI = function (a) {
 	return {$: 'QuarantineI', a: a};
 };
@@ -5582,7 +5582,7 @@ var $author$project$Card$quarantine = A6(
 			_Utils_Tuple2(0, 0))
 		]),
 	'Quarantine',
-	'Build a quarantine tile.',
+	'Build a quarantine.',
 	'Puts one tile in quarantine');
 var $author$project$Card$PowDoubleI_Freeze = function (a) {
 	return {$: 'PowDoubleI_Freeze', a: a};
@@ -5597,8 +5597,8 @@ var $author$project$Card$rain = A6(
 			$author$project$Card$PowDoubleI_Freeze(0.5)
 		]),
 	'Rain',
-	'‧ 50% of virus freezing chance;\n‧ The power output +1.',
-	'In two rounds, there is a probability of 50% to \nfreeze the spread of viruses for 1 round. The power output +1 for two rounds.');
+	'In two rounds,\n‧ 50% of virus freezing chance;\n‧ Power +1.',
+	'In two rounds, there is a probability of 50% to freeze\nthe spread of viruses for 1 round.\nPower +1 for two rounds.');
 var $author$project$Card$ResurgenceI = function (a) {
 	return {$: 'ResurgenceI', a: a};
 };
@@ -5613,7 +5613,7 @@ var $author$project$Card$resurgence = A6(
 		]),
 	'Resurgence',
 	'Restore 20% of the dead.',
-	'For each tile, restore 20% of the dead.');
+	'For the selected tile, restore 20% of the dead.');
 var $author$project$Card$SacrificeI = function (a) {
 	return {$: 'SacrificeI', a: a};
 };
@@ -5662,7 +5662,7 @@ var $author$project$Card$warmwave = A6(
 	'25% of chance to kill the local virus.',
 	'Choose a tile. There is a probability of 25% \nto kill the viruses.');
 var $author$project$Card$allCards = _List_fromArray(
-	[$author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$blizzard, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$humanClone, $author$project$Card$megaClone, $author$project$Card$purification, $author$project$Card$sacrifice, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$drought, $author$project$Card$warehouse, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob]);
+	[$author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$blizzard, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$organClone, $author$project$Card$humanClone, $author$project$Card$megaClone, $author$project$Card$purification, $author$project$Card$sacrifice, $author$project$Card$resurgence, $author$project$Card$defenseline, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$drought, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob]);
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Virus$initAntiVirus = {
 	life: 0,
@@ -5954,6 +5954,11 @@ var $author$project$Geometry$cartesianProduct = F2(
 				},
 				l1));
 	});
+var $author$project$Geometry$converTiletoHex_ = function (_v0) {
+	var i = _v0.a;
+	var j = _v0.b;
+	return _Utils_Tuple2((2 * i) - j, i + (3 * j));
+};
 var $author$project$Virus$virus3 = A5(
 	$author$project$Virus$Virus,
 	_List_fromArray(
@@ -5972,19 +5977,19 @@ var $author$project$Virus$virus3 = A5(
 					[-1, 0]),
 				_List_fromArray(
 					[1])),
-			_List_fromArray(
-				[
-					_Utils_Tuple2(0, 4),
-					_Utils_Tuple2(-1, 5)
-				]))),
+			_Utils_ap(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(0, 4),
+						_Utils_Tuple2(-3, 8),
+						_Utils_Tuple2(-4, 9)
+					]),
+				$author$project$Geometry$generateZone(
+					$author$project$Geometry$converTiletoHex_(
+						_Utils_Tuple2(0, 2)))))),
 	5,
 	1,
 	0.12);
-var $author$project$Geometry$converTiletoHex_ = function (_v0) {
-	var i = _v0.a;
-	var j = _v0.b;
-	return _Utils_Tuple2((2 * i) - j, i + (3 * j));
-};
 var $author$project$Virus$virus4 = A5(
 	$author$project$Virus$Virus,
 	_List_fromArray(
@@ -7283,7 +7288,7 @@ var $author$project$Update$judgeSummon = F2(
 			$elm$core$Basics$add,
 			0,
 			A2($author$project$Geometry$getElement, num, $author$project$Card$summonNum.b));
-		return add + n;
+		return (add + n) - 1;
 	});
 var $author$project$ColorScheme$Minimum = {$: 'Minimum'};
 var $author$project$Model$mapLevel = _List_fromArray(
@@ -7451,11 +7456,11 @@ var $author$project$Model$initlevelmap = function (level) {
 	return A2($author$project$Tile$initCity, 20, citytile);
 };
 var $author$project$Card$cardPile3 = _List_fromArray(
-	[$author$project$Card$defenseline, $author$project$Card$defenseline, $author$project$Card$sacrifice, $author$project$Card$sacrifice, $author$project$Card$goingViral, $author$project$Card$goingViral, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$judgement, $author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$enhancedHealing, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$firstAid, $author$project$Card$medMob, $author$project$Card$medMob, $author$project$Card$medMob]);
+	[$author$project$Card$defenseline, $author$project$Card$defenseline, $author$project$Card$sacrifice, $author$project$Card$sacrifice, $author$project$Card$goingViral, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$judgement, $author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob, $author$project$Card$medMob, $author$project$Card$medMob]);
 var $author$project$Card$cardPile4 = _List_fromArray(
-	[$author$project$Card$megaClone, $author$project$Card$megaClone, $author$project$Card$organClone, $author$project$Card$organClone, $author$project$Card$organClone, $author$project$Card$resurgence, $author$project$Card$resurgence, $author$project$Card$purification, $author$project$Card$purification, $author$project$Card$purification, $author$project$Card$purification, $author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$humanClone, $author$project$Card$humanClone, $author$project$Card$humanClone, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$warehouse, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob, $author$project$Card$medMob]);
+	[$author$project$Card$megaClone, $author$project$Card$megaClone, $author$project$Card$organClone, $author$project$Card$organClone, $author$project$Card$organClone, $author$project$Card$resurgence, $author$project$Card$resurgence, $author$project$Card$purification, $author$project$Card$purification, $author$project$Card$purification, $author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$humanClone, $author$project$Card$humanClone, $author$project$Card$humanClone, $author$project$Card$humanClone, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob, $author$project$Card$medMob]);
 var $author$project$Card$cardPile5 = _List_fromArray(
-	[$author$project$Card$blizzard, $author$project$Card$blizzard, $author$project$Card$blizzard, $author$project$Card$drought, $author$project$Card$drought, $author$project$Card$drought, $author$project$Card$powerOverload, $author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$coldWave, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$warehouse, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$warmwave, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob, $author$project$Card$medMob]);
+	[$author$project$Card$blizzard, $author$project$Card$blizzard, $author$project$Card$drought, $author$project$Card$drought, $author$project$Card$powerOverload, $author$project$Card$powerOverload, $author$project$Card$onStandby, $author$project$Card$coldWave, $author$project$Card$coldWave, $author$project$Card$rain, $author$project$Card$rain, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$megaCut, $author$project$Card$fubao, $author$project$Card$hospital, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$quarantine, $author$project$Card$enhancedHealing, $author$project$Card$cellBroadcast, $author$project$Card$warehouse, $author$project$Card$warmwave, $author$project$Card$warmwave, $author$project$Card$lowSoundWave, $author$project$Card$compulsoryMR, $author$project$Card$firstAid, $author$project$Card$medMob, $author$project$Card$medMob]);
 var $author$project$Card$cardPilestutorial = _List_fromArray(
 	[$author$project$Card$blizzard]);
 var $author$project$Card$cardPiles = _List_fromArray(
@@ -8043,7 +8048,7 @@ var $author$project$Action$performAction = F3(
 												acd,
 												_List_fromArray(
 													[ml])),
-											power: A2($elm$core$Basics$min, model.power + inc, model.maxPower)
+											power: A2($elm$core$Basics$max, model.power + inc, 0)
 										})),
 								$elm$core$Platform$Cmd$none);
 						} else {
@@ -8173,7 +8178,7 @@ var $author$project$Action$performAction = F3(
 					$elm$core$Platform$Cmd$none);
 			case 'Activate996I':
 				var virus_ = model.virus;
-				var dr = A2($elm$core$Basics$min, 1.024 * virus_.kill, 0.6);
+				var dr = A2($elm$core$Basics$min, virus_.kill * 1.024, 0.7);
 				var virus = _Utils_update(
 					virus_,
 					{kill: dr});
@@ -8399,7 +8404,7 @@ var $author$project$Action$performAction = F3(
 									x.indice,
 									_Utils_Tuple2(ti, tj)) ? _Utils_update(
 									x,
-									{cureEff: 5, hos: true}) : x;
+									{cureEff: 2, hos: true}) : x;
 							},
 							city_.tilesIndex)
 					});
@@ -8452,7 +8457,9 @@ var $author$project$Action$performAction = F3(
 							function (x) {
 								return x.hos ? _Utils_update(
 									x,
-									{cureEff: x.cureEff + 1}) : x;
+									{
+										cureEff: A2($elm$core$Basics$min, x.cureEff + 1, 5)
+									}) : x;
 							},
 							city_.tilesIndex)
 					});
@@ -8904,7 +8911,7 @@ var $author$project$Virus$ruleLst = _List_fromArray(
 	]);
 var $author$project$NextRound$selectVirus = F2(
 	function (n, wave) {
-		var rules = (wave > 8) ? A3(
+		var rules = (wave > 5) ? A3(
 			$elm$core$List$foldr,
 			$elm$core$Basics$append,
 			_List_Nil,
@@ -9292,7 +9299,7 @@ var $author$project$NextRound$mutate = F2(
 	});
 var $author$project$NextRound$revenge = F2(
 	function (size, model) {
-		if (model.currentLevel === 3) {
+		if ((model.currentLevel === 3) && (model.virus.kill < 0.66)) {
 			if ((_Utils_cmp(
 				size,
 				$elm$core$List$length(model.virus.pos)) > 0) && (!model.counter)) {
@@ -9301,7 +9308,7 @@ var $author$project$NextRound$revenge = F2(
 					virus_,
 					{
 						infect: A2($elm$core$Basics$min, virus_.infect + 1, 2),
-						kill: A2($elm$core$Basics$min, virus_.kill * 1.1, 0.66)
+						kill: virus_.kill * 1.1
 					});
 				return _Utils_update(
 					model,
@@ -9851,7 +9858,7 @@ var $author$project$Update$update = F2(
 					A2(
 						$elm$random$Random$generate,
 						$author$project$Message$InitializeHands,
-						A2($author$project$Model$cardsGenerator, model, 6))) : _Utils_Tuple2(
+						A2($author$project$Model$cardsGenerator, model, 5))) : _Utils_Tuple2(
 					A2(
 						$author$project$Update$loadTheme,
 						n,
@@ -9863,9 +9870,9 @@ var $author$project$Update$update = F2(
 			case 'InitializeHands':
 				var lc = msg.a;
 				var specialCards = (model.currentLevel === 5) ? _List_fromArray(
-					[$author$project$Card$blizzard, $author$project$Card$drought, $author$project$Card$hospital, $author$project$Card$quarantine]) : ((model.currentLevel === 4) ? _List_fromArray(
+					[$author$project$Card$blizzard, $author$project$Card$drought, $author$project$Card$hospital, $author$project$Card$quarantine, $author$project$Card$cut]) : ((model.currentLevel === 4) ? _List_fromArray(
 					[$author$project$Card$megaClone, $author$project$Card$organClone, $author$project$Card$resurgence, $author$project$Card$purification, $author$project$Card$cut, $author$project$Card$hospital]) : ((model.currentLevel === 3) ? _List_fromArray(
-					[$author$project$Card$defenseline, $author$project$Card$sacrifice, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$hospital, $author$project$Card$hospital]) : _List_fromArray(
+					[$author$project$Card$defenseline, $author$project$Card$sacrifice, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$hospital, $author$project$Card$cut]) : _List_fromArray(
 					[$author$project$Card$quarantine, $author$project$Card$hospital, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$coldWave])));
 				var loglc = A2($elm$core$Debug$log, 'lc', lc);
 				return _Utils_Tuple2(
@@ -10251,7 +10258,14 @@ var $author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{city: city_, virus: virus_}),
+						{
+							actionDescribe: _Utils_ap(
+								model.actionDescribe,
+								_List_fromArray(
+									[log])),
+							city: city_,
+							virus: virus_
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'Click':
 				switch (msg.a) {
@@ -11215,13 +11229,13 @@ var $author$project$GameView$cityInfo = function (model) {
 	var _v0 = model.currentLevel;
 	switch (_v0) {
 		case 3:
-			return 'Atlanta is a city with plain terrain and a \ntemperate climate, making it highly\nsusceptible to viruses. Fortunately, some\nnano-virus technologies were found\nfrom a virus research institute before\nthe nuclear war. With special programs,\nthe nano-virus can kill some\nmicroorganisms, including the viruses.\n\n========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n========OBJECTIVE==========\nNo less than 140 surviving population.\n';
+			return '==========City 1 ATLANTA==========\nAtlanta is a city with plain terrain and a\ntemperate climate, making it highly\nsusceptible to viruses. Fortunately, some\nnano-virus technologies were found\nfrom a virus research institute before\nthe nuclear war. With special programs,\nthe nano-virus can kill some\nmicroorganisms, including the viruses.\n\n==========SPECIAL CARDS==========\n🃟 Defensive Line\n🃟 Sacrifice \n🃟 Going Viral\n🃟 Judgement\n\n============OBJECTIVE============\nNo less than 140 surviving population.\n';
 		case 4:
-			return 'Before the devastating war, Amber was\na "Tech City" whose citizens were mainly\nmade up of researchers and scholars.\nFortunately, Amber didn\'t take much\ndamage in the war. Therefore, it kept\nmany cutting-edge technologies and\nlater became the most populated area\nin the world. To make up for the labor\nloss, a highly advanced cloning system\nwas developed.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purification\n\n========OBJECTIVE==========\nNo less than 160 surviving population.\n';
+			return '==========City 2 AMBER==========\nBefore the devastating war, Amber was\na "Tech City" whose citizens were mainly\nmade up of researchers and scholars.\nFortunately, Amber didn\'t take much\ndamage in the war. Therefore, it kept\nmany cutting-edge technologies and\nlater became the most populated area\nin the world. To make up for the labor\nloss, a highly advanced cloning system\nwas developed.\n\n==========SPECIAL CARDS==========\n🃟 Mega Clone \n🃟 Organ Clone\n🃟 Resurgence\n🃟 Purification\n\n============OBJECTIVE============\nNo less than 160 surviving population.\n';
 		case 5:
-			return 'Welcome to St.Petersburg, the\nnorthernmost city with a population\nover 50,000. The climate here is\nextremely cold and dry. The resources\nharvested from land are very limited.\nTherefore, people created a weather\ncontrol system to adapt to the\nenvironment.\n\n========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n=========OBJECTIVE==========\nNo less than 80 surviving population.\n';
+			return '==========City 3 St.Petersburg==========\nWelcome to St.Petersburg, the\nnorthernmost city with a population\nover 50,000. The climate here is\nextremely cold and dry. The resources\nharvested from land are very limited.\nTherefore, people created a weather\ncontrol system to adapt to the\nenvironment.\n\n==========SPECIAL CARDS==========\n🃟 Blizzard \n🃟 Drought\n\n============OBJECTIVE============\nNo less than 80 surviving population.\n';
 		case 6:
-			return '        Welcome to the endless mode!!!\nUnlike the former levels, there will be\nendless waves of virus. Between two\nwaves, there will be a few buffer rounds\nand a population bonus. As game goes\non, virus would be stronger and more\ndeadly. The game will end once the total\npopulation drops below the required\namount.\n\n========SPECIAL CARDS==========\n🃟 Mega Clone        🃟 Drought\n🃟 Organ Clone      🃟 Defensive Line\n🃟 Resurgence        🃟 Sacrifice\n🃟 Purification       🃟 Going Viral\n🃟 Blizzard               🃟 Judgement\n\n=========OBJECTIVE==========\nNo less than 50 surviving population.\n';
+			return '==========THE ENDLESS==========\nUnlike the former levels, there will be\nendless waves of virus. Between two\nwaves, there will be a few buffer rounds\nand a population bonus. As game goes\non, virus would be stronger and more\ndeadly. The game will end once the total\npopulation drops below the required\namount.\n\n==========SPECIAL CARDS==========\n🃟 Mega Clone        🃟 Drought\n🃟 Organ Clone      🃟 Defensive Line\n🃟 Resurgence        🃟 Sacrifice\n🃟 Purification       🃟 Going Viral\n🃟 Blizzard               🃟 Judgement\n\n============OBJECTIVE============\nNo less than 50 surviving population.\n';
 		default:
 			return '';
 	}
@@ -11471,7 +11485,7 @@ var $author$project$GameView$renderFinished = F2(
 var $author$project$Message$tutorial = _List_fromArray(
 	[
 		_List_fromArray(
-		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was\nlogged in the console. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist but the same\nkind can\'t, please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.']),
+		['Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now.', 'After you had played the card, the card\'s action was logged in the\nconsole. In the map, one big block is called a [tile]. Each tile\ncontains 7 hexagons [hex]. Now, please click next round.', 'On a tile, different kinds of buildings could co-exist but the same\nkind can\'t. Please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map.', 'Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round.', 'The \'deck-like\' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw.', 'Congrats! You\'ve finished tutorial1.\nNow please click next level to proceed to next level.']),
 		_List_fromArray(
 		['In the previous tutorial, you\'ve learned about cards and entering\nnext rounds. The colored stuff on the map is the [virus]. For details\n(spread pattern, special skills) about the virus, click the [i] button\non the right. Now, please try the button and the cards.\nOr you could just skip to next round.', 'As you might have noticed, [MegaCut] clears virus on one tile while\n[cut] only clear a hexagon. Now please use [Going Viral].', 'Anti-virus (always blue) can be released by player, it exterminate\nlocal virus units and could survive three rounds\nPlease proceed to next turn to witness its spread.', 'Win or lose is decided by the remaining population after certain\nrounds (except the endless mode). In this tutorial, however, you\nhave to eliminate all the virus on the map.\nHint: remember to draw new cards and accumulate resource\n(power & economy) by clicking next round.', 'Please be aware of populationFlow between tiles. In each round,\nexchange of at most 2 population (including patients) occurs\nbetween neighboring tiles.\nPlease keep on fighting!', 'Great job!\nClick next turn to finish the tutorial.'])
 	]);

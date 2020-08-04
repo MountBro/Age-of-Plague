@@ -51,8 +51,8 @@ type Levelstatus
 
 tutorial =
     [ [ "Welcome to the tutorial!\nIn the tutorial, you will learn the basics about this game.\nPlease click on the card [MegaClone] now."
-      , "After you had played the card, the card's action was\nlogged in the console. Now, please click next round."
-      , "On a tile, different kinds of buildings could co-exist but the same\nkind can't, please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map."
+      , "After you had played the card, the card's action was logged in the\nconsole. In the map, one big block is called a [tile]. Each tile\ncontains 7 hexagons [hex]. Now, please click next round."
+      , "On a tile, different kinds of buildings could co-exist but the same\nkind can't. Please try the rest of the cards. Concerning the\npopulation distribution, please notice the numbers on the map."
       , "Costs of card is demonstrated on the card. Playing a\ncard costs your power. Your power is displayed on the left\ntop corner. It would accumulate over turns.\nNow, please click next round."
       , "The 'deck-like' pattern on the left down corner\nis draw button. Drawing a card costs 2 power.\nNow please click draw."
       , "Congrats! You've finished tutorial1.\nNow please click next level to proceed to next level."

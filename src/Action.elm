@@ -142,7 +142,7 @@ performAction card action model =
                         acd =
                             List.filter (\x -> x /= (Warning "Maximum Power reached. ")) model.actionDescribe
                     in
-                    ( { model | power = min (model.power + inc) model.maxPower, actionDescribe = acd ++ [ ml ] } |> updateLog card, Cmd.none )
+                    ( { model | power = max (model.power + inc) 0, actionDescribe = acd ++ [ ml ] } |> updateLog card, Cmd.none )
 
                 else
                     ( model, Cmd.none )
@@ -225,7 +225,7 @@ performAction card action model =
                     model.virus
 
                 dr =
-                    min (1.024 * virus_.kill) 0.6
+                    min (virus_.kill * 1.024) 0.7
 
                 virus =
                     { virus_ | kill = dr }
@@ -432,7 +432,7 @@ performAction card action model =
                                     if x.indice == ( ti, tj ) then
                                         { x
                                             | hos = True
-                                            , cureEff = 5
+                                            , cureEff = 2
                                         }
 
                                     else
@@ -478,7 +478,7 @@ performAction card action model =
                             List.map
                                 (\x ->
                                     if x.hos then
-                                        { x | cureEff = x.cureEff + 1 }
+                                        { x | cureEff = min (x.cureEff + 1) 5 }
 
                                     else
                                         x

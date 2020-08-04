@@ -758,7 +758,8 @@ cityInfo : Model -> String
 cityInfo model =
     case model.currentLevel of
         3 ->
-            """Atlanta is a city with plain terrain and a 
+            """==========City 1 ATLANTA==========
+Atlanta is a city with plain terrain and a
 temperate climate, making it highly
 susceptible to viruses. Fortunately, some
 nano-virus technologies were found
@@ -767,18 +768,19 @@ the nuclear war. With special programs,
 the nano-virus can kill some
 microorganisms, including the viruses.
 
-========SPECIAL CARDS==========
+==========SPECIAL CARDS==========
 🃟 Defensive Line
 🃟 Sacrifice 
 🃟 Going Viral
 🃟 Judgement
 
-========OBJECTIVE==========
+============OBJECTIVE============
 No less than 140 surviving population.
 """
 
         4 ->
-            """Before the devastating war, Amber was
+            """==========City 2 AMBER==========
+Before the devastating war, Amber was
 a "Tech City" whose citizens were mainly
 made up of researchers and scholars.
 Fortunately, Amber didn't take much
@@ -789,18 +791,19 @@ in the world. To make up for the labor
 loss, a highly advanced cloning system
 was developed.
 
-========SPECIAL CARDS==========
+==========SPECIAL CARDS==========
 🃟 Mega Clone 
 🃟 Organ Clone
 🃟 Resurgence
 🃟 Purification
 
-========OBJECTIVE==========
+============OBJECTIVE============
 No less than 160 surviving population.
 """
 
         5 ->
-            """Welcome to St.Petersburg, the
+            """==========City 3 St.Petersburg==========
+Welcome to St.Petersburg, the
 northernmost city with a population
 over 50,000. The climate here is
 extremely cold and dry. The resources
@@ -809,16 +812,16 @@ Therefore, people created a weather
 control system to adapt to the
 environment.
 
-========SPECIAL CARDS==========
+==========SPECIAL CARDS==========
 🃟 Blizzard 
 🃟 Drought
 
-=========OBJECTIVE==========
+============OBJECTIVE============
 No less than 80 surviving population.
 """
 
         6 ->
-            """        Welcome to the endless mode!!!
+            """==========THE ENDLESS==========
 Unlike the former levels, there will be
 endless waves of virus. Between two
 waves, there will be a few buffer rounds
@@ -828,14 +831,14 @@ deadly. The game will end once the total
 population drops below the required
 amount.
 
-========SPECIAL CARDS==========
+==========SPECIAL CARDS==========
 🃟 Mega Clone        🃟 Drought
 🃟 Organ Clone      🃟 Defensive Line
 🃟 Resurgence        🃟 Sacrifice
 🃟 Purification       🃟 Going Viral
 🃟 Blizzard               🃟 Judgement
 
-=========OBJECTIVE==========
+============OBJECTIVE============
 No less than 50 surviving population.
 """
 

@@ -288,7 +288,7 @@ update msg model =
                     model.virus
 
                 ( vir, log ) =
-                    if prob <= rand then
+                    if prob >= rand then
                         ( { virus_
                             | pos = List.filter (\x -> converHextoTile x /= ( ti, tj )) virus_.pos
                           }

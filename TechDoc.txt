@@ -1,0 +1,69 @@
+Table of Contents
+─────────────────
+
+1 Architecture
+2 Elm files
+3 File struture
+4 Algorithm & Methods
+
+1 Architecture
+══════════════
+
+  The game is written mainly in elm, with the aid of css for styling and
+  js for handling sound effects.  `Browser.document' is used for the
+  overall architecture ( see [package Browser] for more details).
+
+
+[package Browser]
+https://package.elm-lang.org/packages/elm/browser/latest/Browser#document
+
+
+2 Elm files
+═══════════
+
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   file name                                                                                                                                                          functionality
+   Action.elm, InitLevel.elm, NextRound.elm, RegionFill.elm, Todo.elm, Update.elm                                                                                     funtions for update
+   Card.elm                                                                                                                                                           definition of card
+   ColorScheme.elm, GameViewBasic.elm, GameViewButtons, GameViewCards, GameView.elm, GameViewTiles.elm, SvgDefs.elm, SvgSrc.elm, ViewCards.elm, View.elm, ViewMP.elm  view
+   Geometry.elm, Parameters                                                                                                                                           geometric definitions and parameters
+   Main.elm                                                                                                                                                           declaration of architecture
+   Message.elm                                                                                                                                                        messages
+   Model.elm                                                                                                                                                          model
+   Population.elm, Tile.elm, Map.elm                                                                                                                                  types and functions for city
+   Ports.elm                                                                                                                                                          Interaction with js
+   Virus.elm                                                                                                                                                          types and functions for virus
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+3 File structure
+
+- sites folder:
+
+  1. index.html & elm.js:
+     This is the main files for our projects.
+  2. css folder:
+     These are our css stylesheets.
+  3. assets:
+     These are the pics and musics embeded in the website.
+
+- cards folder:
+  These markdown files sre descriptions for our card desgin.
+
+
+4 Algorithm & Methods
+═════════════════════
+
+  In this game, the virus transmission algorithm adapts the method of "Conway's Game
+of Life". Detailed transmission of this algorithm could be found in the file
+Population.elm and Virus.elm. On the other hand, visualization is mainly accomplished
+in css. For more details, please refer to the build/css folder.
+
+4 Results
+═════════
+
+  The game is accomplished and playable. It contains two tutorial levels, three formal
+levels, an endless mode and a gallery for all the cards. The three formal levels
+represent three different cities. There are altogether 18 basic cards and 10 special
+cards designed for this game. The sound effects, visualization, spread of virus and
+all kinds of cards function quite well.

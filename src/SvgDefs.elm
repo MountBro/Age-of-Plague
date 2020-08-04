@@ -16,14 +16,6 @@ sh1 =
             , SA.dy "20"
             ]
             []
-
-        --, Svg.feColorMatrix
-        --    [ SA.result "matrixOut"
-        --    , SA.in_ "offOut"
-        --    , SA.type_ "matrix"
-        --    , SA.values "0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"
-        --    ]
-        --    []
         , Svg.feGaussianBlur
             [ SA.result "blurOut"
             , SA.in_ "offOut"

@@ -15,33 +15,9 @@ type alias Pos =
     ( Float, Float )
 
 
-norm : Pos -> Float
-norm ( x, y ) =
-    sqrt (x ^ 2 + y ^ 2)
-
-
-dotProduct : Pos -> Pos -> Float
-dotProduct ( x1, y1 ) ( x2, y2 ) =
-    x1 * x2 + y1 * y2
-
-
-stretch : Float -> Pos -> Pos
-stretch t ( x, y ) =
-    ( t * x, t * y )
-
-
 posAdd : Pos -> Pos -> Pos
 posAdd ( x1, y1 ) ( x2, y2 ) =
     ( x1 + x2, y1 + y2 )
-
-
-posDiff : Pos -> Pos -> Pos
-posDiff ( x1, y1 ) ( x2, y2 ) =
-    ( x2 - x1, y2 - y1 )
-
-
-
--- the center position of hex (i, j)
 
 
 rc : HexIndice -> Pos
@@ -57,10 +33,6 @@ rc ( i, j ) =
             a * toFloat i * sqrt 3 |> negate
     in
     ( x, y )
-
-
-
--- convert Xlist and Ylist to points in svg.polygon
 
 
 polyPoint : List Float -> List Float -> String

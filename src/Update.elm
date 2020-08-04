@@ -28,15 +28,21 @@ update msg model =
                 ( levelInit n model |> loadTheme n, Cmd.none )
 
             else if n == 5 then
-                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 6) )
+                let
+                    model_ =
+                        levelInit n model
+                in
+                ( model_ |> loadTheme n, Random.generate InitializeHands (cardsGenerator model_ 5) )
 
             else
-                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
+                let
+                    model_ =
+                        levelInit n model
+                in
+                ( model_ |> loadTheme n, Random.generate InitializeHands (cardsGenerator model_ 4) )
 
         InitializeHands lc ->
             let
-                loglc =
-                    log "lc" lc
 
                 specialCards =
                     if model.currentLevel == 5 then
@@ -45,6 +51,7 @@ update msg model =
                         , drought
                         , hospital
                         , quarantine
+                        , cut
                         ]
 
                     else if model.currentLevel == 4 then
@@ -64,7 +71,7 @@ update msg model =
                         , goingViral
                         , judgement
                         , hospital
-                        , hospital
+                        , cut
                         ]
 
                     else
@@ -94,10 +101,6 @@ update msg model =
             ( { model | screenSize = ( toFloat w, toFloat h ) }, Cmd.none )
 
         Tick newTime ->
-            let
-                log1 =
-                    log "selhex" model.selHex
-            in
             if not (finished model.todo) then
                 model |> pickAction |> mFillRegion
 
@@ -124,24 +127,36 @@ update msg model =
             toNextRound model
 
         DrawACard ->
-            if model.currentLevel == 1 && para.ecoThreshold <= model.economy then
-                if model.currentRound == 3 && model.todo == [] then
-                    ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
+            if model.power >= para.drawCardCost then
+                if model.currentLevel == 1 then
+                    if model.currentRound == 3 && model.todo == [] then
+                        ( { model | power = model.power - para.drawCardCost }, Random.generate DrawCard (cardGenerator model) )
+
+                    else
+                        ( model, Cmd.none )
+
+                else if model.currentLevel == 2 && model.currentRound <= 4 then
+                    ( model, Cmd.none )
+
+                else if List.length model.hands < 10 then
+                    ( { model | power = model.power - para.drawCardCost }, Random.generate DrawCard (cardGenerator model) )
+
+                else if List.length model.hands >= 10 then
+                    let
+                        w =
+                            "Can't draw a card right now:\nmaximum number of hands (10)\nreached." |> Warning
+                    in
+                    ( { model | actionDescribe = model.actionDescribe ++ [ w ] }, Cmd.none )
 
                 else
                     ( model, Cmd.none )
 
-            else if model.currentLevel == 2 && model.currentRound <= 4 then
-                ( model, Cmd.none )
-
-            else if para.ecoThreshold <= model.economy && List.length model.hands < 10 then
-                ( { model | economy = model.economy - para.ecoThreshold }, Random.generate DrawCard (cardGenerator model) )
-
-            else if para.ecoThreshold <= model.economy && List.length model.hands >= 10 then
-                ( { model | actionDescribe = [ Warning "Can't Draw, too many hand cards ( > 10 )!!!\n" ] ++ model.actionDescribe }, Cmd.none )
-
             else
-                ( model, Cmd.none )
+                let
+                    w =
+                        Warning "Can't draw a card right now:\npower insufficient."
+                in
+                ( { model | actionDescribe = model.actionDescribe ++ [ w ] }, Cmd.none )
 
         DrawCard c ->
             ( { model | hands = c :: model.hands }, Cmd.none )
@@ -151,41 +166,64 @@ update msg model =
                 card.cost
                     <= model.power
             then
-                if List.member card targetCardlst then
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , selHex = SelHexOn
-                        , power = model.power - card.cost
-                        , hands = LE.remove card model.hands
-                        , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
-                      }
-                    , P.cardToMusic "ice"
-                    )
+                if model.selHex == SelHexOff then
+                    if List.member card targetCardlst then
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , selHex = SelHexOn
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                            , actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ card.name ++ "]:\nPlease select a hexagon") ]
+                          }
+                        , card.name
+                            |> String.replace " " ""
+                            |> P.cardToMusic
+                        )
 
-                else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
-                        , power = model.power - card.cost
-                        , hands = LE.remove card model.hands
-                      }
-                    , Cmd.none
-                    )
+                    else if judgeSummon card (List.length model.hands) <= 10 && List.member card (Tuple.first summonNum) then
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                          }
+                        , card.name
+                            |> String.replace " " ""
+                            |> P.cardToMusic
+                        )
 
-                else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
-                    ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum hand cards ( > 10 )!!!" ] }
-                    , Cmd.none
-                    )
+                    else if judgeSummon card (List.length model.hands) > 10 && List.member card (Tuple.first summonNum) then
+                        ( { model | actionDescribe = model.actionDescribe ++ [ Warning "Can't summon, maximum number of\ncards (10) exceeded!!!" ] }
+                        , Cmd.none
+                        )
+
+                    else
+                        ( { model
+                            | cardSelected = SelectCard card
+                            , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
+                            , power = model.power - card.cost
+                            , hands = LE.remove card model.hands
+                          }
+                        , card.name
+                            |> String.replace " " ""
+                            |> P.cardToMusic
+                        )
 
                 else
-                    ( { model
-                        | cardSelected = SelectCard card
-                        , todo = model.todo ++ [ ( ( True, card.action ), card ) ]
-                        , power = model.power - card.cost
-                        , hands = LE.remove card model.hands
-                      }
-                    , Cmd.none
-                    )
+                    let
+                        mc =
+                            toCardSelected model
+                    in
+                    case mc of
+                        Just c ->
+                            ( { model
+                                | actionDescribe = model.actionDescribe ++ [ Warning ("[" ++ c.name ++ "]:\nPlease select a hexagon") ]
+                              }
+                            , Cmd.none
+                            )
+
+                        Nothing ->
+                            ( model, Cmd.none )
 
             else
                 ( { model
@@ -203,21 +241,25 @@ update msg model =
 
                 behavior =
                     { behavior_ | virusEvolve = not (rand < prob) }
+
+                log =
+                    if rand < prob then
+                        [ Feedback "Luckily, the virus is frozen." ]
+
+                    else
+                        [ Feedback "Oops, the virus isn't frozen." ]
             in
-            ( { model | behavior = behavior }, Cmd.none )
+            ( { model
+                | behavior = behavior
+                , actionDescribe = model.actionDescribe ++ log
+              }
+            , Cmd.none
+            )
 
         SelectHex i j ->
-            let
-                log1 =
-                    log "i, j: " ( i, j )
-            in
             ( { model | selectedHex = ( i, j ) }, Cmd.none )
 
         MouseOver i j ->
-            let
-                log2 =
-                    log "over" ( i, j )
-            in
             ( { model | mouseOver = ( i, j ) }, Cmd.none )
 
         MouseOverCard n ->
@@ -240,13 +282,6 @@ update msg model =
         StartRound1 ->
             ( { model | state = Playing, drawChance = 0 }, Cmd.none )
 
-        HosInvalid ->
-            ( { model
-                | power = model.power + 4
-              }
-            , Cmd.none
-            )
-
         Message.Alert txt ->
             ( model, sendMsg txt )
 
@@ -258,16 +293,23 @@ update msg model =
                 virus_ =
                     model.virus
 
-                vir =
-                    if prob <= rand then
-                        { virus_
+                ( vir, log ) =
+                    if prob >= rand then
+                        ( { virus_
                             | pos = List.filter (\x -> converHextoTile x /= ( ti, tj )) virus_.pos
-                        }
+                          }
+                        , Feedback "Luckily, virus is killed"
+                        )
 
                     else
-                        virus_
+                        ( virus_, Feedback "Oops, nothing changed" )
             in
-            ( { model | virus = vir }, Cmd.none )
+            ( { model
+                | virus = vir
+                , actionDescribe = model.actionDescribe ++ [ log ]
+              }
+            , Cmd.none
+            )
 
         JudgeVirPeo ( ( i, j ), prob ) rand ->
             let
@@ -313,8 +355,16 @@ update msg model =
 
                     else
                         city
+
+                log =
+                    if prob <= rand then
+                        Feedback "Luckily, virus is killed"
+
+                    else
+                        Feedback "Sorry, people are killed"
             in
-            ( { model | city = city_, virus = virus_ }, Cmd.none )
+            ( { model | city = city_, virus = virus_
+                      , actionDescribe = model.actionDescribe ++ [ log ]}, Cmd.none )
 
         Message.Click "home" ->
             ( { model | state = Model.HomePage }, Cmd.none )
@@ -375,4 +425,4 @@ judgeSummon card n =
             getElement num (Tuple.second summonNum)
                 |> List.foldr (+) 0
     in
-    add + n
+    add + n - 1

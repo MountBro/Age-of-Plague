@@ -256,16 +256,6 @@ renderInitCards model =
 renderHands : Model -> List (Html Msg)
 renderHands model =
     let
-        digitNum =
-            if model.economy < 10 then
-                1.0
-
-            else if model.economy < 100 then
-                2.0
-
-            else
-                3.0
-
         hands =
             model.hands |> List.sortWith cardComparison
 

@@ -1,7 +1,6 @@
 module Population exposing (..)
 
 import Geometry exposing (..)
-import List.Extra as LE
 import Model exposing (..)
 import Tile exposing (..)
 import Virus exposing (..)
@@ -17,7 +16,11 @@ virusKill vir city =
             sumSick city
 
         estimateddeath =
-            max (floor (toFloat patients * dr)) 1
+            if dr /= 0 then
+                max (floor (toFloat patients * dr)) 1
+
+            else
+                0
 
         ( lstInfected1, lstInfectedn ) =
             city.tilesIndex
@@ -31,11 +34,14 @@ virusKill vir city =
                 |> List.sum
 
         ( dn, d1 ) =
-            if deathn >= estimateddeath then
+            if deathn >= estimateddeath && estimateddeath > 0 then
                 ( List.take (floor ((toFloat deathn / toFloat estimateddeath) * toFloat (List.length lstInfectedn))) lstInfectedn, [] )
 
-            else
+            else if deathn < estimateddeath then
                 ( lstInfectedn, List.take (estimateddeath - deathn) lstInfected1 )
+
+            else
+                ([],[])
 
         tilesIndex =
             List.map
@@ -198,8 +204,8 @@ updateCity model =
 
         city_ =
             virusKill vir city
-                |> infect vir
                 |> pFlow model
+                |> infect vir
     in
     city_
 

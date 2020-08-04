@@ -9,7 +9,6 @@ import GameViewCards exposing (..)
 import GameViewTiles exposing (..)
 import Geometry exposing (..)
 import Html exposing (..)
-import Html.Events as HE exposing (..)
 import Message exposing (..)
 import Model exposing (..)
 import Parameters exposing (..)
@@ -66,6 +65,7 @@ viewGame model =
                             else
                                 []
                            )
+                        ++ renderPopulationGuide model
                         ++ (if model.currentLevel == 6 then
                                 [ endlessLevelProgress model ]
 
@@ -81,6 +81,12 @@ viewGame model =
                             else
                                 [ renderVirusSkills model, virusInfoButtonEndless ]
                            )
+                        ++ (if List.member model.currentLevel [ 3, 4, 5, 6 ] then
+                                [ livingPopulationInfo model ]
+
+                            else
+                                []
+                           )
                         ++ renderHands model
                         ++ renderHand model
                         ++ film
@@ -91,15 +97,6 @@ viewGame model =
                                 []
                            )
                     )
-                , Html.text ("round " ++ String.fromInt model.currentRound ++ ". ")
-                , Html.text ("sumPopulation: " ++ Debug.toString (sumPopulation model.city) ++ ". ")
-
-                --, div [] (List.map cardButton allCards)
-                , Html.button [ HE.onClick (Message.Alert "Yo bro!") ] [ Html.text "hello" ]
-                , Html.text (Debug.toString model.todo)
-                , Html.button [ HE.onClick (LevelBegin 3) ] [ Html.text "begin level0" ]
-                , Html.button [ HE.onClick DrawACard ] [ Html.text "Draw card" ]
-                , Html.text ("economy: " ++ String.fromInt model.economy)
                 ]
 
         Drawing ->
@@ -136,6 +133,7 @@ viewGame model =
                            )
                         ++ [ icGameStart model ]
                         ++ [ houseButton_ ]
+                        ++ [ renderCityInfo model ]
                     )
                 ]
 
@@ -226,15 +224,24 @@ powerInfo model =
 
 powerIncInfo : Model -> Svg Msg
 powerIncInfo model =
+    let
+        inc =
+            round (model.powRatio * toFloat para.basicPowerInc)
+    in
     GameViewBasic.caption
-        (para.pix + 40.0)
-        (para.piy + 15.0)
+        (para.pix + 30.0)
+        (para.piy + 20.0)
         (model.theme
             |> colorScheme
             |> .powerColor
         )
-        "(+2)"
-        15
+        ("/"
+            ++ String.fromInt model.maxPower
+            ++ ", +"
+            ++ String.fromInt inc
+            ++ " per round."
+        )
+        10
 
 
 renderFlag : Int -> Html Msg
@@ -361,7 +368,15 @@ ml2s m =
             ("⚠" ++ " " ++ str) |> String.lines |> List.reverse
 
         CardPlayed c ->
-            ("💬" ++ "[" ++ c.name ++ "]: \n" ++ c.describe)
+            ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ c.describe)
+                |> String.lines
+                |> List.reverse
+
+        Feedback str ->
+            ("⨀ " ++ str) |> String.lines |> List.reverse
+
+        CardPlayed_ c str ->
+            ("💬 " ++ "[" ++ c.name ++ "]: \n" ++ str)
                 |> String.lines
                 |> List.reverse
 
@@ -382,14 +397,10 @@ consoleText model =
             para.consolelm
 
         myLog =
-            model.actionDescribe
-
-        ( w, a ) =
-            List.partition isWarning myLog
+            model.actionDescribe |> List.reverse
 
         indexed =
-            w
-                ++ a
+            myLog
                 |> List.map ml2s
                 |> List.foldl (\x -> \y -> x ++ y) []
                 |> List.indexedMap Tuple.pair
@@ -523,6 +534,44 @@ renderGuide model =
         []
 
 
+renderPopulationGuide : Model -> List (Html Msg)
+renderPopulationGuide model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        bkg_ =
+            svg []
+                [ Svg.defs []
+                    [ sh2 ]
+                , rect
+                    [ 270 |> String.fromFloat |> SA.width
+                    , 95 |> String.fromFloat |> SA.height
+                    , cs.guideBkg |> SA.fill
+                    , 640 |> String.fromFloat |> SA.x
+                    , 300 |> String.fromFloat |> SA.y
+                    , "5" |> SA.rx
+                    , "2" |> SA.strokeWidth
+                    , cs.guideStroke |> SA.stroke
+                    , SA.filter "url(#shadow-filter)"
+                    ]
+                    []
+                ]
+    in
+    if model.currentLevel == 1 && model.currentRound == 2 then
+        bkg_
+            :: [ GameViewBasic.caption 650.0 320.0 "green" "Green figures: healthy population." 16
+               , GameViewBasic.caption 650.0 350.0 "yellow" "Yellow figures: sick population." 16
+               , GameViewBasic.caption 650.0 380.0 "red" "Red figures: dead number." 16
+               ]
+
+    else
+        []
+
+
 renderVirusInf : Model -> Html Msg
 renderVirusInf model =
     let
@@ -569,7 +618,7 @@ renderVirusInf model =
                     ++ "☣ Mutate: \nif virus exists and length of\nexisting rules < 4, change the\nvirusspread pattern every 10 turns.\n"
                     ++ "☣ TakeOver: \nif virus exists, every 16 rounds\nvirus would occupy tiles where\nlocal dead >= 3 x local healthy population.\n"
                     ++ "☣ Horrify : \npopulation flow rate x2, if\ntotal dead + total sick > total healthy.\n"
-                    ++ "☣ Unblockable: a quarantine would fall if\npatients nearby > 3 x quarantine population."
+                    ++ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation."
                 ]
 
             else
@@ -592,7 +641,7 @@ renderVirusInf model =
 
             else if model.currentLevel == 5 then
                 inf_
-                    ++ [ "☣ Unblockable: \na quarantine would fall if patients nearby > 3 x quarantine population." ]
+                    ++ [ "☣ Unblockable: \nA quarantine would fall if patients nearby > 3 x quarantine\npopulation." ]
                     ++ [ unfold ]
                     |> List.map String.lines
                     |> List.foldl (\x -> \y -> x ++ y) []
@@ -604,7 +653,7 @@ renderVirusInf model =
                     |> List.foldl (\x -> \y -> x ++ y) []
 
             else if model.currentLevel == 2 then
-                [ "\u{1FA78} Infect rate:\neach virus cell would infect"
+                [ "\u{1FA78} Infect rate:\neach virus cell would infect "
                     ++ infect
                     ++ " local citizens per turn.\n"
                     ++ "Theoretical death rate: "
@@ -674,4 +723,248 @@ renderVirusInf model =
 
 endlessLevelProgress : Model -> Html Msg
 endlessLevelProgress model =
-    GameViewBasic.caption 810 (para.houseButtonY + 50.0) "white" (String.fromInt model.currentRound) 60
+    let
+        r =
+            model.currentRound
+
+        digitNum =
+            if r < 10 then
+                1
+
+            else if r < 100 then
+                2
+
+            else
+                3
+    in
+    GameViewBasic.caption
+        (810 - 30 * (digitNum - 1))
+        (para.houseButtonY + 45.0)
+        "white"
+        (String.fromInt model.currentRound)
+        60
+
+
+cityInfo : Model -> String
+cityInfo model =
+    case model.currentLevel of
+        3 ->
+            """==========City 1 ATLANTA==========
+Atlanta is a city with plain terrain and a
+temperate climate, making it highly
+susceptible to viruses. Fortunately, some
+nano-virus technologies were found
+from a virus research institute before
+the nuclear war. With special programs,
+the nano-virus can kill some
+microorganisms, including the viruses.
+
+==========SPECIAL CARDS==========
+🃟 Defensive Line
+🃟 Sacrifice 
+🃟 Going Viral
+🃟 Judgement
+
+============OBJECTIVE============
+No less than 140 surviving population.
+"""
+
+        4 ->
+            """==========City 2 AMBER==========
+Before the devastating war, Amber was
+a "Tech City" whose citizens were mainly
+made up of researchers and scholars.
+Fortunately, Amber didn't take much
+damage in the war. Therefore, it kept
+many cutting-edge technologies and
+later became the most populated area
+in the world. To make up for the labor
+loss, a highly advanced cloning system
+was developed.
+
+==========SPECIAL CARDS==========
+🃟 Mega Clone 
+🃟 Organ Clone
+🃟 Resurgence
+🃟 Purification
+
+============OBJECTIVE============
+No less than 160 surviving population.
+"""
+
+        5 ->
+            """==========City 3 St.Petersburg==========
+Welcome to St.Petersburg, the
+northernmost city with a population
+over 50,000. The climate here is
+extremely cold and dry. The resources
+harvested from land are very limited.
+Therefore, people created a weather
+control system to adapt to the
+environment.
+
+==========SPECIAL CARDS==========
+🃟 Blizzard 
+🃟 Drought
+
+============OBJECTIVE============
+No less than 80 surviving population.
+"""
+
+        6 ->
+            """==========THE ENDLESS==========
+Unlike the former levels, there will be
+endless waves of virus. Between two
+waves, there will be a few buffer rounds
+and a population bonus. As game goes
+on, virus would be stronger and more
+deadly. The game will end once the total
+population drops below the required
+amount.
+
+==========SPECIAL CARDS==========
+🃟 Mega Clone        🃟 Drought
+🃟 Organ Clone      🃟 Defensive Line
+🃟 Resurgence        🃟 Sacrifice
+🃟 Purification       🃟 Going Viral
+🃟 Blizzard               🃟 Judgement
+
+============OBJECTIVE============
+No less than 50 surviving population.
+"""
+
+        _ ->
+            ""
+
+
+cityInfoText : Model -> List (Html Msg)
+cityInfoText model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        indexed =
+            cityInfo model
+                |> String.lines
+                |> List.indexedMap Tuple.pair
+    in
+    indexed
+        |> List.map (\( n, str ) -> ( para.inflm, para.inftm + para.clh * toFloat n, str ))
+        |> List.map (\( x, y, str ) -> GameViewBasic.caption x y cs.consoleText str 12)
+
+
+renderCityInfo : Model -> Html Msg
+renderCityInfo model =
+    let
+        t =
+            model.theme
+
+        cs =
+            colorScheme t
+
+        x =
+            para.iclm + 5.0 * (para.icw + para.icg)
+
+        y =
+            para.ictm
+
+        w =
+            1000.0 - x - para.icg * 0.5
+
+        h =
+            2.0 * 1.6 * para.icw + para.icg
+
+        vbArg =
+            "0 0 " ++ String.fromFloat w ++ " " ++ String.fromFloat h
+
+        bkg =
+            rect
+                [ w |> String.fromFloat |> SA.width
+                , h |> String.fromFloat |> SA.height
+                , SA.stroke cs.consoleStroke
+                , SA.strokeWidth "4"
+                , SA.fill cs.consoleBkg
+                , cs.consoleOpacity |> String.fromFloat |> SA.fillOpacity
+                ]
+                []
+
+        txt =
+            cityInfoText model
+    in
+    svg
+        [ x |> String.fromFloat |> SA.x
+        , y |> String.fromFloat |> SA.y
+        , SA.viewBox vbArg
+        , w |> String.fromFloat |> SA.width
+        , h |> String.fromFloat |> SA.height
+        ]
+        (bkg :: txt)
+
+
+livingPopulationInfo : Model -> Html Msg
+livingPopulationInfo model =
+    let
+        x =
+            if model.currentLevel /= 6 then
+                750.0
+
+            else
+                780.0
+
+        y =
+            if model.currentLevel /= 6 then
+                410.0
+
+            else
+                418.0
+
+        fs =
+            if model.currentLevel /= 6 then
+                15
+
+            else
+                13
+
+        living =
+            sumPopulation model.city
+
+        win =
+            case model.currentLevel of
+                3 ->
+                    140
+
+                4 ->
+                    160
+
+                5 ->
+                    80
+
+                6 ->
+                    50
+
+                _ ->
+                    0
+
+        str =
+            "Living population/objective: "
+                ++ String.fromInt living
+                ++ "/"
+                ++ String.fromInt win
+
+        color =
+            if living < (win |> toFloat |> (*) 1.2 |> floor) then
+                "#a90b08"
+
+            else if living < (win |> toFloat |> (*) 1.5 |> floor) then
+                "#fd2d29"
+
+            else if living < win * 2 then
+                "#fb8d8d"
+
+            else
+                "white"
+    in
+    GameViewBasic.caption x y color str fs

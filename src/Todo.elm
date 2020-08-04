@@ -7,10 +7,6 @@ type alias Queue =
     ( ( Bool, List Action ), Card )
 
 
-
--- True: Not Finished; False:Finished
-
-
 finishedEmptyQueue =
     ( ( False, [] ), Card NoSel 0 [ NoAction ] " " " " " " )
 

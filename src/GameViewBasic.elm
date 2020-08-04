@@ -1,6 +1,5 @@
 module GameViewBasic exposing (..)
 
-
 import Html.Events exposing (..)
 import Json.Decode as D
 import Message exposing (..)
@@ -12,13 +11,15 @@ caption : Float -> Float -> String -> String -> Int -> Svg Msg
 caption x y cstr text fontSize =
     text_
         [ fontSize |> String.fromInt |> SA.fontSize
-        , SA.fontFamily "sans-serif"
+        , SA.fontFamily "Bree Serif"
         , x |> String.fromFloat |> SA.x
         , y |> String.fromFloat |> SA.y
         , cstr |> SA.fill
+        , SA.xmlSpace "preserve"
         ]
         [ text |> Svg.text
         ]
+
 
 
 onClick : msg -> Svg.Attribute msg

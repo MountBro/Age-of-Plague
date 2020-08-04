@@ -127,6 +127,12 @@ quarantineTiles tlst =
         |> List.filter (\x -> x.qua == True)
         |> List.map (\x -> x.indice)
 
+quaNum : List Tile -> Int
+quaNum tlst =
+    tlst
+        |> List.filter (\x -> x.qua == True)
+        |> List.length
+
 
 hospitalTiles : List Tile -> List ( Int, Int )
 hospitalTiles tlst =
@@ -135,8 +141,22 @@ hospitalTiles tlst =
         |> List.map (\x -> x.indice)
 
 
+hosNum : List Tile -> Int
+hosNum tlst =
+    tlst
+        |> List.filter (\x -> x.hos == True)
+        |> List.length
+
+
 warehouseTiles : List Tile -> List ( Int, Int )
 warehouseTiles tlst =
     tlst
         |> List.filter (\x -> x.wareHouse == True)
         |> List.map (\x -> x.indice)
+
+
+wareNum : List Tile -> Int
+wareNum tlst =
+    tlst
+        |> List.filter (\x -> x.wareHouse == True)
+        |> List.length

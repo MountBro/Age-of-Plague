@@ -28,10 +28,18 @@ update msg model =
                 ( levelInit n model |> loadTheme n, Cmd.none )
 
             else if n == 5 then
-                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 5) )
+                let
+                    model_ =
+                        levelInit n model
+                in
+                ( model_ |> loadTheme n, Random.generate InitializeHands (cardsGenerator model_ 5) )
 
             else
-                ( levelInit n model |> loadTheme n, Random.generate InitializeHands (cardsGenerator model 4) )
+                let
+                    model_ =
+                        levelInit n model
+                in
+                ( model_ |> loadTheme n, Random.generate InitializeHands (cardsGenerator model_ 4) )
 
         InitializeHands lc ->
             let

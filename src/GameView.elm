@@ -98,7 +98,6 @@ viewGame model =
                                 []
                            )
                     )
-                ,  Html.text ("Level " ++ String.fromInt model.currentLevel ++ ". " ++ Debug.toString model.deck)
                 ]
 
         Drawing ->

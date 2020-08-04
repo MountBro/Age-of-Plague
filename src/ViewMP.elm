@@ -1,6 +1,5 @@
 module ViewMP exposing (..)
 
-
 import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events as HE exposing (..)
@@ -43,7 +42,7 @@ viewAll =
                         ]
                     , span [ class "content" ]
                         [ strong []
-                            [ text "City 1" ]
+                            [ text "Atlanta" ]
                         ]
                     ]
                 , a [ class "hex", id "city2", HE.onClick (M.LevelBegin 4) ]
@@ -53,7 +52,7 @@ viewAll =
                         ]
                     , span [ class "content" ]
                         [ strong []
-                            [ text "City 2" ]
+                            [ text "Amber" ]
                         ]
                     ]
                 , a [ class "hex", id "city3", HE.onClick (M.LevelBegin 5) ]
@@ -63,7 +62,7 @@ viewAll =
                         ]
                     , span [ class "content" ]
                         [ strong []
-                            [ text "City 3" ]
+                            [ text "St.Petersburg" ]
                         ]
                     ]
                 , a [ class "hex", id "endless", HE.onClick (M.LevelBegin 6) ]

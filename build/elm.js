@@ -9836,28 +9836,32 @@ var $author$project$Update$update = F2(
 		switch (msg.$) {
 			case 'LevelBegin':
 				var n = msg.a;
-				return (n <= 2) ? _Utils_Tuple2(
-					A2(
-						$author$project$Update$loadTheme,
-						n,
-						A2($author$project$InitLevel$levelInit, n, model)),
-					$elm$core$Platform$Cmd$none) : ((n === 5) ? _Utils_Tuple2(
-					A2(
-						$author$project$Update$loadTheme,
-						n,
-						A2($author$project$InitLevel$levelInit, n, model)),
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$InitializeHands,
-						A2($author$project$Model$cardsGenerator, model, 5))) : _Utils_Tuple2(
-					A2(
-						$author$project$Update$loadTheme,
-						n,
-						A2($author$project$InitLevel$levelInit, n, model)),
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Message$InitializeHands,
-						A2($author$project$Model$cardsGenerator, model, 4))));
+				if (n <= 2) {
+					return _Utils_Tuple2(
+						A2(
+							$author$project$Update$loadTheme,
+							n,
+							A2($author$project$InitLevel$levelInit, n, model)),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					if (n === 5) {
+						var model_ = A2($author$project$InitLevel$levelInit, n, model);
+						return _Utils_Tuple2(
+							A2($author$project$Update$loadTheme, n, model_),
+							A2(
+								$elm$random$Random$generate,
+								$author$project$Message$InitializeHands,
+								A2($author$project$Model$cardsGenerator, model_, 5)));
+					} else {
+						var model_ = A2($author$project$InitLevel$levelInit, n, model);
+						return _Utils_Tuple2(
+							A2($author$project$Update$loadTheme, n, model_),
+							A2(
+								$elm$random$Random$generate,
+								$author$project$Message$InitializeHands,
+								A2($author$project$Model$cardsGenerator, model_, 4)));
+					}
+				}
 			case 'InitializeHands':
 				var lc = msg.a;
 				var specialCards = (model.currentLevel === 5) ? _List_fromArray(
@@ -9865,7 +9869,6 @@ var $author$project$Update$update = F2(
 					[$author$project$Card$megaClone, $author$project$Card$organClone, $author$project$Card$resurgence, $author$project$Card$purification, $author$project$Card$cut, $author$project$Card$hospital]) : ((model.currentLevel === 3) ? _List_fromArray(
 					[$author$project$Card$defenseline, $author$project$Card$sacrifice, $author$project$Card$goingViral, $author$project$Card$judgement, $author$project$Card$hospital, $author$project$Card$cut]) : _List_fromArray(
 					[$author$project$Card$quarantine, $author$project$Card$hospital, $author$project$Card$cut, $author$project$Card$cut, $author$project$Card$megaCut, $author$project$Card$coldWave])));
-				var loglc = A2($elm$core$Debug$log, 'lc', lc);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -10520,7 +10523,7 @@ var $author$project$ViewMP$viewAll = _List_fromArray(
 												_List_Nil,
 												_List_fromArray(
 													[
-														$elm$html$Html$text('City 1')
+														$elm$html$Html$text('Atlanta')
 													]))
 											]))
 									])),
@@ -10564,7 +10567,7 @@ var $author$project$ViewMP$viewAll = _List_fromArray(
 												_List_Nil,
 												_List_fromArray(
 													[
-														$elm$html$Html$text('City 2')
+														$elm$html$Html$text('Amber')
 													]))
 											]))
 									])),
@@ -10608,7 +10611,7 @@ var $author$project$ViewMP$viewAll = _List_fromArray(
 												_List_Nil,
 												_List_fromArray(
 													[
-														$elm$html$Html$text('City 3')
+														$elm$html$Html$text('St.Petersburg')
 													]))
 											]))
 									])),
@@ -10768,7 +10771,7 @@ var $author$project$ViewCards$viewSingleCard = F2(
 					$elm$html$Html$Attributes$class('ctnr'),
 					$elm$html$Html$Attributes$id(
 					'c' + $elm$core$String$fromInt(n + 1)),
-					A2($elm$html$Html$Attributes$attribute, 'data-info', card.describe),
+					A2($elm$html$Html$Attributes$attribute, 'data-info', card.fd),
 					A2($elm$html$Html$Attributes$style, 'background-image', 'url(./assets/cardPNG/' + (card.name + '.png)'))
 				]),
 			_List_fromArray(

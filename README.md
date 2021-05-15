@@ -43,3 +43,11 @@
   wild. It contains two tutorial levels, three formal levels, an endless mode and a
   gallery of all the cards. There're altogether 28 different cards, three different
   cities designed in this game.
+  
+ 5 Honor Code
+  ════════════
+  This project is owned by group LJWZ.
+  
+  Anyone or any team who copies the codes will be treated as an voilation of Honor Code, and it is claimed that we are free of responsibility.
+  
+  Plz be cautious about HC issues!
